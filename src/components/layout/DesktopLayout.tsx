@@ -18,6 +18,11 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
     { id: 'settings', label: 'Configurações', icon: Settings },
   ]
 
+  // 🌐 Configuração via variável de ambiente
+  const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
+  const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Cardápio Digital'
+  const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
+
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#E89EAE] border-r border-pink-200 flex flex-col">
@@ -25,11 +30,19 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
         <div className="p-6 border-b border-pink-300">
           <div className="flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <span className="text-3xl">🧁</span>
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg overflow-hidden">
+                {logoUrl ? (
+                  <img 
+                    src={logoUrl} 
+                    alt={`${systemName} Logo`} 
+                    className="w-10 h-10 object-contain"
+                  />
+                ) : (
+                  <span className="text-3xl">🧁</span>
+                )}
               </div>
-              <h2 className="text-white font-bold text-lg">Cardápio Digital</h2>
-              <p className="text-white/80 text-xs">Sistema de Gestão</p>
+              <h2 className="text-white font-bold text-lg">{systemName}</h2>
+              <p className="text-white/80 text-xs">{systemSubtitle}</p>
             </div>
           </div>
         </div>
@@ -62,7 +75,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
         {/* Footer do Menu */}
         <div className="p-4 border-t border-pink-300">
           <div className="text-center">
-            <p className="text-white/70 text-xs">© 2024 Cardápio Digital</p>
+            <p className="text-white/70 text-xs">© 2024 {systemName}</p>
             <p className="text-white/60 text-xs">Todos os direitos reservados</p>
           </div>
         </div>
