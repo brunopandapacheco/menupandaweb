@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -6,8 +6,11 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Upload, Palette } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
+import { uploadImage } from '@/services/database'
 
 export default function DesignSettings() {
+  const { designSettings, saveDesignSettings, loading } = useDatabase()
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
     cor_borda: '#ec4899',
@@ -15,7 +18,26 @@ export default function DesignSettings() {
     cor_nome: '#be185d',
     background_topo_color: '#fce7f3',
     texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+    logo_url: '',
+    banner1_url: '',
+    banner2_url: '',
   })
+
+  useEffect(() => {
+    if (designSettings) {
+      setSettings({
+        nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
+        cor_borda: designSettings.cor_borda || '#ec4899',
+        cor_background: designSettings.cor_background || '#fef2f2',
+        cor_nome: designSettings.cor_nome || '#be185d',
+        background_topo_color: designSettings.background_topo_color || '#fce7f3',
+        texto_rodape: designSettings.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999',
+        logo_url: designSettings.logo_url || '',
+        banner1_url: designSettings.banner1_url || '',
+        banner2_url: designSettings.banner2_url || '',
+      })
+    }
+  }, [designSettings])
 
   const colorPalettes = [
     {
@@ -56,16 +78,36 @@ export default function DesignSettings() {
     },
   ]
 
-  const handleSave = () => {
-    showSuccess('Configurações salvas com sucesso!')
+  const handleSave = async () => {
+    const success = await saveDesignSettings(settings)
+    if (success) {
+      showSuccess('Configurações salvas com sucesso!')
+    }
   }
 
-  const applyPalette = (palette: typeof colorPalettes[0]) => {
-    setSettings(prev => ({
-      ...prev,
-      ...palette.colors
-    }))
-    showSuccess(`Paleta "${palette.name}" aplicada!`)
+  const applyPalette = async (palette: typeof colorPalettes[0]) => {
+    const newSettings = { ...settings, ...palette.colors }
+    setSettings(newSettings)
+    const success = await saveDesignSettings(newSettings)
+    if (success) {
+      showSuccess(`Paleta "${palette.name}" aplicada!`)
+    }
+  }
+
+  const handleImageUpload = async (file: File, type: 'logo' | 'banner1' | 'banner2') => {
+    const fileName = `${type}-${Date.now()}.${file.name.split('.').pop()}`
+    const url = await uploadImage(file, 'images', fileName)
+    
+    if (url) {
+      const newSettings = { ...settings, [`${type}_url`]: url }
+      setSettings(newSettings)
+      await saveDesignSettings(newSettings)
+      showSuccess('Imagem enviada com sucesso!')
+    }
+  }
+
+  if (loading) {
+    return <div>Carregando...</div>
   }
 
   return (
@@ -223,22 +265,79 @@ export default function DesignSettings() {
                 <div className="space-y-2">
                   <Label>Logo</Label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                    <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                    {settings.logo_url ? (
+                      <img src={settings.logo_url} alt="Logo" className="w-16 h-16 mx-auto mb-2 rounded" />
+                    ) : (
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                    )}
+                    <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="logo-upload"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleImageUpload(file, 'logo')
+                      }}
+                    />
+                    <Button asChild size="sm" variant="outline">
+                      <label htmlFor="logo-upload" className="cursor-pointer">
+                        Escolher Arquivo
+                      </label>
+                    </Button>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Banner 1</Label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                    <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                    {settings.banner1_url ? (
+                      <img src={settings.banner1_url} alt="Banner 1" className="w-full h-20 mx-auto mb-2 object-cover rounded" />
+                    ) : (
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                    )}
+                    <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="banner1-upload"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleImageUpload(file, 'banner1')
+                      }}
+                    />
+                    <Button asChild size="sm" variant="outline">
+                      <label htmlFor="banner1-upload" className="cursor-pointer">
+                        Escolher Arquivo
+                      </label>
+                    </Button>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Banner 2</Label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                    <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                    {settings.banner2_url ? (
+                      <img src={settings.banner2_url} alt="Banner 2" className="w-full h-20 mx-auto mb-2 object-cover rounded" />
+                    ) : (
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                    )}
+                    <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="banner2-upload"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleImageUpload(file, 'banner2')
+                      }}
+                    />
+                    <Button asChild size="sm" variant="outline">
+                      <label htmlFor="banner2-upload" className="cursor-pointer">
+                        Escolher Arquivo
+                      </label>
+                    </Button>
                   </div>
                 </div>
               </div>

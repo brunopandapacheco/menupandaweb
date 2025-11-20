@@ -5,60 +5,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Search, Heart, Phone, Clock, Star, ChevronLeft, ChevronRight } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { DesignSettings, Configuracoes, Produto } from '@/types/database'
 
 export default function CardapioPublico() {
   const { slug } = useParams()
   const [searchTerm, setSearchTerm] = useState('')
   const [favorites, setFavorites] = useState<string[]>([])
   const [currentBanner, setCurrentBanner] = useState(0)
-
-  const designSettings = {
-    nome_confeitaria: 'Doces da Vovó',
-    cor_borda: '#ec4899',
-    cor_background: '#fef2f2',
-    cor_nome: '#be185d',
-    background_topo_color: '#fce7f3',
-    texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-    banner1_url: '',
-    banner2_url: '',
-  }
-
-  const products = [
-    {
-      id: '1',
-      nome: 'Bolo de Chocolate',
-      descricao: 'Bolo molhado com cobertura de chocolate',
-      preco_normal: 45.00,
-      preco_promocional: 35.00,
-      imagem_url: '',
-      categoria: 'Bolos',
-      promocao: true,
-    },
-    {
-      id: '2',
-      nome: 'Cupcake Morango',
-      descricao: 'Cupcake com recheio de morango',
-      preco_normal: 8.00,
-      imagem_url: '',
-      categoria: 'Cupcakes',
-      promocao: false,
-    },
-    {
-      id: '3',
-      nome: 'Torta de Limão',
-      descricao: 'Torta azeda com merengue',
-      preco_normal: 35.00,
-      imagem_url: '',
-      categoria: 'Tortas',
-      promocao: false,
-    },
-  ]
-
-  const categories = ['Bolos', 'Cupcakes', 'Tortas', 'Doces', 'Salgados']
-  const banners = [
-    { id: 1, title: 'Promoção de Aniversário', subtitle: '20% OFF em bolos' },
-    { id: 2, title: 'Novos Sabores', subtitle: 'Experimente nossos cupcakes' },
-  ]
+  const [loading, setLoading] = useState(true)
+  const [designSettings, setDesignSettings] = useState<DesignSettings | null>(null)
+  const [configuracoes, setConfiguracoes] = useState<Configuracoes | null>(null)
+  const [produtos, setProdutos] = useState<Produto[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
@@ -72,11 +30,70 @@ export default function CardapioPublico() {
   }, [favorites])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % banners.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [banners.length])
+    loadCardapioData()
+  }, [slug])
+
+  const loadCardapioData = async () => {
+    try {
+      setLoading(true)
+      
+      // Buscar usuário pelo slug (nome da confeitaria)
+      const { data: userData, error: userError } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('nome_confeitaria', slug)
+        .single()
+
+      if (userError || !userData) {
+        console.error('Confeitaria não encontrada:', userError)
+        setLoading(false)
+        return
+      }
+
+      // Carregar dados do cardápio
+      const [designData, configData, produtosData] = await Promise.all([
+        supabase
+          .from('design_settings')
+          .select('*')
+          .eq('user_id', userData.user_id)
+          .single(),
+        supabase
+          .from('configuracoes')
+          .select('*')
+          .eq('user_id', userData.user_id)
+          .single(),
+        supabase
+          .from('produtos')
+          .select('*')
+          .eq('user_id', userData.user_id)
+          .eq('disponivel', true)
+          .order('created_at', { ascending: false })
+      ])
+
+      setDesignSettings(designData.data)
+      setConfiguracoes(configData.data)
+      setProdutos(produtosData.data || [])
+    } catch (error) {
+      console.error('Erro ao carregar dados do cardápio:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (designSettings?.banner1_url || designSettings?.banner2_url) {
+      const banners = []
+      if (designSettings.banner1_url) banners.push({ id: 1, url: designSettings.banner1_url })
+      if (designSettings.banner2_url) banners.push({ id: 2, url: designSettings.banner2_url })
+      
+      if (banners.length > 1) {
+        const interval = setInterval(() => {
+          setCurrentBanner((prev) => (prev + 1) % banners.length)
+        }, 5000)
+        return () => clearInterval(interval)
+      }
+    }
+  }, [designSettings])
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => 
@@ -87,24 +104,30 @@ export default function CardapioPublico() {
   }
 
   const getStatusMessage = () => {
+    if (!configuracoes) {
+      return { status: 'Carregando...', time: '', color: 'text-gray-600' }
+    }
+
     const now = new Date()
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()
     const currentTime = currentHour * 60 + currentMinute
     
-    const startTime = 8 * 60 // 08:00
-    const endTime = 18 * 60 // 18:00
+    const [startHour, startMinute] = configuracoes.horario_funcionamento_inicio.split(':').map(Number)
+    const [endHour, endMinute] = configuracoes.horario_funcionamento_fim.split(':').map(Number)
+    const startTime = startHour * 60 + startMinute
+    const endTime = endHour * 60 + endMinute
     
     if (currentTime >= startTime && currentTime <= endTime) {
-      return { status: 'Aberto', time: 'Fecha às 18:00', color: 'text-green-600' }
+      return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute}`, color: 'text-green-600' }
     } else {
-      return { status: 'Fechado', time: 'Abre às 08:00', color: 'text-red-600' }
+      return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute}`, color: 'text-red-600' }
     }
   }
 
   const status = getStatusMessage()
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = produtos.filter(product =>
     product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -112,10 +135,39 @@ export default function CardapioPublico() {
   const promotionalProducts = filteredProducts.filter(p => p.promocao)
   const regularProducts = filteredProducts.filter(p => !p.promocao)
 
+  const categories = Array.from(new Set(produtos.map(p => p.categoria)))
+
+  const banners = []
+  if (designSettings?.banner1_url) banners.push({ id: 1, url: designSettings.banner1_url })
+  if (designSettings?.banner2_url) banners.push({ id: 2, url: designSettings.banner2_url })
+
   const handleWhatsAppOrder = (productName: string) => {
     const message = `Olá! Gostaria de fazer um pedido de: ${productName}`
-    const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(message)}`
+    const phoneNumber = configuracoes?.telefone?.replace(/\D/g, '') || '11999999999'
+    const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p>Carregando cardápio...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!designSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Cardápio não encontrado</h1>
+          <p className="text-gray-600">Esta confeitaria não existe ou está indisponível.</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -128,7 +180,11 @@ export default function CardapioPublico() {
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-xl">
-              <span className="text-4xl">🧁</span>
+              {designSettings.logo_url ? (
+                <img src={designSettings.logo_url} alt="Logo" className="w-20 h-20 rounded-full object-cover" />
+              ) : (
+                <span className="text-4xl">🧁</span>
+              )}
             </div>
           </div>
         </div>
@@ -154,42 +210,43 @@ export default function CardapioPublico() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
-                  <p className="font-medium">(11) 99999-9999</p>
+                  <p className="font-medium">{configuracoes?.telefone || '(11) 99999-9999'}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Banner Carousel */}
-          <div className="relative mb-4 h-32 rounded-lg overflow-hidden shadow-sm">
-            {banners.map((banner, index) => (
-              <div
-                key={banner.id}
-                className={`absolute inset-0 transition-opacity duration-1000 ${
-                  index === currentBanner ? 'opacity-100' : 'opacity-0'
-                }`}
-                style={{ 
-                  backgroundColor: designSettings.cor_borda,
-                  background: `linear-gradient(135deg, ${designSettings.cor_borda}, ${designSettings.cor_nome})`
-                }}
-              >
-                <div className="h-full flex flex-col items-center justify-center text-white p-4">
-                  <h3 className="text-lg font-bold">{banner.title}</h3>
-                  <p className="text-sm">{banner.subtitle}</p>
-                </div>
-              </div>
-            ))}
-            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-              {banners.map((_, index) => (
+          {banners.length > 0 && (
+            <div className="relative mb-4 h-32 rounded-lg overflow-hidden shadow-sm">
+              {banners.map((banner, index) => (
                 <div
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentBanner ? 'bg-white' : 'bg-white/50'
+                  key={banner.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                    index === currentBanner ? 'opacity-100' : 'opacity-0'
                   }`}
-                />
+                >
+                  <img 
+                    src={banner.url} 
+                    alt={`Banner ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               ))}
+              {banners.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                  {banners.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        index === currentBanner ? 'bg-white' : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
           {/* Search */}
           <div className="relative mb-6">
@@ -235,7 +292,11 @@ export default function CardapioPublico() {
                           className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
                           style={{ backgroundColor: designSettings.cor_background }}
                         >
-                          <span className="text-3xl">🧁</span>
+                          {product.imagem_url ? (
+                            <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-xl" />
+                          ) : (
+                            <span className="text-3xl">🧁</span>
+                          )}
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
@@ -296,7 +357,11 @@ export default function CardapioPublico() {
                           className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
                           style={{ backgroundColor: designSettings.cor_background }}
                         >
-                          <span className="text-3xl">🧁</span>
+                          {product.imagem_url ? (
+                            <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-xl" />
+                          ) : (
+                            <span className="text-3xl">🧁</span>
+                          )}
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-start">

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -6,8 +6,10 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Clock, Phone, CreditCard, Truck } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
 
 export default function Settings() {
+  const { configuracoes, saveConfiguracoes, loading } = useDatabase()
   const [settings, setSettings] = useState({
     horario_funcionamento_inicio: '08:00',
     horario_funcionamento_fim: '18:00',
@@ -17,8 +19,24 @@ export default function Settings() {
     taxa_entrega: 5.00,
   })
 
-  const handleSave = () => {
-    showSuccess('Configurações salvas com sucesso!')
+  useEffect(() => {
+    if (configuracoes) {
+      setSettings({
+        horario_funcionamento_inicio: configuracoes.horario_funcionamento_inicio || '08:00',
+        horario_funcionamento_fim: configuracoes.horario_funcionamento_fim || '18:00',
+        telefone: configuracoes.telefone || '(11) 99999-9999',
+        meios_pagamento: configuracoes.meios_pagamento || ['Pix', 'Cartão de Crédito', 'Dinheiro'],
+        entrega: configuracoes.entrega ?? true,
+        taxa_entrega: configuracoes.taxa_entrega || 5.00,
+      })
+    }
+  }, [configuracoes])
+
+  const handleSave = async () => {
+    const success = await saveConfiguracoes(settings)
+    if (success) {
+      showSuccess('Configurações salvas com sucesso!')
+    }
   }
 
   const togglePaymentMethod = (method: string) => {
@@ -31,6 +49,65 @@ export default function Settings() {
   }
 
   const paymentMethods = ['Pix', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro', 'PicPay']
+
+  if (loading) {
+    return <div>Carregando configurações
+<dyad-write path="src/pages/admin/Settings.tsx" description="Atualizando Settings para usar banco de dados">
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Clock, Phone, CreditCard, Truck } from 'lucide-react'
+import { showSuccess } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
+
+export default function Settings() {
+  const { configuracoes, saveConfiguracoes, loading } = useDatabase()
+  const [settings, setSettings] = useState({
+    horario_funcionamento_inicio: '08:00',
+    horario_funcionamento_fim: '18:00',
+    telefone: '(11) 99999-9999',
+    meios_pagamento: ['Pix', 'Cartão de Crédito', 'Dinheiro'],
+    entrega: true,
+    taxa_entrega: 5.00,
+  })
+
+  useEffect(() => {
+    if (configuracoes) {
+      setSettings({
+        horario_funcionamento_inicio: configuracoes.horario_funcionamento_inicio || '08:00',
+        horario_funcionamento_fim: configuracoes.horario_funcionamento_fim || '18:00',
+        telefone: configuracoes.telefone || '(11) 99999-9999',
+        meios_pagamento: configuracoes.meios_pagamento || ['Pix', 'Cartão de Crédito', 'Dinheiro'],
+        entrega: configuracoes.entrega ?? true,
+        taxa_entrega: configuracoes.taxa_entrega || 5.00,
+      })
+    }
+  }, [configuracoes])
+
+  const handleSave = async () => {
+    const success = await saveConfiguracoes(settings)
+    if (success) {
+      showSuccess('Configurações salvas com sucesso!')
+    }
+  }
+
+  const togglePaymentMethod = (method: string) => {
+    setSettings(prev => ({
+      ...prev,
+      meios_pagamento: prev.meios_pagamento.includes(method)
+        ? prev.meios_pagamento.filter(m => m !== method)
+        : [...prev.meios_pagamento, method]
+    }))
+  }
+
+  const paymentMethods = ['Pix', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro', 'PicPay']
+
+  if (loading) {
+    return <div>Carregando configurações...</div>
+  }
 
   return (
     <div className="space-y-6">

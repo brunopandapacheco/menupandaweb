@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,47 +9,45 @@ import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Plus, Edit, Trash2, Upload } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
+import { Produto } from '@/types/database'
+import { uploadImage } from '@/services/database'
 
 export default function ProductManager() {
-  const [products, setProducts] = useState([
-    {
-      id: '1',
-      nome: 'Bolo de Chocolate',
-      descricao: 'Bolo molhado com cobertura de chocolate',
-      preco_normal: 45.00,
-      preco_promocional: 35.00,
-      categoria: 'Bolos',
-      forma_venda: 'Unidade',
-      disponivel: true,
-      promocao: true,
-    },
-    {
-      id: '2',
-      nome: 'Cupcake Morango',
-      descricao: 'Cupcake com recheio de morango',
-      preco_normal: 8.00,
-      categoria: 'Cupcakes',
-      forma_venda: 'Unidade',
-      disponivel: true,
-      promocao: false,
-    },
-  ])
-
-  const [editingProduct, setEditingProduct] = useState<any>(null)
+  const { produtos, addProduto, editProduto, removeProduto, loading } = useDatabase()
+  const [editingProduct, setEditingProduct] = useState<Partial<Produto> | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleSaveProduct = () => {
-    showSuccess('Produto salvo com sucesso!')
-    setIsDialogOpen(false)
-    setEditingProduct(null)
+  const handleSaveProduct = async () => {
+    if (!editingProduct) return
+
+    try {
+      if (editingProduct.id) {
+        const success = await editProduto(editingProduct.id, editingProduct)
+        if (success) {
+          showSuccess('Produto atualizado com sucesso!')
+        }
+      } else {
+        const result = await addProduto(editingProduct as Omit<Produto, 'id' | 'user_id' | 'created_at'>)
+        if (result) {
+          showSuccess('Produto criado com sucesso!')
+        }
+      }
+      setIsDialogOpen(false)
+      setEditingProduct(null)
+    } catch (error) {
+      showError('Erro ao salvar produto')
+    }
   }
 
-  const handleDeleteProduct = (id: string) => {
-    setProducts(prev => prev.filter(p => p.id !== id))
-    showSuccess('Produto excluído com sucesso!')
+  const handleDeleteProduct = async (id: string) => {
+    const success = await removeProduto(id)
+    if (success) {
+      showSuccess('Produto excluído com sucesso!')
+    }
   }
 
-  const openEditDialog = (product?: any) => {
+  const openEditDialog = (product?: Produto) => {
     setEditingProduct(product || {
       nome: '',
       descricao: '',
@@ -61,6 +59,20 @@ export default function ProductManager() {
       promocao: false,
     })
     setIsDialogOpen(true)
+  }
+
+  const handleImageUpload = async (file: File) => {
+    const fileName = `produto-${Date.now()}.${file.name.split('.').pop()}`
+    const url = await uploadImage(file, 'products', fileName)
+    
+    if (url && editingProduct) {
+      setEditingProduct(prev => ({ ...prev, imagem_url: url }))
+      showSuccess('Imagem enviada com sucesso!')
+    }
+  }
+
+  if (loading) {
+    return <div>Carregando produtos...</div>
   }
 
   return (
@@ -148,8 +160,27 @@ export default function ProductManager() {
               <div className="space-y-2">
                 <Label>Imagem</Label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                  <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                  {editingProduct?.imagem_url ? (
+                    <img src={editingProduct.imagem_url} alt="Preview" className="w-24 h-24 mx-auto mb-2 object-cover rounded" />
+                  ) : (
+                    <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                  )}
+                  <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="product-image-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageUpload(file)
+                    }}
+                  />
+                  <Button asChild size="sm" variant="outline">
+                    <label htmlFor="product-image-upload" className="cursor-pointer">
+                      Escolher Arquivo
+                    </label>
+                  </Button>
                 </div>
               </div>
 
@@ -186,7 +217,7 @@ export default function ProductManager() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
+        {produtos.map((product) => (
           <Card key={product.id} className="relative">
             <CardHeader>
               <div className="flex justify-between items-start">
@@ -205,6 +236,9 @@ export default function ProductManager() {
               </div>
             </CardHeader>
             <CardContent>
+              {product.imagem_url && (
+                <img src={product.imagem_url} alt={product.nome} className="w-full h-32 object-cover rounded mb-4" />
+              )}
               <p className="text-sm text-gray-600 mb-4">{product.descricao}</p>
               
               <div className="space-y-2">
