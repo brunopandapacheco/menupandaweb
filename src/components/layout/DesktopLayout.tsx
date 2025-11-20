@@ -19,8 +19,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
   ]
 
   return (
-    <div className="min-h-screen bg-pink-600 flex">
-      <div className="w-64 bg-white border-r border-pink-200 p-4">
+    <div className="min-h-screen bg-pink-50 flex">
+      <div className="w-64 bg-pink-600 border-r border-pink-200 p-4">
         <div className="space-y-2">
           {tabs.map((tab) => {
             const Icon = tab.icon
@@ -31,8 +31,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
                 className={cn(
                   "w-full justify-start gap-3 h-12",
                   activeTab === tab.id 
-                    ? "bg-pink-600 hover:bg-pink-700 text-white" 
-                    : "text-gray-700 hover:bg-pink-100 hover:text-pink-700"
+                    ? "bg-white text-pink-600 hover:bg-pink-50" 
+                    : "text-white hover:bg-pink-700 hover:text-white"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
