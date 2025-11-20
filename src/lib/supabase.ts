@@ -13,6 +13,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Configuração do Supabase não encontrada')
 }
 
+// Criar uma única instância do cliente Supabase
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,

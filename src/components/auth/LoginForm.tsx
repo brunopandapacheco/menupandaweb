@@ -20,13 +20,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     setLoading(true)
 
     try {
-      // Verificar conexão antes de tentar login
-      const isConnected = await checkSupabaseConnection()
-      if (!isConnected) {
-        showError('Erro de conexão. Verifique sua internet e tente novamente.')
-        return
-      }
-
       console.log('Tentando fazer login:', email)
       
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -49,9 +42,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       console.error('Erro no login:', error)
       
       // Tratamento específico de erros
-      if (error.message?.includes('Failed to fetch')) {
-        showError('Erro de conexão. Verifique sua internet e tente novamente.')
-      } else if (error.message?.includes('Invalid login credentials')) {
+      if (error.message?.includes('Invalid login credentials')) {
         showError('Email ou senha incorretos.')
       } else if (error.message?.includes('Email not confirmed')) {
         showError('Email não confirmado. Verifique sua caixa de entrada.')
