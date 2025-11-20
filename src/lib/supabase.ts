@@ -13,6 +13,28 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    storage: localStorage,
+    storageKey: 'supabase.auth.token'
+  },
+  global: {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  },
+  db: {
+    schema: 'public'
   }
 })
+
+// Função para verificar conexão
+export const checkSupabaseConnection = async () => {
+  try {
+    const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true })
+    if (error) throw error
+    return true
+  } catch (error) {
+    console.error('Erro ao verificar conexão com Supabase:', error)
+    return false
+  }
+}
