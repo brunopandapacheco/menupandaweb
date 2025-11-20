@@ -26,8 +26,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#E89EAE] border-r border-pink-200 flex flex-col">
-        {/* Logo do Sistema - COM MAIOR ESPAÇAMENTO */}
-        <div className="p-8 pt-12 border-b border-pink-300">
+        {/* Logo do Sistema - SEM LINHA SEPARADORA */}
+        <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
               <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
@@ -47,8 +47,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
           </div>
         </div>
         
-        {/* Menu de Navegação - COM MAIOR ESPAÇAMENTO */}
-        <div className="flex-1 p-6 pt-8">
+        {/* Menu de Navegação */}
+        <div className="flex-1 p-6 pt-2">
           <div className="space-y-3">
             {tabs.map((tab) => {
               const Icon = tab.icon
@@ -72,7 +72,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
           </div>
         </div>
         
-        {/* Footer do Menu - COM MAIOR ESPAÇAMENTO */}
+        {/* Footer do Menu */}
         <div className="p-6 pb-8 border-t border-pink-300">
           <div className="text-center">
             <p className="text-white/70 text-xs">© 2025 {systemName}</p>
