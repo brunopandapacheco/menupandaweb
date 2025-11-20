@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, Palette, Link } from 'lucide-react'
+import { Upload, Palette, Eye } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { uploadImage } from '@/services/database'
@@ -138,9 +138,9 @@ export default function DesignSettings() {
       </div>
 
       <Tabs defaultValue="cores" className="space-y-6">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="cores">Cores</TabsTrigger>
-          <TabsTrigger value="paletas">Paletas Prontas</TabsTrigger>
+          <TabsTrigger value="paletas">Paletas</TabsTrigger>
           <TabsTrigger value="imagens">Imagens</TabsTrigger>
         </TabsList>
 
@@ -150,35 +150,28 @@ export default function DesignSettings() {
               <CardTitle>Configurações de Cores</CardTitle>
               <CardDescription>Escolha as cores do seu cardápio</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="nome_confeitaria">Nome da Confeitaria</Label>
                   <Input
                     id="nome_confeitaria"
                     value={settings.nome_confeitaria}
                     onChange={(e) => handleNameChange(e.target.value)}
+                    placeholder="Nome da sua confeitaria"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="slug">URL do Cardápio</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="slug"
-                      value={settings.slug}
-                      onChange={(e) => setSettings(prev => ({ ...prev, slug: e.target.value }))}
-                      placeholder="url-amigavel"
-                    />
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Link className="w-4 h-4 mr-1" />
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    Seu cardápio ficará disponível em: /cardapio/{settings.slug}
-                  </p>
+                  <Label htmlFor="texto_rodape">Texto do Rodapé</Label>
+                  <Input
+                    id="texto_rodape"
+                    value={settings.texto_rodape}
+                    onChange={(e) => setSettings(prev => ({ ...prev, texto_rodape: e.target.value }))}
+                    placeholder="Informações de contato"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cor_borda">Cor da Borda</Label>
+                  <Label htmlFor="cor_borda">Cor Principal</Label>
                   <div className="flex gap-2">
                     <Input
                       type="color"
@@ -189,6 +182,7 @@ export default function DesignSettings() {
                     <Input
                       value={settings.cor_borda}
                       onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
+                      placeholder="#ec4899"
                     />
                   </div>
                 </div>
@@ -204,6 +198,7 @@ export default function DesignSettings() {
                     <Input
                       value={settings.cor_background}
                       onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                      placeholder="#fef2f2"
                     />
                   </div>
                 </div>
@@ -219,6 +214,7 @@ export default function DesignSettings() {
                     <Input
                       value={settings.cor_nome}
                       onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                      placeholder="#be185d"
                     />
                   </div>
                 </div>
@@ -234,19 +230,12 @@ export default function DesignSettings() {
                     <Input
                       value={settings.background_topo_color}
                       onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
+                      placeholder="#fce7f3"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="texto_rodape">Texto do Rodapé</Label>
-                  <Input
-                    id="texto_rodape"
-                    value={settings.texto_rodape}
-                    onChange={(e) => setSettings(prev => ({ ...prev, texto_rodape: e.target.value }))}
-                  />
-                </div>
               </div>
-              <Button onClick={handleSave} className="w-full">
+              <Button onClick={handleSave} className="w-full" size="lg">
                 Salvar Configurações
               </Button>
             </CardContent>
@@ -260,25 +249,27 @@ export default function DesignSettings() {
               <CardDescription>Escolha uma paleta de cores pré-definida</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {colorPalettes.map((palette) => (
-                  <Card key={palette.name} className="cursor-pointer hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <h3 className="font-medium mb-3">{palette.name}</h3>
-                      <div className="space-y-2">
+                  <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-primary">
+                    <CardContent className="p-6">
+                      <h3 className="font-semibold mb-4 text-center">{palette.name}</h3>
+                      <div className="space-y-3 mb-4">
                         {Object.entries(palette.colors).map(([key, color]) => (
-                          <div key={key} className="flex items-center gap-2">
+                          <div key={key} className="flex items-center gap-3">
                             <div 
-                              className="w-6 h-6 rounded border"
+                              className="w-8 h-8 rounded-lg border-2 border-gray-200"
                               style={{ backgroundColor: color }}
                             />
-                            <span className="text-xs text-gray-600">{key}</span>
+                            <span className="text-xs text-gray-600 capitalize">
+                              {key.replace(/_/g, ' ')}
+                            </span>
                           </div>
                         ))}
                       </div>
                       <Button 
                         size="sm" 
-                        className="w-full mt-4"
+                        className="w-full"
                         onClick={() => applyPalette(palette)}
                       >
                         Aplicar
@@ -297,17 +288,22 @@ export default function DesignSettings() {
               <CardTitle>Imagens</CardTitle>
               <CardDescription>Faça upload do logo e banners</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Logo</Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-base font-medium">Logo</Label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
                     {settings.logo_url ? (
-                      <img src={settings.logo_url} alt="Logo" className="w-16 h-16 mx-auto mb-2 rounded" />
+                      <div className="space-y-3">
+                        <img src={settings.logo_url} alt="Logo" className="w-20 h-20 mx-auto rounded-lg object-cover shadow-md" />
+                        <p className="text-sm text-green-600 font-medium">Logo carregado</p>
+                      </div>
                     ) : (
-                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <div className="space-y-3">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                      </div>
                     )}
-                    <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
                     <Input
                       type="file"
                       accept="image/*"
@@ -320,20 +316,25 @@ export default function DesignSettings() {
                     />
                     <Button asChild size="sm" variant="outline">
                       <label htmlFor="logo-upload" className="cursor-pointer">
-                        Escolher Arquivo
+                        {settings.logo_url ? 'Alterar Logo' : 'Escolher Arquivo'}
                       </label>
                     </Button>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Banner 1</Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <div className="space-y-3">
+                  <Label className="text-base font-medium">Banner 1</Label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
                     {settings.banner1_url ? (
-                      <img src={settings.banner1_url} alt="Banner 1" className="w-full h-20 mx-auto mb-2 object-cover rounded" />
+                      <div className="space-y-3">
+                        <img src={settings.banner1_url} alt="Banner 1" className="w-full h-24 mx-auto rounded-lg object-cover shadow-md" />
+                        <p className="text-sm text-green-600 font-medium">Banner carregado</p>
+                      </div>
                     ) : (
-                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <div className="space-y-3">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                      </div>
                     )}
-                    <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
                     <Input
                       type="file"
                       accept="image/*"
@@ -346,20 +347,25 @@ export default function DesignSettings() {
                     />
                     <Button asChild size="sm" variant="outline">
                       <label htmlFor="banner1-upload" className="cursor-pointer">
-                        Escolher Arquivo
+                        {settings.banner1_url ? 'Alterar Banner' : 'Escolher Arquivo'}
                       </label>
                     </Button>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Banner 2</Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                <div className="space-y-3">
+                  <Label className="text-base font-medium">Banner 2</Label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
                     {settings.banner2_url ? (
-                      <img src={settings.banner2_url} alt="Banner 2" className="w-full h-20 mx-auto mb-2 object-cover rounded" />
+                      <div className="space-y-3">
+                        <img src={settings.banner2_url} alt="Banner 2" className="w-full h-24 mx-auto rounded-lg object-cover shadow-md" />
+                        <p className="text-sm text-green-600 font-medium">Banner carregado</p>
+                      </div>
                     ) : (
-                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <div className="space-y-3">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <p className="text-sm text-gray-600">Clique para fazer upload</p>
+                      </div>
                     )}
-                    <p className="text-sm text-gray-600 mb-2">Clique para fazer upload</p>
                     <Input
                       type="file"
                       accept="image/*"
@@ -372,7 +378,7 @@ export default function DesignSettings() {
                     />
                     <Button asChild size="sm" variant="outline">
                       <label htmlFor="banner2-upload" className="cursor-pointer">
-                        Escolher Arquivo
+                        {settings.banner2_url ? 'Alterar Banner' : 'Escolher Arquivo'}
                       </label>
                     </Button>
                   </div>
