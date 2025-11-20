@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Search, Heart, Phone, Clock, Star } from 'lucide-react'
 
-export default function Preview() {
+const Preview = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [favorites, setFavorites] = useState<string[]>([])
 
@@ -55,8 +55,8 @@ export default function Preview() {
     const currentMinute = now.getMinutes()
     const currentTime = currentHour * 60 + currentMinute
     
-    const [startHour, startMinute] = startHour.split(':').map(Number)
-    const [endHour, endMinute] = endHour.split(':').map(Number)
+    const [startHour, startMinute] = '08:00'.split(':').map(Number)
+    const [endHour, endMinute] = '18:00'.split(':').map(Number)
     const startTime = startHour * 60 + startMinute
     const endTime = endHour * 60 + endMinute
     
@@ -207,3 +207,5 @@ export default function Preview() {
     </div>
   )
 }
+
+export default Preview
