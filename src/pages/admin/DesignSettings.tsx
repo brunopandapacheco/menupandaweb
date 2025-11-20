@@ -133,7 +133,7 @@ export default function DesignSettings() {
   return (
     <div className="space-y-6 px-4 sm:px-0">
       <div className="text-center sm:text-left pt-8 sm:pt-0">
-        <h1 className="text-3xl font-bold">Design</h1>
+        <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Design</h1>
         <p className="text-gray-600">Personalize a aparência do seu cardápio</p>
       </div>
 
@@ -149,11 +149,11 @@ export default function DesignSettings() {
             {/* Card Nome da Confeitaria */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Type className="w-5 h-5" />
                   Informações Básicas
                 </CardTitle>
-                <CardDescription>Nome e texto do rodapé do seu cardápio</CardDescription>
+                <CardDescription className="text-gray-600">Nome e texto do rodapé do seu cardápio</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -180,11 +180,11 @@ export default function DesignSettings() {
             {/* Card Cores Principais */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Palette className="w-5 h-5" />
                   Cores Principais
                 </CardTitle>
-                <CardDescription>Defina as cores principais do seu cardápio</CardDescription>
+                <CardDescription className="text-gray-600">Defina as cores principais do seu cardápio</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -227,11 +227,11 @@ export default function DesignSettings() {
             {/* Card Cores de Destaque */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Eye className="w-5 h-5" />
                   Cores de Destaque
                 </CardTitle>
-                <CardDescription>Personalize cores de texto e elementos visuais</CardDescription>
+                <CardDescription className="text-gray-600">Personalize cores de texto e elementos visuais</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -285,15 +285,15 @@ export default function DesignSettings() {
         <TabsContent value="paletas">
           <Card>
             <CardHeader>
-              <CardTitle>Paletas Prontas</CardTitle>
-              <CardDescription>Escolha uma paleta de cores pré-definida</CardDescription>
+              <CardTitle style={{ color: '#4A3531' }}>Paletas Prontas</CardTitle>
+              <CardDescription className="text-gray-600">Escolha uma paleta de cores pré-definida</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {colorPalettes.map((palette) => (
                   <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-primary">
                     <CardContent className="p-6">
-                      <h3 className="font-semibold mb-4 text-center">{palette.name}</h3>
+                      <h3 className="font-semibold mb-4 text-center" style={{ color: '#4A3531' }}>{palette.name}</h3>
                       <div className="space-y-3 mb-4">
                         {Object.entries(palette.colors).map(([key, color]) => (
                           <div key={key} className="flex items-center gap-3">
@@ -327,11 +327,11 @@ export default function DesignSettings() {
             {/* Card Logo */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Image className="w-5 h-5" />
                   Logo da Confeitaria
                 </CardTitle>
-                <CardDescription>Adicione o logo da sua marca</CardDescription>
+                <CardDescription className="text-gray-600">Adicione o logo da sua marca</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
@@ -371,11 +371,11 @@ export default function DesignSettings() {
             {/* Card Banner 1 */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Image className="w-5 h-5" />
                   Banner Principal
                 </CardTitle>
-                <CardDescription>Adicione um banner promocional</CardDescription>
+                <CardDescription className="text-gray-600">Adicione um banner promocional</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
@@ -415,11 +415,11 @@ export default function DesignSettings() {
             {/* Card Banner 2 */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Image className="w-5 h-5" />
                   Banner Secundário
                 </CardTitle>
-                <CardDescription>Adicione um segundo banner opcional</CardDescription>
+                <CardDescription className="text-gray-600">Adicione um segundo banner opcional</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">

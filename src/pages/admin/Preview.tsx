@@ -81,7 +81,7 @@ const Preview = () => {
                 <Smartphone className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg">Cardápio Público</h3>
+                <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>Cardápio Público</h3>
                 <p className="text-sm text-gray-600">
                   Compartilhe este link com seus clientes
                 </p>
@@ -164,7 +164,7 @@ const Preview = () => {
 
             {/* Categories */}
             <div className="mb-6">
-              <h3 className="font-semibold mb-3">Categorias</h3>
+              <h3 className="font-semibold mb-3" style={{ color: '#4A3531' }}>Categorias</h3>
               <div className="flex gap-3 overflow-x-auto pb-2">
                 {categories.map((category) => (
                   <div key={category} className="flex flex-col items-center min-w-fit">
@@ -182,7 +182,7 @@ const Preview = () => {
 
             {/* Products Preview */}
             <div className="mb-6">
-              <h3 className="font-semibold mb-3">Produtos</h3>
+              <h3 className="font-semibold mb-3" style={{ color: '#4A3531' }}>Produtos</h3>
               <div className="space-y-3">
                 {produtos.slice(0, 3).map((product) => (
                   <Card key={product.id} className="overflow-hidden">
@@ -201,7 +201,7 @@ const Preview = () => {
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h4 className="font-medium text-sm">{product.nome}</h4>
+                              <h4 className="font-medium text-sm" style={{ color: '#4A3531' }}>{product.nome}</h4>
                               <p className="text-xs text-gray-600 line-clamp-1">{product.descricao}</p>
                             </div>
                             <Button

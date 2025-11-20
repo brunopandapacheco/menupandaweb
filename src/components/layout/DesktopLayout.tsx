@@ -29,10 +29,10 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
                 key={tab.id}
                 variant={activeTab === tab.id ? 'default' : 'ghost'}
                 className={cn(
-                  "w-full justify-start gap-3 h-12 bg-white hover:bg-gray-100",
+                  "w-full justify-start gap-3 h-12 bg-white text-[#4A3531]",
                   activeTab === tab.id 
-                    ? "text-[#E89EAE] font-semibold shadow-md" 
-                    : "text-gray-700 hover:text-gray-900"
+                    ? "shadow-md hover:bg-gray-100" 
+                    : "hover:bg-gray-100"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >

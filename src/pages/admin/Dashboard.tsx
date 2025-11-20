@@ -9,55 +9,55 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 px-4 sm:px-0">
       <div className="text-center sm:text-left pt-8 sm:pt-0">
-        <h1 className="text-3xl font-bold text-pink-800">Painel</h1>
-        <p className="text-pink-600">Visão geral do seu negócio</p>
+        <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Painel</h1>
+        <p className="text-gray-600">Visão geral do seu negócio</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="hover:shadow-lg transition-shadow border-pink-200">
+        <Card className="hover:shadow-lg transition-shadow border-[#E89EAE]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-pink-700">Produtos Cadastrados</CardTitle>
+            <CardTitle className="text-sm font-medium" style={{ color: '#4A3531' }}>Produtos Cadastrados</CardTitle>
             <Cake className="h-4 w-4 text-pink-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-pink-800">24</div>
+            <div className="text-2xl font-bold" style={{ color: '#4A3531' }}>24</div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-shadow border-pink-200">
+        <Card className="hover:shadow-lg transition-shadow border-[#E89EAE]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-pink-700">Pedidos Realizados</CardTitle>
+            <CardTitle className="text-sm font-medium" style={{ color: '#4A3531' }}>Pedidos Realizados</CardTitle>
             <ShoppingCart className="h-4 w-4 text-pink-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-pink-800">142</div>
-            <p className="text-xs text-pink-600">
+            <div className="text-2xl font-bold" style={{ color: '#4A3531' }}>142</div>
+            <p className="text-xs text-gray-600">
               +18% desde o mês passado
             </p>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-shadow border-pink-200">
+        <Card className="hover:shadow-lg transition-shadow border-[#E89EAE]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-pink-700">Receita</CardTitle>
+            <CardTitle className="text-sm font-medium" style={{ color: '#4A3531' }}>Receita</CardTitle>
             <TrendingUp className="h-4 w-4 text-pink-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-pink-800">R$ 3.240</div>
-            <p className="text-xs text-pink-600">
+            <div className="text-2xl font-bold" style={{ color: '#4A3531' }}>R$ 3.240</div>
+            <p className="text-xs text-gray-600">
               +25% desde o mês passado
             </p>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-shadow border-pink-200">
+        <Card className="hover:shadow-lg transition-shadow border-[#E89EAE]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-pink-700">Clientes</CardTitle>
+            <CardTitle className="text-sm font-medium" style={{ color: '#4A3531' }}>Clientes</CardTitle>
             <Users className="h-4 w-4 text-pink-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-pink-800">89</div>
-            <p className="text-xs text-pink-600">
+            <div className="text-2xl font-bold" style={{ color: '#4A3531' }}>89</div>
+            <p className="text-xs text-gray-600">
               +12 novos este mês
             </p>
           </CardContent>
@@ -66,44 +66,44 @@ export default function Dashboard() {
 
       {/* Ações Rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-pink-400 border-pink-200" onClick={() => navigate('/admin')}>
+        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#E89EAE]" onClick={() => navigate('/admin')}>
           <CardContent className="p-6 text-center">
             <Plus className="w-8 h-8 mx-auto mb-2 text-pink-600" />
-            <h3 className="font-semibold text-pink-800">Novo Produto</h3>
-            <p className="text-sm text-pink-600">Adicionar item</p>
+            <h3 className="font-semibold" style={{ color: '#4A3531' }}>Novo Produto</h3>
+            <p className="text-sm text-gray-600">Adicionar item</p>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-pink-400 border-pink-200" onClick={() => navigate('/admin')}>
+        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#E89EAE]" onClick={() => navigate('/admin')}>
           <CardContent className="p-6 text-center">
             <Eye className="w-8 h-8 mx-auto mb-2 text-pink-600" />
-            <h3 className="font-semibold text-pink-800">Ver Cardápio</h3>
-            <p className="text-sm text-pink-600">Visualização</p>
+            <h3 className="font-semibold" style={{ color: '#4A3531' }}>Ver Cardápio</h3>
+            <p className="text-sm text-gray-600">Visualização</p>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-pink-400 border-pink-200" onClick={() => navigate('/admin')}>
+        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#E89EAE]" onClick={() => navigate('/admin')}>
           <CardContent className="p-6 text-center">
             <Cake className="w-8 h-8 mx-auto mb-2 text-pink-600" />
-            <h3 className="font-semibold text-pink-800">Produtos</h3>
-            <p className="text-sm text-pink-600">Gerenciar</p>
+            <h3 className="font-semibold" style={{ color: '#4A3531' }}>Produtos</h3>
+            <p className="text-sm text-gray-600">Gerenciar</p>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-pink-400 border-pink-200" onClick={() => navigate('/admin')}>
+        <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#E89EAE]" onClick={() => navigate('/admin')}>
           <CardContent className="p-6 text-center">
             <TrendingUp className="w-8 h-8 mx-auto mb-2 text-pink-600" />
-            <h3 className="font-semibold text-pink-800">Relatórios</h3>
-            <p className="text-sm text-pink-600">Análises</p>
+            <h3 className="font-semibold" style={{ color: '#4A3531' }}>Relatórios</h3>
+            <p className="text-sm text-gray-600">Análises</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-pink-200">
+        <Card className="border-[#E89EAE]">
           <CardHeader>
-            <CardTitle className="text-pink-800">Produtos em Destaque</CardTitle>
-            <CardDescription className="text-pink-600">Seus produtos mais vendidos</CardDescription>
+            <CardTitle style={{ color: '#4A3531' }}>Produtos em Destaque</CardTitle>
+            <CardDescription className="text-gray-600">Seus produtos mais vendidos</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -114,8 +114,8 @@ export default function Dashboard() {
               ].map((product, index) => (
                 <div key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-pink-50 transition-colors">
                   <div>
-                    <p className="font-medium text-pink-800">{product.name}</p>
-                    <p className="text-sm text-pink-600">{product.sales} vendas</p>
+                    <p className="font-medium" style={{ color: '#4A3531' }}>{product.name}</p>
+                    <p className="text-sm text-gray-600">{product.sales} vendas</p>
                   </div>
                   <Badge variant={product.status === 'promo' ? 'default' : 'secondary'} className="bg-pink-100 text-pink-800 hover:bg-pink-200">
                     {product.status === 'promo' ? 'Promoção' : 'Ativo'}
@@ -126,24 +126,24 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="border-pink-200">
+        <Card className="border-[#E89EAE]">
           <CardHeader>
-            <CardTitle className="text-pink-800">Status da Loja</CardTitle>
-            <CardDescription className="text-pink-600">Informações importantes</CardDescription>
+            <CardTitle style={{ color: '#4A3531' }}>Status da Loja</CardTitle>
+            <CardDescription className="text-gray-600">Informações importantes</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 rounded-lg bg-pink-50">
-                <span className="font-medium text-pink-800">Horário de Funcionamento</span>
+                <span className="font-medium" style={{ color: '#4A3531' }}>Horário de Funcionamento</span>
                 <Badge variant="default" className="bg-pink-100 text-pink-800 hover:bg-pink-200">Aberto</Badge>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-pink-50">
-                <span className="font-medium text-pink-800">Entrega</span>
+                <span className="font-medium" style={{ color: '#4A3531' }}>Entrega</span>
                 <Badge variant="secondary" className="bg-pink-100 text-pink-800 hover:bg-pink-200">Disponível</Badge>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-pink-50">
-                <span className="font-medium text-pink-800">Formas de Pagamento</span>
-                <span className="text-sm text-pink-600">Pix, Cartão, Dinheiro</span>
+                <span className="font-medium" style={{ color: '#4A3531' }}>Formas de Pagamento</span>
+                <span className="text-sm text-gray-600">Pix, Cartão, Dinheiro</span>
               </div>
             </div>
           </CardContent>

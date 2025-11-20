@@ -57,18 +57,18 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Configurações</h1>
+        <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Configurações</h1>
         <p className="text-gray-600">Configure as informações do seu negócio</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
               <Clock className="w-5 h-5" />
               Horário de Funcionamento
             </CardTitle>
-            <CardDescription>Defina seus horários de atendimento</CardDescription>
+            <CardDescription className="text-gray-600">Defina seus horários de atendimento</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -96,11 +96,11 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
               <Phone className="w-5 h-5" />
               Contato
             </CardTitle>
-            <CardDescription>Informações para contato</CardDescription>
+            <CardDescription className="text-gray-600">Informações para contato</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -117,11 +117,11 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
               <CreditCard className="w-5 h-5" />
               Formas de Pagamento
             </CardTitle>
-            <CardDescription>Selecione as formas aceitas</CardDescription>
+            <CardDescription className="text-gray-600">Selecione as formas aceitas</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -141,11 +141,11 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
               <Truck className="w-5 h-5" />
               Entrega
             </CardTitle>
-            <CardDescription>Configure as opções de entrega</CardDescription>
+            <CardDescription className="text-gray-600">Configure as opções de entrega</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-2">
@@ -175,8 +175,8 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Resumo das Configurações</CardTitle>
-          <CardDescription>Visualize todas as configurações atuais</CardDescription>
+          <CardTitle style={{ color: '#4A3531' }}>Resumo das Configurações</CardTitle>
+          <CardDescription className="text-gray-600">Visualize todas as configurações atuais</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

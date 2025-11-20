@@ -79,7 +79,7 @@ export default function ProductManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Produtos</h1>
+          <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Produtos</h1>
           <p className="text-gray-600">Gerencie seus produtos</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -222,7 +222,7 @@ export default function ProductManager() {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-lg">{product.nome}</CardTitle>
+                  <CardTitle className="text-lg" style={{ color: '#4A3531' }}>{product.nome}</CardTitle>
                   <CardDescription>{product.categoria}</CardDescription>
                 </div>
                 <div className="flex gap-1">
