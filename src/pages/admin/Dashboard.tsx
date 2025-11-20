@@ -7,8 +7,8 @@ export default function Dashboard() {
   const navigate = useNavigate()
 
   return (
-    <div className="space-y-8">
-      {/* Header alinhado com o menu */}
+    <div className="space-y-8 pt-8">
+      {/* Header alinhado com o menu - COM MAIOR ESPAÇAMENTO */}
       <div className="border-b border-gray-200 pb-6">
         <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
         <p className="text-gray-600 mt-2">Visão geral do seu negócio</p>
