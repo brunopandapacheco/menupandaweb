@@ -1,15 +1,42 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cake, Palette, Smartphone, Users } from "lucide-react";
+import { Cake, Palette, Smartphone, Users, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
 
+  const isSupabaseConfigured = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
       <div className="container mx-auto px-4 py-8">
+        {/* Alerta de Configuração */}
+        {!isSupabaseConfigured && (
+          <Card className="mb-8 border-orange-200 bg-orange-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-orange-800">
+                <AlertTriangle className="w-5 h-5" />
+                Configuração Necessária
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-orange-700 mb-4">
+                O Supabase não está configurado. Para usar o sistema, você precisa:
+              </p>
+              <ol className="list-decimal list-inside text-orange-700 space-y-2">
+                <li>Criar uma conta gratuita no <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="underline">supabase.com</a></li>
+                <li>Criar um novo projeto</li>
+                <li>Ir em Settings &gt; API no dashboard</li>
+                <li>Copiar a URL e a chave "anon"</li>
+                <li>Editar o arquivo <code className="bg-orange-100 px-2 py-1 rounded">.env.local</code> com seus dados</li>
+                <li>Reiniciar o servidor de desenvolvimento</li>
+              </ol>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
@@ -20,8 +47,12 @@ const Index = () => {
             Gerencie seus produtos e impressione seus clientes.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button size="lg" onClick={() => navigate('/login')}>
-              Começar Agora
+            <Button 
+              size="lg" 
+              onClick={() => navigate('/login')}
+              disabled={!isSupabaseConfigured}
+            >
+              {isSupabaseConfigured ? 'Começar Agora' : 'Configure o Supabase Primeiro'}
             </Button>
             <Button variant="outline" size="lg">
               Ver Demonstração
@@ -88,8 +119,12 @@ const Index = () => {
           <p className="text-gray-600 mb-6">
             Junte-se a centenas de confeiteiras que já usam nossa plataforma.
           </p>
-          <Button size="lg" onClick={() => navigate('/login')}>
-            Criar Minha Loja Grátis
+          <Button 
+            size="lg" 
+            onClick={() => navigate('/login')}
+            disabled={!isSupabaseConfigured}
+          >
+            {isSupabaseConfigured ? 'Criar Minha Loja Grátis' : 'Configure o Supabase Primeiro'}
           </Button>
         </div>
       </div>
