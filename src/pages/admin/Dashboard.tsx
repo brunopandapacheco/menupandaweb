@@ -9,7 +9,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 px-4 sm:px-0">
       <div className="text-center sm:text-left pt-8 sm:pt-0">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <h1 className="text-3xl font-bold">Painel</h1>
         <p className="text-gray-600">Visão geral do seu negócio</p>
       </div>
 

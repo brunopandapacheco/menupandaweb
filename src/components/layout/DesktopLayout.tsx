@@ -11,7 +11,7 @@ interface DesktopLayoutProps {
 
 export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }: DesktopLayoutProps) {
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'dashboard', label: 'Painel', icon: Home },
     { id: 'preview', label: 'Prévia do Cardápio', icon: Eye },
     { id: 'design', label: 'Design', icon: Palette },
     { id: 'products', label: 'Produtos', icon: ShoppingBag },

@@ -11,7 +11,7 @@ interface TabletLayoutProps {
 
 export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }: TabletLayoutProps) {
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'dashboard', label: 'Painel', icon: Home },
     { id: 'preview', label: 'Prévia', icon: Menu },
     { id: 'design', label: 'Design', icon: Palette },
     { id: 'products', label: 'Produtos', icon: ShoppingBag },
