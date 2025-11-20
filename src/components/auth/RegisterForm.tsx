@@ -32,40 +32,21 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
     setLoading(true)
 
     try {
-      console.log('🔐 Tentando criar conta...')
-      console.log('Email:', email)
-      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL)
-
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
       })
 
-      console.log('📤 Resposta do Supabase:', { data, error })
-
       if (error) {
-        console.error('❌ Erro no cadastro:', error)
-        
-        if (error.message.includes('User already registered')) {
-          throw new Error('Este email já está cadastrado')
-        } else if (error.message.includes('Password should be')) {
-          throw new Error('A senha deve ter pelo menos 6 caracteres')
-        } else if (error.message.includes('fetch')) {
-          throw new Error('Erro de conexão com o servidor. Verifique sua internet.')
-        } else {
-          throw new Error(error.message)
-        }
+        throw error
       }
 
       if (data.user) {
-        console.log('✅ Cadastro bem-sucedido:', data.user.email)
-        showSuccess('Cadastro realizado! Verifique seu email para confirmar.')
+        showSuccess('Cadastro realizado! Faça login para continuar.')
         onSuccess?.()
-      } else {
-        throw new Error('Erro desconhecido ao criar conta')
       }
     } catch (error: any) {
-      console.error('❌ Erro no cadastro:', error)
+      console.error('Erro no cadastro:', error)
       showError(error.message || 'Erro ao fazer cadastro')
     } finally {
       setLoading(false)
