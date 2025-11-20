@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Home, Settings, Palette, ShoppingBag, Eye, Menu } from 'lucide-react'
+import { Home, Settings, Palette, ShoppingBag, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -7,10 +7,9 @@ interface DesktopLayoutProps {
   children: ReactNode
   activeTab?: string
   onTabChange?: (tab: string) => void
-  preview?: ReactNode
 }
 
-export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange, preview }: DesktopLayoutProps) {
+export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }: DesktopLayoutProps) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'preview', label: 'Prévia do Cardápio', icon: Eye },
@@ -40,19 +39,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange, 
         </div>
       </div>
       
-      <div className="flex-1 flex">
-        <div className="flex-1 p-6">
-          {children}
-        </div>
-        
-        {preview && (
-          <div className="w-96 bg-white border-l border-gray-200 p-4 overflow-y-auto">
-            <div className="sticky top-0">
-              <h3 className="font-semibold mb-4">Prévia em Tempo Real</h3>
-              {preview}
-            </div>
-          </div>
-        )}
+      <div className="flex-1 p-6">
+        {children}
       </div>
     </div>
   )

@@ -31,13 +31,6 @@ export default function AdminLayout() {
     }
   }
 
-  const renderPreview = () => {
-    if (activeTab === 'design' || activeTab === 'preview') {
-      return <Preview />
-    }
-    return null
-  }
-
   const layoutProps = {
     activeTab,
     onTabChange: setActiveTab,
@@ -54,7 +47,7 @@ export default function AdminLayout() {
           {renderContent()}
         </TabletLayout>
       ) : (
-        <DesktopLayout {...layoutProps} preview={renderPreview()}>
+        <DesktopLayout {...layoutProps}>
           {renderContent()}
         </DesktopLayout>
       )}
