@@ -26,11 +26,11 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#E89EAE] border-r border-pink-200 flex flex-col">
-        {/* Logo do Sistema */}
-        <div className="p-6 border-b border-pink-300">
+        {/* Logo do Sistema - COM MAIOR ESPAÇAMENTO */}
+        <div className="p-8 pt-12 border-b border-pink-300">
           <div className="flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg overflow-hidden">
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
                 {logoUrl ? (
                   <img 
                     src={logoUrl} 
@@ -42,14 +42,14 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
                 )}
               </div>
               <h2 className="text-white font-bold text-lg">{systemName}</h2>
-              <p className="text-white/80 text-xs">{systemSubtitle}</p>
+              <p className="text-white/80 text-xs mt-1">{systemSubtitle}</p>
             </div>
           </div>
         </div>
         
-        {/* Menu de Navegação */}
-        <div className="flex-1 p-4">
-          <div className="space-y-2">
+        {/* Menu de Navegação - COM MAIOR ESPAÇAMENTO */}
+        <div className="flex-1 p-6 pt-8">
+          <div className="space-y-3">
             {tabs.map((tab) => {
               const Icon = tab.icon
               return (
@@ -72,8 +72,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
           </div>
         </div>
         
-        {/* Footer do Menu */}
-        <div className="p-4 border-t border-pink-300">
+        {/* Footer do Menu - COM MAIOR ESPAÇAMENTO */}
+        <div className="p-6 pb-8 border-t border-pink-300">
           <div className="text-center">
             <p className="text-white/70 text-xs">© 2025 {systemName}</p>
             <p className="text-white/60 text-xs">Todos os direitos reservados</p>
