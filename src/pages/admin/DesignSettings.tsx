@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, Palette, Eye } from 'lucide-react'
+import { Upload, Palette, Eye, Type, Image } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { uploadImage } from '@/services/database'
@@ -145,13 +145,17 @@ export default function DesignSettings() {
         </TabsList>
 
         <TabsContent value="cores">
-          <Card>
-            <CardHeader>
-              <CardTitle>Configurações de Cores</CardTitle>
-              <CardDescription>Escolha as cores do seu cardápio</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            {/* Card Nome da Confeitaria */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Type className="w-5 h-5" />
+                  Informações Básicas
+                </CardTitle>
+                <CardDescription>Nome e texto do rodapé do seu cardápio</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="nome_confeitaria">Nome da Confeitaria</Label>
                   <Input
@@ -170,76 +174,112 @@ export default function DesignSettings() {
                     placeholder="Informações de contato"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cor_borda">Cor Principal</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="color"
-                      value={settings.cor_borda}
-                      onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                      className="w-16 h-10"
-                    />
-                    <Input
-                      value={settings.cor_borda}
-                      onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                      placeholder="#ec4899"
-                    />
+              </CardContent>
+            </Card>
+
+            {/* Card Cores Principais */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Palette className="w-5 h-5" />
+                  Cores Principais
+                </CardTitle>
+                <CardDescription>Defina as cores principais do seu cardápio</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cor_borda">Cor Principal</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={settings.cor_borda}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
+                        className="w-16 h-10"
+                      />
+                      <Input
+                        value={settings.cor_borda}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
+                        placeholder="#ec4899"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cor_background">Cor do Background</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={settings.cor_background}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                        className="w-16 h-10"
+                      />
+                      <Input
+                        value={settings.cor_background}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                        placeholder="#fef2f2"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cor_background">Cor do Background</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="color"
-                      value={settings.cor_background}
-                      onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                      className="w-16 h-10"
-                    />
-                    <Input
-                      value={settings.cor_background}
-                      onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                      placeholder="#fef2f2"
-                    />
+              </CardContent>
+            </Card>
+
+            {/* Card Cores de Destaque */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Eye className="w-5 h-5" />
+                  Cores de Destaque
+                </CardTitle>
+                <CardDescription>Personalize cores de texto e elementos visuais</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cor_nome">Cor do Nome</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={settings.cor_nome}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                        className="w-16 h-10"
+                      />
+                      <Input
+                        value={settings.cor_nome}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                        placeholder="#be185d"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="background_topo_color">Cor do Topo</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={settings.background_topo_color}
+                        onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
+                        className="w-16 h-10"
+                      />
+                      <Input
+                        value={settings.background_topo_color}
+                        onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
+                        placeholder="#fce7f3"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cor_nome">Cor do Nome</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="color"
-                      value={settings.cor_nome}
-                      onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                      className="w-16 h-10"
-                    />
-                    <Input
-                      value={settings.cor_nome}
-                      onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                      placeholder="#be185d"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="background_topo_color">Cor do Topo</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="color"
-                      value={settings.background_topo_color}
-                      onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                      className="w-16 h-10"
-                    />
-                    <Input
-                      value={settings.background_topo_color}
-                      onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                      placeholder="#fce7f3"
-                    />
-                  </div>
-                </div>
-              </div>
-              <Button onClick={handleSave} className="w-full" size="lg">
-                Salvar Configurações
-              </Button>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Card Salvar */}
+            <Card className="border-primary/20 bg-primary/5">
+              <CardContent className="p-6">
+                <Button onClick={handleSave} className="w-full" size="lg">
+                  Salvar Todas as Configurações
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="paletas">
@@ -283,109 +323,139 @@ export default function DesignSettings() {
         </TabsContent>
 
         <TabsContent value="imagens">
-          <Card>
-            <CardHeader>
-              <CardTitle>Imagens</CardTitle>
-              <CardDescription>Faça upload do logo e banners</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-3">
-                  <Label className="text-base font-medium">Logo</Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
-                    {settings.logo_url ? (
-                      <div className="space-y-3">
-                        <img src={settings.logo_url} alt="Logo" className="w-20 h-20 mx-auto rounded-lg object-cover shadow-md" />
-                        <p className="text-sm text-green-600 font-medium">Logo carregado</p>
+          <div className="space-y-6">
+            {/* Card Logo */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Image className="w-5 h-5" />
+                  Logo da Confeitaria
+                </CardTitle>
+                <CardDescription>Adicione o logo da sua marca</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
+                  {settings.logo_url ? (
+                    <div className="space-y-4">
+                      <img src={settings.logo_url} alt="Logo" className="w-24 h-24 mx-auto rounded-lg object-cover shadow-md" />
+                      <p className="text-sm text-green-600 font-medium">Logo carregado com sucesso</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Upload className="mx-auto h-16 w-16 text-gray-400" />
+                      <div>
+                        <p className="text-lg font-medium text-gray-600">Logo da Confeitaria</p>
+                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="text-sm text-gray-600">Clique para fazer upload</p>
-                      </div>
-                    )}
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      id="logo-upload"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) handleImageUpload(file, 'logo')
-                      }}
-                    />
-                    <Button asChild size="sm" variant="outline">
-                      <label htmlFor="logo-upload" className="cursor-pointer">
-                        {settings.logo_url ? 'Alterar Logo' : 'Escolher Arquivo'}
-                      </label>
-                    </Button>
-                  </div>
+                    </div>
+                  )}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="logo-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageUpload(file, 'logo')
+                    }}
+                  />
+                  <Button asChild size="sm" variant="outline">
+                    <label htmlFor="logo-upload" className="cursor-pointer">
+                      {settings.logo_url ? 'Alterar Logo' : 'Escolher Arquivo'}
+                    </label>
+                  </Button>
                 </div>
-                <div className="space-y-3">
-                  <Label className="text-base font-medium">Banner 1</Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
-                    {settings.banner1_url ? (
-                      <div className="space-y-3">
-                        <img src={settings.banner1_url} alt="Banner 1" className="w-full h-24 mx-auto rounded-lg object-cover shadow-md" />
-                        <p className="text-sm text-green-600 font-medium">Banner carregado</p>
+              </CardContent>
+            </Card>
+
+            {/* Card Banner 1 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Image className="w-5 h-5" />
+                  Banner Principal
+                </CardTitle>
+                <CardDescription>Adicione um banner promocional</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
+                  {settings.banner1_url ? (
+                    <div className="space-y-4">
+                      <img src={settings.banner1_url} alt="Banner 1" className="w-full h-32 mx-auto rounded-lg object-cover shadow-md" />
+                      <p className="text-sm text-green-600 font-medium">Banner carregado com sucesso</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Upload className="mx-auto h-16 w-16 text-gray-400" />
+                      <div>
+                        <p className="text-lg font-medium text-gray-600">Banner Principal</p>
+                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="text-sm text-gray-600">Clique para fazer upload</p>
-                      </div>
-                    )}
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      id="banner1-upload"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) handleImageUpload(file, 'banner1')
-                      }}
-                    />
-                    <Button asChild size="sm" variant="outline">
-                      <label htmlFor="banner1-upload" className="cursor-pointer">
-                        {settings.banner1_url ? 'Alterar Banner' : 'Escolher Arquivo'}
-                      </label>
-                    </Button>
-                  </div>
+                    </div>
+                  )}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="banner1-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageUpload(file, 'banner1')
+                    }}
+                  />
+                  <Button asChild size="sm" variant="outline">
+                    <label htmlFor="banner1-upload" className="cursor-pointer">
+                      {settings.banner1_url ? 'Alterar Banner' : 'Escolher Arquivo'}
+                    </label>
+                  </Button>
                 </div>
-                <div className="space-y-3">
-                  <Label className="text-base font-medium">Banner 2</Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-colors">
-                    {settings.banner2_url ? (
-                      <div className="space-y-3">
-                        <img src={settings.banner2_url} alt="Banner 2" className="w-full h-24 mx-auto rounded-lg object-cover shadow-md" />
-                        <p className="text-sm text-green-600 font-medium">Banner carregado</p>
+              </CardContent>
+            </Card>
+
+            {/* Card Banner 2 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Image className="w-5 h-5" />
+                  Banner Secundário
+                </CardTitle>
+                <CardDescription>Adicione um segundo banner opcional</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
+                  {settings.banner2_url ? (
+                    <div className="space-y-4">
+                      <img src={settings.banner2_url} alt="Banner 2" className="w-full h-32 mx-auto rounded-lg object-cover shadow-md" />
+                      <p className="text-sm text-green-600 font-medium">Banner carregado com sucesso</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Upload className="mx-auto h-16 w-16 text-gray-400" />
+                      <div>
+                        <p className="text-lg font-medium text-gray-600">Banner Secundário</p>
+                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="text-sm text-gray-600">Clique para fazer upload</p>
-                      </div>
-                    )}
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      id="banner2-upload"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) handleImageUpload(file, 'banner2')
-                      }}
-                    />
-                    <Button asChild size="sm" variant="outline">
-                      <label htmlFor="banner2-upload" className="cursor-pointer">
-                        {settings.banner2_url ? 'Alterar Banner' : 'Escolher Arquivo'}
-                      </label>
-                    </Button>
-                  </div>
+                    </div>
+                  )}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="banner2-upload"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageUpload(file, 'banner2')
+                    }}
+                  />
+                  <Button asChild size="sm" variant="outline">
+                    <label htmlFor="banner2-upload" className="cursor-pointer">
+                      {settings.banner2_url ? 'Alterar Banner' : 'Escolher Arquivo'}
+                    </label>
+                  </Button>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
