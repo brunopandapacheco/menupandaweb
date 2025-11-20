@@ -1,0 +1,192 @@
+import { useState } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Clock, Phone, CreditCard, Truck } from 'lucide-react'
+import { showSuccess } from '@/utils/toast'
+
+export default function Settings() {
+  const [settings, setSettings] = useState({
+    horario_funcionamento_inicio: '08:00',
+    horario_funcionamento_fim: '18:00',
+    telefone: '(11) 99999-9999',
+    meios_pagamento: ['Pix', 'Cartão de Crédito', 'Dinheiro'],
+    entrega: true,
+    taxa_entrega: 5.00,
+  })
+
+  const handleSave = () => {
+    showSuccess('Configurações salvas com sucesso!')
+  }
+
+  const togglePaymentMethod = (method: string) => {
+    setSettings(prev => ({
+      ...prev,
+      meios_pagamento: prev.meios_pagamento.includes(method)
+        ? prev.meios_pagamento.filter(m => m !== method)
+        : [...prev.meios_pagamento, method]
+    }))
+  }
+
+  const paymentMethods = ['Pix', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro', 'PicPay']
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Configurações</h1>
+        <p className="text-gray-600">Configure as informações do seu negócio</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              Horário de Funcionamento
+            </CardTitle>
+            <CardDescription>Defina seus horários de atendimento</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="horario_inicio">Abre às</Label>
+                <Input
+                  id="horario_inicio"
+                  type="time"
+                  value={settings.horario_funcionamento_inicio}
+                  onChange={(e) => setSettings(prev => ({ ...prev, horario_funcionamento_inicio: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="horario_fim">Fecha às</Label>
+                <Input
+                  id="horario_fim"
+                  type="time"
+                  value={settings.horario_funcionamento_fim}
+                  onChange={(e) => setSettings(prev => ({ ...prev, horario_funcionamento_fim: e.target.value }))}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Phone className="w-5 h-5" />
+              Contato
+            </CardTitle>
+            <CardDescription>Informações para contato</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Label htmlFor="telefone">Telefone</Label>
+              <Input
+                id="telefone"
+                value={settings.telefone}
+                onChange={(e) => setSettings(prev => ({ ...prev, telefone: e.target.value }))}
+                placeholder="(00) 00000-0000"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="w-5 h-5" />
+              Formas de Pagamento
+            </CardTitle>
+            <CardDescription>Selecione as formas aceitas</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {paymentMethods.map((method) => (
+                <div key={method} className="flex items-center space-x-2">
+                  <Switch
+                    id={method}
+                    checked={settings.meios_pagamento.includes(method)}
+                    onCheckedChange={() => togglePaymentMethod(method)}
+                  />
+                  <Label htmlFor={method}>{method}</Label>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Truck className="w-5 h-5" />
+              Entrega
+            </CardTitle>
+            <CardDescription>Configure as opções de entrega</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="entrega"
+                checked={settings.entrega}
+                onCheckedChange={(checked) => setSettings(prev => ({ ...prev, entrega: checked }))}
+              />
+              <Label htmlFor="entrega">Faz entrega</Label>
+            </div>
+            
+            {settings.entrega && (
+              <div className="space-y-2">
+                <Label htmlFor="taxa_entrega">Taxa de Entrega</Label>
+                <Input
+                  id="taxa_entrega"
+                  type="number"
+                  step="0.01"
+                  value={settings.taxa_entrega}
+                  onChange={(e) => setSettings(prev => ({ ...prev, taxa_entrega: parseFloat(e.target.value) }))}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Resumo das Configurações</CardTitle>
+          <CardDescription>Visualize todas as configurações atuais</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <p className="text-sm text-gray-600">Horário de Funcionamento</p>
+              <p className="font-medium">
+                {settings.horario_funcionamento_inicio} - {settings.horario_funcionamento_fim}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Telefone</p>
+              <p className="font-medium">{settings.telefone}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Entrega</p>
+              <p className="font-medium">
+                {settings.entrega ? `Sim (R$ ${settings.taxa_entrega.toFixed(2)})` : 'Não'}
+              </p>
+            </div>
+            <div className="md:col-span-2 lg:col-span-1">
+              <p className="text-sm text-gray-600">Pagamentos</p>
+              <p className="font-medium">{settings.meios_pagamento.join(', ')}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-end">
+        <Button onClick={handleSave} size="lg">
+          Salvar Todas as Configurações
+        </Button>
+      </div>
+    </div>
+  )
+}
