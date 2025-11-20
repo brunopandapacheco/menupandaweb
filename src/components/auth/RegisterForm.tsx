@@ -27,16 +27,27 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
     setLoading(true)
 
     try {
+      // Verificar se as variáveis de ambiente estão configuradas
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        throw new Error('Configuração do Supabase não encontrada. Verifique as variáveis de ambiente.')
+      }
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
       })
 
-      if (error) throw error
+      if (error) {
+        if (error.message.includes('fetch')) {
+          throw new Error('Erro de conexão. Verifique sua internet e as configurações do Supabase.')
+        }
+        throw error
+      }
 
       showSuccess('Cadastro realizado! Verifique seu email para confirmar.')
       onSuccess?.()
     } catch (error: any) {
+      console.error('Erro no cadastro:', error)
       showError(error.message || 'Erro ao fazer cadastro')
     } finally {
       setLoading(false)
