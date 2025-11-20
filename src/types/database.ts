@@ -6,6 +6,7 @@ export interface User {
 
 export interface DesignSettings {
   user_id: string
+  slug?: string
   logo_url?: string
   nome_confeitaria: string
   cor_borda: string

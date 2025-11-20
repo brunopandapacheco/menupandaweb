@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, Palette } from 'lucide-react'
+import { Upload, Palette, Link } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { uploadImage } from '@/services/database'
@@ -13,6 +13,7 @@ export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
+    slug: 'doces-da-vo',
     cor_borda: '#ec4899',
     cor_background: '#fef2f2',
     cor_nome: '#be185d',
@@ -27,6 +28,7 @@ export default function DesignSettings() {
     if (designSettings) {
       setSettings({
         nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
+        slug: designSettings.slug || 'doces-da-vo',
         cor_borda: designSettings.cor_borda || '#ec4899',
         cor_background: designSettings.cor_background || '#fef2f2',
         cor_nome: designSettings.cor_nome || '#be185d',
@@ -106,6 +108,24 @@ export default function DesignSettings() {
     }
   }
 
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }
+
+  const handleNameChange = (name: string) => {
+    const newSettings = { 
+      ...settings, 
+      nome_confeitaria: name,
+      slug: generateSlug(name)
+    }
+    setSettings(newSettings)
+  }
+
   if (loading) {
     return <div>Carregando...</div>
   }
@@ -137,8 +157,25 @@ export default function DesignSettings() {
                   <Input
                     id="nome_confeitaria"
                     value={settings.nome_confeitaria}
-                    onChange={(e) => setSettings(prev => ({ ...prev, nome_confeitaria: e.target.value }))}
+                    onChange={(e) => handleNameChange(e.target.value)}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="slug">URL do Cardápio</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="slug"
+                      value={settings.slug}
+                      onChange={(e) => setSettings(prev => ({ ...prev, slug: e.target.value }))}
+                      placeholder="url-amigavel"
+                    />
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Link className="w-4 h-4 mr-1" />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Seu cardápio ficará disponível em: /cardapio/{settings.slug}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="cor_borda">Cor da Borda</Label>

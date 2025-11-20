@@ -37,40 +37,35 @@ export default function CardapioPublico() {
     try {
       setLoading(true)
       
-      // Buscar usuário pelo slug (nome da confeitaria)
-      const { data: userData, error: userError } = await supabase
+      // Buscar usuário pelo slug
+      const { data: designData, error: designError } = await supabase
         .from('design_settings')
-        .select('user_id')
-        .eq('nome_confeitaria', slug)
+        .select('*')
+        .eq('slug', slug)
         .single()
 
-      if (userError || !userData) {
-        console.error('Confeitaria não encontrada:', userError)
+      if (designError || !designData) {
+        console.error('Confeitaria não encontrada:', designError)
         setLoading(false)
         return
       }
 
       // Carregar dados do cardápio
-      const [designData, configData, produtosData] = await Promise.all([
-        supabase
-          .from('design_settings')
-          .select('*')
-          .eq('user_id', userData.user_id)
-          .single(),
+      const [configData, produtosData] = await Promise.all([
         supabase
           .from('configuracoes')
           .select('*')
-          .eq('user_id', userData.user_id)
+          .eq('user_id', designData.user_id)
           .single(),
         supabase
           .from('produtos')
           .select('*')
-          .eq('user_id', userData.user_id)
+          .eq('user_id', designData.user_id)
           .eq('disponivel', true)
           .order('created_at', { ascending: false })
       ])
 
-      setDesignSettings(designData.data)
+      setDesignSettings(designData)
       setConfiguracoes(configData.data)
       setProdutos(produtosData.data || [])
     } catch (error) {
