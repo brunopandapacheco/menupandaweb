@@ -20,7 +20,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
 
   // 🌐 Configuração via variável de ambiente
   const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
-  const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Cardápio Digital'
+  const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Menu Bolo'
   const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
 
   return (
@@ -75,7 +75,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
         {/* Footer do Menu */}
         <div className="p-4 border-t border-pink-300">
           <div className="text-center">
-            <p className="text-white/70 text-xs">© 2024 {systemName}</p>
+            <p className="text-white/70 text-xs">© 2025 {systemName}</p>
             <p className="text-white/60 text-xs">Todos os direitos reservados</p>
           </div>
         </div>
