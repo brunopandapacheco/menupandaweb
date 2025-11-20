@@ -3,16 +3,23 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// Para desenvolvimento, mostrar mensagem clara se as variáveis não existirem
+// Debug: mostrar valores das variáveis de ambiente
+console.log('🔍 Debug Supabase:')
+console.log('URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada')
+console.log('Key:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada')
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Variáveis de ambiente do Supabase não encontradas')
-  console.warn('Por favor, configure as seguintes variáveis de ambiente:')
-  console.warn('- VITE_SUPABASE_URL: URL do seu projeto Supabase')
-  console.warn('- VITE_SUPABASE_ANON_KEY: Chave anônima do seu projeto Supabase')
-  console.warn('Crie um arquivo .env.local na raiz do projeto com essas variáveis.')
+  console.error('❌ ERRO: Variáveis de ambiente do Supabase não encontradas')
+  console.error('Verifique se o arquivo .env.local contém:')
+  console.error('VITE_SUPABASE_URL=sua_url_aqui')
+  console.error('VITE_SUPABASE_ANON_KEY=sua_chave_aqui')
+  throw new Error('Configuração do Supabase não encontrada. Verifique as variáveis de ambiente.')
 }
 
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co', 
-  supabaseAnonKey || 'placeholder-key'
-)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+})

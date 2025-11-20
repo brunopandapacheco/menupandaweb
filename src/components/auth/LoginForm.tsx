@@ -20,27 +20,41 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     setLoading(true)
 
     try {
-      // Verificar se as variáveis de ambiente estão configuradas
-      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-        throw new Error('Configuração do Supabase não encontrada. Verifique as variáveis de ambiente.')
-      }
+      console.log('🔐 Tentando fazer login...')
+      console.log('Email:', email)
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL)
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
+      console.log('📤 Resposta do Supabase:', { data, error })
+
       if (error) {
-        if (error.message.includes('fetch')) {
-          throw new Error('Erro de conexão. Verifique sua internet e as configurações do Supabase.')
+        console.error('❌ Erro de autenticação:', error)
+        
+        // Tratamento específico para erros comuns
+        if (error.message.includes('Invalid login credentials')) {
+          throw new Error('Email ou senha incorretos')
+        } else if (error.message.includes('Email not confirmed')) {
+          throw new Error('Email não confirmado. Verifique sua caixa de entrada.')
+        } else if (error.message.includes('fetch')) {
+          throw new Error('Erro de conexão com o servidor. Verifique sua internet.')
+        } else {
+          throw new Error(error.message)
         }
-        throw error
       }
 
-      showSuccess('Login realizado com sucesso!')
-      onSuccess?.()
+      if (data.user) {
+        console.log('✅ Login bem-sucedido:', data.user.email)
+        showSuccess('Login realizado com sucesso!')
+        onSuccess?.()
+      } else {
+        throw new Error('Erro desconhecido ao fazer login')
+      }
     } catch (error: any) {
-      console.error('Erro no login:', error)
+      console.error('❌ Erro no login:', error)
       showError(error.message || 'Erro ao fazer login')
     } finally {
       setLoading(false)
@@ -63,6 +77,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              placeholder="seu@email.com"
             />
           </div>
           <div className="space-y-2">
@@ -73,6 +88,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder="••••••••"
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
