@@ -19,7 +19,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
   ]
 
   return (
-    <div className="min-h-screen bg-pink-50 flex">
+    <div className="min-h-screen bg-pink-600 flex">
       <div className="w-64 bg-white border-r border-pink-200 p-4">
         <div className="space-y-2">
           {tabs.map((tab) => {
