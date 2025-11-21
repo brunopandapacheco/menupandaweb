@@ -33,7 +33,7 @@ export default function Login() {
 
   if (!envConfigured) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-pink-900 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Configuração Necessária</CardTitle>
@@ -63,7 +63,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
       <div className="w-full max-w-md">
         {mode === 'login' && (
           <div className="space-y-4">
