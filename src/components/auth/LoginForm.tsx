@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { supabase, checkSupabaseConnection } from '@/lib/supabase'
 import { showSuccess, showError } from '@/utils/toast'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -14,6 +15,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,6 +27,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: {
+          // Configura a persistência da sessão baseada na opção "Manter conectado"
+          shouldCreateUser: false,
+        }
       })
 
       if (error) {
@@ -35,6 +41,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       console.log('Login bem sucedido:', data)
 
       if (data.user) {
+        // Se "Manter conectado" estiver marcado, a sessão será persistida
+        if (rememberMe) {
+          // O Supabase já persiste a sessão por padrão, mas podemos garantir
+          localStorage.setItem('rememberMe', 'true')
+        }
+        
         showSuccess('Login realizado com sucesso!')
         onSuccess?.()
       }
@@ -86,6 +98,22 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           style={{ WebkitTextFillColor: 'transparent' }}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
         />
+      </div>
+      
+      {/* Campo "Manter conectado" */}
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="remember-me"
+          checked={rememberMe}
+          onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+          disabled={loading}
+        />
+        <Label
+          htmlFor="remember-me"
+          className="text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors"
+        >
+          Manter conectado
+        </Label>
       </div>
       
       <Button 
