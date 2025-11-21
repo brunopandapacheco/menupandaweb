@@ -66,14 +66,12 @@ export default function Login() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
       {/* Logo do Sistema - Centralizado e destacado */}
       <div className="flex flex-col items-center mb-8">
-        <div className="w-32 h-32 bg-white/95 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30 mb-4">
-          {/* Logo da empresa */}
-          <img 
-            src="/logoempresa.png" 
-            alt="Logo da Empresa" 
-            className="w-24 h-24 object-contain"
-          />
-        </div>
+        {/* Removido o fundo branco e borda - agora só a logo */}
+        <img 
+          src="/logoempresa.png" 
+          alt="Logo da Empresa" 
+          className="w-32 h-32 object-contain drop-shadow-2xl"
+        />
         <h1 className="text-3xl font-bold text-white text-center mb-2">Menu Bolo</h1>
         <p className="text-white/90 text-center text-lg">Sistema de Gestão para Confeiteiras</p>
       </div>
