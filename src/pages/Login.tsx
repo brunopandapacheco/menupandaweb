@@ -78,10 +78,6 @@ export default function Login() {
         {mode === 'login' && (
           <div className="space-y-4">
             <Card className="mt-0">
-              <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>Entre com sua conta para acessar o painel</CardDescription>
-              </CardHeader>
               <CardContent>
                 <LoginForm onSuccess={handleSuccess} />
                 <div className="text-center space-y-2">
@@ -109,10 +105,6 @@ export default function Login() {
         {mode === 'register' && (
           <div className="space-y-4">
             <Card className="mt-0">
-              <CardHeader>
-                <CardTitle>Cadastro</CardTitle>
-                <CardDescription>Crie sua conta para começar</CardDescription>
-              </CardHeader>
               <CardContent>
                 <RegisterForm onSuccess={handleSuccess} />
                 <div className="text-center">
@@ -132,10 +124,6 @@ export default function Login() {
         {mode === 'reset' && (
           <div className="space-y-4">
             <Card className="mt-0">
-              <CardHeader>
-                <CardTitle>Recuperar Senha</CardTitle>
-                <CardDescription>Digite seu email para receber um link de recuperação</CardDescription>
-              </CardHeader>
               <CardContent>
                 <ResetPasswordForm 
                   onSuccess={handleBackToLogin} 
