@@ -11,5 +11,14 @@
       "VITE_SUPABASE_URL": "@supabase_url",
       "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key"
     }
+  },
+  "installCommand": "npm install",
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "functions": {
+    "app/**/*.tsx": {
+      "maxDuration": 30
+    }
   }
 }

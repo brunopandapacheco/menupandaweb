@@ -12,17 +12,15 @@ console.log('Produção:', isProduction)
 console.log('URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada')
 console.log('Key:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada')
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  if (isProduction) {
-    console.error('❌ ERRO CRÍTICO: Variáveis de ambiente do Supabase não configuradas em produção')
-    console.error('Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Vercel')
-    // Em produção, não lançamos erro para permitir que a aplicação carregue
-    // mas mostramos um erro amigável para o usuário
-  } else {
-    console.error('❌ ERRO: Configure o arquivo .env.local com suas credenciais do Supabase')
-    console.error('Copie .env.example para .env.local e preencha os dados')
-    throw new Error('Configuração do Supabase não encontrada')
-  }
+// Em produção, se não tiver as variáveis, não criar o cliente
+if (isProduction && (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co')) {
+  console.error('❌ ERRO CRÍTICO: Variáveis de ambiente do Supabase não configuradas em produção')
+  console.error('Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Vercel')
+  // Não lançamos erro em produção para permitir que a aplicação carregue e mostre a página de erro
+} else if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ ERRO: Configure o arquivo .env.local com suas credenciais do Supabase')
+  console.error('Copie .env.example para .env.local e preencha os dados')
+  throw new Error('Configuração do Supabase não encontrada')
 }
 
 // Criar uma única instância do cliente Supabase

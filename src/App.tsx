@@ -17,11 +17,20 @@ const App = () => {
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
   const isProduction = import.meta.env.PROD || import.meta.env.MODE === 'production';
   
+  console.log('🔍 App.tsx - Verificação de ambiente:');
+  console.log('MODE:', import.meta.env.MODE);
+  console.log('PROD:', import.meta.env.PROD);
+  console.log('VITE_SUPABASE_URL:', supabaseUrl ? '✅' : '❌');
+  console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅' : '❌');
+  
   // Em produção, se não tiver as variáveis, mostrar erro
   if (isProduction && (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co')) {
+    console.log('❌ Mostrando EnvironmentError');
     return <EnvironmentError />;
   }
 
+  console.log('✅ Renderizando aplicação normal');
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
