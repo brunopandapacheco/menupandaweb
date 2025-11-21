@@ -65,9 +65,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
       {/* Logo no topo */}
-      <div className="flex flex-col items-center mb-8 animate-fade-in">
+      <div className="flex flex-col items-center mb-4 animate-fade-in">
         <img 
-          src="/logoempresa.png" 
+          src="/logopandamenu.png" 
           alt="Logo da Empresa" 
           className="w-64 h-64 object-contain drop-shadow-2xl"
         />
@@ -78,7 +78,7 @@ export default function Login() {
         {mode === 'login' && (
           <div className="space-y-4">
             <Card className="mt-0 shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-              <CardContent className="p-8 pt-6">
+              <CardContent className="p-8 pt-4">
                 <div className="text-center mb-6">
                   <h1 className="text-2xl font-bold text-gray-800 mb-2">Bem-vindo(a)!</h1>
                   <p className="text-gray-600">Entre com sua conta para acessar o painel</p>
@@ -111,7 +111,7 @@ export default function Login() {
         {mode === 'register' && (
           <div className="space-y-4">
             <Card className="mt-0 shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-              <CardContent className="p-8 pt-6">
+              <CardContent className="p-8 pt-4">
                 <div className="text-center mb-6">
                   <h1 className="text-2xl font-bold text-gray-800 mb-2">Criar Conta</h1>
                   <p className="text-gray-600">Cadastre-se para começar a usar</p>
@@ -136,7 +136,7 @@ export default function Login() {
         {mode === 'reset' && (
           <div className="space-y-4">
             <Card className="mt-0 shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-              <CardContent className="p-8 pt-6">
+              <CardContent className="p-8 pt-4">
                 <div className="text-center mb-6">
                   <h1 className="text-2xl font-bold text-gray-800 mb-2">Recuperar Senha</h1>
                   <p className="text-gray-600">Digite seu email para receber um link de recuperação</p>
