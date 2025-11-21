@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Heart, Phone, Clock, Star, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Heart, Phone, Clock } from 'lucide-react'
 import { supabaseService } from '@/services/supabase'
 import { DesignSettings, Configuracoes, Produto } from '@/types'
 
@@ -20,7 +20,9 @@ export default function CardapioPublico() {
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
-    if (saved) setFavorites(JSON.parse(saved))
+    if (saved) {
+      setFavorites(JSON.parse(saved))
+    }
   }, [])
 
   useEffect(() => {
@@ -30,6 +32,45 @@ export default function CardapioPublico() {
   useEffect(() => {
     loadCardapioData()
   }, [slug])
+
+  const loadCardapioData = async () => {
+    try {
+      setLoading(true)
+      
+      const { data: designData } = await supabase.supabase
+        .from('design_settings')
+        .select('*')
+        .eq('slug', slug)
+        .single()
+
+      if (!designData) {
+        setLoading(false)
+        return
+      }
+
+      const [configData, produtosData] = await Promise.all([
+        supabase.supabase
+          .from('configuracoes')
+          .select('*')
+          .eq('user_id', designData.user_id)
+          .single(),
+        supabase.supabase
+          .from('produtos')
+          .select('*')
+          .eq('user_id', designData.user_id)
+          .eq('disponivel', true)
+          .order('created_at', { ascending: false })
+      ])
+
+      setDesignSettings(designData)
+      setConfiguracoes(configData.data)
+      setProdutos(produtosData.data || [])
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (designSettings?.banner1_url || designSettings?.banner2_url) {
@@ -45,33 +86,6 @@ export default function CardapioPublico() {
       }
     }
   }, [designSettings])
-
-  const loadCardapioData = async () => {
-    if (!slug) return
-
-    try {
-      setLoading(true)
-      
-      const designData = await supabaseService.getDesignSettingsBySlug(slug)
-      if (!designData) {
-        setLoading(false)
-        return
-      }
-
-      const [configData, produtosData] = await Promise.all([
-        supabaseService.getConfiguracoes(designData.user_id),
-        supabaseService.getProdutos(designData.user_id)
-      ])
-
-      setDesignSettings(designData)
-      setConfiguracoes(configData)
-      setProdutos(produtosData.filter(p => p.disponivel))
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => 
@@ -112,6 +126,7 @@ export default function CardapioPublico() {
 
   const promotionalProducts = filteredProducts.filter(p => p.promocao)
   const regularProducts = filteredProducts.filter(p => !p.promocao)
+
   const categories = Array.from(new Set(produtos.map(p => p.categoria)))
 
   const banners = []
