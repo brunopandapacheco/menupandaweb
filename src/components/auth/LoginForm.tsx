@@ -70,7 +70,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="seu@email.com"
+              placeholder=""
               disabled={loading}
             />
           </div>
