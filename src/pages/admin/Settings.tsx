@@ -14,7 +14,7 @@ export default function Settings() {
     horario_funcionamento_inicio: '08:00',
     horario_funcionamento_fim: '18:00',
     telefone: '(11) 99999-9999',
-    meios_pagamento: ['Pix', 'Cartão de Crédito', 'Dinheiro'],
+    meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
     entrega: true,
     taxa_entrega: 5.00,
   })
@@ -25,7 +25,7 @@ export default function Settings() {
         horario_funcionamento_inicio: configuracoes.horario_funcionamento_inicio || '08:00',
         horario_funcionamento_fim: configuracoes.horario_funcionamento_fim || '18:00',
         telefone: configuracoes.telefone || '(11) 99999-9999',
-        meios_pagamento: configuracoes.meios_pagamento || ['Pix', 'Cartão de Crédito', 'Dinheiro'],
+        meios_pagamento: configuracoes.meios_pagamento || ['Pix', 'Cartão', 'Dinheiro'],
         entrega: configuracoes.entrega ?? true,
         taxa_entrega: configuracoes.taxa_entrega || 5.00,
       })
@@ -48,7 +48,8 @@ export default function Settings() {
     }))
   }
 
-  const paymentMethods = ['Pix', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro', 'PicPay']
+  // Opções simplificadas de pagamento
+  const paymentMethods = ['Pix', 'Cartão', 'Dinheiro']
 
   if (loading) {
     return <div>Carregando configurações...</div>
