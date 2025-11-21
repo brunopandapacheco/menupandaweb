@@ -12,19 +12,29 @@ console.log('Produção:', isProduction)
 console.log('URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada')
 console.log('Key:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada')
 
-// Em produção, se não tiver as variáveis, não criar o cliente
-if (isProduction && (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co')) {
+// Em desenvolvimento, permitir valores padrão para testes
+let finalSupabaseUrl = supabaseUrl
+let finalSupabaseKey = supabaseAnonKey
+
+if (!isProduction) {
+  // Em desenvolvimento, se não tiver as variáveis, usar valores padrão para evitar crash
+  if (!finalSupabaseUrl || finalSupabaseUrl === 'https://seu-projeto.supabase.co') {
+    console.warn('⚠️ Usando URL padrão para desenvolvimento. Configure o .env.local')
+    finalSupabaseUrl = 'https://placeholder.supabase.co'
+  }
+  
+  if (!finalSupabaseKey) {
+    console.warn('⚠️ Usando chave padrão para desenvolvimento. Configure o .env.local')
+    finalSupabaseKey = 'placeholder-key'
+  }
+} else if (isProduction && (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co')) {
   console.error('❌ ERRO CRÍTICO: Variáveis de ambiente do Supabase não configuradas em produção')
   console.error('Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Vercel')
   // Não lançamos erro em produção para permitir que a aplicação carregue e mostre a página de erro
-} else if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ ERRO: Configure o arquivo .env.local com suas credenciais do Supabase')
-  console.error('Copie .env.example para .env.local e preencha os dados')
-  throw new Error('Configuração do Supabase não encontrada')
 }
 
 // Criar uma única instância do cliente Supabase
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
+export const supabase = createClient(finalSupabaseUrl || '', finalSupabaseKey || '', {
   auth: {
     autoRefreshToken: true,
     persistSession: true,

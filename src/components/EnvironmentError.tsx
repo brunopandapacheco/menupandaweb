@@ -1,15 +1,17 @@
 import { useEffect } from 'react'
-import { AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react'
+import { AlertTriangle, RefreshCw, ExternalLink, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function EnvironmentError() {
   const isProduction = import.meta.env.PROD || import.meta.env.MODE === 'production'
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
   
   useEffect(() => {
     console.error('❌ Ambiente não configurado corretamente')
-    console.error('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL)
-    console.error('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '[HIDDEN]' : '❌ MISSING')
-  }, [])
+    console.error('VITE_SUPABASE_URL:', supabaseUrl)
+    console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '[HIDDEN]' : '❌ MISSING')
+  }, [supabaseUrl, supabaseAnonKey])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50 p-4">
@@ -71,13 +73,50 @@ export function EnvironmentError() {
             </div>
           </div>
         ) : (
-          <div className="space-y-3 text-left bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm font-medium text-gray-800">Para desenvolvedor:</p>
-            <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
-              <li>Copie .env.example para .env.local</li>
-              <li>Preencha VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY</li>
-              <li>Reinicie o servidor de desenvolvimento</li>
-            </ul>
+          <div className="space-y-4">
+            <div className="text-left bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+              <p className="text-sm font-medium text-yellow-800 mb-2">⚠️ Desenvolvimento:</p>
+              <p className="text-sm text-yellow-700">
+                Você está em modo desenvolvimento. Configure o Supabase para usar todas as funcionalidades.
+              </p>
+            </div>
+            
+            <div className="text-left bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm font-medium text-gray-800 mb-2">🔧 Como corrigir:</p>
+              <ol className="text-sm text-gray-600 list-decimal list-inside space-y-2">
+                <li>
+                  <strong>Crie o arquivo .env.local:</strong>
+                  <div className="bg-gray-100 p-2 rounded mt-1 font-mono text-xs">
+                    cp .env.example .env.local
+                  </div>
+                </li>
+                <li>
+                  <strong>Configure as variáveis:</strong>
+                  <div className="bg-gray-100 p-2 rounded mt-1 font-mono text-xs">
+                    VITE_SUPABASE_URL = https://seu-projeto.supabase.co<br/>
+                    VITE_SUPABASE_ANON_KEY = sua-chave-anon-aqui
+                  </div>
+                </li>
+                <li>
+                  <strong>Reinicie o servidor:</strong>
+                  <div className="bg-gray-100 p-2 rounded mt-1 font-mono text-xs">
+                    npm run dev
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <div className="text-left bg-blue-50 border border-blue-200 p-4 rounded-lg">
+              <p className="text-sm font-medium text-blue-800 mb-2">📋 Passos para configurar o Supabase:</p>
+              <ol className="text-sm text-blue-700 list-decimal list-inside space-y-1">
+                <li>Acesse <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="underline">supabase.com</a></li>
+                <li>Crie uma conta gratuita</li>
+                <li>Crie um novo projeto</li>
+                <li>Vá em Settings → API</li>
+                <li>Copie a URL e a chave "anon"</li>
+                <li>Cole no arquivo .env.local</li>
+              </ol>
+            </div>
           </div>
         )}
         
@@ -99,6 +138,17 @@ export function EnvironmentError() {
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               Acessar Vercel
+            </Button>
+          )}
+
+          {!isProduction && (
+            <Button 
+              onClick={() => window.open('https://supabase.com', '_blank')}
+              className="w-full"
+              variant="outline"
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Acessar Supabase
             </Button>
           )}
         </div>
