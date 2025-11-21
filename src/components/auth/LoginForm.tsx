@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { supabase } from '@/lib/supabase'
 import { showSuccess, showError } from '@/utils/toast'
-import { validateEmail } from '@/utils/helpers'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -17,35 +16,30 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [loading, setLoading] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!validateEmail(email)) {
-      showError('Email inválido')
-      return
-    }
-
     setLoading(true)
+
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: { shouldCreateUser: false }
       })
 
       if (error) throw error
 
-      if (rememberMe) {
-        localStorage.setItem('rememberMe', 'true')
+      if (data.user) {
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true')
+        }
+        showSuccess('Login realizado com sucesso!')
+        onSuccess?.()
       }
-
-      showSuccess('Login realizado com sucesso!')
-      onSuccess?.()
     } catch (error: any) {
       if (error.message?.includes('Invalid login credentials')) {
-        showError('Email ou senha incorretos')
+        showError('Email ou senha incorretos.')
       } else if (error.message?.includes('Email not confirmed')) {
-        showError('Email não confirmado')
+        showError('Email não confirmado. Verifique sua caixa de entrada.')
       } else {
         showError(error.message || 'Erro ao fazer login')
       }
@@ -55,9 +49,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleLogin} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email">Email ou Usuário</Label>
+        <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+          Email ou Usuário
+        </Label>
         <Input
           id="email"
           type="email"
@@ -65,12 +61,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={loading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
         />
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+          Senha
+        </Label>
         <Input
           id="password"
           type="password"
@@ -78,8 +76,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={loading}
-          autoComplete="current-password"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
         />
       </div>
       
@@ -90,14 +87,17 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           onCheckedChange={(checked) => setRememberMe(checked as boolean)}
           disabled={loading}
         />
-        <Label htmlFor="remember-me" className="text-sm cursor-pointer">
+        <Label
+          htmlFor="remember-me"
+          className="text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors"
+        >
           Manter conectado
         </Label>
       </div>
       
       <Button 
         type="submit" 
-        className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+        className="w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
         disabled={loading}
       >
         {loading ? (
@@ -105,7 +105,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
             Entrando...
           </div>
-        ) : 'Entrar'}
+        ) : (
+          'Entrar'
+        )}
       </Button>
     </form>
   )
