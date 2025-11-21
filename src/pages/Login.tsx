@@ -64,9 +64,9 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
-      {/* Logo do Sistema - Com margens superior e inferiores ajustadas */}
-      <div className="flex flex-col items-center my-1">
-        {/* Logo bem maior */}
+      {/* Logo do Sistema - Colada diretamente no formulário sem margens */}
+      <div className="flex flex-col items-center mb-0">
+        {/* Logo em PNG sem fundo - sem margens */}
         <img 
           src="/logoempresa.png" 
           alt="Logo da Empresa" 
@@ -77,48 +77,64 @@ export default function Login() {
       <div className="w-full max-w-md">
         {mode === 'login' && (
           <div className="space-y-4">
-            <LoginForm onSuccess={handleSuccess} />
-            <div className="text-center space-y-2">
-              <Button
-                variant="link"
-                onClick={() => setMode('register')}
-                className="text-sm text-white hover:text-white/80"
-              >
-                Não tem uma conta? Cadastre-se
-              </Button>
-              <br />
-              <Button
-                variant="link"
-                onClick={() => setMode('reset')}
-                className="text-sm text-white hover:text-white/80"
-              >
-                Esqueceu sua senha?
-              </Button>
-            </div>
+            <Card className="mt-0">
+              <CardHeader>
+                <CardTitle>Login</CardTitle>
+                <CardDescription>Entre com sua conta para acessar o painel</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <LoginForm onSuccess={handleSuccess} />
+                <div className="text-center space-y-2">
+                  <Button
+                    variant="link"
+                    onClick={() => setMode('register')}
+                    className="text-sm text-white hover:text-white/80"
+                  >
+                    Não tem uma conta? Cadastre-se
+                  </Button>
+                  <br />
+                  <Button
+                    variant="link"
+                    onClick={() => setMode('reset')}
+                    className="text-sm text-white hover:text-white/80"
+                  >
+                    Esqueceu sua senha?
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
         
         {mode === 'register' && (
           <div className="space-y-4">
-            <RegisterForm onSuccess={handleSuccess} />
-            <div className="text-center">
-              <Button
-                variant="link"
-                onClick={() => setMode('login')}
-                className="text-sm text-white hover:text-white/80"
-              >
-                Já tem uma conta? Faça login
-              </Button>
-            </div>
+            <Card className="mt-0">
+              <CardContent>
+                <RegisterForm onSuccess={handleSuccess} />
+                <div className="text-center">
+                  <Button
+                    variant="link"
+                    onClick={() => setMode('login')}
+                    className="text-sm text-white hover:text-white/80"
+                  >
+                    Já tem uma conta? Faça login
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
         
         {mode === 'reset' && (
           <div className="space-y-4">
-            <ResetPasswordForm 
-              onSuccess={handleBackToLogin} 
-              onBackToLogin={handleBackToLogin}
-            />
+            <Card className="mt-0">
+              <CardContent>
+                <ResetPasswordForm 
+                  onSuccess={handleBackToLogin} 
+                  onBackToLogin={handleBackToLogin}
+                />
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>
