@@ -85,8 +85,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           placeholder="Digite sua senha"
           disabled={loading}
           autoComplete="new-password"
-          style={{ WebkitTextFillColor: 'transparent' }}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+          style={{ 
+            WebkitTextFillColor: 'transparent',
+            '::placeholder': { color: '#6b7280' } // Cor cinza para o placeholder
+          }}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 placeholder:text-gray-500"
         />
       </div>
       
