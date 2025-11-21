@@ -61,7 +61,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={loading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-gray-700"
         />
       </div>
       
@@ -76,7 +76,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={loading}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-gray-700"
         />
       </div>
       
