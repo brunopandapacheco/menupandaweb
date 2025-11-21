@@ -63,8 +63,8 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
-      {/* Logo do Sistema - Colada diretamente no formulário sem margens */}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-0">
+      {/* Logo do Sistema - Colada diretamente no formulário */}
       <div className="flex flex-col items-center mb-0">
         {/* Logo em PNG sem fundo - sem margens */}
         <img 
@@ -78,13 +78,13 @@ export default function Login() {
         {mode === 'login' && (
           <div className="space-y-4">
             <Card className="mt-0">
-              <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>Entre com sua conta para acessar o painel</CardDescription>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold text-white">Login</h2>
+                  <p className="text-white/80 mt-2">Entre com sua conta para acessar o painel</p>
+                </div>
                 <LoginForm onSuccess={handleSuccess} />
-                <div className="text-center space-y-2">
+                <div className="text-center space-y-2 mt-6">
                   <Button
                     variant="link"
                     onClick={() => setMode('register')}
@@ -109,9 +109,13 @@ export default function Login() {
         {mode === 'register' && (
           <div className="space-y-4">
             <Card className="mt-0">
-              <CardContent>
+              <CardContent className="p-6">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold text-white">Cadastro</h2>
+                  <p className="text-white/80 mt-2">Crie sua conta para começar</p>
+                </div>
                 <RegisterForm onSuccess={handleSuccess} />
-                <div className="text-center">
+                <div className="text-center mt-6">
                   <Button
                     variant="link"
                     onClick={() => setMode('login')}
@@ -128,7 +132,11 @@ export default function Login() {
         {mode === 'reset' && (
           <div className="space-y-4">
             <Card className="mt-0">
-              <CardContent>
+              <CardContent className="p-6">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-bold text-white">Recuperar Senha</h2>
+                  <p className="text-white/80 mt-2">Digite seu email para receber um link de recuperação</p>
+                </div>
                 <ResetPasswordForm 
                   onSuccess={handleBackToLogin} 
                   onBackToLogin={handleBackToLogin}
