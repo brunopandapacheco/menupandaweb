@@ -60,10 +60,6 @@ export default function Login() {
           </div>
         )}
       </div>
-
-      <footer className="mt-8 text-center text-white/80 text-sm">
-        <p>&copy; 2025 Menu Bolo. Todos os direitos reservados.</p>
-      </footer>
     </div>
   )
 }
