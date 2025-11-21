@@ -40,4 +40,6 @@ export interface Produto {
   forma_venda: string
   disponivel: boolean
   promocao: boolean
+  created_at: string
+  updated_at: string
 }
