@@ -63,7 +63,16 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
+      {/* Logo do Sistema */}
+      <div className="mb-8">
+        <div className="w-24 h-24 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg border border-white/20">
+          <div className="text-4xl">🧁</div>
+        </div>
+        <h1 className="text-2xl font-bold text-white text-center mt-4">Menu Bolo</h1>
+        <p className="text-white/80 text-center text-sm mt-1">Sistema de Gestão para Confeiteiras</p>
+      </div>
+
       <div className="w-full max-w-md">
         {mode === 'login' && (
           <div className="space-y-4">
@@ -72,7 +81,7 @@ export default function Login() {
               <Button
                 variant="link"
                 onClick={() => setMode('register')}
-                className="text-sm"
+                className="text-sm text-white hover:text-white/80"
               >
                 Não tem uma conta? Cadastre-se
               </Button>
@@ -80,7 +89,7 @@ export default function Login() {
               <Button
                 variant="link"
                 onClick={() => setMode('reset')}
-                className="text-sm"
+                className="text-sm text-white hover:text-white/80"
               >
                 Esqueceu sua senha?
               </Button>
@@ -95,7 +104,7 @@ export default function Login() {
               <Button
                 variant="link"
                 onClick={() => setMode('login')}
-                className="text-sm"
+                className="text-sm text-white hover:text-white/80"
               >
                 Já tem uma conta? Faça login
               </Button>
