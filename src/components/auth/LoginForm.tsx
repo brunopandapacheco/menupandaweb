@@ -82,9 +82,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="••••••••"
+              placeholder=""
               disabled={loading}
-              autoComplete="new-password" // Remove pré-visualização
+              autoComplete="new-password"
+              style={{ WebkitTextFillColor: 'transparent' }}
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>

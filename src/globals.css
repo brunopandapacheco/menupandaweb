@@ -117,3 +117,18 @@
   background-size: 200% 200%;
   animation: gradient-x 8s ease infinite;
 }
+
+/* Remover pré-visualização de senha */
+input[type="password"]::-webkit-textfield-decoration-container,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-fill-mode,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+input[type="password"] {
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
