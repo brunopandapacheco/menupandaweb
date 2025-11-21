@@ -1,5 +1,5 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "pandamenu", // Atualizei o nome do projeto para refletir a nova pasta
   "private": true,
   "version": "0.0.0",
   "type": "module",

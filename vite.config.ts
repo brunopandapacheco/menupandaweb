@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
     plugins: [dyadComponentTagger(), react()],
     resolve: {
       alias: {
+        // Usando path.resolve para garantir que funcione independente do nome da pasta
         "@": path.resolve(__dirname, "./src"),
       },
     },
