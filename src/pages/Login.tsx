@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { LoginForm } from '@/components/auth/LoginForm'
-import { RegisterForm } from '@/components/auth/RegisterForm'
 import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
 import { useNavigate } from 'react-router-dom'
 import { AuthMode } from '@/types'
@@ -33,41 +32,12 @@ export default function Login() {
               
               <LoginForm onSuccess={handleSuccess} />
               
-              <div className="text-center space-y-3 mt-6">
-                <button
-                  onClick={() => setMode('register')}
-                  className="text-sm text-pink-600 hover:text-pink-700 hover:underline"
-                >
-                  Não tem uma conta? Cadastre-se
-                </button>
-                <br />
+              <div className="text-center mt-6">
                 <button
                   onClick={() => setMode('reset')}
                   className="text-sm text-pink-600 hover:text-pink-700 hover:underline"
                 >
                   Esqueceu sua senha?
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {mode === 'register' && (
-          <div className="space-y-4">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 pt-2">
-              <div className="text-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-800 mb-2">Criar Conta</h1>
-                <p className="text-gray-600">Cadastre-se para começar</p>
-              </div>
-              
-              <RegisterForm onSuccess={handleSuccess} />
-              
-              <div className="text-center mt-6">
-                <button
-                  onClick={() => setMode('login')}
-                  className="text-sm text-pink-600 hover:text-pink-700 hover:underline"
-                >
-                  Já tem uma conta? Faça login
                 </button>
               </div>
             </div>
