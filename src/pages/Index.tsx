@@ -1,4 +1,3 @@
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cake, Palette, Smartphone, Users, AlertTriangle } from "lucide-react";
@@ -128,8 +127,6 @@ const Index = () => {
           </Button>
         </div>
       </div>
-      
-      <MadeWithDyad />
     </div>
   );
 };
