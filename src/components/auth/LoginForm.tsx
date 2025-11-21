@@ -66,7 +66,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="Digite seu email"
           disabled={loading}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
         />
@@ -82,14 +81,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="Digite sua senha"
           disabled={loading}
           autoComplete="new-password"
-          style={{ 
-            WebkitTextFillColor: 'transparent',
-            '::placeholder': { color: '#6b7280' } // Cor cinza para o placeholder
-          }}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 placeholder:text-gray-500"
+          style={{ WebkitTextFillColor: 'transparent' }}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
         />
       </div>
       
