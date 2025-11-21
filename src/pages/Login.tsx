@@ -64,8 +64,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
-      {/* Logo do Sistema - Bem próxima do formulário */}
-      <div className="flex flex-col items-center mb-2">
+      {/* Logo do Sistema - Com apenas 4px de espaçamento do formulário */}
+      <div className="flex flex-col items-center mb-1">
         {/* Logo bem maior */}
         <img 
           src="/logoempresa.png" 
