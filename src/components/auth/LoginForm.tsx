@@ -57,8 +57,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
-        <CardDescription>Entre com sua conta para acessar o painel</CardDescription>
+        {/* REMOVIDO: <CardTitle>Login</CardTitle> */}
+        {/* REMOVIDO: <CardDescription>Entre com sua conta para acessar o painel</CardDescription> */}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-4">
