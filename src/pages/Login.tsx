@@ -64,13 +64,13 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
-      {/* Logo do Sistema - Centralizado */}
+      {/* Logo do Sistema - Centralizado e maior */}
       <div className="flex flex-col items-center mb-8">
-        {/* Logo maior e mais destacada */}
+        {/* Logo bem maior */}
         <img 
           src="/logoempresa.png" 
           alt="Logo da Empresa" 
-          className="w-48 h-48 object-contain drop-shadow-2xl"
+          className="w-64 h-64 object-contain drop-shadow-2xl"
         />
       </div>
 
