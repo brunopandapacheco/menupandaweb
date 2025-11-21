@@ -156,11 +156,6 @@ export default function Login() {
       <footer className="mt-8 text-center text-white/80 text-sm">
         <div className="space-y-2">
           <p>&copy; 2025 Menu Bolo. Todos os direitos reservados.</p>
-          <div className="flex justify-center space-x-4">
-            <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
-            <a href="#" className="hover:text-white transition-colors">Privacidade</a>
-            <a href="#" className="hover:text-white transition-colors">Suporte</a>
-          </div>
         </div>
       </footer>
     </div>
