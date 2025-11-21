@@ -17,18 +17,17 @@ const App = () => {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    const isProduction = import.meta.env.PROD || import.meta.env.MODE === 'production';
-    
-    setTimeout(() => {
-      if (isProduction && (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co')) {
-        setShowEnvironmentError(true);
-      } else if (!supabaseUrl || !supabaseAnonKey) {
+    const checkEnvironment = () => {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co') {
         setShowEnvironmentError(true);
       }
       setIsChecking(false);
-    }, 100);
+    };
+
+    checkEnvironment();
   }, []);
 
   if (isChecking) {
@@ -36,7 +35,7 @@ const App = () => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando configurações...</p>
+          <p>Verificando configurações...</p>
         </div>
       </div>
     );
