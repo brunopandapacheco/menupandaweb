@@ -69,7 +69,7 @@ export default function Login() {
         <img 
           src="/logoempresa.png" 
           alt="Logo da Empresa" 
-          className="w-32 h-32 object-contain drop-shadow-2xl"
+          className="w-64 h-64 object-contain drop-shadow-2xl"
         />
       </div>
 
