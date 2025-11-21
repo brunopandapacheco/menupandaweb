@@ -67,10 +67,10 @@ export default function Login() {
       {/* Logo do Sistema - Centralizado e destacado */}
       <div className="flex flex-col items-center mb-8">
         <div className="w-32 h-32 bg-white/95 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30 mb-4">
-          {/* Substituindo emoji pela logo PNG */}
+          {/* Logo da empresa */}
           <img 
-            src="/logo.png" 
-            alt="Logo da Confeitaria" 
+            src="/logoempresa.png" 
+            alt="Logo da Empresa" 
             className="w-24 h-24 object-contain"
           />
         </div>
