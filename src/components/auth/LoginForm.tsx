@@ -66,7 +66,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="Digite seu email ou nome de usuário"
+          placeholder="Digite seu email"
           disabled={loading}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
         />
