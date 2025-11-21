@@ -64,13 +64,13 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] animate-gradient-x p-4">
-      {/* Logo do Sistema */}
-      <div className="mb-8">
-        <div className="w-24 h-24 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg border border-white/20">
-          <div className="text-4xl">🧁</div>
+      {/* Logo do Sistema - Centralizado e destacado */}
+      <div className="flex flex-col items-center mb-8">
+        <div className="w-32 h-32 bg-white/95 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30 mb-4">
+          <div className="text-5xl">🧁</div>
         </div>
-        <h1 className="text-2xl font-bold text-white text-center mt-4">Menu Bolo</h1>
-        <p className="text-white/80 text-center text-sm mt-1">Sistema de Gestão para Confeiteiras</p>
+        <h1 className="text-3xl font-bold text-white text-center mb-2">Menu Bolo</h1>
+        <p className="text-white/90 text-center text-lg">Sistema de Gestão para Confeiteiras</p>
       </div>
 
       <div className="w-full max-w-md">
