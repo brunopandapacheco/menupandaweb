@@ -3,29 +3,46 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+// Verificação mais robusta para ambiente de produção
+const isProduction = import.meta.env.PROD || import.meta.env.MODE === 'production'
+
 console.log('🔍 Verificando configuração Supabase:')
+console.log('Ambiente:', import.meta.env.MODE)
+console.log('Produção:', isProduction)
 console.log('URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada')
 console.log('Key:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada')
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ ERRO: Configure o arquivo .env.local com suas credenciais do Supabase')
-  console.error('Copie .env.example para .env.local e preencha os dados')
-  throw new Error('Configuração do Supabase não encontrada')
+  if (isProduction) {
+    console.error('❌ ERRO CRÍTICO: Variáveis de ambiente do Supabase não configuradas em produção')
+    console.error('Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Vercel')
+    // Em produção, não lançamos erro para permitir que a aplicação carregue
+    // mas mostramos um erro amigável para o usuário
+  } else {
+    console.error('❌ ERRO: Configure o arquivo .env.local com suas credenciais do Supabase')
+    console.error('Copie .env.example para .env.local e preencha os dados')
+    throw new Error('Configuração do Supabase não encontrada')
+  }
 }
 
 // Criar uma única instância do cliente Supabase
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    storage: localStorage,
+    storage: isProduction ? localStorage : localStorage,
     storageKey: 'supabase.auth.token'
   }
 })
 
 // Função para verificar conexão
 export const checkSupabaseConnection = async () => {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('❌ Supabase não configurado')
+    return false
+  }
+
   try {
     console.log('🔄 Testando conexão com Supabase...')
     const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true })
