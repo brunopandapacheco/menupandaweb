@@ -84,6 +84,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               required
               placeholder="••••••••"
               disabled={loading}
+              autoComplete="new-password" // Remove pré-visualização
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
