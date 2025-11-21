@@ -68,52 +68,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Ações Rápidas */}
-      <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Ações Rápidas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-0 shadow-md group">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-pink-200 transition-colors">
-                <Plus className="w-6 h-6 text-pink-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Novo Produto</h3>
-              <p className="text-sm text-gray-600 mt-1">Adicionar item</p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-0 shadow-md group">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
-                <Eye className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Ver Cardápio</h3>
-              <p className="text-sm text-gray-600 mt-1">Visualização</p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-0 shadow-md group">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
-                <Cake className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Produtos</h3>
-              <p className="text-sm text-gray-600 mt-1">Gerenciar</p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-0 shadow-md group">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Relatórios</h3>
-              <p className="text-sm text-gray-600 mt-1">Análises</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
       {/* Seções Detalhadas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-0 shadow-md">
