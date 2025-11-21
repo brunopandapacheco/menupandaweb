@@ -8,9 +8,9 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 pt-8">
-      {/* Header alinhado com o menu - TÍTULO PRINCIPAL */}
+      {/* Header centralizado com o menu - TÍTULO PRINCIPAL */}
       <div className="border-b border-gray-200 pb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
+        <h1 className="text-3xl font-bold text-gray-900 text-center">Visão Geral</h1>
       </div>
 
       {/* Cards de Métricas - Grid responsivo */}
