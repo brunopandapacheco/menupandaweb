@@ -9,16 +9,15 @@ interface DesktopLayoutProps {
   onTabChange?: (tab: string) => void
 }
 
-export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }: DesktopLayoutProps) {
-  const tabs = [
-    { id: 'dashboard', label: 'Painel', icon: Home },
-    { id: 'preview', label: 'Prévia do Cardápio', icon: Eye },
-    { id: 'design', label: 'Design', icon: Palette },
-    { id: 'products', label: 'Produtos', icon: ShoppingBag },
-    { id: 'settings', label: 'Configurações', icon: Settings },
-  ]
+const tabs = [
+  { id: 'dashboard', label: 'Painel', icon: Home },
+  { id: 'preview', label: 'Prévia do Cardápio', icon: Eye },
+  { id: 'design', label: 'Design', icon: Palette },
+  { id: 'products', label: 'Produtos', icon: ShoppingBag },
+  { id: 'settings', label: 'Configurações', icon: Settings },
+]
 
-  // 🌐 Configuração via variável de ambiente
+export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }: DesktopLayoutProps) {
   const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
   const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Menu Bolo'
   const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
@@ -26,17 +25,12 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#E89EAE] border-r border-pink-200 flex flex-col">
-        {/* Logo do Sistema - SEM LINHA SEPARADORA */}
         <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
               <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
                 {logoUrl ? (
-                  <img 
-                    src={logoUrl} 
-                    alt={`${systemName} Logo`} 
-                    className="w-10 h-10 object-contain"
-                  />
+                  <img src={logoUrl} alt={`${systemName} Logo`} className="w-10 h-10 object-contain" />
                 ) : (
                   <span className="text-3xl">🧁</span>
                 )}
@@ -47,7 +41,6 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
           </div>
         </div>
         
-        {/* Menu de Navegação */}
         <div className="flex-1 p-6 pt-2">
           <div className="space-y-3">
             {tabs.map((tab) => {
@@ -72,7 +65,6 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
           </div>
         </div>
         
-        {/* Footer do Menu */}
         <div className="p-6 pb-8 border-t border-pink-300">
           <div className="text-center">
             <p className="text-white/70 text-xs">© 2025 {systemName}</p>

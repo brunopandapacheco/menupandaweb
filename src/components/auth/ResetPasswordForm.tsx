@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { supabase } from '@/lib/supabase'
 import { showSuccess, showError } from '@/utils/toast'
+import { validateEmail } from '@/utils/helpers'
 
 interface ResetPasswordFormProps {
   onSuccess?: () => void
@@ -15,24 +16,26 @@ export function ResetPasswordForm({ onSuccess, onBackToLogin }: ResetPasswordFor
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleResetPassword = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    
+    if (!validateEmail(email)) {
+      showError('Email inválido')
+      return
+    }
 
+    setLoading(true)
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/login`,
       })
 
-      if (error) {
-        throw error
-      }
+      if (error) throw error
 
-      showSuccess('Email de recuperação enviado! Verifique sua caixa de entrada.')
+      showSuccess('Email de recuperação enviado!')
       onSuccess?.()
     } catch (error: any) {
-      console.error('Erro ao enviar email de recuperação:', error)
-      showError(error.message || 'Erro ao enviar email de recuperação')
+      showError(error.message || 'Erro ao enviar email')
     } finally {
       setLoading(false)
     }
@@ -42,10 +45,10 @@ export function ResetPasswordForm({ onSuccess, onBackToLogin }: ResetPasswordFor
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Recuperar Senha</CardTitle>
-        <CardDescription>Digite seu email para receber um link de recuperação</CardDescription>
+        <CardDescription>Digite seu email para receber um link</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleResetPassword} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -55,10 +58,11 @@ export function ResetPasswordForm({ onSuccess, onBackToLogin }: ResetPasswordFor
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
+              disabled={loading}
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Enviando...' : 'Enviar Link de Recuperação'}
+            {loading ? 'Enviando...' : 'Enviar Link'}
           </Button>
           {onBackToLogin && (
             <Button 
@@ -67,7 +71,7 @@ export function ResetPasswordForm({ onSuccess, onBackToLogin }: ResetPasswordFor
               className="w-full"
               onClick={onBackToLogin}
             >
-              Voltar para o Login
+              Voltar
             </Button>
           )}
         </form>

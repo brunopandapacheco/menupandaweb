@@ -1,74 +1,47 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Cake, ShoppingCart, TrendingUp, Users, Plus, Eye } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Cake, ShoppingCart, TrendingUp, Users } from 'lucide-react'
 
 export default function Dashboard() {
-  const navigate = useNavigate()
+  const metrics = [
+    { title: 'Produtos', value: '24', change: '+2', icon: Cake, color: 'pink' },
+    { title: 'Pedidos', value: '142', change: '+18%', icon: ShoppingCart, color: 'blue' },
+    { title: 'Receita', value: 'R$ 3.240', change: '+25%', icon: TrendingUp, color: 'green' },
+    { title: 'Clientes', value: '89', change: '+12', icon: Users, color: 'purple' }
+  ]
+
+  const products = [
+    { name: 'Bolo de Chocolate', sales: 45, status: 'active', trend: '+12%' },
+    { name: 'Cupcake Morango', sales: 32, status: 'promo', trend: '+8%' },
+    { name: 'Torta Limão', sales: 28, status: 'active', trend: '+5%' }
+  ]
 
   return (
     <div className="space-y-8 pt-8">
-      {/* Header centralizado com o menu - TÍTULO PRINCIPAL */}
       <div className="border-b border-gray-200 pb-6">
         <h1 className="text-3xl font-bold text-gray-900 text-center">Visão Geral</h1>
       </div>
 
-      {/* Cards de Métricas - Grid responsivo */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Produtos Cadastrados</CardTitle>
-            <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
-              <Cake className="h-5 w-5 text-pink-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">24</div>
-            <p className="text-xs text-gray-500 mt-1">+2 este mês</p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Pedidos Realizados</CardTitle>
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <ShoppingCart className="h-5 w-5 text-blue-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">142</div>
-            <p className="text-xs text-green-600 mt-1">+18% desde o mês passado</p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Receita</CardTitle>
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">R$ 3.240</div>
-            <p className="text-xs text-green-600 mt-1">+25% desde o mês passado</p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Clientes</CardTitle>
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Users className="h-5 w-5 text-purple-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">89</div>
-            <p className="text-xs text-gray-500 mt-1">+12 novos este mês</p>
-          </CardContent>
-        </Card>
+        {metrics.map((metric, index) => {
+          const Icon = metric.icon
+          return (
+            <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">{metric.title}</CardTitle>
+                <div className={`w-10 h-10 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
+                  <Icon className={`h-5 w-5 text-${metric.color}-600`} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-900">{metric.value}</div>
+                <p className="text-xs text-green-600 mt-1">{metric.change}</p>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
-      {/* Seções Detalhadas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-0 shadow-md">
           <CardHeader>
@@ -77,12 +50,8 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { name: 'Bolo de Chocolate', sales: 45, status: 'active', trend: '+12%' },
-                { name: 'Cupcake Morango', sales: 32, status: 'promo', trend: '+8%' },
-                { name: 'Torta Limão', sales: 28, status: 'active', trend: '+5%' },
-              ].map((product, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+              {products.map((product, index) => (
+                <div key={index} className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -96,7 +65,7 @@ export default function Dashboard() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-green-600">{product.trend}</span>
-                    <Badge variant={product.status === 'promo' ? 'default' : 'secondary'} className="bg-pink-100 text-pink-800 hover:bg-pink-200">
+                    <Badge variant={product.status === 'promo' ? 'default' : 'secondary'} className="bg-pink-100 text-pink-800">
                       {product.status === 'promo' ? 'Promoção' : 'Ativo'}
                     </Badge>
                   </div>
@@ -123,7 +92,7 @@ export default function Dashboard() {
                     <p className="text-sm text-gray-600">08:00 - 18:00</p>
                   </div>
                 </div>
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Aberto</Badge>
+                <Badge className="bg-green-100 text-green-800">Aberto</Badge>
               </div>
 
               <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50 border border-blue-200">
@@ -136,7 +105,7 @@ export default function Dashboard() {
                     <p className="text-sm text-gray-600">Taxa: R$ 5,00</p>
                   </div>
                 </div>
-                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">Disponível</Badge>
+                <Badge className="bg-blue-100 text-blue-800">Disponível</Badge>
               </div>
 
               <div className="flex items-center justify-between p-4 rounded-lg bg-purple-50 border border-purple-200">
@@ -149,7 +118,7 @@ export default function Dashboard() {
                     <p className="text-sm text-gray-600">3 métodos</p>
                   </div>
                 </div>
-                <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">Ativos</Badge>
+                <Badge className="bg-purple-100 text-purple-800">Ativos</Badge>
               </div>
             </div>
           </CardContent>

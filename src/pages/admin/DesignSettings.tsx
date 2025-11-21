@@ -7,7 +7,47 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Upload, Palette, Eye, Type, Image } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
-import { uploadImage } from '@/services/database'
+import { supabaseService } from '@/services/supabase'
+import { generateSlug } from '@/utils/helpers'
+
+const colorPalettes = [
+  {
+    name: 'Doce',
+    colors: {
+      cor_borda: '#ec4899',
+      cor_background: '#fef2f2',
+      cor_nome: '#be185d',
+      background_topo_color: '#fce7f3',
+    }
+  },
+  {
+    name: 'Premium',
+    colors: {
+      cor_borda: '#7c3aed',
+      cor_background: '#f5f3ff',
+      cor_nome: '#5b21b6',
+      background_topo_color: '#ede9fe',
+    }
+  },
+  {
+    name: 'Minimalista',
+    colors: {
+      cor_borda: '#6b7280',
+      cor_background: '#f9fafb',
+      cor_nome: '#374151',
+      background_topo_color: '#f3f4f6',
+    }
+  },
+  {
+    name: 'Moderno',
+    colors: {
+      cor_borda: '#06b6d4',
+      cor_background: '#ecfeff',
+      cor_nome: '#0891b2',
+      background_topo_color: '#cffafe',
+    }
+  },
+]
 
 export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
@@ -41,80 +81,28 @@ export default function DesignSettings() {
     }
   }, [designSettings])
 
-  const colorPalettes = [
-    {
-      name: 'Doce',
-      colors: {
-        cor_borda: '#ec4899',
-        cor_background: '#fef2f2',
-        cor_nome: '#be185d',
-        background_topo_color: '#fce7f3',
-      }
-    },
-    {
-      name: 'Premium',
-      colors: {
-        cor_borda: '#7c3aed',
-        cor_background: '#f5f3ff',
-        cor_nome: '#5b21b6',
-        background_topo_color: '#ede9fe',
-      }
-    },
-    {
-      name: 'Minimalista',
-      colors: {
-        cor_borda: '#6b7280',
-        cor_background: '#f9fafb',
-        cor_nome: '#374151',
-        background_topo_color: '#f3f4f6',
-      }
-    },
-    {
-      name: 'Moderno',
-      colors: {
-        cor_borda: '#06b6d4',
-        cor_background: '#ecfeff',
-        cor_nome: '#0891b2',
-        background_topo_color: '#cffafe',
-      }
-    },
-  ]
-
   const handleSave = async () => {
     const success = await saveDesignSettings(settings)
-    if (success) {
-      showSuccess('Configurações salvas com sucesso!')
-    }
+    if (success) showSuccess('Configurações salvas!')
   }
 
   const applyPalette = async (palette: typeof colorPalettes[0]) => {
     const newSettings = { ...settings, ...palette.colors }
     setSettings(newSettings)
     const success = await saveDesignSettings(newSettings)
-    if (success) {
-      showSuccess(`Paleta "${palette.name}" aplicada!`)
-    }
+    if (success) showSuccess(`Paleta "${palette.name}" aplicada!`)
   }
 
   const handleImageUpload = async (file: File, type: 'logo' | 'banner1' | 'banner2') => {
     const fileName = `${type}-${Date.now()}.${file.name.split('.').pop()}`
-    const url = await uploadImage(file, 'images', fileName)
+    const url = await supabaseService.uploadImage(file, 'images', fileName)
     
     if (url) {
       const newSettings = { ...settings, [`${type}_url`]: url }
       setSettings(newSettings)
       await saveDesignSettings(newSettings)
-      showSuccess('Imagem enviada com sucesso!')
+      showSuccess('Imagem enviada!')
     }
-  }
-
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim()
   }
 
   const handleNameChange = (name: string) => {
@@ -126,9 +114,7 @@ export default function DesignSettings() {
     setSettings(newSettings)
   }
 
-  if (loading) {
-    return <div>Carregando...</div>
-  }
+  if (loading) return <div>Carregando...</div>
 
   return (
     <div className="space-y-6 px-4 sm:px-0">
@@ -146,14 +132,12 @@ export default function DesignSettings() {
 
         <TabsContent value="cores">
           <div className="space-y-6">
-            {/* Card Nome da Confeitaria */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Type className="w-5 h-5" />
                   Informações Básicas
                 </CardTitle>
-                <CardDescription className="text-gray-600">Nome e texto do rodapé do seu cardápio</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -162,7 +146,6 @@ export default function DesignSettings() {
                     id="nome_confeitaria"
                     value={settings.nome_confeitaria}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="Nome da sua confeitaria"
                   />
                 </div>
                 <div className="space-y-2">
@@ -171,20 +154,17 @@ export default function DesignSettings() {
                     id="texto_rodape"
                     value={settings.texto_rodape}
                     onChange={(e) => setSettings(prev => ({ ...prev, texto_rodape: e.target.value }))}
-                    placeholder="Informações de contato"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Card Cores Principais */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Palette className="w-5 h-5" />
                   Cores Principais
                 </CardTitle>
-                <CardDescription className="text-gray-600">Defina as cores principais do seu cardápio</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -200,7 +180,6 @@ export default function DesignSettings() {
                       <Input
                         value={settings.cor_borda}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                        placeholder="#ec4899"
                       />
                     </div>
                   </div>
@@ -216,7 +195,6 @@ export default function DesignSettings() {
                       <Input
                         value={settings.cor_background}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                        placeholder="#fef2f2"
                       />
                     </div>
                   </div>
@@ -224,14 +202,12 @@ export default function DesignSettings() {
               </CardContent>
             </Card>
 
-            {/* Card Cores de Destaque */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Eye className="w-5 h-5" />
                   Cores de Destaque
                 </CardTitle>
-                <CardDescription className="text-gray-600">Personalize cores de texto e elementos visuais</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -247,7 +223,6 @@ export default function DesignSettings() {
                       <Input
                         value={settings.cor_nome}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                        placeholder="#be185d"
                       />
                     </div>
                   </div>
@@ -263,7 +238,6 @@ export default function DesignSettings() {
                       <Input
                         value={settings.background_topo_color}
                         onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                        placeholder="#fce7f3"
                       />
                     </div>
                   </div>
@@ -271,11 +245,10 @@ export default function DesignSettings() {
               </CardContent>
             </Card>
 
-            {/* Card Salvar */}
             <Card className="border-primary/20 bg-primary/5">
               <CardContent className="p-6">
                 <Button onClick={handleSave} className="w-full" size="lg">
-                  Salvar Todas as Configurações
+                  Salvar Configurações
                 </Button>
               </CardContent>
             </Card>
@@ -286,12 +259,11 @@ export default function DesignSettings() {
           <Card>
             <CardHeader>
               <CardTitle style={{ color: '#4A3531' }}>Paletas Prontas</CardTitle>
-              <CardDescription className="text-gray-600">Escolha uma paleta de cores pré-definida</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {colorPalettes.map((palette) => (
-                  <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-primary">
+                  <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all">
                     <CardContent className="p-6">
                       <h3 className="font-semibold mb-4 text-center" style={{ color: '#4A3531' }}>{palette.name}</h3>
                       <div className="space-y-3 mb-4">
@@ -324,137 +296,50 @@ export default function DesignSettings() {
 
         <TabsContent value="imagens">
           <div className="space-y-6">
-            {/* Card Logo */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
-                  <Image className="w-5 h-5" />
-                  Logo da Confeitaria
-                </CardTitle>
-                <CardDescription className="text-gray-600">Adicione o logo da sua marca</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
-                  {settings.logo_url ? (
-                    <div className="space-y-4">
-                      <img src={settings.logo_url} alt="Logo" className="w-24 h-24 mx-auto rounded-lg object-cover shadow-md" />
-                      <p className="text-sm text-green-600 font-medium">Logo carregado com sucesso</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <Upload className="mx-auto h-16 w-16 text-gray-400" />
-                      <div>
-                        <p className="text-lg font-medium text-gray-600">Logo da Confeitaria</p>
-                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
+            {['logo', 'banner1', 'banner2'].map((type) => (
+              <Card key={type}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+                    <Image className="w-5 h-5" />
+                    {type === 'logo' ? 'Logo' : type === 'banner1' ? 'Banner Principal' : 'Banner Secundário'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                    {settings[`${type}_url`] ? (
+                      <div className="space-y-4">
+                        <img 
+                          src={settings[`${type}_url`]} 
+                          alt={type} 
+                          className={`${type === 'logo' ? 'w-24 h-24' : 'w-full h-32'} mx-auto rounded-lg object-cover shadow-md`} 
+                        />
+                        <p className="text-sm text-green-600">Imagem carregada</p>
                       </div>
-                    </div>
-                  )}
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="logo-upload"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) handleImageUpload(file, 'logo')
-                    }}
-                  />
-                  <Button asChild size="sm" variant="outline">
-                    <label htmlFor="logo-upload" className="cursor-pointer">
-                      {settings.logo_url ? 'Alterar Logo' : 'Escolher Arquivo'}
-                    </label>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Card Banner 1 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
-                  <Image className="w-5 h-5" />
-                  Banner Principal
-                </CardTitle>
-                <CardDescription className="text-gray-600">Adicione um banner promocional</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
-                  {settings.banner1_url ? (
-                    <div className="space-y-4">
-                      <img src={settings.banner1_url} alt="Banner 1" className="w-full h-32 mx-auto rounded-lg object-cover shadow-md" />
-                      <p className="text-sm text-green-600 font-medium">Banner carregado com sucesso</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <Upload className="mx-auto h-16 w-16 text-gray-400" />
-                      <div>
-                        <p className="text-lg font-medium text-gray-600">Banner Principal</p>
-                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
+                    ) : (
+                      <div className="space-y-4">
+                        <Upload className="mx-auto h-16 w-16 text-gray-400" />
+                        <p className="text-lg font-medium text-gray-600">Clique para fazer upload</p>
                       </div>
-                    </div>
-                  )}
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="banner1-upload"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) handleImageUpload(file, 'banner1')
-                    }}
-                  />
-                  <Button asChild size="sm" variant="outline">
-                    <label htmlFor="banner1-upload" className="cursor-pointer">
-                      {settings.banner1_url ? 'Alterar Banner' : 'Escolher Arquivo'}
-                    </label>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Card Banner 2 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
-                  <Image className="w-5 h-5" />
-                  Banner Secundário
-                </CardTitle>
-                <CardDescription className="text-gray-600">Adicione um segundo banner opcional</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
-                  {settings.banner2_url ? (
-                    <div className="space-y-4">
-                      <img src={settings.banner2_url} alt="Banner 2" className="w-full h-32 mx-auto rounded-lg object-cover shadow-md" />
-                      <p className="text-sm text-green-600 font-medium">Banner carregado com sucesso</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <Upload className="mx-auto h-16 w-16 text-gray-400" />
-                      <div>
-                        <p className="text-lg font-medium text-gray-600">Banner Secundário</p>
-                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
-                      </div>
-                    </div>
-                  )}
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="banner2-upload"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) handleImageUpload(file, 'banner2')
-                    }}
-                  />
-                  <Button asChild size="sm" variant="outline">
-                    <label htmlFor="banner2-upload" className="cursor-pointer">
-                      {settings.banner2_url ? 'Alterar Banner' : 'Escolher Arquivo'}
-                    </label>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                    )}
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id={`${type}-upload`}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleImageUpload(file, type as 'logo' | 'banner1' | 'banner2')
+                      }}
+                    />
+                    <Button asChild size="sm" variant="outline">
+                      <label htmlFor={`${type}-upload`} className="cursor-pointer">
+                        {settings[`${type}_url`] ? 'Alterar' : 'Escolher Arquivo'}
+                      </label>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </TabsContent>
       </Tabs>

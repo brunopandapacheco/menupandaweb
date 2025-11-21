@@ -17,29 +17,15 @@ const App = () => {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    // Verificar se as variáveis de ambiente estão configuradas
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
     const isProduction = import.meta.env.PROD || import.meta.env.MODE === 'production';
     
-    console.log('🔍 App.tsx - Verificação de ambiente:');
-    console.log('MODE:', import.meta.env.MODE);
-    console.log('PROD:', import.meta.env.PROD);
-    console.log('VITE_SUPABASE_URL:', supabaseUrl ? '✅' : '❌');
-    console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅' : '❌');
-    
-    // Pequeno delay para garantir que as variáveis sejam carregadas
     setTimeout(() => {
-      // Em produção, se não tiver as variáveis, mostrar erro
       if (isProduction && (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://seu-projeto.supabase.co')) {
-        console.log('❌ Mostrando EnvironmentError');
         setShowEnvironmentError(true);
       } else if (!supabaseUrl || !supabaseAnonKey) {
-        // Em desenvolvimento, mostrar erro se não estiver configurado
-        console.log('❌ Variáveis não configuradas em desenvolvimento');
         setShowEnvironmentError(true);
-      } else {
-        console.log('✅ Renderizando aplicação normal');
       }
       setIsChecking(false);
     }, 100);
@@ -71,7 +57,6 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminLayout />} />
             <Route path="/cardapio/:slug" element={<CardapioPublico />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

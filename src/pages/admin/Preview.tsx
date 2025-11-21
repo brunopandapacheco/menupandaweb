@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Search, Heart, Phone, Clock, Star, ExternalLink, Smartphone } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 
-const Preview = () => {
+export default function Preview() {
   const [searchTerm, setSearchTerm] = useState('')
   const [favorites, setFavorites] = useState<string[]>([])
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
@@ -59,9 +59,6 @@ const Preview = () => {
     product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const promotionalProducts = filteredProducts.filter(p => p.promocao)
-  const regularProducts = filteredProducts.filter(p => !p.promocao)
-
   const categories = Array.from(new Set(produtos.map(p => p.categoria)))
 
   const openCardapioPublico = () => {
@@ -72,7 +69,6 @@ const Preview = () => {
 
   return (
     <div className="space-y-6">
-      {/* Card de acesso ao cardápio público */}
       <Card className="border-2 border-dashed border-primary/20 bg-primary/5">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
@@ -100,7 +96,6 @@ const Preview = () => {
         </CardContent>
       </Card>
 
-      {/* Preview do cardápio */}
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl overflow-hidden border">
         <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white p-4 text-center">
           <h2 className="text-lg font-semibold">Prévia do Cardápio</h2>
@@ -108,7 +103,6 @@ const Preview = () => {
         </div>
         
         <div className="max-w-md mx-auto bg-white">
-          {/* Header */}
           <div 
             className="h-32 relative"
             style={{ backgroundColor: designSettings?.background_topo_color || '#fce7f3' }}
@@ -124,7 +118,6 @@ const Preview = () => {
             </div>
           </div>
 
-          {/* Info */}
           <div className="px-4 pb-4">
             <h1 
               className="text-2xl font-bold text-center mb-2"
@@ -151,7 +144,6 @@ const Preview = () => {
               </CardContent>
             </Card>
 
-            {/* Search */}
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
@@ -162,7 +154,6 @@ const Preview = () => {
               />
             </div>
 
-            {/* Categories */}
             <div className="mb-6">
               <h3 className="font-semibold mb-3" style={{ color: '#4A3531' }}>Categorias</h3>
               <div className="flex gap-3 overflow-x-auto pb-2">
@@ -180,7 +171,6 @@ const Preview = () => {
               </div>
             </div>
 
-            {/* Products Preview */}
             <div className="mb-6">
               <h3 className="font-semibold mb-3" style={{ color: '#4A3531' }}>Produtos</h3>
               <div className="space-y-3">
@@ -248,7 +238,6 @@ const Preview = () => {
               )}
             </div>
 
-            {/* Footer */}
             <div className="mt-6 text-center text-sm text-gray-600">
               <p>{designSettings?.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999'}</p>
             </div>
@@ -258,5 +247,3 @@ const Preview = () => {
     </div>
   )
 }
-
-export default Preview

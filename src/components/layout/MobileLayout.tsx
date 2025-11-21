@@ -9,14 +9,14 @@ interface MobileLayoutProps {
   onTabChange?: (tab: string) => void
 }
 
-export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }: MobileLayoutProps) {
-  const tabs = [
-    { id: 'dashboard', label: 'Início', icon: Home },
-    { id: 'design', label: 'Design', icon: Palette },
-    { id: 'products', label: 'Produtos', icon: ShoppingBag },
-    { id: 'settings', label: 'Config', icon: Settings },
-  ]
+const tabs = [
+  { id: 'dashboard', label: 'Início', icon: Home },
+  { id: 'design', label: 'Design', icon: Palette },
+  { id: 'products', label: 'Produtos', icon: ShoppingBag },
+  { id: 'settings', label: 'Config', icon: Settings },
+]
 
+export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }: MobileLayoutProps) {
   return (
     <div className="min-h-screen bg-pink-50 flex flex-col">
       <div className="flex-1 pb-16">

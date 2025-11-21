@@ -5,13 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
-
   const isSupabaseConfigured = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Alerta de Configuração */}
         {!isSupabaseConfigured && (
           <Card className="mb-8 border-orange-200 bg-orange-50">
             <CardHeader>
@@ -29,14 +27,13 @@ const Index = () => {
                 <li>Criar um novo projeto</li>
                 <li>Ir em Settings &gt; API no dashboard</li>
                 <li>Copiar a URL e a chave "anon"</li>
-                <li>Editar o arquivo <code className="bg-orange-100 px-2 py-1 rounded">.env.local</code> com seus dados</li>
-                <li>Reiniciar o servidor de desenvolvimento</li>
+                <li>Editar o arquivo <code className="bg-orange-100 px-2 py-1 rounded">.env.local</code></li>
+                <li>Reiniciar o servidor</li>
               </ol>
             </CardContent>
           </Card>
         )}
 
-        {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             Cardápio Digital para Confeiteiras
@@ -59,7 +56,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <Card>
             <CardHeader>
@@ -110,7 +106,6 @@ const Index = () => {
           </Card>
         </div>
 
-        {/* CTA Section */}
         <div className="text-center bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-3xl font-bold mb-4">
             Pronta para transformar sua confeitaria?

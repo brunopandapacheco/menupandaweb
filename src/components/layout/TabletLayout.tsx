@@ -9,15 +9,15 @@ interface TabletLayoutProps {
   onTabChange?: (tab: string) => void
 }
 
-export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }: TabletLayoutProps) {
-  const tabs = [
-    { id: 'dashboard', label: 'Painel', icon: Home },
-    { id: 'preview', label: 'Prévia', icon: Menu },
-    { id: 'design', label: 'Design', icon: Palette },
-    { id: 'products', label: 'Produtos', icon: ShoppingBag },
-    { id: 'settings', label: 'Configurações', icon: Settings },
-  ]
+const tabs = [
+  { id: 'dashboard', label: 'Painel', icon: Home },
+  { id: 'preview', label: 'Prévia', icon: Menu },
+  { id: 'design', label: 'Design', icon: Palette },
+  { id: 'products', label: 'Produtos', icon: ShoppingBag },
+  { id: 'settings', label: 'Configurações', icon: Settings },
+]
 
+export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }: TabletLayoutProps) {
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-white border-r border-pink-200 p-4">

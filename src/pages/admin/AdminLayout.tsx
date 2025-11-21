@@ -14,21 +14,12 @@ export default function AdminLayout() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const device = useDeviceDetection()
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return <Dashboard />
-      case 'preview':
-        return <Preview />
-      case 'design':
-        return <DesignSettings />
-      case 'products':
-        return <ProductManager />
-      case 'settings':
-        return <Settings />
-      default:
-        return <Dashboard />
-    }
+  const content = {
+    dashboard: <Dashboard />,
+    preview: <Preview />,
+    design: <DesignSettings />,
+    products: <ProductManager />,
+    settings: <Settings />
   }
 
   const layoutProps = {
@@ -40,15 +31,15 @@ export default function AdminLayout() {
     <AuthGuard>
       {device === 'mobile' ? (
         <MobileLayout {...layoutProps}>
-          {renderContent()}
+          {content[activeTab as keyof typeof content]}
         </MobileLayout>
       ) : device === 'tablet' ? (
         <TabletLayout {...layoutProps}>
-          {renderContent()}
+          {content[activeTab as keyof typeof content]}
         </TabletLayout>
       ) : (
         <DesktopLayout {...layoutProps}>
-          {renderContent()}
+          {content[activeTab as keyof typeof content]}
         </DesktopLayout>
       )}
     </AuthGuard>

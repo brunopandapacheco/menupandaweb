@@ -13,12 +13,7 @@
     }
   },
   "installCommand": "npm install",
-  "buildCommand": "npm run vercel-build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
-  "functions": {
-    "app/**/*.tsx": {
-      "maxDuration": 30
-    }
-  }
+  "framework": "vite"
 }

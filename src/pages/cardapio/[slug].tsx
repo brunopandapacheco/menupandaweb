@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Search, Heart, Phone, Clock, Star, ChevronLeft, ChevronRight } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
-import { DesignSettings, Configuracoes, Produto } from '@/types/database'
+import { supabaseService } from '@/services/supabase'
+import { DesignSettings, Configuracoes, Produto } from '@/types'
 
 export default function CardapioPublico() {
   const { slug } = useParams()
@@ -20,9 +20,7 @@ export default function CardapioPublico() {
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
-    if (saved) {
-      setFavorites(JSON.parse(saved))
-    }
+    if (saved) setFavorites(JSON.parse(saved))
   }, [])
 
   useEffect(() => {
@@ -32,48 +30,6 @@ export default function CardapioPublico() {
   useEffect(() => {
     loadCardapioData()
   }, [slug])
-
-  const loadCardapioData = async () => {
-    try {
-      setLoading(true)
-      
-      // Buscar usuário pelo slug
-      const { data: designData, error: designError } = await supabase
-        .from('design_settings')
-        .select('*')
-        .eq('slug', slug)
-        .single()
-
-      if (designError || !designData) {
-        console.error('Confeitaria não encontrada:', designError)
-        setLoading(false)
-        return
-      }
-
-      // Carregar dados do cardápio
-      const [configData, produtosData] = await Promise.all([
-        supabase
-          .from('configuracoes')
-          .select('*')
-          .eq('user_id', designData.user_id)
-          .single(),
-        supabase
-          .from('produtos')
-          .select('*')
-          .eq('user_id', designData.user_id)
-          .eq('disponivel', true)
-          .order('created_at', { ascending: false })
-      ])
-
-      setDesignSettings(designData)
-      setConfiguracoes(configData.data)
-      setProdutos(produtosData.data || [])
-    } catch (error) {
-      console.error('Erro ao carregar dados do cardápio:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
     if (designSettings?.banner1_url || designSettings?.banner2_url) {
@@ -89,6 +45,33 @@ export default function CardapioPublico() {
       }
     }
   }, [designSettings])
+
+  const loadCardapioData = async () => {
+    if (!slug) return
+
+    try {
+      setLoading(true)
+      
+      const designData = await supabaseService.getDesignSettingsBySlug(slug)
+      if (!designData) {
+        setLoading(false)
+        return
+      }
+
+      const [configData, produtosData] = await Promise.all([
+        supabaseService.getConfiguracoes(designData.user_id),
+        supabaseService.getProdutos(designData.user_id)
+      ])
+
+      setDesignSettings(designData)
+      setConfiguracoes(configData)
+      setProdutos(produtosData.filter(p => p.disponivel))
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => 
@@ -129,7 +112,6 @@ export default function CardapioPublico() {
 
   const promotionalProducts = filteredProducts.filter(p => p.promocao)
   const regularProducts = filteredProducts.filter(p => !p.promocao)
-
   const categories = Array.from(new Set(produtos.map(p => p.categoria)))
 
   const banners = []
@@ -168,7 +150,6 @@ export default function CardapioPublico() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings.cor_background }}>
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        {/* Header */}
         <div 
           className="h-40 relative"
           style={{ backgroundColor: designSettings.background_topo_color }}
@@ -184,7 +165,6 @@ export default function CardapioPublico() {
           </div>
         </div>
 
-        {/* Info */}
         <div className="px-4 pb-4 -mt-8">
           <h1 
             className="text-3xl font-bold text-center mb-3"
@@ -211,7 +191,6 @@ export default function CardapioPublico() {
             </CardContent>
           </Card>
 
-          {/* Banner Carousel */}
           {banners.length > 0 && (
             <div className="relative mb-4 h-32 rounded-lg overflow-hidden shadow-sm">
               {banners.map((banner, index) => (
@@ -243,7 +222,6 @@ export default function CardapioPublico() {
             </div>
           )}
 
-          {/* Search */}
           <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
@@ -254,7 +232,6 @@ export default function CardapioPublico() {
             />
           </div>
 
-          {/* Categories */}
           <div className="mb-6">
             <h3 className="font-semibold mb-3 text-lg">Categorias</h3>
             <div className="flex gap-4 overflow-x-auto pb-2">
@@ -272,7 +249,6 @@ export default function CardapioPublico() {
             </div>
           </div>
 
-          {/* Promotional Products */}
           {promotionalProducts.length > 0 && (
             <div className="mb-6">
               <h3 className="font-semibold mb-3 text-lg flex items-center gap-2">
@@ -339,7 +315,6 @@ export default function CardapioPublico() {
             </div>
           )}
 
-          {/* Regular Products */}
           {regularProducts.length > 0 && (
             <div className="mb-6">
               <h3 className="font-semibold mb-3 text-lg">Todos os Produtos</h3>
@@ -396,7 +371,6 @@ export default function CardapioPublico() {
             </div>
           )}
 
-          {/* Footer */}
           <div className="mt-8 text-center text-sm text-gray-600 pb-8">
             <p>{designSettings.texto_rodape}</p>
           </div>

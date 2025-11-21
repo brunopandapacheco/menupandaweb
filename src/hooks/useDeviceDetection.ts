@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-
-export type DeviceType = 'mobile' | 'tablet' | 'desktop'
+import { DeviceType } from '@/types'
 
 export function useDeviceDetection(): DeviceType {
   const [device, setDevice] = useState<DeviceType>('desktop')
@@ -8,13 +7,9 @@ export function useDeviceDetection(): DeviceType {
   useEffect(() => {
     const checkDevice = () => {
       const width = window.innerWidth
-      if (width < 768) {
-        setDevice('mobile')
-      } else if (width < 1024) {
-        setDevice('tablet')
-      } else {
-        setDevice('desktop')
-      }
+      if (width < 768) setDevice('mobile')
+      else if (width < 1024) setDevice('tablet')
+      else setDevice('desktop')
     }
 
     checkDevice()

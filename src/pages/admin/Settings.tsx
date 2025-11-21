@@ -33,7 +33,6 @@ export default function Settings() {
   }, [configuracoes])
 
   const handleSave = async () => {
-    // Para compatibilidade com o backend, usamos o primeiro telefone como principal
     const telefonePrincipal = settings.telefones[0] || '(11) 99999-9999'
     const configParaSalvar = {
       ...settings,
@@ -41,9 +40,7 @@ export default function Settings() {
     }
     
     const success = await saveConfiguracoes(configParaSalvar)
-    if (success) {
-      showSuccess('Configurações salvas com sucesso!')
-    }
+    if (success) showSuccess('Configurações salvas!')
   }
 
   const addTelefone = () => {
@@ -76,12 +73,9 @@ export default function Settings() {
     }))
   }
 
-  // Opções simplificadas de pagamento
   const paymentMethods = ['Pix', 'Cartão', 'Dinheiro']
 
-  if (loading) {
-    return <div>Carregando configurações...</div>
-  }
+  if (loading) return <div>Carregando configurações...</div>
 
   return (
     <div className="space-y-6">
@@ -97,7 +91,6 @@ export default function Settings() {
               <Clock className="w-5 h-5" />
               Horário de Funcionamento
             </CardTitle>
-            <CardDescription className="text-gray-600">Defina seus horários de atendimento</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -129,7 +122,6 @@ export default function Settings() {
               <Phone className="w-5 h-5" />
               Contatos
             </CardTitle>
-            <CardDescription className="text-gray-600">Adicione múltiplos números de telefone</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
@@ -147,7 +139,7 @@ export default function Settings() {
                       variant="outline"
                       size="sm"
                       onClick={() => removeTelefone(index)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="text-red-600 hover:text-red-700"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -159,10 +151,10 @@ export default function Settings() {
                 type="button"
                 variant="outline"
                 onClick={addTelefone}
-                className="w-full border-dashed border-2 border-gray-300 hover:border-gray-400"
+                className="w-full border-dashed border-2"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Adicionar mais telefone
+                Adicionar telefone
               </Button>
             </div>
           </CardContent>
@@ -174,7 +166,6 @@ export default function Settings() {
               <CreditCard className="w-5 h-5" />
               Formas de Pagamento
             </CardTitle>
-            <CardDescription className="text-gray-600">Selecione as formas aceitas</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -198,7 +189,6 @@ export default function Settings() {
               <Truck className="w-5 h-5" />
               Entrega
             </CardTitle>
-            <CardDescription className="text-gray-600">Configure as opções de entrega</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-2">
@@ -226,45 +216,9 @@ export default function Settings() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle style={{ color: '#4A3531' }}>Resumo das Configurações</CardTitle>
-          <CardDescription className="text-gray-600">Visualize todas as configurações atuais</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm text-gray-600">Horário de Funcionamento</p>
-              <p className="font-medium">
-                {settings.horario_funcionamento_inicio} - {settings.horario_funcionamento_fim}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Telefones</p>
-              <p className="font-medium">
-                {settings.telefones.length > 0 
-                  ? settings.telefones.filter(t => t.trim()).join(', ') 
-                  : 'Nenhum telefone adicionado'
-                }
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Entrega</p>
-              <p className="font-medium">
-                {settings.entrega ? `Sim (R$ ${settings.taxa_entrega.toFixed(2)})` : 'Não'}
-              </p>
-            </div>
-            <div className="md:col-span-2 lg:col-span-1">
-              <p className="text-sm text-gray-600">Pagamentos</p>
-              <p className="font-medium">{settings.meios_pagamento.join(', ')}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="flex justify-end">
         <Button onClick={handleSave} size="lg">
-          Salvar Todas as Configurações
+          Salvar Configurações
         </Button>
       </div>
     </div>
