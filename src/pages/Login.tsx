@@ -10,12 +10,12 @@ export default function Login() {
   const handleSuccess = () => navigate('/admin')
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-4 overflow-hidden">
+    <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-4">
       <div className="flex flex-col items-center mb-8">
         <img 
           src="/logopandamenu.png" 
           alt="Logo da Empresa" 
-          className="w-48 h-32 object-contain drop-shadow-2xl"
+          className="w-40 h-28 object-contain drop-shadow-2xl"
         />
       </div>
 
