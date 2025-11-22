@@ -124,10 +124,40 @@ export default function DesignSettings() {
       </div>
 
       <Tabs defaultValue="cores" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="cores">Cores</TabsTrigger>
-          <TabsTrigger value="paletas">Paletas</TabsTrigger>
-          <TabsTrigger value="imagens">Imagens</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 h-auto p-2 bg-white rounded-xl shadow-sm">
+          <TabsTrigger 
+            value="cores" 
+            className="rounded-full data-[state=active]:bg-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+          >
+            <div className="flex flex-col items-center gap-1 py-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
+                <Palette className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xs font-medium">Cores</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="paletas" 
+            className="rounded-full data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+          >
+            <div className="flex flex-col items-center gap-1 py-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                <Eye className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xs font-medium">Paletas</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="imagens" 
+            className="rounded-full data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+          >
+            <div className="flex flex-col items-center gap-1 py-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                <Image className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xs font-medium">Imagens</span>
+            </div>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="cores">
@@ -270,7 +300,7 @@ export default function DesignSettings() {
                         {Object.entries(palette.colors).map(([key, color]) => (
                           <div key={key} className="flex items-center gap-3">
                             <div 
-                              className="w-8 h-8 rounded-lg border-2 border-gray-200"
+                              className="w-8 h-8 rounded-full border-2 border-gray-200"
                               style={{ backgroundColor: color }}
                             />
                             <span className="text-xs text-gray-600 capitalize">
