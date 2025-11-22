@@ -10,11 +10,11 @@ interface MobileLayoutProps {
 }
 
 const tabs = [
-  { id: 'dashboard', label: 'Início', icon: Home },
-  { id: 'design', label: 'Design', icon: Palette },
   { id: 'preview', label: 'Prévia', icon: Eye },
+  { id: 'design', label: 'Design', icon: Palette },
   { id: 'products', label: 'Produtos', icon: ShoppingBag },
   { id: 'settings', label: 'Config', icon: Settings },
+  { id: 'dashboard', label: 'Status', icon: Home },
 ]
 
 export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }: MobileLayoutProps) {
