@@ -156,13 +156,15 @@ export default function Dashboard() {
                       <p className="text-xs text-gray-600">{check.details}</p>
                     )}
                   </div>
-                  <Badge className={
-                    check.configured 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                  }>
-                    {check.configured ? 'Configurado' : 'Não configurado'}
-                  </Badge>
+                  <div className="pointer-events-none">
+                    <Badge className={
+                      check.configured 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }>
+                      {check.configured ? 'Configurado' : 'Não configurado'}
+                    </Badge>
+                  </div>
                 </div>
               ))}
             </div>
