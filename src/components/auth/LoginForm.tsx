@@ -49,7 +49,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   }
 
   return (
-    <form onSubmit={handleLogin} className="space-y-6">
+    <form onSubmit={handleLogin} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium text-black">
           Email ou Usuário
