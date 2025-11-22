@@ -159,8 +159,8 @@ export default function Dashboard() {
                   <div className="pointer-events-none">
                     <Badge className={
                       check.configured 
-                        ? 'bg-green-100 text-green-800 rounded-sm' 
-                        : 'bg-red-100 text-red-800 rounded-sm'
+                        ? 'bg-green-100 text-green-800 rounded-sm text-xs' 
+                        : 'bg-red-100 text-red-800 rounded-sm text-xs'
                     }>
                       {check.configured ? 'Configurado' : 'Não configurado'}
                     </Badge>
