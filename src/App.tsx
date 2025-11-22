@@ -13,13 +13,21 @@ import { EnvironmentError } from "./components/EnvironmentError";
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Verificação simples das variáveis de ambiente
-  const hasRequiredEnvVars = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY;
+  // Verificação das variáveis de ambiente
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
   
-  // Em produção, exige as variáveis. Em desenvolvimento, mostra erro se não tiver.
-  if (!hasRequiredEnvVars) {
+  console.log('🔍 Verificando variáveis de ambiente...');
+  console.log('VITE_SUPABASE_URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada');
+  console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada');
+  
+  // Se não tiver as variáveis, mostra erro
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('❌ Variáveis de ambiente não configuradas');
     return <EnvironmentError />;
   }
+  
+  console.log('✅ Variáveis de ambiente OK, iniciando aplicação...');
   
   return (
     <QueryClientProvider client={queryClient}>
