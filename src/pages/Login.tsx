@@ -10,7 +10,7 @@ export default function Login() {
   const handleSuccess = () => navigate('/admin')
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-4">
+    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-2">
       <div className="flex flex-col items-center mb-2">
         <img 
           src="/logopandamenu.png" 
