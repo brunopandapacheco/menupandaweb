@@ -178,7 +178,7 @@ export default function DesignSettings() {
 
         <TabsContent value="cores">
           <div className="space-y-6">
-            {selectedPalette && (
+            {selectedPalette ? (
               <Card className="border-primary/20 bg-primary/5">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
@@ -222,48 +222,34 @@ export default function DesignSettings() {
                   </p>
                 </CardContent>
               </Card>
-            )}
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
-                  <Palette className="w-5 h-5" />
-                  Alterar Cores
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {Object.entries(colorLabels).map(([key, label]) => (
-                  <div key={key} className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor={key} className="text-base font-medium">{label}</Label>
-                      <div className="flex items-center gap-3">
-                        {!isMobile && (
-                          <Input
-                            value={settings[key as keyof typeof settings] as string}
-                            onChange={(e) => updateColor(key as keyof typeof settings, e.target.value)}
-                            className="w-32"
-                            placeholder="#ec4899"
-                          />
-                        )}
-                        <Input
-                          type="color"
-                          value={settings[key as keyof typeof settings] as string}
-                          onChange={(e) => updateColor(key as keyof typeof settings, e.target.value)}
-                          className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
-                          style={{
-                            '-webkit-appearance': 'none',
-                            'appearance': 'none',
-                            'background': 'none',
-                            'border': 'none',
-                            'cursor': 'pointer'
-                          } as React.CSSProperties}
-                        />
-                      </div>
-                    </div>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+                    <Palette className="w-5 h-5" />
+                    Nenhuma Paleta Selecionada
+                  </CardTitle>
+                  <CardDescription>
+                    Escolha uma paleta na aba "Paletas" para começar a personalizar as cores
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <Palette className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-4">Selecione uma paleta para visualizar e editar as cores</p>
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        const tabsList = document.querySelector('[data-state="value"][value="paletas"]') as HTMLElement
+                        if (tabsList) tabsList.click()
+                      }}
+                    >
+                      Ver Paletas
+                    </Button>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
 
             <Card className="border-primary/20 bg-primary/5">
               <CardContent className="p-6">
