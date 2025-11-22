@@ -78,11 +78,15 @@ export default function Settings() {
   if (loading) return <div>Carregando configurações...</div>
 
   return (
-    <div className="space-y-6 px-4 sm:px-0">
-      <div>
-        <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Configurações</h1>
-        <p className="text-gray-600">Configure as informações do seu negócio</p>
-      </div>
+    <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+      <Card className="border-0 shadow-md bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb]">
+        <CardHeader>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-white">Configurações</h1>
+            <p className="text-white/90">Configure as informações do seu negócio</p>
+          </div>
+        </CardHeader>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
