@@ -70,10 +70,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="text-center">
-        <h1 className="text-3xl font-bold relative inline-block" style={{ color: '#1A1A1A' }}>
-          <span className="relative z-10">Visão Geral</span>
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-shine"></span>
-        </h1>
+        <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Visão Geral</h1>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
