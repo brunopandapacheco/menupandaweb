@@ -17,17 +17,24 @@ const App = () => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
   
-  console.log('🔍 Verificando variáveis de ambiente...');
-  console.log('VITE_SUPABASE_URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada');
-  console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada');
+  // Log para debug (apenas em desenvolvimento)
+  if (import.meta.env.DEV) {
+    console.log('🔍 Verificando variáveis de ambiente...');
+    console.log('VITE_SUPABASE_URL:', supabaseUrl ? '✅ Configurada' : '❌ Não configurada');
+    console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '✅ Configurada' : '❌ Não configurada');
+  }
   
   // Se não tiver as variáveis, mostra erro
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('❌ Variáveis de ambiente não configuradas');
+    if (import.meta.env.DEV) {
+      console.error('❌ Variáveis de ambiente não configuradas');
+    }
     return <EnvironmentError />;
   }
   
-  console.log('✅ Variáveis de ambiente OK, iniciando aplicação...');
+  if (import.meta.env.DEV) {
+    console.log('✅ Variáveis de ambiente OK, iniciando aplicação...');
+  }
   
   return (
     <QueryClientProvider client={queryClient}>
