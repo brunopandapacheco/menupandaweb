@@ -111,15 +111,11 @@ export default function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Status de Configuração</CardTitle>
+                <CardTitle className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Status do Cardápio</CardTitle>
                 <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
               </div>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                completionPercentage === 100 ? 'bg-green-100' : 'bg-pink-100'
-              }`}>
-                <span className={`text-sm font-bold ${
-                  completionPercentage === 100 ? 'text-green-800' : 'text-pink-800'
-                }`}>{completionPercentage}%</span>
+              <div className="bg-gray-500 text-white font-bold px-3 py-1.5 rounded">
+                <span className="text-sm">{completionPercentage}%</span>
               </div>
             </div>
           </CardHeader>
