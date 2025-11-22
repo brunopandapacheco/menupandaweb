@@ -96,7 +96,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-0 shadow-md">
           <CardHeader>
-            <CardTitle className="text-gray-900">Produtos em Destaque</CardTitle>
+            <CardTitle className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Produtos em Destaque</CardTitle>
             <CardDescription className="text-gray-600">Seus produtos mais vendidos</CardDescription>
           </CardHeader>
           <CardContent>
@@ -130,7 +130,7 @@ export default function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-gray-900 text-lg sm:text-xl font-bold">Status de Configuração</CardTitle>
+                <CardTitle className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Status de Configuração</CardTitle>
                 <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
               </div>
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
