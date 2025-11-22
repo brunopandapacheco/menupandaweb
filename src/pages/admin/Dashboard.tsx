@@ -16,7 +16,7 @@ export default function Dashboard() {
   const configChecks = [
     {
       title: 'Horário de atendimento',
-      configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
+      configured: configuracoes?.horario_funcionamento_inicio && configuracoes.horario_funcionamento_fim,
       details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : ''
     },
     {
@@ -78,55 +78,61 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="max-w-2xl mx-auto">
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>Status do Cardápio</CardTitle>
-                <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
-              </div>
-              <div className="text-white font-bold px-3 py-1.5 rounded" style={{ backgroundColor: '#2A2A2A' }}>
-                <span className="text-sm">{completionPercentage}%</span>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {configChecks.map((check, index) => (
-                <div key={index} className={`flex items-center justify-between p-2 border rounded-lg ${
-                  check.configured 
-                    ? 'bg-green-50 border-green-200' 
-                    : 'bg-gray-50 border-gray-200'
-                }`}>
-                  <div>
-                    <p className="font-medium text-gray-900 text-sm">{check.title}</p>
-                    {check.details && (
-                      <p className="text-xs text-gray-600">{check.details}</p>
-                    )}
-                  </div>
-                  <div className="pointer-events-none">
-                    <Badge className={
-                      check.configured 
-                        ? 'bg-green-100 text-green-800 rounded-sm text-xs' 
-                        : 'bg-red-100 text-red-800 rounded-sm text-xs'
-                    }>
-                      {check.configured ? 'Configurado' : 'Não configurado'}
-                    </Badge>
-                  </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1">
+          <Card className="border-0 shadow-md">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>Status do Cardápio</CardTitle>
+                  <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
                 </div>
-              ))}
-            </div>
-            
-            {completionPercentage < 100 && (
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  💡 Complete todas as configurações para ter seu cardápio 100% funcional!
-                </p>
+                <div className="text-white font-bold px-3 py-1.5 rounded" style={{ backgroundColor: '#2A2A2A' }}>
+                  <span className="text-sm">{completionPercentage}%</span>
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {configChecks.map((check, index) => (
+                  <div key={index} className={`flex items-center justify-between p-2 border rounded-lg ${
+                    check.configured 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-gray-50 border-gray-200'
+                  }`}>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{check.title}</p>
+                      {check.details && (
+                        <p className="text-xs text-gray-600">{check.details}</p>
+                      )}
+                    </div>
+                    <div className="pointer-events-none">
+                      <Badge className={
+                        check.configured 
+                          ? 'bg-green-100 text-green-800 rounded-sm text-xs' 
+                          : 'bg-red-100 text-red-800 rounded-sm text-xs'
+                      }>
+                        {check.configured ? 'Configurado' : 'Não configurado'}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {completionPercentage < 100 && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    💡 Complete todas as configurações para ter seu cardápio 100% funcional!
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+        
+        <div className="lg:col-span-2">
+          {/* Espaço para futuros componentes ou conteúdo */}
+        </div>
       </div>
     </div>
   )
