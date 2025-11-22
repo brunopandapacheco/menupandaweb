@@ -10,7 +10,7 @@ export default function Login() {
   const handleSuccess = () => navigate('/admin')
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-between bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-2 pt-12 pb-4">
+    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-2">
       <div className="flex flex-col items-center">
         <div className="flex flex-col items-center mb-6">
           <img 
@@ -31,10 +31,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-
-      <footer className="text-center text-white/80 text-sm">
-        <p>© 2025 Panda Menu Digital - Todos os direitos reservados</p>
-      </footer>
     </div>
   )
 }
