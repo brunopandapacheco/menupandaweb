@@ -130,7 +130,7 @@ export default function DesignSettings() {
             className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white/90 hover:text-[#1A1A1A]"
           >
             <div className="flex flex-col items-center gap-1 py-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center data-[state=active]:bg-transparent">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center data-[state=active]:bg-white">
                 <Palette className="w-4 h-4 text-white data-[state=active]:text-[#1A1A1A]" />
               </div>
               <span className="text-xs font-medium text-white data-[state=active]:text-[#1A1A1A]">Cores</span>
@@ -141,7 +141,7 @@ export default function DesignSettings() {
             className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white/90 hover:text-[#1A1A1A]"
           >
             <div className="flex flex-col items-center gap-1 py-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center data-[state=active]:bg-transparent">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center data-[state=active]:bg-white">
                 <Eye className="w-4 h-4 text-white data-[state=active]:text-[#1A1A1A]" />
               </div>
               <span className="text-xs font-medium text-white data-[state=active]:text-[#1A1A1A]">Paletas</span>
@@ -152,7 +152,7 @@ export default function DesignSettings() {
             className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white/90 hover:text-[#1A1A1A]"
           >
             <div className="flex flex-col items-center gap-1 py-2">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center data-[state=active]:bg-transparent">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center data-[state=active]:bg-white">
                 <Image className="w-4 h-4 text-white data-[state=active]:text-[#1A1A1A]" />
               </div>
               <span className="text-xs font-medium text-white data-[state=active]:text-[#1A1A1A]">Imagens</span>
