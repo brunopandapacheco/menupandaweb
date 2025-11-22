@@ -25,7 +25,7 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
         {children}
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 bg-[#230319] border-t border-pink-200 rounded-t-2xl">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#1A1A1A] border-t border-pink-200 rounded-t-2xl">
         <div className="grid grid-cols-4 gap-1 p-2">
           {tabs.map((tab) => {
             return (
@@ -33,10 +33,10 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
                 key={tab.id}
                 variant={activeTab === tab.id ? 'default' : 'ghost'}
                 className={cn(
-                  "flex items-center justify-center h-12 rounded-lg bg-white text-pink-600",
+                  "flex items-center justify-center h-12 rounded-lg bg-white text-[#1A1A1A]",
                   activeTab === tab.id 
                     ? "bg-white shadow-md" 
-                    : "hover:bg-gray-100"
+                    : "hover:bg-[#E18ABB] text-white"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
