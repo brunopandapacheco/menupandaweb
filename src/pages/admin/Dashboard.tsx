@@ -8,9 +8,9 @@ export default function Dashboard() {
 
   const metrics = [
     { title: 'Produtos', value: produtos?.length || '0', icon: Cookie, color: 'pink' },
-    { title: 'Pedidos', value: '142', icon: ShoppingBag, color: 'blue' },
-    { title: 'Receita', value: 'R$ 3.240', icon: DollarSign, color: 'green' },
-    { title: 'Clientes', value: '89', icon: Users, color: 'purple' }
+    { title: 'Pedidos', value: '0', icon: ShoppingBag, color: 'blue' },
+    { title: 'Receita', value: 'R$ 0', icon: DollarSign, color: 'green' },
+    { title: 'Clientes', value: '0', icon: Users, color: 'purple' }
   ]
 
   const products = [
