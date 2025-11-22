@@ -15,7 +15,6 @@ const colorPalettes = [
   {
     name: 'Rosa Chiclete com Caramelo',
     description: '',
-    emoji: '🎨',
     colors: {
       cor_borda: '#FF4F87',
       cor_background: '#FFF2F6',
@@ -26,7 +25,6 @@ const colorPalettes = [
   {
     name: 'Framboesa com Creme',
     description: '',
-    emoji: '🎨',
     colors: {
       cor_borda: '#D6336C',
       cor_background: '#FFF9F4',
@@ -37,7 +35,6 @@ const colorPalettes = [
   {
     name: 'Menta com Lilás',
     description: '',
-    emoji: '❄️',
     colors: {
       cor_borda: '#6FD8C8',
       cor_background: '#F4F7FF',
@@ -48,7 +45,6 @@ const colorPalettes = [
   {
     name: 'Azul Sorvete com Violeta',
     description: '',
-    emoji: '❄️',
     colors: {
       cor_borda: '#4C8BFF',
       cor_background: '#F3F5FF',
@@ -59,7 +55,6 @@ const colorPalettes = [
   {
     name: 'Mix Quente com Frio',
     description: '',
-    emoji: '⭐',
     colors: {
       cor_borda: '#FF7A7A',
       cor_background: '#FAFAFA',
@@ -159,19 +154,19 @@ export default function DesignSettings() {
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="paletas" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3"
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Paletas
           </TabsTrigger>
           <TabsTrigger 
             value="cores" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3"
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Cores
           </TabsTrigger>
           <TabsTrigger 
             value="imagens" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3"
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Imagens
           </TabsTrigger>
@@ -188,8 +183,7 @@ export default function DesignSettings() {
                   <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all">
                     <CardContent className="p-6">
                       <div className="text-center mb-4">
-                        <span className="text-2xl mb-2 block">{palette.emoji}</span>
-                        <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>{palette.name}</h3>
+                        <h3 className="font-black text-xl" style={{ color: '#4A3531' }}>{palette.name}</h3>
                       </div>
                       <div className="space-y-3 mb-4">
                         {Object.entries(palette.colors).map(([key, color]) => (
@@ -211,7 +205,7 @@ export default function DesignSettings() {
                       </div>
                       <Button 
                         size="sm" 
-                        className="w-full"
+                        className="w-full font-[650]"
                         onClick={() => applyPalette(palette)}
                       >
                         Aplicar Paleta
@@ -229,7 +223,7 @@ export default function DesignSettings() {
             {selectedPalette ? (
               <Card className="border-primary/20 bg-primary/5">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+                  <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
                     <Palette className="w-5 h-5" />
                     Paleta Atual: {selectedPalette.name}
                   </CardTitle>
@@ -273,7 +267,7 @@ export default function DesignSettings() {
             ) : (
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+                  <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
                     <Palette className="w-5 h-5" />
                     Nenhuma Paleta Selecionada
                   </CardTitle>
@@ -288,6 +282,7 @@ export default function DesignSettings() {
                     <Button 
                       variant="outline"
                       onClick={() => setActiveTab('paletas')}
+                      className="font-[650]"
                     >
                       Ver Paletas
                     </Button>
@@ -298,7 +293,7 @@ export default function DesignSettings() {
 
             <Card className="border-primary/20 bg-primary/5">
               <CardContent className="p-6">
-                <Button onClick={handleSave} className="w-full" size="lg">
+                <Button onClick={handleSave} className="w-full font-[650]" size="lg">
                   Salvar Configurações
                 </Button>
               </CardContent>
@@ -311,7 +306,7 @@ export default function DesignSettings() {
             {['logo', 'banner1', 'banner2'].map((type) => (
               <Card key={type}>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+                  <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
                     <Image className="w-5 h-5" />
                     {type === 'logo' ? 'Logo' : type === 'banner1' ? 'Banner Principal' : 'Banner Secundário'}
                   </CardTitle>
@@ -343,7 +338,7 @@ export default function DesignSettings() {
                         if (file) handleImageUpload(file, type as 'logo' | 'banner1' | 'banner2')
                       }}
                     />
-                    <Button asChild size="sm" variant="outline">
+                    <Button asChild size="sm" variant="outline" className="font-[650]">
                       <label htmlFor={`${type}-upload`} className="cursor-pointer">
                         {settings[`${type}_url`] ? 'Alterar' : 'Escolher Arquivo'}
                       </label>
