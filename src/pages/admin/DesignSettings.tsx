@@ -105,15 +105,6 @@ export default function DesignSettings() {
     }
   }
 
-  const handleNameChange = (name: string) => {
-    const newSettings = { 
-      ...settings, 
-      nome_confeitaria: name,
-      slug: generateSlug(name)
-    }
-    setSettings(newSettings)
-  }
-
   if (loading) return <div>Carregando...</div>
 
   return (
@@ -147,33 +138,6 @@ export default function DesignSettings() {
 
         <TabsContent value="cores">
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
-                  <Type className="w-5 h-5" />
-                  Informações Básicas
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nome_confeitaria">Nome da Confeitaria</Label>
-                  <Input
-                    id="nome_confeitaria"
-                    value={settings.nome_confeitaria}
-                    onChange={(e) => handleNameChange(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="texto_rodape">Texto do Rodapé</Label>
-                  <Input
-                    id="texto_rodape"
-                    value={settings.texto_rodape}
-                    onChange={(e) => setSettings(prev => ({ ...prev, texto_rodape: e.target.value }))}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
