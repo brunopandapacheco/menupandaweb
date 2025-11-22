@@ -22,7 +22,7 @@ export default function Dashboard() {
   // Verificações de configuração
   const configChecks = [
     {
-      title: 'Horário de Funcionamento',
+      title: 'Horário de atendimento',
       configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
       details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : ''
     },
@@ -129,21 +129,23 @@ export default function Dashboard() {
         <Card className="border-0 shadow-md">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
-                  <span className="text-sm font-bold text-pink-800">{completionPercentage}%</span>
-                </div>
-                <div>
-                  <CardTitle className="text-gray-900 text-lg sm:text-xl">Guia de Configuração</CardTitle>
-                  <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
-                </div>
+              <div>
+                <CardTitle className="text-gray-900 text-lg sm:text-xl">Guia de Configuração</CardTitle>
+                <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
+              </div>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                completionPercentage === 100 ? 'bg-green-100' : 'bg-pink-100'
+              }`}>
+                <span className={`text-sm font-bold ${
+                  completionPercentage === 100 ? 'text-green-800' : 'text-pink-800'
+                }`}>{completionPercentage}%</span>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {configChecks.map((check, index) => (
-                <div key={index} className={`flex items-center justify-between p-3 rounded-md border ${
+                <div key={index} className={`flex items-center justify-between p-3 border ${
                   check.configured 
                     ? 'bg-green-50 border-green-200' 
                     : 'bg-gray-50 border-gray-200'
