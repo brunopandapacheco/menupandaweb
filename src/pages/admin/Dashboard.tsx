@@ -37,12 +37,12 @@ export default function Dashboard() {
     {
       title: 'Design da Loja',
       configured: designSettings?.nome_confeitaria && designSettings.nome_confeitaria !== 'Doces da Vovó',
-      details: designSettings?.nome_confeitaria || ''
+      details: ''
     },
     {
       title: 'Produtos Cadastrados',
       configured: produtos && produtos.length > 0,
-      details: produtos ? `${produtos.length} produtos` : ''
+      details: ''
     }
   ]
 
