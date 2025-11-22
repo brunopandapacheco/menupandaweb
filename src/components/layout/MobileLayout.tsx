@@ -37,7 +37,7 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
                   "flex items-center justify-center h-12 rounded-lg text-white",
                   activeTab === tab.id 
                     ? "bg-white text-[#1A1A1A]" 
-                    : "hover:bg-[#C89BD3]"
+                    : "hover:bg-[#A63A6B]"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
