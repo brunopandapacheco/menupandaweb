@@ -22,21 +22,23 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold text-gray-900 text-center">Visão Geral</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {metrics.map((metric, index) => {
           const Icon = metric.icon
           return (
-            <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-gray-600">{metric.title}</CardTitle>
-                <div className={`w-10 h-10 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
-                  <Icon className={`h-5 w-5 text-${metric.color}-600`} />
+            <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-8 h-8 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
+                    <Icon className={`h-4 w-4 text-${metric.color}-600`} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                    <p className="text-lg font-bold text-gray-900">{metric.value}</p>
+                  </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{metric.value}</div>
-                <p className="text-xs text-green-600 mt-1">{metric.change}</p>
-              </CardContent>
+                <p className="text-xs text-green-600">{metric.change}</p>
+              </div>
             </Card>
           )
         })}
