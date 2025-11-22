@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Cookie, ShoppingBag, DollarSign, Users } from 'lucide-react'
+import { Cookie, ShoppingBag, Eye } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 
 export default function Dashboard() {
@@ -8,9 +8,8 @@ export default function Dashboard() {
 
   const metrics = [
     { title: 'Produtos', value: produtos?.length || '0', icon: Cookie, color: 'pink' },
-    { title: 'Pedidos', value: '0', icon: ShoppingBag, color: 'blue' },
-    { title: 'Receita', value: 'R$ 0', icon: DollarSign, color: 'green' },
-    { title: 'Clientes', value: '0', icon: Users, color: 'purple' }
+    { title: 'Visitas', value: '0', icon: Eye, color: 'blue' },
+    { title: 'Pedidos', value: '0', icon: ShoppingBag, color: 'green' }
   ]
 
   const products = [
@@ -74,7 +73,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Visão Geral</h1>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         {metrics.map((metric, index) => {
           const Icon = metric.icon
           return (
