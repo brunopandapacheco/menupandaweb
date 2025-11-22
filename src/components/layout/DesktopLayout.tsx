@@ -28,8 +28,8 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
         <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
-              <div className="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
-                <img src="/logointernaadmin.png" alt={`${systemName} Logo`} className="w-16 h-16 object-contain" />
+              <div className="w-32 h-32 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
+                <img src="/logointernaadmin.png" alt={`${systemName} Logo`} className="w-24 h-24 object-contain" />
               </div>
             </div>
           </div>
