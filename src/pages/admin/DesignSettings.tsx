@@ -247,7 +247,7 @@ export default function DesignSettings() {
         <TabsContent value="cores">
           <div className="space-y-6">
             {selectedPalette ? (
-              <Card className="border-primary/20 bg-primary/5">
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
                     <Palette className="w-5 h-5" />
@@ -258,7 +258,7 @@ export default function DesignSettings() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     {Object.entries(selectedPalette.colors).map(([key, color]) => (
                       <div key={key} className="text-center">
                         <div 
@@ -285,9 +285,12 @@ export default function DesignSettings() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-sm text-gray-600 mt-4 text-center">
+                  <p className="text-sm text-gray-600 mb-6 text-center">
                     💡 Clique em qualquer cor acima para editá-la individualmente
                   </p>
+                  <Button onClick={handleSave} className="w-full font-[650]" size="lg">
+                    Salvar Configurações
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
@@ -316,14 +319,6 @@ export default function DesignSettings() {
                 </CardContent>
               </Card>
             )}
-
-            <Card className="border-primary/20 bg-primary/5">
-              <CardContent className="p-6">
-                <Button onClick={handleSave} className="w-full font-[650]" size="lg">
-                  Salvar Configurações
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </TabsContent>
 
