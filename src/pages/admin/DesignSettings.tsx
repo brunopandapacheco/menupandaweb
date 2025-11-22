@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, Palette, Eye, Type, Image } from 'lucide-react'
+import { Upload, Palette, Eye, Type, Image, CheckCircle } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
 import { generateSlug } from '@/utils/helpers'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { toast } from 'sonner'
 
 const colorPalettes = [
   {
@@ -129,7 +130,12 @@ export default function DesignSettings() {
     setSettings(newSettings)
     setSelectedPalette(palette)
     const success = await saveDesignSettings(newSettings)
-    if (success) showSuccess(`Paleta "${palette.name}" aplicada!`)
+    if (success) {
+      toast.success(`🎨 Paleta "${palette.name}" aplicada com sucesso!`, {
+        description: 'Seu cardápio agora tem um visual renovado',
+        icon: <CheckCircle className="w-4 h-4" />
+      })
+    }
   }
 
   const handleImageUpload = async (file: File, type: 'logo' | 'banner1' | 'banner2') => {
