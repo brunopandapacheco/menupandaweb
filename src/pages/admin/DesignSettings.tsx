@@ -13,39 +13,58 @@ import { useIsMobile } from '@/hooks/use-mobile'
 
 const colorPalettes = [
   {
-    name: 'Doce',
+    name: 'Quente e Forte',
+    description: 'Rosa Chiclete + Caramelo',
+    emoji: '🎨',
     colors: {
-      cor_borda: '#ec4899',
-      cor_background: '#fef2f2',
-      cor_nome: '#be185d',
-      background_topo_color: '#fce7f3',
+      cor_borda: '#FF4F87',
+      cor_background: '#FFF2F6',
+      cor_nome: '#6B2E2E',
+      background_topo_color: '#FF92B5',
     }
   },
   {
-    name: 'Premium',
+    name: 'Doce Quente',
+    description: 'Framboesa + Creme',
+    emoji: '🎨',
     colors: {
-      cor_borda: '#7c3aed',
-      cor_background: '#f5f3ff',
-      cor_nome: '#5b21b6',
-      background_topo_color: '#ede9fe',
+      cor_borda: '#D6336C',
+      cor_background: '#FFF9F4',
+      cor_nome: '#8C4A3A',
+      background_topo_color: '#F7B8CC',
     }
   },
   {
-    name: 'Minimalista',
+    name: 'Fria e Suave',
+    description: 'Menta + Lilás',
+    emoji: '❄️',
     colors: {
-      cor_borda: '#6b7280',
-      cor_background: '#f9fafb',
-      cor_nome: '#374151',
-      background_topo_color: '#f3f4f6',
+      cor_borda: '#6FD8C8',
+      cor_background: '#F4F7FF',
+      cor_nome: '#6E61A8',
+      background_topo_color: '#A5E7DD',
     }
   },
   {
-    name: 'Moderno',
+    name: 'Fria e Forte',
+    description: 'Azul Sorvete + Violeta',
+    emoji: '❄️',
     colors: {
-      cor_borda: '#06b6d4',
-      cor_background: '#ecfeff',
-      cor_nome: '#0891b2',
-      background_topo_color: '#cffafe',
+      cor_borda: '#4C8BFF',
+      cor_background: '#F3F5FF',
+      cor_nome: '#5A3B91',
+      background_topo_color: '#8EBBFF',
+    }
+  },
+  {
+    name: 'Versátil',
+    description: 'Mix Quente + Frio',
+    emoji: '⭐',
+    colors: {
+      cor_borda: '#FF7A7A',
+      cor_background: '#FAFAFA',
+      cor_nome: '#B78CEB',
+      background_topo_color: '#FDAE85',
     }
   },
 ]
@@ -282,21 +301,30 @@ export default function DesignSettings() {
               <CardTitle style={{ color: '#4A3531' }}>Paletas Prontas</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {colorPalettes.map((palette) => (
                   <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all">
                     <CardContent className="p-6">
-                      <h3 className="font-semibold mb-4 text-center" style={{ color: '#4A3531' }}>{palette.name}</h3>
+                      <div className="text-center mb-4">
+                        <span className="text-2xl mb-2 block">{palette.emoji}</span>
+                        <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>{palette.name}</h3>
+                        <p className="text-sm text-gray-600">{palette.description}</p>
+                      </div>
                       <div className="space-y-3 mb-4">
                         {Object.entries(palette.colors).map(([key, color]) => (
                           <div key={key} className="flex items-center gap-3">
                             <div 
-                              className="w-8 h-8 rounded-full border-2 border-gray-200"
+                              className="w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm"
                               style={{ backgroundColor: color }}
                             />
-                            <span className="text-xs text-gray-600 capitalize">
-                              {key.replace(/_/g, ' ')}
-                            </span>
+                            <div className="flex-1">
+                              <span className="text-xs text-gray-600 capitalize block">
+                                {key.replace(/_/g, ' ')}
+                              </span>
+                              <span className="text-xs font-mono text-gray-500">
+                                {color}
+                              </span>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -305,7 +333,7 @@ export default function DesignSettings() {
                         className="w-full"
                         onClick={() => applyPalette(palette)}
                       >
-                        Aplicar
+                        Aplicar Paleta
                       </Button>
                     </CardContent>
                   </Card>
