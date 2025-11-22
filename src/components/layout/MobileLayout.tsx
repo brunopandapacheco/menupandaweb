@@ -25,7 +25,7 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
         {children}
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 bg-[#230319] border-t border-pink-200 rounded-t-3xl">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#230319] border-t border-pink-200 rounded-t-2xl">
         <div className="grid grid-cols-4 gap-1 p-2">
           {tabs.map((tab) => {
             return (
