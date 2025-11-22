@@ -4,10 +4,10 @@ import { Cake, ShoppingCart, TrendingUp, Users } from 'lucide-react'
 
 export default function Dashboard() {
   const metrics = [
-    { title: 'Produtos', value: '24', change: '+2', icon: Cake, color: 'pink' },
-    { title: 'Pedidos', value: '142', change: '+18%', icon: ShoppingCart, color: 'blue' },
-    { title: 'Receita', value: 'R$ 3.240', change: '+25%', icon: TrendingUp, color: 'green' },
-    { title: 'Clientes', value: '89', change: '+12', icon: Users, color: 'purple' }
+    { title: 'Produtos', value: '24', icon: Cake, color: 'pink' },
+    { title: 'Pedidos', value: '142', icon: ShoppingCart, color: 'blue' },
+    { title: 'Receita', value: 'R$ 3.240', icon: TrendingUp, color: 'green' },
+    { title: 'Clientes', value: '89', icon: Users, color: 'purple' }
   ]
 
   const products = [
@@ -27,17 +27,14 @@ export default function Dashboard() {
           const Icon = metric.icon
           return (
             <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
-                    <Icon className={`h-4 w-4 text-${metric.color}-600`} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{metric.title}</p>
-                    <p className="text-lg font-bold text-gray-900">{metric.value}</p>
-                  </div>
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
+                  <Icon className={`h-4 w-4 text-${metric.color}-600`} />
                 </div>
-                <p className="text-xs text-green-600">{metric.change}</p>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                  <p className="text-lg font-bold text-gray-900">{metric.value}</p>
+                </div>
               </div>
             </Card>
           )
