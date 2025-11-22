@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, Edit, Trash2, Upload, X } from 'lucide-react'
+import { Plus, Edit, Trash2, Upload, X, GripVertical } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
@@ -26,6 +26,7 @@ export default function ProductManager() {
   const { produtos, addProduto, editProduto, removeProduto, loading } = useDatabase()
   const [editingProduct, setEditingProduct] = useState<Partial<Produto> | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   const handleSave = async () => {
     if (!editingProduct) return
@@ -88,6 +89,43 @@ export default function ProductManager() {
   const getProductImages = (imagemUrl: string) => {
     if (!imagemUrl) return []
     return imagemUrl.split(',').filter(Boolean)
+  }
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault()
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) return
+    
+    if (editingProduct?.imagem_url) {
+      const currentImages = getProductImages(editingProduct.imagem_url)
+      const draggedImage = currentImages[draggedIndex]
+      
+      // Remove da posição original
+      currentImages.splice(draggedIndex, 1)
+      // Insere na nova posição
+      currentImages.splice(dropIndex, 0, draggedImage)
+      
+      setEditingProduct(prev => ({ 
+        ...prev, 
+        imagem_url: currentImages.filter(Boolean).join(',') 
+      }))
+    }
+    
+    setDraggedIndex(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
   }
 
   if (loading) return <div>Carregando produtos...</div>
@@ -196,19 +234,29 @@ export default function ProductManager() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Imagens (até 3)</Label>
+              <Label>Imagens (até 3) - Arraste para reordenar</Label>
               <div className="grid grid-cols-3 gap-2">
                 {[0, 1, 2].map((index) => {
                   const images = getProductImages(editingProduct?.imagem_url || '')
                   return (
                     <div key={index} className="relative">
                       {images[index] ? (
-                        <div className="relative">
+                        <div 
+                          className="relative cursor-move"
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, index)}
+                          onDragOver={handleDragOver}
+                          onDrop={(e) => handleDrop(e, index)}
+                          onDragEnd={handleDragEnd}
+                        >
                           <img 
                             src={images[index]} 
                             alt={`Imagem ${index + 1}`}
-                            className="w-full h-24 object-cover rounded border"
+                            className="w-full h-24 object-cover rounded border border-gray-300 hover:border-blue-400 transition-colors" 
                           />
+                          <div className="absolute top-1 left-1 bg-black/50 text-white p-1 rounded">
+                            <GripVertical className="w-3 h-3" />
+                          </div>
                           <Button
                             type="button"
                             size="sm"
@@ -242,6 +290,9 @@ export default function ProductManager() {
                   )
                 })}
               </div>
+              <p className="text-xs text-gray-500 text-center">
+                💡 Arraste as imagens para reordenar a posição
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
