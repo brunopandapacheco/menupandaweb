@@ -13,8 +13,8 @@ import { useIsMobile } from '@/hooks/use-mobile'
 
 const colorPalettes = [
   {
-    name: 'Quente e Forte',
-    description: 'Rosa Chiclete + Caramelo',
+    name: 'Rosa Chiclete com Caramelo',
+    description: '',
     emoji: '🎨',
     colors: {
       cor_borda: '#FF4F87',
@@ -24,8 +24,8 @@ const colorPalettes = [
     }
   },
   {
-    name: 'Doce Quente',
-    description: 'Framboesa + Creme',
+    name: 'Framboesa com Creme',
+    description: '',
     emoji: '🎨',
     colors: {
       cor_borda: '#D6336C',
@@ -35,8 +35,8 @@ const colorPalettes = [
     }
   },
   {
-    name: 'Fria e Suave',
-    description: 'Menta + Lilás',
+    name: 'Menta com Lilás',
+    description: '',
     emoji: '❄️',
     colors: {
       cor_borda: '#6FD8C8',
@@ -46,8 +46,8 @@ const colorPalettes = [
     }
   },
   {
-    name: 'Fria e Forte',
-    description: 'Azul Sorvete + Violeta',
+    name: 'Azul Sorvete com Violeta',
+    description: '',
     emoji: '❄️',
     colors: {
       cor_borda: '#4C8BFF',
@@ -57,8 +57,8 @@ const colorPalettes = [
     }
   },
   {
-    name: 'Versátil',
-    description: 'Mix Quente + Frio',
+    name: 'Mix Quente com Frio',
+    description: '',
     emoji: '⭐',
     colors: {
       cor_borda: '#FF7A7A',
@@ -190,7 +190,6 @@ export default function DesignSettings() {
                       <div className="text-center mb-4">
                         <span className="text-2xl mb-2 block">{palette.emoji}</span>
                         <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>{palette.name}</h3>
-                        <p className="text-sm text-gray-600">{palette.description}</p>
                       </div>
                       <div className="space-y-3 mb-4">
                         {Object.entries(palette.colors).map(([key, color]) => (
