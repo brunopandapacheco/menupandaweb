@@ -124,13 +124,13 @@ export default function DesignSettings() {
       </div>
 
       <Tabs defaultValue="cores" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 h-auto p-2 bg-white rounded-xl shadow-sm">
+        <TabsList className="grid w-full grid-cols-3 h-auto p-2 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
-            className="rounded-full data-[state=active]:bg-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white/20"
           >
             <div className="flex flex-col items-center gap-1 py-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Palette className="w-4 h-4 text-white" />
               </div>
               <span className="text-xs font-medium">Cores</span>
@@ -138,10 +138,10 @@ export default function DesignSettings() {
           </TabsTrigger>
           <TabsTrigger 
             value="paletas" 
-            className="rounded-full data-[state=active]:bg-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white/20"
           >
             <div className="flex flex-col items-center gap-1 py-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Eye className="w-4 h-4 text-white" />
               </div>
               <span className="text-xs font-medium">Paletas</span>
@@ -149,10 +149,10 @@ export default function DesignSettings() {
           </TabsTrigger>
           <TabsTrigger 
             value="imagens" 
-            className="rounded-full data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white/20"
           >
             <div className="flex flex-col items-center gap-1 py-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Image className="w-4 h-4 text-white" />
               </div>
               <span className="text-xs font-medium">Imagens</span>
