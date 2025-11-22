@@ -24,7 +24,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
 
   return (
     <div className="min-h-screen bg-pink-50 flex">
-      <div className="w-64 bg-[#E89EAE] border-r border-pink-200 flex flex-col">
+      <div className="w-64 bg-[#230319] border-r border-pink-200 flex flex-col">
         <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
