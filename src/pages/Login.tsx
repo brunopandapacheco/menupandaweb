@@ -10,25 +10,31 @@ export default function Login() {
   const handleSuccess = () => navigate('/admin')
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-start bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-2 pt-12">
-      <div className="flex flex-col items-center mb-6">
-        <img 
-          src="/logopandamenu.png" 
-          alt="Logo da Empresa" 
-          className="w-48 h-32 object-contain drop-shadow-2xl"
-        />
-      </div>
+    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-between bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-2 pt-12 pb-4">
+      <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mb-6">
+          <img 
+            src="/logopandamenu.png" 
+            alt="Logo da Empresa" 
+            className="w-48 h-32 object-contain drop-shadow-2xl"
+          />
+        </div>
 
-      <div className="w-full max-w-md">
-        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 pt-6">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Acesse sua conta</h1>
-            <p className="text-gray-600">Faça login para acessar seu painel</p>
+        <div className="w-full max-w-md">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 pt-6">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Acesse sua conta</h1>
+              <p className="text-gray-600">Faça login para acessar seu painel</p>
+            </div>
+            
+            <LoginForm onSuccess={handleSuccess} />
           </div>
-          
-          <LoginForm onSuccess={handleSuccess} />
         </div>
       </div>
+
+      <footer className="text-center text-white/80 text-sm">
+        <p>© 2025 Panda Menu Digital - Todos os direitos reservados</p>
+      </footer>
     </div>
   )
 }
