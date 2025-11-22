@@ -73,6 +73,7 @@ export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
   const isMobile = useIsMobile()
   const [selectedPalette, setSelectedPalette] = useState<typeof colorPalettes[0] | null>(null)
+  const [activeTab, setActiveTab] = useState('cores')
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
     slug: 'doces-da-vo',
@@ -154,7 +155,7 @@ export default function DesignSettings() {
         <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Cores, fontes e elementos do seu jeito</p>
       </div>
 
-      <Tabs defaultValue="cores" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
@@ -239,10 +240,7 @@ export default function DesignSettings() {
                     <p className="text-gray-600 mb-4">Selecione uma paleta para visualizar e editar as cores</p>
                     <Button 
                       variant="outline"
-                      onClick={() => {
-                        const tabsList = document.querySelector('[data-state="value"][value="paletas"]') as HTMLElement
-                        if (tabsList) tabsList.click()
-                      }}
+                      onClick={() => setActiveTab('paletas')}
                     >
                       Ver Paletas
                     </Button>
