@@ -127,7 +127,7 @@ export default function DesignSettings() {
         <TabsList className="grid w-full grid-cols-3 h-auto p-2 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
-            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white hover:text-[#d11b70]"
+            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white"
           >
             <div className="flex flex-col items-center gap-1 py-2">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
@@ -138,7 +138,7 @@ export default function DesignSettings() {
           </TabsTrigger>
           <TabsTrigger 
             value="paletas" 
-            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white hover:text-[#d11b70]"
+            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white"
           >
             <div className="flex flex-col items-center gap-1 py-2">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
@@ -149,7 +149,7 @@ export default function DesignSettings() {
           </TabsTrigger>
           <TabsTrigger 
             value="imagens" 
-            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white hover:bg-white hover:text-[#d11b70]"
+            className="rounded-full data-[state=active]:bg-white data-[state=active]:text-[#d11b70] data-[state=active]:shadow-md transition-all duration-200 text-white"
           >
             <div className="flex flex-col items-center gap-1 py-2">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
