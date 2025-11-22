@@ -36,8 +36,8 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
                 className={cn(
                   "flex flex-col items-center gap-1 h-16 rounded-lg",
                   activeTab === tab.id 
-                    ? "bg-pink-600 hover:bg-pink-700 text-white" 
-                    : "text-white/70 hover:bg-pink-900 hover:text-white"
+                    ? "bg-[#ff3a9e] hover:bg-pink-700 text-white" 
+                    : "text-white/70 hover:bg-[#ff3a9e] hover:text-white"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
