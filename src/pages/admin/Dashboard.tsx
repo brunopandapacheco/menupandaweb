@@ -7,9 +7,9 @@ export default function Dashboard() {
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
 
   const metrics = [
-    { title: 'Produtos', value: produtos?.length || '0', icon: Cookie, color: 'pink' },
-    { title: 'Visitas', value: '0', icon: Eye, color: 'blue' },
-    { title: 'Pedidos', value: '0', icon: ShoppingBag, color: 'green' }
+    { title: 'Produtos', value: produtos?.length || '0', color: 'pink' },
+    { title: 'Visitas', value: '0', color: 'blue' },
+    { title: 'Pedidos', value: '0', color: 'green' }
   ]
 
   const products = [
@@ -74,22 +74,14 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        {metrics.map((metric, index) => {
-          const Icon = metric.icon
-          return (
-            <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-sm p-4">
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
-                  <Icon className={`h-4 w-4 text-${metric.color}-600`} />
-                </div>
-                <div>
-                  <p className="text-sm" style={{ color: '#1A1A1A' }}>{metric.title}</p>
-                  <p className="text-lg font-semibold text-gray-900">{metric.value}</p>
-                </div>
-              </div>
-            </Card>
-          )
-        })}
+        {metrics.map((metric, index) => (
+          <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-sm p-4">
+            <div className="text-center">
+              <p className="text-sm" style={{ color: '#1A1A1A' }}>{metric.title}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-2">{metric.value}</p>
+            </div>
+          </Card>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
