@@ -133,7 +133,7 @@ export default function DesignSettings() {
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Palette className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xs font-medium">Cores</span>
+              <span className="text-xs font-medium text-white">Cores</span>
             </div>
           </TabsTrigger>
           <TabsTrigger 
@@ -144,7 +144,7 @@ export default function DesignSettings() {
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Eye className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xs font-medium">Paletas</span>
+              <span className="text-xs font-medium text-white">Paletas</span>
             </div>
           </TabsTrigger>
           <TabsTrigger 
@@ -155,7 +155,7 @@ export default function DesignSettings() {
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Image className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xs font-medium">Imagens</span>
+              <span className="text-xs font-medium text-white">Imagens</span>
             </div>
           </TabsTrigger>
         </TabsList>
