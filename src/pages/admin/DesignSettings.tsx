@@ -18,7 +18,7 @@ const colorPalettes = [
     colors: {
       cor_borda: '#B5673E',
       cor_background: '#F4D4D4',
-      cor_nome: '#B5673E',
+      cor_nome: '#D2E0D8',
       background_topo_color: '#EDB889',
     }
   },
@@ -28,7 +28,7 @@ const colorPalettes = [
     colors: {
       cor_borda: '#791B25',
       cor_background: '#EFE8DA',
-      cor_nome: '#791B25',
+      cor_nome: '#EF8DB1',
       background_topo_color: '#EDBABA',
     }
   },
@@ -38,7 +38,7 @@ const colorPalettes = [
     colors: {
       cor_borda: '#4A3531',
       cor_background: '#EFE8DA',
-      cor_nome: '#4A3531',
+      cor_nome: '#EE7480',
       background_topo_color: '#BF9EA7',
     }
   },
@@ -48,7 +48,7 @@ const colorPalettes = [
     colors: {
       cor_borda: '#0B99A0',
       cor_background: '#FFFFFF',
-      cor_nome: '#0B99A0',
+      cor_nome: '#E89EAE',
       background_topo_color: '#89D6DF',
     }
   },
@@ -58,7 +58,7 @@ const colorPalettes = [
     colors: {
       cor_borda: '#6B2E2E',
       cor_background: '#FFF2F6',
-      cor_nome: '#6B2E2E',
+      cor_nome: '#FF4F87',
       background_topo_color: '#FF92B5',
     }
   },
@@ -78,7 +78,7 @@ const colorPalettes = [
     colors: {
       cor_borda: '#6E61A8',
       cor_background: '#F4F7FF',
-      cor_nome: '#6E61A8',
+      cor_nome: '#6FD8C8',
       background_topo_color: '#A5E7DD',
     }
   },
