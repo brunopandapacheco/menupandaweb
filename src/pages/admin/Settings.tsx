@@ -78,7 +78,7 @@ export default function Settings() {
   if (loading) return <div>Carregando configurações...</div>
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 sm:px-0">
       <div>
         <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Configurações</h1>
         <p className="text-gray-600">Configure as informações do seu negócio</p>
