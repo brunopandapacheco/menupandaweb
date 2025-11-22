@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, Edit, Trash2, Upload, X, GripVertical } from 'lucide-react'
+import { Plus, Edit, Trash2, Upload, X, GripVertical, Filter } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
@@ -27,6 +27,7 @@ export default function ProductManager() {
   const [editingProduct, setEditingProduct] = useState<Partial<Produto> | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string>('todas')
 
   const handleSave = async () => {
     if (!editingProduct) return
@@ -128,6 +129,14 @@ export default function ProductManager() {
     setDraggedIndex(null)
   }
 
+  // Obter categorias únicas
+  const categories = Array.from(new Set(produtos.map(p => p.categoria)))
+  
+  // Filtrar produtos por categoria
+  const filteredProducts = selectedCategory === 'todas' 
+    ? produtos 
+    : produtos.filter(p => p.categoria === selectedCategory)
+
   if (loading) return <div>Carregando produtos...</div>
 
   return (
@@ -147,16 +156,44 @@ export default function ProductManager() {
         </CardHeader>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {produtos.map((product) => {
+      {/* Card de Filtros */}
+      <Card className="border-0 shadow-md">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-4">
+            <Filter className="w-5 h-5 text-gray-600" />
+            <div className="flex-1">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-full max-w-xs">
+                  <SelectValue placeholder="Filtrar por categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todas">Todas as categorias</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="text-sm text-gray-600">
+              {filteredProducts.length} produto{filteredProducts.length !== 1 ? 's' : ''}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Grid de Produtos - 2 por linha */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {filteredProducts.map((product) => {
           const images = getProductImages(product.imagem_url)
           return (
-            <Card key={product.id} className="relative">
-              <CardHeader>
+            <Card key={product.id} className="relative overflow-hidden hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg" style={{ color: '#4A3531' }}>{product.nome}</CardTitle>
-                    <CardDescription>{product.categoria}</CardDescription>
+                  <div className="flex-1">
+                    <CardTitle className="text-xl" style={{ color: '#4A3531' }}>{product.nome}</CardTitle>
+                    <CardDescription className="text-sm mt-1">{product.categoria}</CardDescription>
                   </div>
                   <div className="flex gap-1">
                     <Button size="sm" variant="ghost" onClick={() => openDialog(product)}>
@@ -168,28 +205,36 @@ export default function ProductManager() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                {/* Imagem do Produto */}
                 {images.length > 0 && (
-                  <div className="mb-4">
-                    <div className="relative h-32 rounded-lg overflow-hidden">
-                      <img 
-                        src={images[0]} 
-                        alt={product.nome} 
-                        className="w-full h-full object-cover" 
-                      />
-                      {images.length > 1 && (
-                        <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                          +{images.length - 1}
-                        </div>
-                      )}
-                    </div>
+                  <div className="relative h-48 rounded-lg overflow-hidden">
+                    <img 
+                      src={images[0]} 
+                      alt={product.nome} 
+                      className="w-full h-full object-cover" 
+                    />
+                    {images.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                        +{images.length - 1}
+                      </div>
+                    )}
                   </div>
                 )}
-                <p className="text-sm text-gray-600 mb-4">{product.descricao}</p>
-                
+
+                {/* Descrição */}
+                <div>
+                  <p className="text-sm text-gray-600 line-clamp-2">{product.descricao}</p>
+                </div>
+
+                {/* Preço e Tipo */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span>Preço:</span>
+                    <span className="text-sm text-gray-600">Tipo:</span>
+                    <span className="text-sm font-medium capitalize">{product.forma_venda}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Preço:</span>
                     <div className="text-right">
                       {product.promocao && product.preco_promocional ? (
                         <div>
@@ -207,14 +252,10 @@ export default function ProductManager() {
                       )}
                     </div>
                   </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Tipo:</span>
-                    <span className="text-sm capitalize">{product.forma_venda}</span>
-                  </div>
                 </div>
 
-                <div className="flex gap-2 mt-4">
+                {/* Badges */}
+                <div className="flex gap-2">
                   <Badge variant={product.disponivel ? 'default' : 'secondary'}>
                     {product.disponivel ? 'Disponível' : 'Indisponível'}
                   </Badge>
@@ -227,6 +268,32 @@ export default function ProductManager() {
           )
         })}
       </div>
+
+      {/* Mensagem quando não há produtos */}
+      {filteredProducts.length === 0 && (
+        <Card className="border-0 shadow-md">
+          <CardContent className="p-12 text-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Plus className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {selectedCategory === 'todas' ? 'Nenhum produto cadastrado' : `Nenhum produto em "${selectedCategory}"`}
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {selectedCategory === 'todas' 
+                ? 'Comece cadastrando seu primeiro produto' 
+                : 'Tente selecionar outra categoria ou cadastre novos produtos'
+              }
+            </p>
+            {selectedCategory === 'todas' && (
+              <Button onClick={() => openDialog()}>
+                <Plus className="w-4 h-4 mr-2" />
+                Cadastrar Primeiro Produto
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
