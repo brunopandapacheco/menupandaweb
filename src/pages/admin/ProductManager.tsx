@@ -131,17 +131,21 @@ export default function ProductManager() {
   if (loading) return <div>Carregando produtos...</div>
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Produtos</h1>
-          <p className="text-gray-600">Gerencie seus produtos</p>
-        </div>
-        <Button onClick={() => openDialog()}>
-          <Plus className="w-4 h-4 mr-2" />
-          Novo Produto
-        </Button>
-      </div>
+    <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+      <Card className="border-0 shadow-md">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold" style={{ color: '#4A3531' }}>Produtos</h1>
+              <p className="text-gray-600">Gerencie seus produtos</p>
+            </div>
+            <Button onClick={() => openDialog()}>
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Produto
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {produtos.map((product) => {
