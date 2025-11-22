@@ -1,10 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Cookie, ShoppingBag, DollarSign, Users } from 'lucide-react'
+import { Cookie, ShoppingBag, DollarSign, Users, Check, X, Clock, Phone, CreditCard, Truck, Palette, Package } from 'lucide-react'
+import { useDatabase } from '@/hooks/useDatabase'
 
 export default function Dashboard() {
+  const { designSettings, configuracoes, produtos, loading } = useDatabase()
+
   const metrics = [
-    { title: 'Produtos', value: '24', icon: Cookie, color: 'pink' },
+    { title: 'Produtos', value: produtos?.length || '0', icon: Cookie, color: 'pink' },
     { title: 'Pedidos', value: '142', icon: ShoppingBag, color: 'blue' },
     { title: 'Receita', value: 'R$ 3.240', icon: DollarSign, color: 'green' },
     { title: 'Clientes', value: '89', icon: Users, color: 'purple' }
@@ -15,6 +18,61 @@ export default function Dashboard() {
     { name: 'Cupcake Morango', sales: 32, status: 'promo', trend: '+8%' },
     { name: 'Torta Limão', sales: 28, status: 'active', trend: '+5%' }
   ]
+
+  // Verificações de configuração
+  const configChecks = [
+    {
+      title: 'Horário de Funcionamento',
+      icon: Clock,
+      configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
+      details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : 'Não configurado'
+    },
+    {
+      title: 'Telefone de Contato',
+      icon: Phone,
+      configured: configuracoes?.telefone && configuracoes.telefone !== '(11) 99999-9999',
+      details: configuracoes?.telefone || 'Não configurado'
+    },
+    {
+      title: 'Formas de Pagamento',
+      icon: CreditCard,
+      configured: configuracoes?.meios_pagamento && configuracoes.meios_pagamento.length > 0,
+      details: configuracoes?.meios_pagamento ? `${configuracoes.meios_pagamento.length} métodos` : 'Não configurado'
+    },
+    {
+      title: 'Configuração de Entrega',
+      icon: Truck,
+      configured: configuracoes?.entrega !== undefined,
+      details: configuracoes?.entrega ? 'Entrega ativada' : 'Entrega desativada'
+    },
+    {
+      title: 'Design da Loja',
+      icon: Palette,
+      configured: designSettings?.nome_confeitaria && designSettings.nome_confeitaria !== 'Doces da Vovó',
+      details: designSettings?.nome_confeitaria || 'Não configurado'
+    },
+    {
+      title: 'Produtos Cadastrados',
+      icon: Package,
+      configured: produtos && produtos.length > 0,
+      details: produtos ? `${produtos.length} produtos` : 'Nenhum produto'
+    }
+  ]
+
+  const configuredCount = configChecks.filter(check => check.configured).length
+  const totalChecks = configChecks.length
+  const completionPercentage = Math.round((configuredCount / totalChecks) * 100)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p>Carregando dashboard...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
@@ -76,50 +134,63 @@ export default function Dashboard() {
 
         <Card className="border-0 shadow-md">
           <CardHeader>
-            <CardTitle className="text-gray-900">Status da Loja</CardTitle>
-            <CardDescription className="text-gray-600">Informações importantes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 border border-green-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Horário de Funcionamento</p>
-                    <p className="text-sm text-gray-600">08:00 - 18:00</p>
-                  </div>
-                </div>
-                <Badge className="bg-green-100 text-green-800">Aberto</Badge>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-gray-900">Guia de Configuração</CardTitle>
+                <CardDescription className="text-gray-600">Verifique se tudo está configurado</CardDescription>
               </div>
-
-              <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50 border border-blue-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Entrega</p>
-                    <p className="text-sm text-gray-600">Taxa: R$ 5,00</p>
-                  </div>
-                </div>
-                <Badge className="bg-blue-100 text-blue-800">Disponível</Badge>
-              </div>
-
-              <div className="flex items-center justify-between p-4 rounded-lg bg-purple-50 border border-purple-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Pagamentos</p>
-                    <p className="text-sm text-gray-600">3 métodos</p>
-                  </div>
-                </div>
-                <Badge className="bg-purple-100 text-purple-800">Ativos</Badge>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-gray-900">{completionPercentage}%</div>
+                <div className="text-sm text-gray-600">{configuredCount}/{totalChecks} configurado</div>
               </div>
             </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {configChecks.map((check, index) => {
+                const Icon = check.icon
+                return (
+                  <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                    check.configured 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-red-50 border-red-200'
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        check.configured 
+                          ? 'bg-green-100' 
+                          : 'bg-red-100'
+                      }`}>
+                        {check.configured ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <X className="w-4 h-4 text-red-600" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{check.title}</p>
+                        <p className="text-sm text-gray-600">{check.details}</p>
+                      </div>
+                    </div>
+                    <Badge className={
+                      check.configured 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }>
+                      {check.configured ? 'Configurado' : 'Não configurado'}
+                    </Badge>
+                  </div>
+                )
+              })}
+            </div>
+            
+            {completionPercentage < 100 && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  💡 Complete todas as configurações para ter seu cardápio 100% funcional!
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
