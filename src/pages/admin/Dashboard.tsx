@@ -114,7 +114,7 @@ export default function Dashboard() {
                 <CardTitle className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Status do Cardápio</CardTitle>
                 <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
               </div>
-              <div className="bg-gray-500 text-white font-bold px-3 py-1.5 rounded">
+              <div className="text-white font-bold px-3 py-1.5 rounded" style={{ backgroundColor: '#2A2A2A' }}>
                 <span className="text-sm">{completionPercentage}%</span>
               </div>
             </div>
