@@ -142,81 +142,85 @@ export default function DesignSettings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
                   <Palette className="w-5 h-5" />
-                  Cores Principais
+                  Alterar Cores
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cor_borda">Cor Principal</Label>
-                    <div className="flex gap-2">
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="cor_borda" className="text-base font-medium">Borda da Logo</Label>
+                    <div className="flex items-center gap-3">
+                      <Input
+                        value={settings.cor_borda}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
+                        className="w-32"
+                        placeholder="#ec4899"
+                      />
                       <Input
                         type="color"
                         value={settings.cor_borda}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                        className="w-16 h-10"
-                      />
-                      <Input
-                        value={settings.cor_borda}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cor_background">Cor do Background</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="color"
-                        value={settings.cor_background}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                        className="w-16 h-10"
-                      />
-                      <Input
-                        value={settings.cor_background}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
                       />
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
-                  <Eye className="w-5 h-5" />
-                  Cores de Destaque
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cor_nome">Cor do Nome</Label>
-                    <div className="flex gap-2">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="cor_background" className="text-base font-medium">Background</Label>
+                    <div className="flex items-center gap-3">
                       <Input
-                        type="color"
-                        value={settings.cor_nome}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                        className="w-16 h-10"
+                        value={settings.cor_background}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                        className="w-32"
+                        placeholder="#fef2f2"
                       />
                       <Input
-                        value={settings.cor_nome}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                        type="color"
+                        value={settings.cor_background}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
                       />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="background_topo_color">Cor do Topo</Label>
-                    <div className="flex gap-2">
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="cor_nome" className="text-base font-medium">Nome da Loja</Label>
+                    <div className="flex items-center gap-3">
+                      <Input
+                        value={settings.cor_nome}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                        className="w-32"
+                        placeholder="#be185d"
+                      />
+                      <Input
+                        type="color"
+                        value={settings.cor_nome}
+                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="background_topo_color" className="text-base font-medium">Cor do Topo</Label>
+                    <div className="flex items-center gap-3">
+                      <Input
+                        value={settings.background_topo_color}
+                        onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
+                        className="w-32"
+                        placeholder="#fce7f3"
+                      />
                       <Input
                         type="color"
                         value={settings.background_topo_color}
                         onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                        className="w-16 h-10"
-                      />
-                      <Input
-                        value={settings.background_topo_color}
-                        onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
+                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
                       />
                     </div>
                   </div>
