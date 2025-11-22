@@ -165,6 +165,13 @@ export default function DesignSettings() {
                         value={settings.cor_borda}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
                         className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
+                        style={{
+                          '-webkit-appearance': 'none',
+                          'appearance': 'none',
+                          'background': 'none',
+                          'border': 'none',
+                          'cursor': 'pointer'
+                        } as React.CSSProperties}
                       />
                     </div>
                   </div>
@@ -187,6 +194,13 @@ export default function DesignSettings() {
                         value={settings.cor_background}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
                         className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
+                        style={{
+                          '-webkit-appearance': 'none',
+                          'appearance': 'none',
+                          'background': 'none',
+                          'border': 'none',
+                          'cursor': 'pointer'
+                        } as React.CSSProperties}
                       />
                     </div>
                   </div>
@@ -209,6 +223,13 @@ export default function DesignSettings() {
                         value={settings.cor_nome}
                         onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
                         className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
+                        style={{
+                          '-webkit-appearance': 'none',
+                          'appearance': 'none',
+                          'background': 'none',
+                          'border': 'none',
+                          'cursor': 'pointer'
+                        } as React.CSSProperties}
                       />
                     </div>
                   </div>
@@ -231,6 +252,13 @@ export default function DesignSettings() {
                         value={settings.background_topo_color}
                         onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
                         className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
+                        style={{
+                          '-webkit-appearance': 'none',
+                          'appearance': 'none',
+                          'background': 'none',
+                          'border': 'none',
+                          'cursor': 'pointer'
+                        } as React.CSSProperties}
                       />
                     </div>
                   </div>
