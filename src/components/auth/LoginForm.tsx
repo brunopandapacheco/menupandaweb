@@ -15,6 +15,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,7 +72,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         </Label>
         <Input
           id="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -84,7 +85,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <Checkbox
           id="remember-me"
           checked={rememberMe}
-          onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+          onCheckedChange={(checked) => {
+            setRememberMe(checked as boolean)
+            setShowPassword(checked as boolean)
+          }}
           disabled={loading}
         />
         <Label
