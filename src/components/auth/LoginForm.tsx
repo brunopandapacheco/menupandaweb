@@ -97,7 +97,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       
       <Button 
         type="submit" 
-        className="w-full py-3 px-4 bg-gradient-to-r from-purple-900 via-purple-800 to-black text-white font-medium rounded-lg hover:from-purple-800 hover:via-purple-700 hover:to-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 animate-gradient-x"
+        className="w-full py-3 px-4 bg-gradient-to-r from-purple-900 via-purple-800 to-black text-white font-bold rounded-lg hover:from-purple-800 hover:via-purple-700 hover:to-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 animate-gradient-x"
         disabled={loading}
       >
         {loading ? (
