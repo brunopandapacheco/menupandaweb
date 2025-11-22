@@ -18,29 +18,58 @@ const tabs = [
 ]
 
 export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }: TabletLayoutProps) {
+  const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
+  const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Menu Bolo'
+  const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
+
   return (
     <div className="min-h-screen bg-pink-50 flex">
-      <div className="w-64 bg-white border-r border-pink-200 p-4">
-        <div className="space-y-2">
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            return (
-              <Button
-                key={tab.id}
-                variant={activeTab === tab.id ? 'default' : 'ghost'}
-                className={cn(
-                  "w-full justify-start gap-3 h-12",
-                  activeTab === tab.id 
-                    ? "bg-pink-600 hover:bg-pink-700 text-white" 
-                    : "text-gray-700 hover:bg-pink-100 hover:text-pink-700"
+      <div className="w-64 bg-[#230319] border-r border-pink-200 p-4 flex flex-col">
+        <div className="p-4 pb-8">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
+                {logoUrl ? (
+                  <img src={logoUrl} alt={`${systemName} Logo`} className="w-10 h-10 object-contain" />
+                ) : (
+                  <span className="text-3xl">🧁</span>
                 )}
-                onClick={() => onTabChange?.(tab.id)}
-              >
-                <Icon size={20} />
-                <span>{tab.label}</span>
-              </Button>
-            )
-          })}
+              </div>
+              <h2 className="text-white font-bold text-lg">{systemName}</h2>
+              <p className="text-white/80 text-xs mt-1">{systemSubtitle}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex-1">
+          <div className="space-y-2">
+            {tabs.map((tab) => {
+              const Icon = tab.icon
+              return (
+                <Button
+                  key={tab.id}
+                  variant={activeTab === tab.id ? 'default' : 'ghost'}
+                  className={cn(
+                    "w-full justify-start gap-3 h-12 bg-white text-[#4A3531]",
+                    activeTab === tab.id 
+                      ? "shadow-md hover:bg-gray-100" 
+                      : "hover:bg-gray-100"
+                  )}
+                  onClick={() => onTabChange?.(tab.id)}
+                >
+                  <Icon size={20} />
+                  <span>{tab.label}</span>
+                </Button>
+              )
+            })}
+          </div>
+        </div>
+        
+        <div className="p-4 pt-8 border-t border-pink-300">
+          <div className="text-center">
+            <p className="text-white/70 text-xs">© 2025 {systemName}</p>
+            <p className="text-white/60 text-xs">Todos os direitos reservados</p>
+          </div>
         </div>
       </div>
       
