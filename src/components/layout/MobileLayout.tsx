@@ -34,10 +34,10 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
                 key={tab.id}
                 variant={activeTab === tab.id ? 'default' : 'ghost'}
                 className={cn(
-                  "flex items-center justify-center h-12 rounded-lg text-white",
+                  "flex items-center justify-center h-12 rounded-lg text-white hover:bg-[#A63A6B] hover:text-white",
                   activeTab === tab.id 
-                    ? "bg-white text-[#1A1A1A]" 
-                    : "hover:bg-[#A63A6B]"
+                    ? "bg-white text-[#1A1A1A] hover:bg-white hover:text-[#1A1A1A]" 
+                    : ""
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
