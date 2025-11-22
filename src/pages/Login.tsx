@@ -11,14 +11,6 @@ export default function Login() {
 
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-4">
-      <div className="flex flex-col items-center mb-8">
-        <img 
-          src="/logopandamenu.png" 
-          alt="Logo da Empresa" 
-          className="w-48 h-32 object-contain drop-shadow-2xl"
-        />
-      </div>
-
       <div className="w-full max-w-md">
         <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 pt-6">
           <div className="text-center mb-6">
@@ -28,6 +20,14 @@ export default function Login() {
           
           <LoginForm onSuccess={handleSuccess} />
         </div>
+      </div>
+
+      <div className="flex flex-col items-center mt-8 md:hidden">
+        <img 
+          src="/logopandamenu.png" 
+          alt="Logo da Empresa" 
+          className="w-48 h-32 object-contain drop-shadow-2xl"
+        />
       </div>
     </div>
   )
