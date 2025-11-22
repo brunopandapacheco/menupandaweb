@@ -119,8 +119,8 @@ export default function DesignSettings() {
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="text-center sm:text-left pt-8 sm:pt-0">
-        <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Design</h1>
-        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Personalize a aparência do seu cardápio</p>
+        <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
+        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Cores, fontes e elementos do seu jeito</p>
       </div>
 
       <Tabs defaultValue="cores" className="space-y-6">
