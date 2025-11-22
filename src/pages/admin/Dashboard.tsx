@@ -22,7 +22,7 @@ export default function Dashboard() {
   // Verificações de configuração
   const configChecks = [
     {
-      title: 'Horário de funcionamento',
+      title: 'Horário de Funcionamento',
       configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
       details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : ''
     },
@@ -32,7 +32,7 @@ export default function Dashboard() {
       details: configuracoes?.telefone || ''
     },
     {
-      title: 'Formas de pagamento',
+      title: 'Formas de Pagamento',
       configured: configuracoes?.meios_pagamento && configuracoes.meios_pagamento.length > 0,
       details: configuracoes?.meios_pagamento ? `${configuracoes.meios_pagamento.length} métodos` : ''
     },
@@ -42,12 +42,12 @@ export default function Dashboard() {
       details: configuracoes?.entrega ? 'Entrega ativada' : 'Entrega desativada'
     },
     {
-      title: 'Design da loja',
+      title: 'Design da Loja',
       configured: designSettings?.nome_confeitaria && designSettings.nome_confeitaria !== 'Doces da Vovó',
       details: designSettings?.nome_confeitaria || ''
     },
     {
-      title: 'Produtos cadastrados',
+      title: 'Produtos Cadastrados',
       configured: produtos && produtos.length > 0,
       details: produtos ? `${produtos.length} produtos` : ''
     }
@@ -129,13 +129,14 @@ export default function Dashboard() {
         <Card className="border-0 shadow-md">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-gray-900">Guia de Configuração</CardTitle>
-                <CardDescription className="text-gray-600">Verifique se tudo está configurado</CardDescription>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-gray-900">{completionPercentage}%</div>
-                <div className="text-sm text-gray-600">{configuredCount}/{totalChecks} configurado</div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-bold text-pink-800">{completionPercentage}%</span>
+                </div>
+                <div>
+                  <CardTitle className="text-gray-900 text-lg sm:text-xl">Guia de Configuração</CardTitle>
+                  <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
+                </div>
               </div>
             </div>
           </CardHeader>
