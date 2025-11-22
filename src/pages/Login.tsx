@@ -11,7 +11,7 @@ export default function Login() {
 
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb] p-4">
-      <div className="flex flex-col items-center mb-8">
+      <div className="flex flex-col items-center mb-auto">
         <img 
           src="/logopandamenu.png" 
           alt="Logo da Empresa" 
