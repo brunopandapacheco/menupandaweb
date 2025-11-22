@@ -41,7 +41,7 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
-                <span className="text-xs">{tab.label}</span>
+                <span className="text-xs font-[650]">{tab.label}</span>
               </Button>
             )
           })}
