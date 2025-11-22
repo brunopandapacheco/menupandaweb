@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import AdminLayout from "./pages/admin/AdminLayout";
 import CardapioPublico from "./pages/cardapio/[slug]";
+import TestConnection from "./pages/TestConnection";
 import NotFound from "./pages/NotFound";
 import { EnvironmentError } from "./components/EnvironmentError";
 
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminLayout />} />
             <Route path="/cardapio/:slug" element={<CardapioPublico />} />
+            <Route path="/test" element={<TestConnection />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
