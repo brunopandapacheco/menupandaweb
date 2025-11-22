@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Cookie, ShoppingBag, DollarSign, Users, Clock, Phone, CreditCard, Truck, Palette, Package } from 'lucide-react'
+import { Cookie, ShoppingBag, DollarSign, Users } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 
 export default function Dashboard() {
@@ -24,17 +24,17 @@ export default function Dashboard() {
     {
       title: 'Horário de Funcionamento',
       configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
-      details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : 'Não configurado'
+      details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : ''
     },
     {
       title: 'Telefone de Contato',
       configured: configuracoes?.telefone && configuracoes.telefone !== '(11) 99999-9999',
-      details: configuracoes?.telefone || 'Não configurado'
+      details: configuracoes?.telefone || ''
     },
     {
       title: 'Formas de Pagamento',
       configured: configuracoes?.meios_pagamento && configuracoes.meios_pagamento.length > 0,
-      details: configuracoes?.meios_pagamento ? `${configuracoes.meios_pagamento.length} métodos` : 'Não configurado'
+      details: configuracoes?.meios_pagamento ? `${configuracoes.meios_pagamento.length} métodos` : ''
     },
     {
       title: 'Configuração de Entrega',
@@ -44,12 +44,12 @@ export default function Dashboard() {
     {
       title: 'Design da Loja',
       configured: designSettings?.nome_confeitaria && designSettings.nome_confeitaria !== 'Doces da Vovó',
-      details: designSettings?.nome_confeitaria || 'Não configurado'
+      details: designSettings?.nome_confeitaria || ''
     },
     {
       title: 'Produtos Cadastrados',
       configured: produtos && produtos.length > 0,
-      details: produtos ? `${produtos.length} produtos` : 'Nenhum produto'
+      details: produtos ? `${produtos.length} produtos` : ''
     }
   ]
 
@@ -149,7 +149,9 @@ export default function Dashboard() {
                 }`}>
                   <div>
                     <p className="font-medium text-gray-900">{check.title}</p>
-                    <p className="text-sm text-gray-600">{check.details}</p>
+                    {check.details && (
+                      <p className="text-sm text-gray-600">{check.details}</p>
+                    )}
                   </div>
                   <Badge className={
                     check.configured 
