@@ -24,7 +24,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
 
   return (
     <div className="min-h-screen bg-pink-50 flex">
-      <div className="w-64 bg-[#230319] border-r border-pink-200 flex flex-col">
+      <div className="w-64 bg-[#1A1A1A] border-r border-pink-200 flex flex-col">
         <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
@@ -44,15 +44,15 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
                   key={tab.id}
                   variant={activeTab === tab.id ? 'default' : 'ghost'}
                   className={cn(
-                    "w-full justify-start gap-3 h-12 bg-white text-[#4A3531]",
+                    "w-full justify-start gap-3 h-12 text-white hover:bg-white hover:text-[#1A1A1A]",
                     activeTab === tab.id 
-                      ? "shadow-md hover:bg-gray-100" 
-                      : "hover:bg-gray-100"
+                      ? "bg-white text-[#1A1A1A] hover:bg-white hover:text-[#1A1A1A]" 
+                      : ""
                   )}
                   onClick={() => onTabChange?.(tab.id)}
                 >
                   <Icon size={20} />
-                  <span>{tab.label}</span>
+                  <span className="font-[650]">{tab.label}</span>
                 </Button>
               )
             })}
