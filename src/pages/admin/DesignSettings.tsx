@@ -73,7 +73,7 @@ export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
   const isMobile = useIsMobile()
   const [selectedPalette, setSelectedPalette] = useState<typeof colorPalettes[0] | null>(null)
-  const [activeTab, setActiveTab] = useState('cores')
+  const [activeTab, setActiveTab] = useState('paletas')
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
     slug: 'doces-da-vo',
@@ -158,16 +158,16 @@ export default function DesignSettings() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
-            value="cores" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3"
-          >
-            Cores
-          </TabsTrigger>
-          <TabsTrigger 
             value="paletas" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3"
           >
             Paletas
+          </TabsTrigger>
+          <TabsTrigger 
+            value="cores" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3"
+          >
+            Cores
           </TabsTrigger>
           <TabsTrigger 
             value="imagens" 
@@ -176,6 +176,54 @@ export default function DesignSettings() {
             Imagens
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="paletas">
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: '#4A3531' }}>Paletas Prontas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {colorPalettes.map((palette) => (
+                  <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all">
+                    <CardContent className="p-6">
+                      <div className="text-center mb-4">
+                        <span className="text-2xl mb-2 block">{palette.emoji}</span>
+                        <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>{palette.name}</h3>
+                        <p className="text-sm text-gray-600">{palette.description}</p>
+                      </div>
+                      <div className="space-y-3 mb-4">
+                        {Object.entries(palette.colors).map(([key, color]) => (
+                          <div key={key} className="flex items-center gap-3">
+                            <div 
+                              className="w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm"
+                              style={{ backgroundColor: color }}
+                            />
+                            <div className="flex-1">
+                              <span className="text-xs text-gray-600 capitalize block">
+                                {colorLabels[key as keyof typeof colorLabels]}
+                              </span>
+                              <span className="text-xs font-mono text-gray-500">
+                                {color}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <Button 
+                        size="sm" 
+                        className="w-full"
+                        onClick={() => applyPalette(palette)}
+                      >
+                        Aplicar Paleta
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="cores">
           <div className="space-y-6">
@@ -257,54 +305,6 @@ export default function DesignSettings() {
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
-
-        <TabsContent value="paletas">
-          <Card>
-            <CardHeader>
-              <CardTitle style={{ color: '#4A3531' }}>Paletas Prontas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {colorPalettes.map((palette) => (
-                  <Card key={palette.name} className="cursor-pointer hover:shadow-lg transition-all">
-                    <CardContent className="p-6">
-                      <div className="text-center mb-4">
-                        <span className="text-2xl mb-2 block">{palette.emoji}</span>
-                        <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>{palette.name}</h3>
-                        <p className="text-sm text-gray-600">{palette.description}</p>
-                      </div>
-                      <div className="space-y-3 mb-4">
-                        {Object.entries(palette.colors).map(([key, color]) => (
-                          <div key={key} className="flex items-center gap-3">
-                            <div 
-                              className="w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm"
-                              style={{ backgroundColor: color }}
-                            />
-                            <div className="flex-1">
-                              <span className="text-xs text-gray-600 capitalize block">
-                                {colorLabels[key as keyof typeof colorLabels]}
-                              </span>
-                              <span className="text-xs font-mono text-gray-500">
-                                {color}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="w-full"
-                        onClick={() => applyPalette(palette)}
-                      >
-                        Aplicar Paleta
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="imagens">
