@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Heart, Phone, Clock } from 'lucide-react'
+import { Search, Heart, Phone, Clock, Truck, MapPin, Star, ExternalLink } from 'lucide-react'
 import { supabaseService } from '@/services/supabase'
 import { DesignSettings, Configuracoes, Produto } from '@/types'
 
@@ -87,11 +87,41 @@ export default function CardapioPublico() {
       return { status: 'Carregando...', time: '', color: 'text-gray-600' }
     }
 
+    // Verificar se está de férias
+    if (configuracoes.em_ferias) {
+      return { status: 'Fechado', time: 'De férias', color: 'text-red-600' }
+    }
+
     const now = new Date()
+    const currentDay = now.getDay() // 0 = Domingo, 1 = Segunda, etc.
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()
     const currentTime = currentHour * 60 + currentMinute
     
+    // Mapear dias da semana para o array de horários
+    const dayMapping = [6, 0, 1, 2, 3, 4, 5] // Domingo=6, Segunda=0, etc.
+    const todayIndex = dayMapping[currentDay]
+    
+    if (configuracoes.horarios_semana && configuracoes.horarios_semana[todayIndex]) {
+      const todaySchedule = configuracoes.horarios_semana[todayIndex]
+      
+      if (!todaySchedule.open) {
+        return { status: 'Fechado', time: 'Fechado hoje', color: 'text-red-600' }
+      }
+      
+      const [startHour, startMinute] = todaySchedule.openTime.split(':').map(Number)
+      const [endHour, endMinute] = todaySchedule.closeTime.split(':').map(Number)
+      const startTime = startHour * 60 + startMinute
+      const endTime = endHour * 60 + endMinute
+      
+      if (currentTime >= startTime && currentTime <= endTime) {
+        return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, color: 'text-green-600' }
+      } else {
+        return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, color: 'text-red-600' }
+      }
+    }
+    
+    // Fallback para horário único
     const [startHour, startMinute] = configuracoes.horario_funcionamento_inicio.split(':').map(Number)
     const [endHour, endMinute] = configuracoes.horario_funcionamento_fim.split(':').map(Number)
     const startTime = startHour * 60 + startMinute
@@ -152,14 +182,15 @@ export default function CardapioPublico() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings.cor_background }}>
       <div className="max-w-md mx-auto bg-white min-h-screen">
+        {/* Header com logo e background */}
         <div 
-          className="h-40 relative"
+          className="h-48 relative"
           style={{ backgroundColor: designSettings.background_topo_color }}
         >
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-xl">
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-xl">
               {designSettings.logo_url ? (
-                <img src={designSettings.logo_url} alt="Logo" className="w-20 h-20 rounded-full object-cover" />
+                <img src={designSettings.logo_url} alt="Logo" className="w-24 h-24 rounded-full object-cover" />
               ) : (
                 <span className="text-4xl">🧁</span>
               )}
@@ -168,14 +199,16 @@ export default function CardapioPublico() {
         </div>
 
         <div className="px-4 pb-4 -mt-8">
+          {/* Nome da confeitaria */}
           <h1 
-            className="text-3xl font-bold text-center mb-3"
+            className="text-3xl font-bold text-center mb-4"
             style={{ color: designSettings.cor_nome }}
           >
             {designSettings.nome_confeitaria}
           </h1>
           
-          <Card className="mb-4 shadow-sm">
+          {/* Card de informações */}
+          <Card className="mb-6 shadow-sm">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center gap-2">
@@ -189,12 +222,25 @@ export default function CardapioPublico() {
                   <Phone className="w-4 h-4" />
                   <p className="font-medium">{configuracoes?.telefone || '(11) 99999-9999'}</p>
                 </div>
+                {configuracoes?.entrega && (
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-4 h-4" />
+                    <p className="font-medium">Faz entrega</p>
+                  </div>
+                )}
+                {configuracoes?.taxa_entrega && configuracoes.entrega && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-600">Taxa:</span>
+                    <p className="font-medium">R$ {configuracoes.taxa_entrega.toFixed(2)}</p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
 
+          {/* Banner promocional */}
           {banners.length > 0 && (
-            <div className="relative mb-4 h-32 rounded-lg overflow-hidden shadow-sm">
+            <div className="relative mb-6 h-40 rounded-lg overflow-hidden shadow-sm">
               {banners.map((banner, index) => (
                 <div
                   key={banner.id}
@@ -224,6 +270,7 @@ export default function CardapioPublico() {
             </div>
           )}
 
+          {/* Campo de busca */}
           <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
@@ -234,23 +281,7 @@ export default function CardapioPublico() {
             />
           </div>
 
-          <div className="mb-6">
-            <h3 className="font-semibold mb-3 text-lg">Categorias</h3>
-            <div className="flex gap-4 overflow-x-auto pb-2">
-              {categories.map((category) => (
-                <div key={category} className="flex flex-col items-center min-w-fit">
-                  <div 
-                    className="w-20 h-20 rounded-full flex items-center justify-center mb-2 shadow-md"
-                    style={{ backgroundColor: designSettings.cor_borda }}
-                  >
-                    <span className="text-white text-2xl">🍰</span>
-                  </div>
-                  <span className="text-xs text-gray-600 font-medium">{category}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
+          {/* Lista de produtos */}
           {promotionalProducts.length > 0 && (
             <div className="mb-6">
               <h3 className="font-semibold mb-3 text-lg flex items-center gap-2">
@@ -373,6 +404,7 @@ export default function CardapioPublico() {
             </div>
           )}
 
+          {/* Rodapé simples */}
           <div className="mt-8 text-center text-sm text-gray-600 pb-8">
             <p>{designSettings.texto_rodape}</p>
           </div>
