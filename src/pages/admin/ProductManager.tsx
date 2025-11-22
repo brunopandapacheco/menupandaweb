@@ -67,7 +67,17 @@ export default function ProductManager() {
     setIsDialogOpen(true)
   }
 
+  const validateImageFormat = (file: File): boolean => {
+    const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
+    return allowedFormats.includes(file.type)
+  }
+
   const handleImageUpload = async (file: File, index: number) => {
+    if (!validateImageFormat(file)) {
+      showError('Formato de imagem inválido. Use apenas PNG, JPEG ou WEBP.')
+      return
+    }
+
     const fileName = `produto-${Date.now()}-${index}.${file.name.split('.').pop()}`
     const url = await supabaseService.uploadImage(file, 'products', fileName)
     
@@ -336,7 +346,7 @@ export default function ProductManager() {
                         <div className="border-2 border-dashed border-gray-300 rounded h-24 flex items-center justify-center">
                           <Input
                             type="file"
-                            accept="image/*"
+                            accept="image/png,image/jpeg,image/webp"
                             className="hidden"
                             id={`product-image-${index}`}
                             onChange={(e) => {
