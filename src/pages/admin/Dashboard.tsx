@@ -39,7 +39,7 @@ export default function Dashboard() {
     {
       title: 'Entrega',
       configured: configuracoes?.entrega !== undefined,
-      details: configuracoes?.entrega ? 'Entrega ativada' : 'Entrega desativada'
+      details: configuracoes?.entrega ? 'Entrega ativada' : ''
     },
     {
       title: 'Design da Loja',
@@ -130,7 +130,7 @@ export default function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-gray-900 text-lg sm:text-xl">Guia de Configuração</CardTitle>
+                <CardTitle className="text-gray-900 text-lg sm:text-xl font-bold">Status de Configuração</CardTitle>
                 <CardDescription className="text-gray-600 text-sm">Verifique se tudo está configurado</CardDescription>
               </div>
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
