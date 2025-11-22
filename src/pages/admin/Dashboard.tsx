@@ -22,32 +22,32 @@ export default function Dashboard() {
   // Verificações de configuração
   const configChecks = [
     {
-      title: 'Horário de Funcionamento',
+      title: 'Horário de funcionamento',
       configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
       details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : ''
     },
     {
-      title: 'Telefone de Contato',
+      title: 'Contato',
       configured: configuracoes?.telefone && configuracoes.telefone !== '(11) 99999-9999',
       details: configuracoes?.telefone || ''
     },
     {
-      title: 'Formas de Pagamento',
+      title: 'Formas de pagamento',
       configured: configuracoes?.meios_pagamento && configuracoes.meios_pagamento.length > 0,
       details: configuracoes?.meios_pagamento ? `${configuracoes.meios_pagamento.length} métodos` : ''
     },
     {
-      title: 'Configuração de Entrega',
+      title: 'Entrega',
       configured: configuracoes?.entrega !== undefined,
       details: configuracoes?.entrega ? 'Entrega ativada' : 'Entrega desativada'
     },
     {
-      title: 'Design da Loja',
+      title: 'Design da loja',
       configured: designSettings?.nome_confeitaria && designSettings.nome_confeitaria !== 'Doces da Vovó',
       details: designSettings?.nome_confeitaria || ''
     },
     {
-      title: 'Produtos Cadastrados',
+      title: 'Produtos cadastrados',
       configured: produtos && produtos.length > 0,
       details: produtos ? `${produtos.length} produtos` : ''
     }
@@ -145,18 +145,18 @@ export default function Dashboard() {
                 <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
                   check.configured 
                     ? 'bg-green-50 border-green-200' 
-                    : 'bg-red-50 border-red-200'
+                    : 'bg-gray-50 border-gray-200'
                 }`}>
                   <div>
-                    <p className="font-medium text-gray-900">{check.title}</p>
+                    <p className="font-medium text-gray-900 text-sm">{check.title}</p>
                     {check.details && (
-                      <p className="text-sm text-gray-600">{check.details}</p>
+                      <p className="text-xs text-gray-600">{check.details}</p>
                     )}
                   </div>
                   <Badge className={
                     check.configured 
                       ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
+                      : 'bg-red-100 text-red-800 animate-pulse'
                   }>
                     {check.configured ? 'Configurado' : 'Não configurado'}
                   </Badge>
