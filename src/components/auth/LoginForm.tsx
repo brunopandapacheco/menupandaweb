@@ -18,6 +18,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [emailSuggestions, setEmailSuggestions] = useState<string[]>([])
   const emailInputRef = useRef<HTMLInputElement>(null)
+  const suggestionsRef = useRef<HTMLDivElement>(null)
 
   const emailDomains = [
     '@gmail.com',
@@ -29,6 +30,19 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     '@uol.com.br',
     '@terra.com.br'
   ]
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
     const handleEmailChange = (value: string) => {
@@ -113,7 +127,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         />
         
         {showSuggestions && emailSuggestions.length > 0 && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+          <div 
+            ref={suggestionsRef}
+            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+          >
             {emailSuggestions.map((suggestion, index) => (
               <button
                 key={index}
