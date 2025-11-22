@@ -3,10 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig({
-  server: {
-    host: "0.0.0.0",
-    port: 5173,
-  },
   plugins: [react()],
   resolve: {
     alias: {
@@ -14,20 +10,7 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'esnext',
     outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: false,
-    minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          supabase: ['@supabase/supabase-js'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu']
-        }
-      }
-    }
-  },
-  base: "./"
+    base: "./"
+  }
 });
