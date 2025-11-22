@@ -26,14 +26,14 @@ export default function Dashboard() {
         {metrics.map((metric, index) => {
           const Icon = metric.icon
           return (
-            <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md p-4">
+            <Card key={index} className="hover:shadow-lg transition-all duration-200 border-0 shadow-sm p-4">
               <div className="flex items-center gap-3">
                 <div className={`w-8 h-8 bg-${metric.color}-100 rounded-lg flex items-center justify-center`}>
                   <Icon className={`h-4 w-4 text-${metric.color}-600`} />
                 </div>
                 <div>
                   <p className="text-sm" style={{ color: '#1A1A1A' }}>{metric.title}</p>
-                  <p className="text-lg font-bold text-gray-900">{metric.value}</p>
+                  <p className="text-lg font-semibold text-gray-900">{metric.value}</p>
                 </div>
               </div>
             </Card>
