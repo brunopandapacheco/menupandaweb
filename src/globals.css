@@ -118,6 +118,20 @@
   animation: gradient-x 3s ease infinite;
 }
 
+/* Animação de brilho (shine effect) */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-20deg);
+  }
+}
+
+.animate-shine {
+  animation: shine 2s ease-in-out infinite;
+}
+
 /* Remover pré-visualização de senha */
 input[type="password"]::-webkit-textfield-decoration-container,
 input[type="password"]::-webkit-credentials-auto-fill-button,
