@@ -151,11 +151,11 @@ export default function ProductManager() {
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      <Card className="border-0 shadow-md">
+      <Card className="border-0 shadow-md bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb]">
         <CardHeader>
           <div className="text-center">
-            <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Produtos</h1>
-            <p className="text-gray-600">Gerencie seus produtos</p>
+            <h1 className="text-3xl font-bold text-white">Produtos</h1>
+            <p className="text-white/90">Gerencie seus produtos</p>
           </div>
         </CardHeader>
       </Card>
