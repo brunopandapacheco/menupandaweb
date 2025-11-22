@@ -21,7 +21,7 @@ export default function Login() {
 
       <div className="w-full max-w-md">
         <div className="space-y-4">
-          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 pt-2">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 pt-6">
             <div className="text-center mb-6">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">Acesse sua conta</h1>
               <p className="text-gray-600">Faça login para acessar seu painel</p>
