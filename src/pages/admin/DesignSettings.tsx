@@ -9,6 +9,7 @@ import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
 import { generateSlug } from '@/utils/helpers'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const colorPalettes = [
   {
@@ -51,6 +52,7 @@ const colorPalettes = [
 
 export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
+  const isMobile = useIsMobile()
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
     slug: 'doces-da-vo',
@@ -150,12 +152,14 @@ export default function DesignSettings() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="cor_borda" className="text-base font-medium">Borda da Logo</Label>
                     <div className="flex items-center gap-3">
-                      <Input
-                        value={settings.cor_borda}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                        className="w-32"
-                        placeholder="#ec4899"
-                      />
+                      {!isMobile && (
+                        <Input
+                          value={settings.cor_borda}
+                          onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
+                          className="w-32"
+                          placeholder="#ec4899"
+                        />
+                      )}
                       <Input
                         type="color"
                         value={settings.cor_borda}
@@ -170,12 +174,14 @@ export default function DesignSettings() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="cor_background" className="text-base font-medium">Background</Label>
                     <div className="flex items-center gap-3">
-                      <Input
-                        value={settings.cor_background}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                        className="w-32"
-                        placeholder="#fef2f2"
-                      />
+                      {!isMobile && (
+                        <Input
+                          value={settings.cor_background}
+                          onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
+                          className="w-32"
+                          placeholder="#fef2f2"
+                        />
+                      )}
                       <Input
                         type="color"
                         value={settings.cor_background}
@@ -190,12 +196,14 @@ export default function DesignSettings() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="cor_nome" className="text-base font-medium">Nome da Loja</Label>
                     <div className="flex items-center gap-3">
-                      <Input
-                        value={settings.cor_nome}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                        className="w-32"
-                        placeholder="#be185d"
-                      />
+                      {!isMobile && (
+                        <Input
+                          value={settings.cor_nome}
+                          onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
+                          className="w-32"
+                          placeholder="#be185d"
+                        />
+                      )}
                       <Input
                         type="color"
                         value={settings.cor_nome}
@@ -210,12 +218,14 @@ export default function DesignSettings() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="background_topo_color" className="text-base font-medium">Cor do Topo</Label>
                     <div className="flex items-center gap-3">
-                      <Input
-                        value={settings.background_topo_color}
-                        onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                        className="w-32"
-                        placeholder="#fce7f3"
-                      />
+                      {!isMobile && (
+                        <Input
+                          value={settings.background_topo_color}
+                          onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
+                          className="w-32"
+                          placeholder="#fce7f3"
+                        />
+                      )}
                       <Input
                         type="color"
                         value={settings.background_topo_color}
