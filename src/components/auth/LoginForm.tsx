@@ -51,7 +51,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   return (
     <form onSubmit={handleLogin} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="email" className="text-sm font-medium text-purple-900">
           Email ou Usuário
         </Label>
         <Input
@@ -66,7 +66,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+        <Label htmlFor="password" className="text-sm font-medium text-purple-900">
           Senha
         </Label>
         <Input
@@ -89,7 +89,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         />
         <Label
           htmlFor="remember-me"
-          className="text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 transition-colors"
+          className="text-sm font-medium text-purple-900 cursor-pointer hover:text-purple-800 transition-colors"
         >
           Manter conectado
         </Label>
