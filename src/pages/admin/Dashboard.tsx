@@ -13,9 +13,9 @@ export default function Dashboard() {
   ]
 
   const products = [
-    { name: 'Bolo de Chocolate', sales: 45, status: 'active', trend: '+12%' },
-    { name: 'Cupcake Morango', sales: 32, status: 'promo', trend: '+8%' },
-    { name: 'Torta Limão', sales: 28, status: 'active', trend: '+5%' }
+    { name: 'Bolo de Chocolate', sales: 45, image: '🧁' },
+    { name: 'Cupcake Morango', sales: 32, image: '🍰' },
+    { name: 'Torta Limão', sales: 28, image: '🥧' }
   ]
 
   // Verificações de configuração
@@ -93,23 +93,13 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-4">
               {products.map((product, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <span className="text-lg">🧁</span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{product.name}</p>
-                        <p className="text-sm text-gray-600">{product.sales} vendas</p>
-                      </div>
-                    </div>
+                <div key={index} className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">{product.image}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-green-600">{product.trend}</span>
-                    <Badge variant={product.status === 'promo' ? 'default' : 'secondary'} className="bg-pink-100 text-pink-800">
-                      {product.status === 'promo' ? 'Promoção' : 'Ativo'}
-                    </Badge>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 text-lg">{product.name}</p>
+                    <p className="text-sm text-gray-600">{product.sales} vendas</p>
                   </div>
                 </div>
               ))}
