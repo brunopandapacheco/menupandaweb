@@ -4,30 +4,47 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Clock, Phone, CreditCard, Truck, Plus, Trash2 } from 'lucide-react'
+import { Clock, Phone, CreditCard, Truck, Plus, Trash2, Plane } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
+
+interface DaySchedule {
+  day: string
+  open: boolean
+  openTime: string
+  closeTime: string
+}
+
+const weekDays: DaySchedule[] = [
+  { day: 'Segunda-feira', open: true, openTime: '08:00', closeTime: '18:00' },
+  { day: 'Terça-feira', open: true, openTime: '08:00', closeTime: '18:00' },
+  { day: 'Quarta-feira', open: true, openTime: '08:00', closeTime: '18:00' },
+  { day: 'Quinta-feira', open: true, openTime: '08:00', closeTime: '18:00' },
+  { day: 'Sexta-feira', open: true, openTime: '08:00', closeTime: '18:00' },
+  { day: 'Sábado', open: true, openTime: '08:00', closeTime: '18:00' },
+  { day: 'Domingo', open: false, openTime: '08:00', closeTime: '18:00' },
+]
 
 export default function Settings() {
   const { configuracoes, saveConfiguracoes, loading } = useDatabase()
   const [settings, setSettings] = useState({
-    horario_funcionamento_inicio: '08:00',
-    horario_funcionamento_fim: '18:00',
     telefones: ['(11) 99999-9999'],
     meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
     entrega: true,
-    taxa_entrega: 5.00,
+    taxa_entrega: '5.00',
+    em_ferias: false,
+    horarios_semana: weekDays
   })
 
   useEffect(() => {
     if (configuracoes) {
       setSettings({
-        horario_funcionamento_inicio: configuracoes.horario_funcionamento_inicio || '08:00',
-        horario_funcionamento_fim: configuracoes.horario_funcionamento_fim || '18:00',
         telefones: configuracoes.telefone ? [configuracoes.telefone] : ['(11) 99999-9999'],
         meios_pagamento: configuracoes.meios_pagamento || ['Pix', 'Cartão', 'Dinheiro'],
         entrega: configuracoes.entrega ?? true,
-        taxa_entrega: configuracoes.taxa_entrega || 5.00,
+        taxa_entrega: configuracoes.taxa_entrega?.toString() || '5.00',
+        em_ferias: configuracoes.em_ferias || false,
+        horarios_semana: configuracoes.horarios_semana || weekDays
       })
     }
   }, [configuracoes])
@@ -37,6 +54,7 @@ export default function Settings() {
     const configParaSalvar = {
       ...settings,
       telefone: telefonePrincipal,
+      taxa_entrega: parseFloat(settings.taxa_entrega) || 0,
     }
     
     const success = await saveConfiguracoes(configParaSalvar)
@@ -73,6 +91,36 @@ export default function Settings() {
     }))
   }
 
+  const updateDaySchedule = (index: number, field: keyof DaySchedule, value: any) => {
+    setSettings(prev => ({
+      ...prev,
+      horarios_semana: prev.horarios_semana.map((day, i) => 
+        i === index ? { ...day, [field]: value } : day
+      )
+    }))
+  }
+
+  const formatCurrency = (value: string) => {
+    const numericValue = value.replace(/[^\d,]/g, '')
+    const parts = numericValue.split(',')
+    if (parts.length > 2) return value
+    
+    const integerPart = parts[0] || '0'
+    const decimalPart = parts[1] || ''
+    
+    let formatted = integerPart
+    if (decimalPart) {
+      formatted += ',' + decimalPart.slice(0, 2)
+    }
+    
+    return formatted
+  }
+
+  const handleTaxaChange = (value: string) => {
+    const formatted = formatCurrency(value)
+    setSettings(prev => ({ ...prev, taxa_entrega: formatted }))
+  }
+
   const paymentMethods = ['Pix', 'Cartão', 'Dinheiro']
 
   if (loading) return <div>Carregando configurações...</div>
@@ -89,40 +137,68 @@ export default function Settings() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+            <CardTitle className="flex items-center gap-2" style={{ color: '#1A1A1A' }}>
               <Clock className="w-5 h-5" />
               Horário de Funcionamento
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="horario_inicio">Abre às</Label>
-                <Input
-                  id="horario_inicio"
-                  type="time"
-                  value={settings.horario_funcionamento_inicio}
-                  onChange={(e) => setSettings(prev => ({ ...prev, horario_funcionamento_inicio: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="horario_fim">Fecha às</Label>
-                <Input
-                  id="horario_fim"
-                  type="time"
-                  value={settings.horario_funcionamento_fim}
-                  onChange={(e) => setSettings(prev => ({ ...prev, horario_funcionamento_fim: e.target.value }))}
-                />
-              </div>
+            <div className="flex items-center space-x-2 mb-4">
+              <Switch
+                id="em_ferias"
+                checked={settings.em_ferias}
+                onCheckedChange={(checked) => setSettings(prev => ({ ...prev, em_ferias: checked }))}
+                className="data-[state=checked]:bg-pink-600"
+              />
+              <Label htmlFor="em_ferias" className="font-medium">De Férias (Fechado Temporariamente)</Label>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {settings.horarios_semana.map((day, index) => (
+                <div key={day.day} className="space-y-2 p-3 border rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id={`day-${index}`}
+                      checked={day.open}
+                      onCheckedChange={(checked) => updateDaySchedule(index, 'open', checked)}
+                      className="data-[state=checked]:bg-pink-600"
+                    />
+                    <Label htmlFor={`day-${index}`} className="font-medium">{day.day}</Label>
+                  </div>
+                  
+                  {day.open && (
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label className="text-xs">Abre</Label>
+                        <Input
+                          type="time"
+                          value={day.openTime}
+                          onChange={(e) => updateDaySchedule(index, 'openTime', e.target.value)}
+                          className="text-sm"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Fecha</Label>
+                        <Input
+                          type="time"
+                          value={day.closeTime}
+                          onChange={(e) => updateDaySchedule(index, 'closeTime', e.target.value)}
+                          className="text-sm"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+            <CardTitle className="flex items-center gap-2" style={{ color: '#1A1A1A' }}>
               <Phone className="w-5 h-5" />
               Contatos
             </CardTitle>
@@ -166,7 +242,7 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+            <CardTitle className="flex items-center gap-2" style={{ color: '#1A1A1A' }}>
               <CreditCard className="w-5 h-5" />
               Formas de Pagamento
             </CardTitle>
@@ -179,6 +255,7 @@ export default function Settings() {
                     id={method}
                     checked={settings.meios_pagamento.includes(method)}
                     onCheckedChange={() => togglePaymentMethod(method)}
+                    className="data-[state=checked]:bg-pink-600"
                   />
                   <Label htmlFor={method}>{method}</Label>
                 </div>
@@ -189,9 +266,9 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+            <CardTitle className="flex items-center gap-2" style={{ color: '#1A1A1A' }}>
               <Truck className="w-5 h-5" />
-              Entrega
+              Entrega e Taxas
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -200,6 +277,7 @@ export default function Settings() {
                 id="entrega"
                 checked={settings.entrega}
                 onCheckedChange={(checked) => setSettings(prev => ({ ...prev, entrega: checked }))}
+                className="data-[state=checked]:bg-pink-600"
               />
               <Label htmlFor="entrega">Faz entrega</Label>
             </div>
@@ -207,13 +285,16 @@ export default function Settings() {
             {settings.entrega && (
               <div className="space-y-2">
                 <Label htmlFor="taxa_entrega">Taxa de Entrega</Label>
-                <Input
-                  id="taxa_entrega"
-                  type="number"
-                  step="0.01"
-                  value={settings.taxa_entrega}
-                  onChange={(e) => setSettings(prev => ({ ...prev, taxa_entrega: parseFloat(e.target.value) }))}
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">R$</span>
+                  <Input
+                    id="taxa_entrega"
+                    value={settings.taxa_entrega}
+                    onChange={(e) => handleTaxaChange(e.target.value)}
+                    placeholder="0,00"
+                    className="pl-8"
+                  />
+                </div>
               </div>
             )}
           </CardContent>

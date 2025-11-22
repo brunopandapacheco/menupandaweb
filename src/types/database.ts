@@ -26,6 +26,15 @@ export interface Configuracoes {
   meios_pagamento: string[]
   entrega: boolean
   taxa_entrega: number
+  em_ferias?: boolean
+  horarios_semana?: DaySchedule[]
+}
+
+export interface DaySchedule {
+  day: string
+  open: boolean
+  openTime: string
+  closeTime: string
 }
 
 export interface Produto {
