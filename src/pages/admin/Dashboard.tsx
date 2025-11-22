@@ -12,12 +12,6 @@ export default function Dashboard() {
     { title: 'Pedidos', value: '0', color: 'green' }
   ]
 
-  const products = [
-    { name: 'Bolo de Chocolate', sales: 45, image: '🧁' },
-    { name: 'Cupcake Morango', sales: 32, image: '🍰' },
-    { name: 'Torta Limão', sales: 28, image: '🥧' }
-  ]
-
   // Verificações de configuração
   const configChecks = [
     {
@@ -84,29 +78,7 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Produtos em Destaque</CardTitle>
-            <CardDescription className="text-gray-600">Seus produtos mais vendidos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {products.map((product, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl">{product.image}</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 text-lg">{product.name}</p>
-                    <p className="text-sm text-gray-600">{product.sales} vendas</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="max-w-2xl mx-auto">
         <Card className="border-0 shadow-md">
           <CardHeader>
             <div className="flex items-center justify-between">
