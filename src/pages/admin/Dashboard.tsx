@@ -67,12 +67,12 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Visão Geral</h1>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
         {metrics.map((metric, index) => (
-          <Card key={index} className="hover:shadow-lg transition-all duration-200 shadow-sm p-4">
+          <Card key={index} className="hover:shadow-lg transition-all duration-200 shadow-sm p-3">
             <div className="text-center">
-              <p className="text-sm" style={{ color: '#1A1A1A' }}>{metric.title}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{metric.value}</p>
+              <p className="text-xs" style={{ color: '#1A1A1A' }}>{metric.title}</p>
+              <p className="text-xl font-bold text-gray-900 mt-1">{metric.value}</p>
             </div>
           </Card>
         ))}
