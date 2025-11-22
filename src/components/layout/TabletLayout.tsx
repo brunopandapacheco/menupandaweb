@@ -25,7 +25,7 @@ export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }:
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#230319] border-r border-pink-200 p-4 flex flex-col">
-        <div className="p-4 pb-8">
+        <div className="p-4 pb-4">
           <div className="flex items-center justify-center">
             <div className="text-center">
               <div className="w-40 h-40 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">

@@ -35,7 +35,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
           </div>
         </div>
         
-        <div className="flex-1 p-6 pt-2">
+        <div className="flex-1 p-6 pt-0">
           <div className="space-y-3">
             {tabs.map((tab) => {
               const Icon = tab.icon
