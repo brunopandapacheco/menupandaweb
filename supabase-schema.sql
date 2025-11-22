@@ -1,63 +1,59 @@
--- Criar as tabelas necessárias para o sistema de cardápio digital
+-- Schema para o Panda Menu
+-- Execute este SQL no seu novo projeto Supabase
+
+-- Habilitar extensão UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Tabela de configurações de design
 CREATE TABLE IF NOT EXISTS design_settings (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  nome_confeitaria VARCHAR(255) NOT NULL DEFAULT 'Doces da Vovó',
-  cor_borda VARCHAR(7) DEFAULT '#ec4899',
-  cor_background VARCHAR(7) DEFAULT '#fef2f2',
-  cor_nome VARCHAR(7) DEFAULT '#be185d',
-  background_topo_color VARCHAR(7) DEFAULT '#fce7f3',
-  texto_rodape TEXT DEFAULT 'Faça seu pedido! 📞 (11) 99999-9999',
+  slug TEXT UNIQUE,
   logo_url TEXT,
+  nome_confeitaria TEXT NOT NULL DEFAULT 'Minha Confeitaria',
+  cor_borda TEXT DEFAULT '#ec4899',
+  cor_background TEXT DEFAULT '#fef2f2',
+  cor_nome TEXT DEFAULT '#be185d',
   banner1_url TEXT,
   banner2_url TEXT,
+  background_topo_color TEXT DEFAULT '#fce7f3',
+  texto_rodape TEXT DEFAULT 'Faça seu pedido! 📞 (11) 99999-9999',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(user_id)
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Tabela de configurações gerais
 CREATE TABLE IF NOT EXISTS configuracoes (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  horario_funcionamento_inicio TIME DEFAULT '08:00',
-  horario_funcionamento_fim TIME DEFAULT '18:00',
-  telefone VARCHAR(20) DEFAULT '(11) 99999-9999',
-  meios_pagamento TEXT[] DEFAULT ARRAY['Pix', 'Cartão de Crédito', 'Dinheiro'],
+  horario_funcionamento_inicio TEXT DEFAULT '08:00',
+  horario_funcionamento_fim TEXT DEFAULT '18:00',
+  telefone TEXT DEFAULT '(11) 99999-9999',
+  meios_pagamento TEXT[] DEFAULT ARRAY['Pix', 'Cartão', 'Dinheiro'],
   entrega BOOLEAN DEFAULT true,
   taxa_entrega DECIMAL(10,2) DEFAULT 5.00,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(user_id)
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Tabela de produtos
 CREATE TABLE IF NOT EXISTS produtos (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  nome VARCHAR(255) NOT NULL,
+  nome TEXT NOT NULL,
   descricao TEXT,
   preco_normal DECIMAL(10,2) NOT NULL,
   preco_promocional DECIMAL(10,2),
   imagem_url TEXT,
-  categoria VARCHAR(100) NOT NULL,
-  forma_venda VARCHAR(100) NOT NULL,
+  categoria TEXT NOT NULL,
+  forma_venda TEXT NOT NULL,
   disponivel BOOLEAN DEFAULT true,
   promocao BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Criar índices para melhor performance
-CREATE INDEX IF NOT EXISTS idx_produtos_user_id ON produtos(user_id);
-CREATE INDEX IF NOT EXISTS idx_produtos_categoria ON produtos(categoria);
-CREATE INDEX IF NOT EXISTS idx_produtos_disponivel ON produtos(disponivel);
-CREATE INDEX IF NOT EXISTS idx_produtos_promocao ON produtos(promocao);
-
--- Criar políticas de segurança (Row Level Security)
--- Habilitar RLS nas tabelas
+-- Políticas de segurança (RLS)
 ALTER TABLE design_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE configuracoes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE produtos ENABLE ROW LEVEL SECURITY;
@@ -72,9 +68,6 @@ CREATE POLICY "Users can insert own design settings" ON design_settings
 CREATE POLICY "Users can update own design settings" ON design_settings
   FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete own design settings" ON design_settings
-  FOR DELETE USING (auth.uid() = user_id);
-
 -- Políticas para configuracoes
 CREATE POLICY "Users can view own configuracoes" ON configuracoes
   FOR SELECT USING (auth.uid() = user_id);
@@ -84,9 +77,6 @@ CREATE POLICY "Users can insert own configuracoes" ON configuracoes
 
 CREATE POLICY "Users can update own configuracoes" ON configuracoes
   FOR UPDATE USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete own configuracoes" ON configuracoes
-  FOR DELETE USING (auth.uid() = user_id);
 
 -- Políticas para produtos
 CREATE POLICY "Users can view own produtos" ON produtos
@@ -101,17 +91,20 @@ CREATE POLICY "Users can update own produtos" ON produtos
 CREATE POLICY "Users can delete own produtos" ON produtos
   FOR DELETE USING (auth.uid() = user_id);
 
--- Políticas para acesso público ao cardápio (somente leitura)
+-- Políticas públicas para cardápio (leitura pública)
+CREATE POLICY "Public can view design settings by slug" ON design_settings
+  FOR SELECT USING (slug IS NOT NULL);
+
 CREATE POLICY "Public can view available produtos" ON produtos
   FOR SELECT USING (disponivel = true);
 
-CREATE POLICY "Public can view design settings" ON design_settings
-  FOR SELECT USING (true);
+-- Índices para melhor performance
+CREATE INDEX IF NOT EXISTS idx_design_settings_slug ON design_settings(slug);
+CREATE INDEX IF NOT EXISTS idx_produtos_user_id ON produtos(user_id);
+CREATE INDEX IF NOT EXISTS idx_produtos_disponivel ON produtos(disponivel);
+CREATE INDEX IF NOT EXISTS idx_produtos_categoria ON produtos(categoria);
 
-CREATE POLICY "Public can view configuracoes" ON configuracoes
-  FOR SELECT USING (true);
-
--- Criar trigger para atualizar o campo updated_at
+-- Função para atualizar updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -120,7 +113,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Aplicar trigger nas tabelas
+-- Triggers para atualizar updated_at
 CREATE TRIGGER update_design_settings_updated_at BEFORE UPDATE ON design_settings
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 

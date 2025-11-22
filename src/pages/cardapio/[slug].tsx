@@ -37,11 +37,7 @@ export default function CardapioPublico() {
     try {
       setLoading(true)
       
-      const { data: designData } = await supabase.supabase
-        .from('design_settings')
-        .select('*')
-        .eq('slug', slug)
-        .single()
+      const designData = await supabaseService.getDesignSettingsBySlug(slug || '')
 
       if (!designData) {
         setLoading(false)
@@ -49,22 +45,13 @@ export default function CardapioPublico() {
       }
 
       const [configData, produtosData] = await Promise.all([
-        supabase.supabase
-          .from('configuracoes')
-          .select('*')
-          .eq('user_id', designData.user_id)
-          .single(),
-        supabase.supabase
-          .from('produtos')
-          .select('*')
-          .eq('user_id', designData.user_id)
-          .eq('disponivel', true)
-          .order('created_at', { ascending: false })
+        supabaseService.getConfiguracoes(designData.user_id),
+        supabaseService.getProdutos(designData.user_id)
       ])
 
       setDesignSettings(designData)
-      setConfiguracoes(configData.data)
-      setProdutos(produtosData.data || [])
+      setConfiguracoes(configData)
+      setProdutos(produtosData)
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
     } finally {
