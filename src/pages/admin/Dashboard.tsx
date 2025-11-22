@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Cookie, ShoppingBag, DollarSign, Users, Check, X, Clock, Phone, CreditCard, Truck, Palette, Package } from 'lucide-react'
+import { Cookie, ShoppingBag, DollarSign, Users, Clock, Phone, CreditCard, Truck, Palette, Package } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 
 export default function Dashboard() {
@@ -23,37 +23,31 @@ export default function Dashboard() {
   const configChecks = [
     {
       title: 'Horário de Funcionamento',
-      icon: Clock,
       configured: configuracoes?.horario_funcionamento_inicio && configuracoes?.horario_funcionamento_fim,
       details: configuracoes ? `${configuracoes.horario_funcionamento_inicio} - ${configuracoes.horario_funcionamento_fim}` : 'Não configurado'
     },
     {
       title: 'Telefone de Contato',
-      icon: Phone,
       configured: configuracoes?.telefone && configuracoes.telefone !== '(11) 99999-9999',
       details: configuracoes?.telefone || 'Não configurado'
     },
     {
       title: 'Formas de Pagamento',
-      icon: CreditCard,
       configured: configuracoes?.meios_pagamento && configuracoes.meios_pagamento.length > 0,
       details: configuracoes?.meios_pagamento ? `${configuracoes.meios_pagamento.length} métodos` : 'Não configurado'
     },
     {
       title: 'Configuração de Entrega',
-      icon: Truck,
       configured: configuracoes?.entrega !== undefined,
       details: configuracoes?.entrega ? 'Entrega ativada' : 'Entrega desativada'
     },
     {
       title: 'Design da Loja',
-      icon: Palette,
       configured: designSettings?.nome_confeitaria && designSettings.nome_confeitaria !== 'Doces da Vovó',
       details: designSettings?.nome_confeitaria || 'Não configurado'
     },
     {
       title: 'Produtos Cadastrados',
-      icon: Package,
       configured: produtos && produtos.length > 0,
       details: produtos ? `${produtos.length} produtos` : 'Nenhum produto'
     }
@@ -147,41 +141,25 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {configChecks.map((check, index) => {
-                const Icon = check.icon
-                return (
-                  <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
-                    check.configured 
-                      ? 'bg-green-50 border-green-200' 
-                      : 'bg-red-50 border-red-200'
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        check.configured 
-                          ? 'bg-green-100' 
-                          : 'bg-red-100'
-                      }`}>
-                        {check.configured ? (
-                          <Check className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <X className="w-4 h-4 text-red-600" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{check.title}</p>
-                        <p className="text-sm text-gray-600">{check.details}</p>
-                      </div>
-                    </div>
-                    <Badge className={
-                      check.configured 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }>
-                      {check.configured ? 'Configurado' : 'Não configurado'}
-                    </Badge>
+              {configChecks.map((check, index) => (
+                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                  check.configured 
+                    ? 'bg-green-50 border-green-200' 
+                    : 'bg-red-50 border-red-200'
+                }`}>
+                  <div>
+                    <p className="font-medium text-gray-900">{check.title}</p>
+                    <p className="text-sm text-gray-600">{check.details}</p>
                   </div>
-                )
-              })}
+                  <Badge className={
+                    check.configured 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }>
+                    {check.configured ? 'Configurado' : 'Não configurado'}
+                  </Badge>
+                </div>
+              ))}
             </div>
             
             {completionPercentage < 100 && (
