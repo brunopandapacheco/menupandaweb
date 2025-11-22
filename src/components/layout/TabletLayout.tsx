@@ -28,12 +28,8 @@ export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }:
         <div className="p-4 pb-8">
           <div className="flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
-                {logoUrl ? (
-                  <img src={logoUrl} alt={`${systemName} Logo`} className="w-10 h-10 object-contain" />
-                ) : (
-                  <span className="text-3xl">🧁</span>
-                )}
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
+                <img src="/logointernaadmin.png" alt={`${systemName} Logo`} className="w-10 h-10 object-contain" />
               </div>
               <h2 className="text-white font-bold text-lg">{systemName}</h2>
               <p className="text-white/80 text-xs mt-1">{systemSubtitle}</p>

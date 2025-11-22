@@ -18,16 +18,22 @@ const tabs = [
 ]
 
 export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }: DesktopLayoutProps) {
+  const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
+  const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Menu Bolo'
+  const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
+
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#230319] border-r border-pink-200 flex flex-col">
         <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
-            <img 
-              src="/logopandamenu.png" 
-              alt="Logo da Empresa" 
-              className="w-32 h-20 object-contain"
-            />
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
+                <img src="/logointernaadmin.png" alt={`${systemName} Logo`} className="w-10 h-10 object-contain" />
+              </div>
+              <h2 className="text-white font-bold text-lg">{systemName}</h2>
+              <p className="text-white/80 text-xs mt-1">{systemSubtitle}</p>
+            </div>
           </div>
         </div>
         
@@ -57,7 +63,7 @@ export function DesktopLayout({ children, activeTab = 'dashboard', onTabChange }
         
         <div className="p-6 pb-8 border-t border-pink-300">
           <div className="text-center">
-            <p className="text-white/70 text-xs">© 2025 Panda Menu</p>
+            <p className="text-white/70 text-xs">© 2025 {systemName}</p>
             <p className="text-white/60 text-xs">Todos os direitos reservados</p>
           </div>
         </div>
