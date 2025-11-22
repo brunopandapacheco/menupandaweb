@@ -32,7 +32,7 @@ export default function Dashboard() {
                   <Icon className={`h-4 w-4 text-${metric.color}-600`} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                  <p className="text-sm font-medium" style={{ color: '#1A1A1A' }}>{metric.title}</p>
                   <p className="text-lg font-bold text-gray-900">{metric.value}</p>
                 </div>
               </div>
