@@ -13,53 +13,73 @@ import { useIsMobile } from '@/hooks/use-mobile'
 
 const colorPalettes = [
   {
-    name: 'Rosa Chiclete com Caramelo',
+    name: 'Caramelo Rosé',
     description: '',
     colors: {
-      cor_borda: '#FF4F87',
+      cor_borda: '#B5673E',
+      cor_background: '#F4D4D4',
+      cor_nome: '#B5673E',
+      background_topo_color: '#EDB889',
+    }
+  },
+  {
+    name: 'Cereja Suave',
+    description: '',
+    colors: {
+      cor_borda: '#791B25',
+      cor_background: '#EFE8DA',
+      cor_nome: '#791B25',
+      background_topo_color: '#EDBABA',
+    }
+  },
+  {
+    name: 'Morango Burnt',
+    description: '',
+    colors: {
+      cor_borda: '#4A3531',
+      cor_background: '#EFE8DA',
+      cor_nome: '#4A3531',
+      background_topo_color: '#BF9EA7',
+    }
+  },
+  {
+    name: 'Blue Candy',
+    description: '',
+    colors: {
+      cor_borda: '#0B99A0',
+      cor_background: '#FFFFFF',
+      cor_nome: '#0B99A0',
+      background_topo_color: '#89D6DF',
+    }
+  },
+  {
+    name: 'Framboesa Cremosa',
+    description: '',
+    colors: {
+      cor_borda: '#6B2E2E',
       cor_background: '#FFF2F6',
       cor_nome: '#6B2E2E',
       background_topo_color: '#FF92B5',
     }
   },
   {
-    name: 'Framboesa com Creme',
+    name: 'Rosa Confeiteira',
     description: '',
     colors: {
-      cor_borda: '#D6336C',
+      cor_borda: '#8C4A3A',
       cor_background: '#FFF9F4',
-      cor_nome: '#8C4A3A',
+      cor_nome: '#D6336C',
       background_topo_color: '#F7B8CC',
     }
   },
   {
-    name: 'Menta com Lilás',
+    name: 'Mint & Lavanda',
     description: '',
     colors: {
-      cor_borda: '#6FD8C8',
+      cor_borda: '#6E61A8',
       cor_background: '#F4F7FF',
       cor_nome: '#6E61A8',
       background_topo_color: '#A5E7DD',
-    }
-  },
-  {
-    name: 'Azul Sorvete com Violeta',
-    description: '',
-    colors: {
-      cor_borda: '#4C8BFF',
-      cor_background: '#F3F5FF',
-      cor_nome: '#5A3B91',
-      background_topo_color: '#8EBBFF',
-    }
-  },
-  {
-    name: 'Mix Quente com Frio',
-    description: '',
-    colors: {
-      cor_borda: '#FF7A7A',
-      cor_background: '#FAFAFA',
-      cor_nome: '#B78CEB',
-      background_topo_color: '#FDAE85',
     }
   },
 ]
