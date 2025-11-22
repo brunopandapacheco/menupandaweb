@@ -72,6 +72,7 @@ const colorPalettes = [
 export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
   const isMobile = useIsMobile()
+  const [selectedPalette, setSelectedPalette] = useState<typeof colorPalettes[0] | null>(null)
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
     slug: 'doces-da-vo',
@@ -110,6 +111,7 @@ export default function DesignSettings() {
   const applyPalette = async (palette: typeof colorPalettes[0]) => {
     const newSettings = { ...settings, ...palette.colors }
     setSettings(newSettings)
+    setSelectedPalette(palette)
     const success = await saveDesignSettings(newSettings)
     if (success) showSuccess(`Paleta "${palette.name}" aplicada!`)
   }
@@ -126,7 +128,24 @@ export default function DesignSettings() {
     }
   }
 
+  const updateColor = (colorKey: keyof typeof settings, value: string) => {
+    const newSettings = { ...settings, [colorKey]: value }
+    setSettings(newSettings)
+    
+    // Se tiver uma paleta selecionada, remove a seleção ao editar manualmente
+    if (selectedPalette) {
+      setSelectedPalette(null)
+    }
+  }
+
   if (loading) return <div>Carregando...</div>
+
+  const colorLabels = {
+    cor_borda: 'Borda da Logo',
+    cor_background: 'Background',
+    cor_nome: 'Nome da Loja',
+    background_topo_color: 'Cor do Topo'
+  }
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
@@ -159,6 +178,52 @@ export default function DesignSettings() {
 
         <TabsContent value="cores">
           <div className="space-y-6">
+            {selectedPalette && (
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
+                    <Palette className="w-5 h-5" />
+                    Paleta Atual: {selectedPalette.name}
+                  </CardTitle>
+                  <CardDescription>
+                    {selectedPalette.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {Object.entries(selectedPalette.colors).map(([key, color]) => (
+                      <div key={key} className="text-center">
+                        <div 
+                          className="w-16 h-16 rounded-lg border-2 border-gray-200 shadow-sm mx-auto mb-2 cursor-pointer hover:scale-105 transition-transform"
+                          style={{ backgroundColor: color }}
+                          onClick={() => {
+                            const input = document.getElementById(`color-input-${key}`) as HTMLInputElement
+                            if (input) input.click()
+                          }}
+                        />
+                        <p className="text-xs text-gray-600 capitalize">
+                          {colorLabels[key as keyof typeof colorLabels]}
+                        </p>
+                        <p className="text-xs font-mono text-gray-500">
+                          {color}
+                        </p>
+                        <Input
+                          id={`color-input-${key}`}
+                          type="color"
+                          value={settings[key as keyof typeof settings] as string}
+                          onChange={(e) => updateColor(key as keyof typeof settings, e.target.value)}
+                          className="hidden"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-600 mt-4 text-center">
+                    💡 Clique em qualquer cor acima para editá-la individualmente
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2" style={{ color: '#4A3531' }}>
@@ -167,121 +232,36 @@ export default function DesignSettings() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="cor_borda" className="text-base font-medium">Borda da Logo</Label>
-                    <div className="flex items-center gap-3">
-                      {!isMobile && (
+                {Object.entries(colorLabels).map(([key, label]) => (
+                  <div key={key} className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor={key} className="text-base font-medium">{label}</Label>
+                      <div className="flex items-center gap-3">
+                        {!isMobile && (
+                          <Input
+                            value={settings[key as keyof typeof settings] as string}
+                            onChange={(e) => updateColor(key as keyof typeof settings, e.target.value)}
+                            className="w-32"
+                            placeholder="#ec4899"
+                          />
+                        )}
                         <Input
-                          value={settings.cor_borda}
-                          onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                          className="w-32"
-                          placeholder="#ec4899"
+                          type="color"
+                          value={settings[key as keyof typeof settings] as string}
+                          onChange={(e) => updateColor(key as keyof typeof settings, e.target.value)}
+                          className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
+                          style={{
+                            '-webkit-appearance': 'none',
+                            'appearance': 'none',
+                            'background': 'none',
+                            'border': 'none',
+                            'cursor': 'pointer'
+                          } as React.CSSProperties}
                         />
-                      )}
-                      <Input
-                        type="color"
-                        value={settings.cor_borda}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_borda: e.target.value }))}
-                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
-                        style={{
-                          '-webkit-appearance': 'none',
-                          'appearance': 'none',
-                          'background': 'none',
-                          'border': 'none',
-                          'cursor': 'pointer'
-                        } as React.CSSProperties}
-                      />
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="cor_background" className="text-base font-medium">Background</Label>
-                    <div className="flex items-center gap-3">
-                      {!isMobile && (
-                        <Input
-                          value={settings.cor_background}
-                          onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                          className="w-32"
-                          placeholder="#fef2f2"
-                        />
-                      )}
-                      <Input
-                        type="color"
-                        value={settings.cor_background}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_background: e.target.value }))}
-                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
-                        style={{
-                          '-webkit-appearance': 'none',
-                          'appearance': 'none',
-                          'background': 'none',
-                          'border': 'none',
-                          'cursor': 'pointer'
-                        } as React.CSSProperties}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="cor_nome" className="text-base font-medium">Nome da Loja</Label>
-                    <div className="flex items-center gap-3">
-                      {!isMobile && (
-                        <Input
-                          value={settings.cor_nome}
-                          onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                          className="w-32"
-                          placeholder="#be185d"
-                        />
-                      )}
-                      <Input
-                        type="color"
-                        value={settings.cor_nome}
-                        onChange={(e) => setSettings(prev => ({ ...prev, cor_nome: e.target.value }))}
-                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
-                        style={{
-                          '-webkit-appearance': 'none',
-                          'appearance': 'none',
-                          'background': 'none',
-                          'border': 'none',
-                          'cursor': 'pointer'
-                        } as React.CSSProperties}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="background_topo_color" className="text-base font-medium">Cor do Topo</Label>
-                    <div className="flex items-center gap-3">
-                      {!isMobile && (
-                        <Input
-                          value={settings.background_topo_color}
-                          onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                          className="w-32"
-                          placeholder="#fce7f3"
-                        />
-                      )}
-                      <Input
-                        type="color"
-                        value={settings.background_topo_color}
-                        onChange={(e) => setSettings(prev => ({ ...prev, background_topo_color: e.target.value }))}
-                        className="w-12 h-12 cursor-pointer rounded-lg border-2 border-gray-200"
-                        style={{
-                          '-webkit-appearance': 'none',
-                          'appearance': 'none',
-                          'background': 'none',
-                          'border': 'none',
-                          'cursor': 'pointer'
-                        } as React.CSSProperties}
-                      />
-                    </div>
-                  </div>
-                </div>
+                ))}
               </CardContent>
             </Card>
 
@@ -319,7 +299,7 @@ export default function DesignSettings() {
                             />
                             <div className="flex-1">
                               <span className="text-xs text-gray-600 capitalize block">
-                                {key.replace(/_/g, ' ')}
+                                {colorLabels[key as keyof typeof colorLabels]}
                               </span>
                               <span className="text-xs font-mono text-gray-500">
                                 {color}
