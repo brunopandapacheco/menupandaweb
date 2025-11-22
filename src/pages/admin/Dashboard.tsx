@@ -17,9 +17,9 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="space-y-8 px-4 sm:px-0 pt-8 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      <div className="border-b border-gray-200 pb-6">
-        <h1 className="text-3xl font-bold text-gray-900 text-center">Visão Geral</h1>
+    <div className="space-y-8 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Visão Geral</h1>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
