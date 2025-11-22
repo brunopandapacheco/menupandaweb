@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,6 +15,53 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [emailSuggestions, setEmailSuggestions] = useState<string[]>([])
+  const emailInputRef = useRef<HTMLInputElement>(null)
+
+  const emailDomains = [
+    '@gmail.com',
+    '@yahoo.com',
+    '@hotmail.com',
+    '@outlook.com',
+    '@icloud.com',
+    '@bol.com.br',
+    '@uol.com.br',
+    '@terra.com.br'
+  ]
+
+  useEffect(() => {
+    const handleEmailChange = (value: string) => {
+      const atIndex = value.lastIndexOf('@')
+      
+      if (atIndex > 0) {
+        const domainPart = value.substring(atIndex)
+        const localPart = value.substring(0, atIndex)
+        
+        const filteredDomains = emailDomains.filter(domain => 
+          domain.toLowerCase().startsWith(domainPart.toLowerCase())
+        )
+        
+        if (filteredDomains.length > 0 && domainPart !== '@') {
+          const suggestions = filteredDomains.map(domain => localPart + domain)
+          setEmailSuggestions(suggestions)
+          setShowSuggestions(true)
+        } else {
+          setShowSuggestions(false)
+        }
+      } else {
+        setShowSuggestions(false)
+      }
+    }
+
+    handleEmailChange(email)
+  }, [email])
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setEmail(suggestion)
+    setShowSuggestions(false)
+    emailInputRef.current?.focus()
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,11 +97,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
   return (
     <form onSubmit={handleLogin} className="space-y-6">
-      <div className="space-y-2">
+      <div className="space-y-2 relative">
         <Label htmlFor="email" className="text-sm font-medium text-gray-700">
           Email ou Usuário
         </Label>
         <Input
+          ref={emailInputRef}
           id="email"
           type="email"
           value={email}
@@ -63,6 +111,21 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           disabled={loading}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-gray-700"
         />
+        
+        {showSuggestions && emailSuggestions.length > 0 && (
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+            {emailSuggestions.map((suggestion, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => handleSuggestionClick(suggestion)}
+                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-700 transition-colors first:rounded-t-lg last:rounded-b-lg"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       
       <div className="space-y-2">
