@@ -63,9 +63,14 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      <div className="text-center">
-        <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>Visão Geral</h1>
-      </div>
+      <Card className="border-0 shadow-md bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb]">
+        <CardHeader>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-white">Visão Geral</h1>
+            <p className="text-white/90">Status do seu cardápio</p>
+          </div>
+        </CardHeader>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
