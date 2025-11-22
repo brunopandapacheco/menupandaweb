@@ -17,7 +17,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="space-y-8 px-4 sm:px-0 pt-8">
+    <div className="space-y-8 px-4 sm:px-0 pt-8 bg-white min-h-screen">
       <div className="border-b border-gray-200 pb-6">
         <h1 className="text-3xl font-bold text-gray-900 text-center">Visão Geral</h1>
       </div>
