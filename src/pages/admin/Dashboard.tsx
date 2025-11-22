@@ -143,7 +143,7 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-3">
               {configChecks.map((check, index) => (
-                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                <div key={index} className={`flex items-center justify-between p-3 rounded-md border ${
                   check.configured 
                     ? 'bg-green-50 border-green-200' 
                     : 'bg-gray-50 border-gray-200'
@@ -157,7 +157,7 @@ export default function Dashboard() {
                   <Badge className={
                     check.configured 
                       ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800 animate-pulse'
+                      : 'bg-red-100 text-red-800'
                   }>
                     {check.configured ? 'Configurado' : 'Não configurado'}
                   </Badge>
