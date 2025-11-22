@@ -1,12 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Cake, ShoppingCart, TrendingUp, Users } from 'lucide-react'
+import { Cookie, ShoppingBag, DollarSign, Users } from 'lucide-react'
 
 export default function Dashboard() {
   const metrics = [
-    { title: 'Produtos', value: '24', icon: Cake, color: 'pink' },
-    { title: 'Pedidos', value: '142', icon: ShoppingCart, color: 'blue' },
-    { title: 'Receita', value: 'R$ 3.240', icon: TrendingUp, color: 'green' },
+    { title: 'Produtos', value: '24', icon: Cookie, color: 'pink' },
+    { title: 'Pedidos', value: '142', icon: ShoppingBag, color: 'blue' },
+    { title: 'Receita', value: 'R$ 3.240', icon: DollarSign, color: 'green' },
     { title: 'Clientes', value: '89', icon: Users, color: 'purple' }
   ]
 
