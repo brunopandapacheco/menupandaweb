@@ -145,7 +145,7 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-3">
               {configChecks.map((check, index) => (
-                <div key={index} className={`flex items-center justify-between p-3 border ${
+                <div key={index} className={`flex items-center justify-between p-3 border rounded-lg ${
                   check.configured 
                     ? 'bg-green-50 border-green-200' 
                     : 'bg-gray-50 border-gray-200'
