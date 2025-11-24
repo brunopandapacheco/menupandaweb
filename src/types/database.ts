@@ -30,6 +30,7 @@ export interface Configuracoes {
   entrega: boolean
   taxa_entrega: number
   em_ferias?: boolean
+  data_retorno_ferias?: string
   horarios_semana?: DaySchedule[]
   total_pedidos?: number
   avaliacao_media?: number
