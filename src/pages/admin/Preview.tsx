@@ -112,33 +112,37 @@ export default function Preview() {
   }
 
   return (
-    <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       {/* Card de Compartilhamento no Topo */}
-      <Card className="border-0 shadow-md">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Share2 className="w-5 h-5 text-blue-600" />
-              <div>
-                <h3 className="font-semibold text-gray-800">Compartilhar Cardápio</h3>
-                <p className="text-sm text-gray-600">Link para seus clientes</p>
+      <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="max-w-4xl mx-auto p-4">
+          <Card className="border-0 shadow-md">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Share2 className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">Compartilhar Cardápio</h3>
+                    <p className="text-sm text-gray-600">Link para seus clientes</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={copyToClipboard}
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  Copiar Link
+                </Button>
               </div>
-            </div>
-            <Button
-              onClick={copyToClipboard}
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Copy className="w-4 h-4" />
-              Copiar Link
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
-      {/* Prévia Real do Cardápio */}
-      <div className="max-w-md mx-auto">
-        <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+      {/* Prévia Real do Cardápio - Ocupando 100% da largura */}
+      <div className="w-full">
+        <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
           <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white' }}>
             <Banner 
               logoUrl={designSettings.logo_url} 
