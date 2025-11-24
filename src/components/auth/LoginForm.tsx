@@ -21,6 +21,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     setLoading(true)
 
     try {
+      console.log('Tentando login com:', email)
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -40,7 +42,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       }
 
       if (data.user) {
-        console.log('Login bem-sucedido:', data.user)
+        console.log('Login bem-sucedido:', data.user.id)
         
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true')
@@ -48,10 +50,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         
         showSuccess('Login realizado com sucesso!')
         
-        // Pequeno delay para garantir que o estado seja atualizado
+        // Redireciona imediatamente após sucesso
         setTimeout(() => {
           onSuccess?.()
-        }, 500)
+        }, 100)
       }
     } catch (error: any) {
       console.error('Erro durante o login:', error)
@@ -65,7 +67,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium text-black">
-          Email ou Usuário
+          Email
         </Label>
         <Input
           id="email"

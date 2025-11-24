@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
-import { User, Session } from '@supabase/supabase-js'
+import { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -16,7 +15,6 @@ export function useAuth() {
         if (error) {
           console.error('Erro ao obter sessão inicial:', error)
         } else {
-          setSession(session)
           setUser(session?.user ?? null)
         }
       } catch (error) {
@@ -30,9 +28,8 @@ export function useAuth() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session)
+      console.log('Auth state changed:', event, session?.user?.id)
       
-      setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -49,7 +46,6 @@ export function useAuth() {
         console.error('Erro ao fazer logout:', error)
       }
       setUser(null)
-      setSession(null)
     } catch (error) {
       console.error('Erro durante o logout:', error)
     }
@@ -57,7 +53,6 @@ export function useAuth() {
 
   return { 
     user, 
-    session, 
     loading, 
     signOut 
   }

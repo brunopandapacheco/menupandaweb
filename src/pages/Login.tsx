@@ -1,13 +1,32 @@
 import { useState } from 'react'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { useNavigate } from 'react-router-dom'
-import { AuthMode } from '@/types'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function Login() {
-  const [mode, setMode] = useState<AuthMode>('login')
   const navigate = useNavigate()
+  const { user, loading } = useAuth()
 
-  const handleSuccess = () => navigate('/admin')
+  // Se já estiver logado, redireciona diretamente para admin
+  if (loading) {
+    return (
+      <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white">Verificando autenticação...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (user) {
+    navigate('/admin', { replace: true })
+    return null
+  }
+
+  const handleSuccess = () => {
+    navigate('/admin', { replace: true })
+  }
 
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb]">
