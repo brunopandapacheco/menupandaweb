@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Search, Heart, Phone, Clock, Truck, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { Banner } from '@/components/cardapio/Banner'
+import { Logo } from '@/components/cardapio/Logo'
+import { StoreInfo } from '@/components/cardapio/StoreInfo'
+import { SearchBar } from '@/components/cardapio/SearchBar'
+import { ProductList } from '@/components/cardapio/ProductList'
+import { Footer } from '@/components/cardapio/Footer'
+import { EmptyState } from '@/components/cardapio/EmptyState'
 
 interface Produto {
   id: string
@@ -127,48 +131,17 @@ export default function CardapioPublico() {
     )
   }
 
-  const getStatusMessage = () => {
-    if (!configuracoes) {
-      return { status: 'Carregando...', time: '', color: 'text-gray-600' }
-    }
-
-    if (configuracoes.em_ferias) {
-      return { status: 'Fechado', time: 'De férias', color: 'text-red-600' }
-    }
-
-    const now = new Date()
-    const currentHour = now.getHours()
-    const currentMinute = now.getMinutes()
-    const currentTime = currentHour * 60 + currentMinute
-    
-    const [startHour, startMinute] = configuracoes.horario_funcionamento_inicio.split(':').map(Number)
-    const [endHour, endMinute] = configuracoes.horario_funcionamento_fim.split(':').map(Number)
-    const startTime = startHour * 60 + startMinute
-    const endTime = endHour * 60 + endMinute
-    
-    if (currentTime >= startTime && currentTime <= endTime) {
-      return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, color: 'text-green-600' }
-    } else {
-      return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, color: 'text-red-600' }
-    }
-  }
-
-  const status = getStatusMessage()
-
-  const filteredProducts = produtos.filter(product =>
-    product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
-  const promotionalProducts = filteredProducts.filter(p => p.promocao)
-  const regularProducts = filteredProducts.filter(p => !p.promocao)
-
   const handleWhatsAppOrder = (productName: string) => {
     const message = `Olá! Gostaria de fazer um pedido de: ${productName}`
     const phoneNumber = configuracoes?.telefone?.replace(/\D/g, '') || '11999999999'
     const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
   }
+
+  const filteredProducts = produtos.filter(product =>
+    product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   if (loading) {
     return (
@@ -199,141 +172,21 @@ export default function CardapioPublico() {
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white', minHeight: '100vh' }}>
-        {/* Banner superior com degrade rosa igual a tela de login */}
-        <div style={{ 
-          position: 'relative', 
-          height: '180px', 
-          overflow: 'hidden',
-          background: 'linear-gradient(to bottom right, #d11b70, #ff6fae, #ff9acb)'
-        }}>
-          {/* Forma curva e inclinada usando SVG */}
-          <svg 
-            style={{ 
-              position: 'absolute', 
-              top: 0, 
-              left: 0, 
-              width: '100%', 
-              height: '100%'
-            }} 
-            viewBox="0 0 448 180" 
-            preserveAspectRatio="none"
-          >
-            {/* Caminho curvo e inclinado */}
-            <path 
-              d="M 0,0 L 448,0 L 448,120 Q 400,140 350,145 Q 300,150 250,145 Q 200,140 150,135 Q 100,130 50,125 Q 25,122 0,120 Z" 
-              fill="url(#gradient)"
-            />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#d11b70" />
-                <stop offset="50%" stopColor="#ff6fae" />
-                <stop offset="100%" stopColor="#ff9acb" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-
-        {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO E BORDA COLADA */}
-        <div style={{ position: 'relative', marginTop: '-100px', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div 
-              style={{ 
-                width: '160px', 
-                height: '160px', 
-                borderRadius: '50%', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-                border: `4px solid ${designSettings.cor_borda}`,
-                position: 'relative',
-                zIndex: 10,
-                padding: '0' // Removido padding para logo colar na borda
-              }}
-            >
-              {designSettings.logo_url ? (
-                <img src={designSettings.logo_url} alt="Logo" style={{ width: '152px', height: '152px', borderRadius: '50%', objectFit: 'cover' }} />
-              ) : (
-                <img src="/logoteste.webp" alt="Logo" style={{ width: '152px', height: '152px', borderRadius: '50%', objectFit: 'cover' }} />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Conteúdo abaixo do logo - COM BACKGROUND BRANCO */}
+        <Banner logoUrl={designSettings.logo_url} borderColor={designSettings.cor_borda} />
+        <Logo logoUrl={designSettings.logo_url} borderColor={designSettings.cor_borda} />
+        
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
-          {/* Card ÚNICO com título, descrição e informações */}
-          <div style={{ 
-            backgroundColor: 'white', 
-            borderRadius: '8px', 
-            padding: '24px', 
-            marginBottom: '24px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-          }}>
-            {/* Nome da confeitaria */}
-            <h1 
-              style={{ 
-                fontSize: '28px', 
-                fontWeight: 'bold', 
-                textAlign: 'center', 
-                marginBottom: '8px',
-                color: designSettings.cor_nome 
-              }}
-            >
-              {designSettings.nome_confeitaria}
-            </h1>
-            
-            {/* Descrição */}
-            <p style={{ color: '#6b7280', textAlign: 'center', fontSize: '14px', lineHeight: '1.5', marginBottom: '20px' }}>
-              Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
-            </p>
-
-            {/* Informações da loja */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px', marginBottom: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock style={{ width: '16px', height: '16px' }} />
-                <div>
-                  <p style={{ fontWeight: '600', color: status.color }}>{status.status}</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px' }}>{status.time}</p>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Phone style={{ width: '16px', height: '16px' }} />
-                <p style={{ fontWeight: '600' }}>{configuracoes?.telefone || '(11) 99999-9999'}</p>
-              </div>
-              {configuracoes?.entrega && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Truck style={{ width: '16px', height: '16px' }} />
-                  <p style={{ fontWeight: '600' }}>Faz entrega</p>
-                </div>
-              )}
-              {configuracoes?.taxa_entrega && configuracoes.entrega && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '12px', color: '#6b7280' }}>Taxa:</span>
-                  <p style={{ fontWeight: '600' }}>R$ {configuracoes.taxa_entrega.toFixed(2)}</p>
-                </div>
-              )}
-            </div>
-            
-            {/* Informações adicionais */}
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {configuracoes?.meios_pagamento?.includes('Pix') && (
-                <Badge variant="secondary" style={{ backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
-                  Pix
-                </Badge>
-              )}
-              {configuracoes?.meios_pagamento?.includes('Cardão') && (
-                <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
-                  Cardão
-                </Badge>
-              )}
-              {configuracoes?.meios_pagamento?.includes('Dinheiro') && (
-                <Badge variant="secondary" style={{ backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-                  Dinheiro
-                </Badge>
-              )}
-            </div>
-          </div>
+          <StoreInfo
+            nomeConfeitaria={designSettings.nome_confeitaria}
+            corNome={designSettings.cor_nome}
+            telefone={configuracoes?.telefone || '(11) 99999-9999'}
+            horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio || '08:00'}
+            horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim || '18:00'}
+            meiosPagamento={configuracoes?.meios_pagamento || ['Pix', 'Cartão', 'Dinheiro']}
+            entrega={configuracoes?.entrega ?? true}
+            taxaEntrega={configuracoes?.taxa_entrega || 0}
+            emFerias={configuracoes?.em_ferias}
+          />
 
           {/* Banner promocional */}
           {designSettings.banner1_url && (
@@ -346,224 +199,22 @@ export default function CardapioPublico() {
             </div>
           )}
 
-          {/* Campo de busca - CARD BRANCO */}
-          <div style={{ 
-            backgroundColor: 'white', 
-            borderRadius: '8px', 
-            padding: '16px', 
-            marginBottom: '24px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-          }}>
-            <div style={{ position: 'relative' }}>
-              <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '16px', height: '16px' }} />
-              <input
-                type="text"
-                placeholder="Buscar produtos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  width: '100%',
-                  paddingLeft: '40px',
-                  height: '48px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#ec4899'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-              />
-            </div>
-          </div>
+          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-          {/* Lista de produtos - 2 POR LINHA */}
-          {promotionalProducts.length > 0 && (
-            <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '20px' }}>🔥</span> Promoções
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                {promotionalProducts.map((product) => (
-                  <div key={product.id} style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                    <div style={{ padding: '12px' }}>
-                      {/* Imagem em primeiro */}
-                      <div 
-                        style={{ 
-                          width: '100%', 
-                          height: '120px', 
-                          borderRadius: '8px', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          marginBottom: '12px',
-                          backgroundColor: designSettings.cor_background 
-                        }}
-                      >
-                        {product.imagem_url ? (
-                          <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
-                        ) : (
-                          <span style={{ fontSize: '32px' }}>🧁</span>
-                        )}
-                      </div>
-                      
-                      {/* Conteúdo do produto */}
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                          <h4 style={{ fontWeight: '600', fontSize: '14px', lineHeight: '1.2', flex: 1 }}>{product.nome}</h4>
-                          <button
-                            onClick={() => toggleFavorite(product.id)}
-                            style={{ 
-                              padding: '4px', 
-                              background: 'none', 
-                              border: 'none', 
-                              cursor: 'pointer',
-                              color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af',
-                              marginLeft: '8px'
-                            }}
-                          >
-                            <Heart style={{ width: '16px', height: '16px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
-                          </button>
-                        </div>
-                        
-                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '32px', overflow: 'hidden' }}>
-                          {product.descricao}
-                        </p>
-                        
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                          <div>
-                            <span style={{ fontSize: '12px', color: '#6b7280', textDecoration: 'line-through' }}>
-                              R$ {product.preco_normal.toFixed(2)}
-                            </span>
-                            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981' }}>
-                              R$ {product.preco_promocional?.toFixed(2)}
-                            </div>
-                          </div>
-                          <Badge variant="destructive" style={{ fontSize: '10px', padding: '2px 6px' }}>
-                            -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
-                          </Badge>
-                        </div>
-                        
-                        <button 
-                          style={{ 
-                            width: '100%', 
-                            height: '36px', 
-                            fontWeight: '600', 
-                            backgroundColor: designSettings.cor_borda,
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s',
-                            fontSize: '12px'
-                          }}
-                          onClick={() => handleWhatsAppOrder(product.nome)}
-                          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                        >
-                          Pedir
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {filteredProducts.length > 0 ? (
+            <ProductList
+              produtos={filteredProducts}
+              favorites={favorites}
+              onToggleFavorite={toggleFavorite}
+              onOrder={handleWhatsAppOrder}
+              backgroundColor={designSettings.cor_background}
+              borderColor={designSettings.cor_borda}
+            />
+          ) : (
+            <EmptyState />
           )}
 
-          {regularProducts.length > 0 && (
-            <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>Todos os Produtos</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                {regularProducts.map((product) => (
-                  <div key={product.id} style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                    <div style={{ padding: '12px' }}>
-                      {/* Imagem em primeiro */}
-                      <div 
-                        style={{ 
-                          width: '100%', 
-                          height: '120px', 
-                          borderRadius: '8px', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          marginBottom: '12px',
-                          backgroundColor: designSettings.cor_background 
-                        }}
-                      >
-                        {product.imagem_url ? (
-                          <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
-                        ) : (
-                          <span style={{ fontSize: '32px' }}>🧁</span>
-                        )}
-                      </div>
-                      
-                      {/* Conteúdo do produto */}
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                          <h4 style={{ fontWeight: '600', fontSize: '14px', lineHeight: '1.2', flex: 1 }}>{product.nome}</h4>
-                          <button
-                            onClick={() => toggleFavorite(product.id)}
-                            style={{ 
-                              padding: '4px', 
-                              background: 'none', 
-                              border: 'none', 
-                              cursor: 'pointer',
-                              color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af',
-                              marginLeft: '8px'
-                            }}
-                          >
-                            <Heart style={{ width: '16px', height: '16px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
-                          </button>
-                        </div>
-                        
-                        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '32px', overflow: 'hidden' }}>
-                          {product.descricao}
-                        </p>
-                        
-                        <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '8px' }}>
-                          R$ {product.preco_normal.toFixed(2)}
-                        </div>
-                        
-                        <button 
-                          style={{ 
-                            width: '100%', 
-                            height: '36px', 
-                            fontWeight: '600', 
-                            backgroundColor: designSettings.cor_borda,
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s',
-                            fontSize: '12px'
-                          }}
-                          onClick={() => handleWhatsAppOrder(product.nome)}
-                          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                        >
-                          Pedir
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Rodapé simples - CARD BRANCO */}
-          <div style={{ 
-            backgroundColor: 'white', 
-            borderRadius: '8px', 
-            padding: '24px 16px', 
-            textAlign: 'center', 
-            fontSize: '14px', 
-            color: '#6b7280',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-          }}>
-            <p>{designSettings.texto_rodape}</p>
-          </div>
+          <Footer textoRodape={designSettings.texto_rodape} />
         </div>
       </div>
     </div>
