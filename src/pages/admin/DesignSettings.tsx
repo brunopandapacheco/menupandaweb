@@ -162,14 +162,29 @@ export default function DesignSettings() {
   }
 
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
+    console.log('Aplicando degrade:', gradient.name, gradient.gradient)
+    
+    // Atualiza o estado local imediatamente
     const newSettings = { ...settings, banner_gradient: gradient.gradient }
     setSettings(newSettings)
     setSelectedGradient(gradient)
+    
+    // Salva no banco
     const success = await saveDesignSettings(newSettings)
+    
     if (success) {
       toast.success(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`, {
         description: 'O background do seu cardápio agora tem um novo visual',
         icon: <CheckCircle className="w-4 h-4" />
+      })
+      
+      // Força atualização dos dados para garantir que o Preview pegue as informações mais recentes
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
+    } else {
+      toast.error('Erro ao aplicar degrade', {
+        description: 'Tente novamente mais tarde'
       })
     }
   }
