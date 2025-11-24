@@ -26,7 +26,9 @@ const mockConfiguracoes = {
   meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
   entrega: true,
   taxa_entrega: 5.00,
-  emFerias: false
+  emFerias: false,
+  total_pedidos: 500,
+  avaliacao_media: 4.9
 }
 
 const mockProdutos = [
@@ -152,6 +154,8 @@ export default function CardapioDemo() {
             entrega={mockConfiguracoes.entrega}
             taxaEntrega={mockConfiguracoes.taxa_entrega}
             emFerias={mockConfiguracoes.emFerias}
+            totalPedidos={mockConfiguracoes.total_pedidos}
+            avaliacaoMedia={mockConfiguracoes.avaliacao_media}
           />
 
           {/* Banner promocional */}

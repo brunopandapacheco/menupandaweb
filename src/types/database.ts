@@ -28,6 +28,8 @@ export interface Configuracoes {
   taxa_entrega: number
   em_ferias?: boolean
   horarios_semana?: DaySchedule[]
+  total_pedidos?: number
+  avaliacao_media?: number
 }
 
 export interface DaySchedule {

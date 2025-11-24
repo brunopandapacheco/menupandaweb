@@ -95,6 +95,8 @@ export default function Preview() {
             entrega={configuracoes?.entrega ?? true}
             taxaEntrega={configuracoes?.taxa_entrega || 0}
             emFerias={configuracoes?.em_ferias}
+            totalPedidos={configuracoes?.total_pedidos || 500}
+            avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
           />
 
           {/* Banner promocional */}

@@ -1,4 +1,4 @@
-import { Clock, Phone, Truck } from 'lucide-react'
+import { Clock, Star } from 'lucide-react'
 
 interface StoreInfoProps {
   telefone: string
@@ -8,6 +8,8 @@ interface StoreInfoProps {
   entrega: boolean
   taxaEntrega: number
   emFerias?: boolean
+  totalPedidos?: number
+  avaliacaoMedia?: number
 }
 
 export function StoreInfo({
@@ -17,7 +19,9 @@ export function StoreInfo({
   meiosPagamento,
   entrega,
   taxaEntrega,
-  emFerias
+  emFerias,
+  totalPedidos = 500,
+  avaliacaoMedia = 4.9
 }: StoreInfoProps) {
   const getStatusMessage = () => {
     if (emFerias) {
@@ -58,6 +62,45 @@ export function StoreInfo({
 
   const status = getStatusMessage()
 
+  // Renderiza estrelas com base na avaliação
+  const renderStars = (rating: number) => {
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 !== 0
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <Star key={`full-${i}`} size={16} fill="#fbbf24" color="#fbbf24" />
+      )
+    }
+
+    if (hasHalfStar) {
+      stars.push(
+        <div key="half" style={{ position: 'relative', display: 'inline-block' }}>
+          <Star size={16} color="#d1d5db" />
+          <div style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '50%', 
+            overflow: 'hidden' 
+          }}>
+            <Star size={16} fill="#fbbf24" color="#fbbf24" />
+          </div>
+        </div>
+      )
+    }
+
+    const emptyStars = 5 - Math.ceil(rating)
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <Star key={`empty-${i}`} size={16} color="#d1d5db" />
+      )
+    }
+
+    return stars
+  }
+
   return (
     <div style={{ 
       backgroundColor: 'white', 
@@ -67,40 +110,39 @@ export function StoreInfo({
       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
       border: '0.5px solid #ec4899'
     }}>
-      {/* Informações da loja */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Clock style={{ width: '16px', height: '16px' }} />
-          <div>
-            <p style={{ 
-              fontWeight: '600', 
-              color: status.color,
-              backgroundColor: status.bgColor,
-              padding: '2px 8px',
-              borderRadius: '4px',
-              display: 'inline-block'
-            }}>
-              {status.status}
-            </p>
-            <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px' }}>{status.time}</p>
-          </div>
+      {/* Status da loja */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+        <Clock style={{ width: '16px', height: '16px' }} />
+        <div>
+          <p style={{ 
+            fontWeight: '600', 
+            color: status.color,
+            backgroundColor: status.bgColor,
+            padding: '2px 8px',
+            borderRadius: '4px',
+            display: 'inline-block'
+          }}>
+            {status.status}
+          </p>
+          <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px' }}>{status.time}</p>
+        </div>
+      </div>
+
+      {/* Métricas */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <p style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
+            +{totalPedidos} Pedidos realizados
+          </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Phone style={{ width: '16px', height: '16px' }} />
-          <p style={{ fontWeight: '600' }}>{telefone}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            {renderStars(avaliacaoMedia)}
+          </div>
+          <span style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
+            {avaliacaoMedia}/5.0
+          </span>
         </div>
-        {entrega && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Truck style={{ width: '16px', height: '16px' }} />
-            <p style={{ fontWeight: '600' }}>Faz entrega</p>
-          </div>
-        )}
-        {taxaEntrega && entrega && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#6b7280' }}>Taxa:</span>
-            <p style={{ fontWeight: '600' }}>R$ {taxaEntrega.toFixed(2)}</p>
-          </div>
-        )}
       </div>
     </div>
   )
