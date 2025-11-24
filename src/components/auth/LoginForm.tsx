@@ -26,23 +26,36 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         password,
       })
 
-      if (error) throw error
+      if (error) {
+        console.error('Erro de login:', error)
+        
+        if (error.message?.includes('Invalid login credentials')) {
+          showError('Email ou senha incorretos.')
+        } else if (error.message?.includes('Email not confirmed')) {
+          showError('Email não confirmado. Verifique sua caixa de entrada.')
+        } else {
+          showError(error.message || 'Erro ao fazer login')
+        }
+        return
+      }
 
       if (data.user) {
+        console.log('Login bem-sucedido:', data.user)
+        
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true')
         }
+        
         showSuccess('Login realizado com sucesso!')
-        onSuccess?.()
+        
+        // Pequeno delay para garantir que o estado seja atualizado
+        setTimeout(() => {
+          onSuccess?.()
+        }, 500)
       }
     } catch (error: any) {
-      if (error.message?.includes('Invalid login credentials')) {
-        showError('Email ou senha incorretos.')
-      } else if (error.message?.includes('Email not confirmed')) {
-        showError('Email não confirmado. Verifique sua caixa de entrada.')
-      } else {
-        showError(error.message || 'Erro ao fazer login')
-      }
+      console.error('Erro durante o login:', error)
+      showError('Ocorreu um erro ao tentar fazer login. Tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -72,7 +85,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         </Label>
         <Input
           id="password"
-          type="text"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

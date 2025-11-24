@@ -7,22 +7,28 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { user, loading } = useAuth()
+  const { user, session, loading } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Se não estiver mais carregando e não houver usuário, redirecionar para login
+    if (!loading && (!user || !session)) {
+      console.log('Usuário não autenticado, redirecionando para login')
       navigate('/login')
     }
-  }, [user, loading, navigate])
+  }, [user, session, loading, navigate])
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p>Carregando...</p>
+        </div>
       </div>
     )
   }
 
-  return user ? <>{children}</> : null
+  // Só renderiza os filhos se houver usuário e sessão
+  return user && session ? <>{children}</> : null
 }
