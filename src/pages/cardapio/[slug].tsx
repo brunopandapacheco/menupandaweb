@@ -197,7 +197,7 @@ export default function CardapioPublico() {
   }
 
   return (
-    <div style={{ backgroundColor: '#F9F9F9', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white', minHeight: '100vh' }}>
         {/* Banner superior reduzido com logo escapando */}
         <div 
@@ -217,14 +217,13 @@ export default function CardapioPublico() {
           </div>
         </div>
 
-        {/* Logo com efeito de escapar do banner */}
+        {/* Logo com efeito de escapar do banner - SEM BACKGROUND */}
         <div style={{ position: 'relative', marginTop: '-64px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div 
               style={{ 
                 width: '128px', 
                 height: '128px', 
-                backgroundColor: 'white', 
                 borderRadius: '50%', 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -242,8 +241,8 @@ export default function CardapioPublico() {
           </div>
         </div>
 
-        {/* Conteúdo abaixo do logo - COM BACKGROUND #F9F9F9 */}
-        <div style={{ padding: '0 16px 16px', backgroundColor: '#F9F9F9' }}>
+        {/* Conteúdo abaixo do logo - COM BACKGROUND BRANCO */}
+        <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
           {/* Card ÚNICO com título, descrição e informações */}
           <div style={{ 
             backgroundColor: 'white', 
