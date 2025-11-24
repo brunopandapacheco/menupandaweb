@@ -1,4 +1,4 @@
-import { Star, Clock } from 'lucide-react'
+import { Star } from 'lucide-react'
 
 interface LogoProps {
   logoUrl?: string
@@ -150,7 +150,6 @@ export function Logo({
         
         {/* Status da loja abaixo da avaliação */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
-          <Clock style={{ width: '14px', height: '14px' }} />
           <div>
             <p style={{ 
               fontWeight: 'bold', 
@@ -161,9 +160,8 @@ export function Logo({
               display: 'inline-block',
               fontSize: '14px'
             }}>
-              {status.status}
+              {status.status} • {status.time}
             </p>
-            <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px', textAlign: 'center' }}>{status.time}</p>
           </div>
         </div>
         
