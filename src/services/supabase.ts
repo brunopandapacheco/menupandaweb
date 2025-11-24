@@ -108,85 +108,59 @@ class SupabaseService {
       console.log('🔄 INICIANDO ATUALIZAÇÃO DE DESIGN SETTINGS')
       console.log('👤 User ID:', userId)
       console.log('📦 Dados a serem atualizados:', settings)
-      console.log('🎨 Banner gradient específico:', settings.banner_gradient)
-      console.log('🔗 Slug específico:', settings.slug)
-      console.log('🖼️ Logo URL específico:', settings.logo_url)
       
-      // Primeiro, vamos verificar se já existe um registro
-      console.log('🔍 Buscando registro existente...')
-      const { data: existingData, error: fetchError } = await supabase
+      // PASSO 1: Remover todos os registros existentes para este usuário
+      console.log('🧹 Limpando registros existentes...')
+      const { error: deleteError } = await supabase
         .from('design_settings')
-        .select('*')
+        .delete()
         .eq('user_id', userId)
-        .single()
       
-      console.log('📊 Resultado da busca:', { existingData, fetchError })
-      
-      if (fetchError && fetchError.code !== 'PGRST116') {
-        console.error('❌ Erro ao buscar dados existentes:', fetchError)
+      if (deleteError) {
+        console.error('❌ Erro ao limpar registros:', deleteError)
         return false
       }
+      console.log('✅ Registros existentes removidos')
       
-      let result
-      if (existingData) {
-        // Se existe, faz update
-        console.log('📝 Atualizando registro existente...')
-        console.log('📝 Dados do update:', {
-          ...settings,
-          updated_at: new Date().toISOString()
-        })
-        
-        const { data, error } = await supabase
-          .from('design_settings')
-          .update({
-            ...settings,
-            updated_at: new Date().toISOString()
-          })
-          .eq('user_id', userId)
-          .select()
-          .single()
-        
-        console.log('📊 Resultado do update:', { data, error })
-        result = { data, error }
-      } else {
-        // Se não existe, faz insert
-        console.log('📝 Criando novo registro...')
-        console.log('📝 Dados do insert:', {
-          user_id: userId,
-          ...settings,
-          updated_at: new Date().toISOString()
-        })
-        
-        const { data, error } = await supabase
-          .from('design_settings')
-          .insert({
-            user_id: userId,
-            ...settings,
-            updated_at: new Date().toISOString()
-          })
-          .select()
-          .single()
-        
-        console.log('📊 Resultado do insert:', { data, error })
-        result = { data, error }
+      // PASSO 2: Criar um novo registro com os dados atualizados
+      console.log('📝 Criando novo registro com dados atualizados...')
+      
+      const newData = {
+        user_id: userId,
+        nome_confeitaria: settings.nome_confeitaria || 'Minha Confeitaria',
+        slug: settings.slug || 'minha-confeitaria',
+        cor_borda: settings.cor_borda || '#ec4899',
+        cor_background: settings.cor_background || '#fef2f2',
+        cor_nome: settings.cor_nome || '#be185d',
+        background_topo_color: settings.background_topo_color || '#fce7f3',
+        texto_rodape: settings.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999',
+        categorias: settings.categorias || ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+        descricao_loja: settings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+        banner_gradient: settings.banner_gradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+        logo_url: settings.logo_url || null,
+        banner1_url: settings.banner1_url || null,
+        banner2_url: settings.banner2_url || null,
+        updated_at: new Date().toISOString()
       }
       
-      if (result.error) {
-        console.error('❌ Error updating design settings:', result.error)
-        console.error('❌ Detalhes do erro:', {
-          message: result.error.message,
-          details: result.error.details,
-          hint: result.error.hint,
-          code: result.error.code
-        })
+      console.log('📝 Dados do novo registro:', newData)
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .insert(newData)
+        .select()
+        .single()
+      
+      console.log('📊 Resultado do insert:', { data, error })
+      
+      if (error) {
+        console.error('❌ Erro ao criar novo registro:', error)
         return false
       }
       
       console.log('✅ Design settings atualizados com sucesso!')
-      console.log('📊 Dados salvos:', result.data)
-      console.log('🎨 Banner gradient salvo:', result.data.banner_gradient)
-      console.log('🔗 Slug salvo:', result.data.slug)
-      console.log('🖼️ Logo URL salvo:', result.data.logo_url)
+      console.log('📊 Dados salvos:', data)
+      console.log('🖼️ Logo URL salvo:', data.logo_url)
       
       // Verificação adicional: buscar novamente para confirmar
       console.log('🔍 Verificando se foi salvo corretamente...')
@@ -200,8 +174,6 @@ class SupabaseService {
         console.error('❌ Erro na verificação:', verificationError)
       } else {
         console.log('✅ Verificação bem-sucedida!')
-        console.log('🎨 Banner gradient verificado:', verificationData.banner_gradient)
-        console.log('🔗 Slug verificado:', verificationData.slug)
         console.log('🖼️ Logo URL verificado:', verificationData.logo_url)
       }
       
