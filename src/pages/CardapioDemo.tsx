@@ -161,7 +161,7 @@ export default function CardapioDemo() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: mockDesignSettings.cor_background }}>
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        {/* Banner superior com logo */}
+        {/* Banner superior com logo - ajustado para não sobrepor */}
         <div 
           className="h-64 relative overflow-hidden"
           style={{ backgroundColor: mockDesignSettings.background_topo_color }}
@@ -196,8 +196,9 @@ export default function CardapioDemo() {
           </div>
         </div>
 
-        <div className="px-4 pb-4 -mt-8">
-          {/* Card de informações do negócio */}
+        {/* Conteúdo abaixo do banner - sem margem negativa */}
+        <div className="px-4 pb-4">
+          {/* Card de informações do negócio - agora totalmente visível */}
           <Card className="mb-6 shadow-lg border-0">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
@@ -241,7 +242,9 @@ export default function CardapioDemo() {
           </Card>
 
           {/* Campo de busca */}
-          <div className="relative mb-6">
+          <div className="
+
+relative mb-6">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="🔍 Buscar produtos..."

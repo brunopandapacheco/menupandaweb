@@ -123,7 +123,7 @@ export default function Preview() {
       </Card>
 
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl overflow-hidden border">
-        {/* Banner superior com logo - igual ao demo */}
+        {/* Banner superior com logo - ajustado para não sobrepor */}
         <div 
           className="h-64 relative overflow-hidden"
           style={{ backgroundColor: designSettings?.background_topo_color || '#fce7f3' }}
@@ -162,8 +162,9 @@ export default function Preview() {
           </div>
         </div>
 
-        <div className="px-4 pb-4 -mt-8">
-          {/* Card de informações do negócio - igual ao demo */}
+        {/* Conteúdo abaixo do banner - sem margem negativa */}
+        <div className="px-4 pb-4">
+          {/* Card de informações do negócio - agora totalmente visível */}
           <Card className="mb-6 shadow-lg border-0">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">

@@ -199,7 +199,7 @@ export default function CardapioPublico() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings.cor_background }}>
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        {/* Header com logo e background */}
+        {/* Header com logo e background - ajustado para não sobrepor */}
         <div 
           className="h-48 relative"
           style={{ backgroundColor: designSettings.background_topo_color }}
@@ -215,7 +215,8 @@ export default function CardapioPublico() {
           </div>
         </div>
 
-        <div className="px-4 pb-4 -mt-8">
+        {/* Conteúdo abaixo do banner - sem margem negativa */}
+        <div className="px-4 pb-4">
           {/* Nome da confeitaria */}
           <h1 
             className="text-3xl font-bold text-center mb-4"
@@ -224,7 +225,7 @@ export default function CardapioPublico() {
             {designSettings.nome_confeitaria}
           </h1>
           
-          {/* Card de informações */}
+          {/* Card de informações - agora totalmente visível */}
           <Card className="mb-6 shadow-sm">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
