@@ -202,33 +202,34 @@ export default function CardapioDemo() {
 
         {/* Conteúdo abaixo do logo - COM BACKGROUND #F9F9F9 */}
         <div style={{ padding: '0 16px 16px', backgroundColor: '#F9F9F9' }}>
-          {/* Nome da confeitaria */}
-          <h1 
-            style={{ 
-              fontSize: '28px', 
-              fontWeight: 'bold', 
-              textAlign: 'center', 
-              marginBottom: '8px',
-              color: mockDesignSettings.cor_nome 
-            }}
-          >
-            {mockDesignSettings.nome_confeitaria}
-          </h1>
-          
-          {/* Descrição */}
-          <p style={{ color: '#6b7280', textAlign: 'center', fontSize: '14px', padding: '0 16px', lineHeight: '1.5', marginBottom: '24px' }}>
-            {mockDesignSettings.descricao}
-          </p>
-
-          {/* Card de informações - branco com sombra leve */}
+          {/* Card ÚNICO com título, descrição e informações */}
           <div style={{ 
             backgroundColor: 'white', 
             borderRadius: '8px', 
-            padding: '16px', 
+            padding: '24px', 
             marginBottom: '24px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px', marginBottom: '12px' }}>
+            {/* Nome da confeitaria */}
+            <h1 
+              style={{ 
+                fontSize: '28px', 
+                fontWeight: 'bold', 
+                textAlign: 'center', 
+                marginBottom: '8px',
+                color: mockDesignSettings.cor_nome 
+              }}
+            >
+              {mockDesignSettings.nome_confeitaria}
+            </h1>
+            
+            {/* Descrição */}
+            <p style={{ color: '#6b7280', textAlign: 'center', fontSize: '14px', lineHeight: '1.5', marginBottom: '20px' }}>
+              {mockDesignSettings.descricao}
+            </p>
+
+            {/* Informações da loja */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Clock style={{ width: '16px', height: '16px' }} />
                 <div>
@@ -240,16 +241,22 @@ export default function CardapioDemo() {
                 <Phone style={{ width: '16px', height: '16px' }} />
                 <p style={{ fontWeight: '600' }}>{mockConfiguracoes.telefone}</p>
               </div>
+              {mockConfiguracoes.entrega && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Truck style={{ width: '16px', height: '16px' }} />
+                  <p style={{ fontWeight: '600' }}>Faz entrega</p>
+                </div>
+              )}
+              {mockConfiguracoes.taxa_entrega && mockConfiguracoes.entrega && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '12px', color: '#6b7280' }}>Taxa:</span>
+                  <p style={{ fontWeight: '600' }}>R$ {mockConfiguracoes.taxa_entrega.toFixed(2)}</p>
+                </div>
+              )}
             </div>
             
             {/* Informações adicionais */}
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {mockConfiguracoes.entrega && (
-                <Badge variant="secondary" style={{ backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-                  <Truck style={{ width: '12px', height: '12px', marginRight: '4px' }} />
-                  Faz entrega
-                </Badge>
-              )}
               {mockConfiguracoes.meios_pagamento.includes('Pix') && (
                 <Badge variant="secondary" style={{ backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
                   Pix
@@ -258,6 +265,11 @@ export default function CardapioDemo() {
               {mockConfiguracoes.meios_pagamento.includes('Cartão') && (
                 <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
                   Cartão
+                </Badge>
+              )}
+              {mockConfiguracoes.meios_pagamento.includes('Dinheiro') && (
+                <Badge variant="secondary" style={{ backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
+                  Dinheiro
                 </Badge>
               )}
             </div>
