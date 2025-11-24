@@ -7,7 +7,7 @@ interface LogoProps {
 
 export function Logo({ logoUrl, borderColor, storeName, storeDescription }: LogoProps) {
   return (
-    <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '16px' }}>
+    <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '24px' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div 
           style={{ 
@@ -34,12 +34,12 @@ export function Logo({ logoUrl, borderColor, storeName, storeDescription }: Logo
       </div>
       
       {/* Título e descrição da loja fora do card */}
-      <div style={{ textAlign: 'center', marginTop: '16px', padding: '0 16px' }}>
+      <div style={{ textAlign: 'center', marginTop: '20px', padding: '0 16px' }}>
         <h2 style={{ 
           fontSize: '32px', 
           fontWeight: 'bold', 
           color: '#1A1A1A', 
-          marginBottom: '8px',
+          marginBottom: '12px',
           lineHeight: '1.2'
         }}>
           {storeName || 'Doces da Vovó'}
