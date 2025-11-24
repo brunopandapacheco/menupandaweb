@@ -17,7 +17,8 @@ const mockDesignSettings = {
   banner1_url: '',
   banner2_url: '',
   categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
-  descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
+  descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+  banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
 }
 
 const mockConfiguracoes = {
@@ -145,7 +146,11 @@ export default function CardapioDemo() {
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white', minHeight: '100vh' }}>
-        <Banner logoUrl={mockDesignSettings.logo_url} borderColor={mockDesignSettings.cor_borda} />
+        <Banner 
+          logoUrl={mockDesignSettings.logo_url} 
+          borderColor={mockDesignSettings.cor_borda} 
+          bannerGradient={mockDesignSettings.banner_gradient}
+        />
         <Logo 
           logoUrl={mockDesignSettings.logo_url} 
           borderColor={mockDesignSettings.cor_borda} 

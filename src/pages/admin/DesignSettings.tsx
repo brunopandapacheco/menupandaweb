@@ -85,6 +85,100 @@ const colorPalettes = [
   },
 ]
 
+// Novas paletas de degrade para o background da logo
+const gradientBackgrounds = [
+  {
+    name: 'Rosa Clássico',
+    description: 'Degrade rosa suave e elegante',
+    gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+    colors: ['#d11b70', '#ff6fae', '#ff9acb']
+  },
+  {
+    name: 'Azul Celeste',
+    description: 'Degrade azul claro e refrescante',
+    gradient: 'linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #E0F6FF 100%)',
+    colors: ['#87CEEB', '#B0E0E6', '#E0F6FF']
+  },
+  {
+    name: 'Rosa Vibrante',
+    description: 'Degrade rosa intenso e energético',
+    gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)',
+    colors: ['#FF1493', '#FF69B4', '#FFB6C1']
+  },
+  {
+    name: 'Rosa Pink',
+    description: 'Degrade pink moderno e divertido',
+    gradient: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 50%, #FFC0CB 100%)',
+    colors: ['#FF69B4', '#FFB6C1', '#FFC0CB']
+  },
+  {
+    name: 'Azul Oceano',
+    description: 'Degrade azul profundo e tranquilo',
+    gradient: 'linear-gradient(135deg, #4682B4 0%, #87CEEB 50%, #B0E0E6 100%)',
+    colors: ['#4682B4', '#87CEEB', '#B0E0E6']
+  },
+  {
+    name: 'Rosa Magenta',
+    description: 'Degrade magenta vibrante e ousado',
+    gradient: 'linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FF69B4 100%)',
+    colors: ['#8B008B', '#FF1493', '#FF69B4']
+  },
+  {
+    name: 'Rosa Baby',
+    description: 'Degrade rosa baby suave e delicado',
+    gradient: 'linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 50%, #FFE4E1 100%)',
+    colors: ['#FFB6C1', '#FFC0CB', '#FFE4E1']
+  },
+  {
+    name: 'Rosa Fúcsia',
+    description: 'Degrade fúcsia intenso e marcante',
+    gradient: 'linear-gradient(135deg, #FF00FF 0%, #FF1493 50%, #FF69B4 100%)',
+    colors: ['#FF00FF', '#FF1493', '#FF69B4']
+  },
+  {
+    name: 'Rosa Coral',
+    description: 'Degrade coral quente e acolhedor',
+    gradient: 'linear-gradient(135deg, #FF7F50 0%, #FFA07A 50%, #FFB6C1 100%)',
+    colors: ['#FF7F50', '#FFA07A', '#FFB6C1']
+  },
+  {
+    name: 'Rosa Lavanda',
+    description: 'Degrade rosa lavanda suave e romântico',
+    gradient: 'linear-gradient(135deg, #E6E6FA 0%, #FFB6C1 50%, #FFC0CB 100%)',
+    colors: ['#E6E6FA', '#FFB6C1', '#FFC0CB']
+  },
+  {
+    name: 'Azul Céu',
+    description: 'Degrade azul céu claro e sereno',
+    gradient: 'linear-gradient(135deg, #87CEEB 0%, #ADD8E6 50%, #B0E0E6 100%)',
+    colors: ['#87CEEB', '#ADD8E6', '#B0E0E6']
+  },
+  {
+    name: 'Roxo Lilás',
+    description: 'Degrade roxo lilás claro e elegante',
+    gradient: 'linear-gradient(135deg, #DDA0DD 0%, #E6E6FA 50%, #F0E6FF 100%)',
+    colors: ['#DDA0DD', '#E6E6FA', '#F0E6FF']
+  },
+  {
+    name: 'Roxo Ametista',
+    description: 'Degrade roxo ametista escuro e sofisticado',
+    gradient: 'linear-gradient(135deg, #4B0082 0%, #663399 50%, #8B008B 100%)',
+    colors: ['#4B0082', '#663399', '#8B008B']
+  },
+  {
+    name: 'Roxo Violeta',
+    description: 'Degrade roxo violeta intenso e misterioso',
+    gradient: 'linear-gradient(135deg, #8A2BE2 0%, #9370DB 50%, #BA55D3 100%)',
+    colors: ['#8A2BE2', '#9370DB', '#BA55D3']
+  },
+  {
+    name: 'Roxo Índigo',
+    description: 'Degrade roxo índigo profundo e nobre',
+    gradient: 'linear-gradient(135deg, #4B0082 0%, #6A0DAD 50%, #7B68EE 100%)',
+    colors: ['#4B0082', '#6A0DAD', '#7B68EE']
+  }
+]
+
 const defaultCategories = [
   'Bolos',
   'Doces', 
@@ -99,6 +193,7 @@ export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
   const isMobile = useIsMobile()
   const [selectedPalette, setSelectedPalette] = useState<typeof colorPalettes[0] | null>(null)
+  const [selectedGradient, setSelectedGradient] = useState<typeof gradientBackgrounds[0] | null>(null)
   const [activeTab, setActiveTab] = useState('paletas')
   const [settings, setSettings] = useState({
     nome_confeitaria: 'Doces da Vovó',
@@ -112,7 +207,8 @@ export default function DesignSettings() {
     banner1_url: '',
     banner2_url: '',
     categorias: defaultCategories,
-    descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
+    descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+    banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
   })
   const [newCategory, setNewCategory] = useState('')
   const [editingCategory, setEditingCategory] = useState<string | null>(null)
@@ -132,7 +228,8 @@ export default function DesignSettings() {
         banner1_url: designSettings.banner1_url || '',
         banner2_url: designSettings.banner2_url || '',
         categorias: designSettings.categorias || defaultCategories,
-        descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
+        descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+        banner_gradient: designSettings.banner_gradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
       })
     }
   }, [designSettings])
@@ -150,6 +247,323 @@ export default function DesignSettings() {
     if (success) {
       toast.success(`🎨 Paleta "${palette.name}" aplicada com sucesso!`, {
         description: 'Seu cardápio agora tem um visual renovado',
+        icon: <CheckCircle className="w-4 h-4" />
+      })
+    }
+  }
+
+  const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
+    const newSettings = { ...settings, banner_gradient: gradient.gradient }
+    setSettings(newSettings)
+    setSelectedGradient(gradient)
+    const success = await saveDesignSettings(newSettings)
+    if (success) {
+      toast.success(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`, {
+        description: 'O background do seu cardápio agora tem um novo visual',
+        icon: <CheckCircle className="w-4 h-4" />
+      })
+    }
+  }
+
+  const handleImageUpload = async (file: File, type: 'logo' | 'banner1' | 'banner2') => {
+    const fileName = `${type}-${Date.now()}.${file.name.split('.').pop()}`
+    const url = await supabaseService.uploadImage(file, 'images', fileName)
+    
+    if (url) {
+      const newSettings = { ...settings, [`${type}_url`]: url }
+      setSettings(newSettings)
+      await saveDesignSettings(newSettings)
+      showSuccess('Imagem enviada!')
+    }
+  }
+
+  const updateColor = (colorKey: keyof typeof settings, value: string) => {
+    const newSettings = { ...settings, [colorKey]: value }
+    setSettings(newSettings)
+    
+    // Se tiver uma paleta selecionada, remove a seleção ao editar manualmente
+    if (selectedPalette) {
+      setSelectedPalette(null)
+    }
+  }
+
+  const addCategory = () => {
+    if (newCategory.trim() && !settings.categorias.includes(newCategory.trim())) {
+      const newSettings = {
+        ...settings,
+        categorias: [...settings.categorias, newCategory.trim()]
+      }
+      setSettings(newSettings)
+      setNewCategory('')
+      saveDesignSettings(newSettings)
+      showSuccess('Categoria adicionada!')
+    }
+  }
+
+  const removeCategory = (category: string) =>
+<dyad-write path="src/pages/admin/DesignSettings.tsx" description="Add new gradient background options for logo area">
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Upload, Palette, Eye, Type, Image, CheckCircle, Plus, Trash2, Edit2, Save, X } from 'lucide-react'
+import { showSuccess } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
+import { supabaseService } from '@/services/supabase'
+import { generateSlug } from '@/utils/helpers'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { toast } from 'sonner'
+
+const colorPalettes = [
+  {
+    name: 'Caramelo Rosé',
+    description: '',
+    colors: {
+      cor_borda: '#B5673E',
+      cor_background: '#F4D4D4',
+      cor_nome: '#D2E0D8',
+      background_topo_color: '#EDB889',
+    }
+  },
+  {
+    name: 'Cereja Suave',
+    description: '',
+    colors: {
+      cor_borda: '#791B25',
+      cor_background: '#EFE8DA',
+      cor_nome: '#EF8DB1',
+      background_topo_color: '#EDBABA',
+    }
+  },
+  {
+    name: 'Morango Burnt',
+    description: '',
+    colors: {
+      cor_borda: '#4A3531',
+      cor_background: '#EFE8DA',
+      cor_nome: '#EE7480',
+      background_topo_color: '#BF9EA7',
+    }
+  },
+  {
+    name: 'Blue Candy',
+    description: '',
+    colors: {
+      cor_borda: '#0B99A0',
+      cor_background: '#FFFFFF',
+      cor_nome: '#E89EAE',
+      background_topo_color: '#89D6DF',
+    }
+  },
+  {
+    name: 'Framboesa Cremosa',
+    description: '',
+    colors: {
+      cor_borda: '#6B2E2E',
+      cor_background: '#FFF2F6',
+      cor_nome: '#FF4F87',
+      background_topo_color: '#FF92B5',
+    }
+  },
+  {
+    name: 'Rosa Confeiteira',
+    description: '',
+    colors: {
+      cor_borda: '#8C4A3A',
+      cor_background: '#FFF9F4',
+      cor_nome: '#D6336C',
+      background_topo_color: '#F7B8CC',
+    }
+  },
+  {
+    name: 'Mint & Lavanda',
+    description: '',
+    colors: {
+      cor_borda: '#6E61A8',
+      cor_background: '#F4F7FF',
+      cor_nome: '#6FD8C8',
+      background_topo_color: '#A5E7DD',
+    }
+  },
+]
+
+// Novas paletas de degrade para o background da logo
+const gradientBackgrounds = [
+  {
+    name: 'Rosa Clássico',
+    description: 'Degrade rosa suave e elegante',
+    gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+    colors: ['#d11b70', '#ff6fae', '#ff9acb']
+  },
+  {
+    name: 'Azul Celeste',
+    description: 'Degrade azul claro e refrescante',
+    gradient: 'linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #E0F6FF 100%)',
+    colors: ['#87CEEB', '#B0E0E6', '#E0F6FF']
+  },
+  {
+    name: 'Rosa Vibrante',
+    description: 'Degrade rosa intenso e energético',
+    gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)',
+    colors: ['#FF1493', '#FF69B4', '#FFB6C1']
+  },
+  {
+    name: 'Rosa Pink',
+    description: 'Degrade pink moderno e divertido',
+    gradient: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 50%, #FFC0CB 100%)',
+    colors: ['#FF69B4', '#FFB6C1', '#FFC0CB']
+  },
+  {
+    name: 'Azul Oceano',
+    description: 'Degrade azul profundo e tranquilo',
+    gradient: 'linear-gradient(135deg, #4682B4 0%, #87CEEB 50%, #B0E0E6 100%)',
+    colors: ['#4682B4', '#87CEEB', '#B0E0E6']
+  },
+  {
+    name: 'Rosa Magenta',
+    description: 'Degrade magenta vibrante e ousado',
+    gradient: 'linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FF69B4 100%)',
+    colors: ['#8B008B', '#FF1493', '#FF69B4']
+  },
+  {
+    name: 'Rosa Baby',
+    description: 'Degrade rosa baby suave e delicado',
+    gradient: 'linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 50%, #FFE4E1 100%)',
+    colors: ['#FFB6C1', '#FFC0CB', '#FFE4E1']
+  },
+  {
+    name: 'Rosa Fúcsia',
+    description: 'Degrade fúcsia intenso e marcante',
+    gradient: 'linear-gradient(135deg, #FF00FF 0%, #FF1493 50%, #FF69B4 100%)',
+    colors: ['#FF00FF', '#FF1493', '#FF69B4']
+  },
+  {
+    name: 'Rosa Coral',
+    description: 'Degrade coral quente e acolhedor',
+    gradient: 'linear-gradient(135deg, #FF7F50 0%, #FFA07A 50%, #FFB6C1 100%)',
+    colors: ['#FF7F50', '#FFA07A', '#FFB6C1']
+  },
+  {
+    name: 'Rosa Lavanda',
+    description: 'Degrade rosa lavanda suave e romântico',
+    gradient: 'linear-gradient(135deg, #E6E6FA 0%, #FFB6C1 50%, #FFC0CB 100%)',
+    colors: ['#E6E6FA', '#FFB6C1', '#FFC0CB']
+  },
+  {
+    name: 'Azul Céu',
+    description: 'Degrade azul céu claro e sereno',
+    gradient: 'linear-gradient(135deg, #87CEEB 0%, #ADD8E6 50%, #B0E0E6 100%)',
+    colors: ['#87CEEB', '#ADD8E6', '#B0E0E6']
+  },
+  {
+    name: 'Roxo Lilás',
+    description: 'Degrade roxo lilás claro e elegante',
+    gradient: 'linear-gradient(135deg, #DDA0DD 0%, #E6E6FA 50%, #F0E6FF 100%)',
+    colors: ['#DDA0DD', '#E6E6FA', '#F0E6FF']
+  },
+  {
+    name: 'Roxo Ametista',
+    description: 'Degrade roxo ametista escuro e sofisticado',
+    gradient: 'linear-gradient(135deg, #4B0082 0%, #663399 50%, #8B008B 100%)',
+    colors: ['#4B0082', '#663399', '#8B008B']
+  },
+  {
+    name: 'Roxo Violeta',
+    description: 'Degrade roxo violeta intenso e misterioso',
+    gradient: 'linear-gradient(135deg, #8A2BE2 0%, #9370DB 50%, #BA55D3 100%)',
+    colors: ['#8A2BE2', '#9370DB', '#BA55D3']
+  },
+  {
+    name: 'Roxo Índigo',
+    description: 'Degrade roxo índigo profundo e nobre',
+    gradient: 'linear-gradient(135deg, #4B0082 0%, #6A0DAD 50%, #7B68EE 100%)',
+    colors: ['#4B0082', '#6A0DAD', '#7B68EE']
+  }
+]
+
+const defaultCategories = [
+  'Bolos',
+  'Doces', 
+  'Brigadeiros',
+  'Cookies',
+  'Salgadinhos',
+  'Pipoca',
+  'Tortas'
+]
+
+export default function DesignSettings() {
+  const { designSettings, saveDesignSettings, loading } = useDatabase()
+  const isMobile = useIsMobile()
+  const [selectedPalette, setSelectedPalette] = useState<typeof colorPalettes[0] | null>(null)
+  const [selectedGradient, setSelectedGradient] = useState<typeof gradientBackgrounds[0] | null>(null)
+  const [activeTab, setActiveTab] = useState('paletas')
+  const [settings, setSettings] = useState({
+    nome_confeitaria: 'Doces da Vovó',
+    slug: 'doces-da-vo',
+    cor_borda: '#ec4899',
+    cor_background: '#fef2f2',
+    cor_nome: '#be185d',
+    background_topo_color: '#fce7f3',
+    texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+    logo_url: '',
+    banner1_url: '',
+    banner2_url: '',
+    categorias: defaultCategories,
+    descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+    banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+  })
+  const [newCategory, setNewCategory] = useState('')
+  const [editingCategory, setEditingCategory] = useState<string | null>(null)
+  const [editingValue, setEditingValue] = useState('')
+
+  useEffect(() => {
+    if (designSettings) {
+      setSettings({
+        nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
+        slug: designSettings.slug || 'doces-da-vo',
+        cor_borda: designSettings.cor_borda || '#ec4899',
+        cor_background: designSettings.cor_background || '#fef2f2',
+        cor_nome: designSettings.cor_nome || '#be185d',
+        background_topo_color: designSettings.background_topo_color || '#fce7f3',
+        texto_rodape: designSettings.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999',
+        logo_url: designSettings.logo_url || '',
+        banner1_url: designSettings.banner1_url || '',
+        banner2_url: designSettings.banner2_url || '',
+        categorias: designSettings.categorias || defaultCategories,
+        descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+        banner_gradient: designSettings.banner_gradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+      })
+    }
+  }, [designSettings])
+
+  const handleSave = async () => {
+    const success = await saveDesignSettings(settings)
+    if (success) showSuccess('Configurações salvas!')
+  }
+
+  const applyPalette = async (palette: typeof colorPalettes[0]) => {
+    const newSettings = { ...settings, ...palette.colors }
+    setSettings(newSettings)
+    setSelectedPalette(palette)
+    const success = await saveDesignSettings(newSettings)
+    if (success) {
+      toast.success(`🎨 Paleta "${palette.name}" aplicada com sucesso!`, {
+        description: 'Seu cardápio agora tem um visual renovado',
+        icon: <CheckCircle className="w-4 h-4" />
+      })
+    }
+  }
+
+  const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
+    const newSettings = { ...settings, banner_gradient: gradient.gradient }
+    setSettings(newSettings)
+    setSelectedGradient(gradient)
+    const success = await saveDesignSettings(newSettings)
+    if (success) {
+      toast.success(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`, {
+        description: 'O background do seu cardápio agora tem um novo visual',
         icon: <CheckCircle className="w-4 h-4" />
       })
     }
@@ -241,12 +655,18 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="paletas" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Paletas
+          </TabsTrigger>
+          <TabsTrigger 
+            value="degrades" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
+          >
+            Degrades
           </TabsTrigger>
           <TabsTrigger 
             value="cores" 
@@ -305,6 +725,60 @@ export default function DesignSettings() {
                         onClick={() => applyPalette(palette)}
                       >
                         Aplicar Paleta
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="degrades">
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: '#4A3531' }}>Degrades para o Background</CardTitle>
+              <CardDescription>
+                Escolha um degrade para o background atrás da logo no seu cardápio
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {gradientBackgrounds.map((gradient) => (
+                  <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
+                    <CardContent className="p-6">
+                      <div className="text-center mb-4">
+                        <h3 className="font-black text-xl" style={{ color: '#4A3531' }}>{gradient.name}</h3>
+                        <p className="text-sm text-gray-600">{gradient.description}</p>
+                      </div>
+                      
+                      {/* Preview do degrade */}
+                      <div 
+                        className="w-full h-24 rounded-lg mb-4 shadow-sm"
+                        style={{ background: gradient.gradient }}
+                      />
+                      
+                      {/* Cores do degrade */}
+                      <div className="flex gap-2 mb-4">
+                        {gradient.colors.map((color, index) => (
+                          <div key={index} className="flex-1 text-center">
+                            <div 
+                              className="w-full h-8 rounded border-2 border-gray-200 shadow-sm mb-1"
+                              style={{ backgroundColor: color }}
+                            />
+                            <span className="text-xs font-mono text-gray-500">
+                              {color}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <Button 
+                        size="sm" 
+                        className="w-full font-[650]"
+                        onClick={() => applyGradient(gradient)}
+                      >
+                        Aplicar Degrade
                       </Button>
                     </CardContent>
                   </Card>

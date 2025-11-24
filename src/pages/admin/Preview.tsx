@@ -88,7 +88,11 @@ export default function Preview() {
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white', minHeight: '100vh' }}>
-        <Banner logoUrl={designSettings.logo_url} borderColor={designSettings.cor_borda} />
+        <Banner 
+          logoUrl={designSettings.logo_url} 
+          borderColor={designSettings.cor_borda} 
+          bannerGradient={designSettings.banner_gradient}
+        />
         <Logo 
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
