@@ -9,6 +9,7 @@ import CardapioPublico from "./pages/cardapio/[slug]";
 import CardapioDemo from "./pages/CardapioDemo";
 import TestConnection from "./pages/TestConnection";
 import TestDatabase from "./pages/TestDatabase";
+import TestLogo from "./pages/TestLogo";
 import NotFound from "./pages/NotFound";
 import { EnvironmentError } from "./components/EnvironmentError";
 
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/demo" element={<CardapioDemo />} />
             <Route path="/test" element={<TestConnection />} />
             <Route path="/test-db" element={<TestDatabase />} />
+            <Route path="/test-logo" element={<TestLogo />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
