@@ -113,8 +113,8 @@ export default function Preview() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      {/* Card de Compartilhamento no Topo */}
-      <div className="sticky top-0 z-10 bg-white shadow-sm">
+      {/* Card de Compartilhamento no Topo - Com z-index alto para ficar sempre na frente */}
+      <div className="sticky top-0 z-50 bg-white shadow-md">
         <div className="max-w-4xl mx-auto p-4">
           <Card className="border-0 shadow-md">
             <CardContent className="p-4">
