@@ -47,7 +47,7 @@ class SupabaseService {
       const defaultSettings = {
         user_id: userId,
         nome_confeitaria: 'Minha Confeitaria',
-        slug: 'minha-confeitaria', // Adicionando slug padrão
+        slug: 'minha-confeitaria',
         cor_borda: '#ec4899',
         cor_background: '#fef2f2',
         cor_nome: '#be185d',
@@ -196,6 +196,7 @@ class SupabaseService {
   // Configurações
   async getConfiguracoes(userId: string): Promise<Configuracoes | null> {
     try {
+      console.log('🔍 Buscando configuracoes para user:', userId)
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
@@ -203,85 +204,171 @@ class SupabaseService {
         .single()
       
       if (error) {
-        console.error('Error getting configuracoes:', error)
+        console.error('❌ Error getting configuracoes:', error)
         // If no record found, create a default one
         if (error.code === 'PGRST116') {
+          console.log('📝 Nenhum registro encontrado, criando padrão...')
           return await this.createDefaultConfiguracoes(userId)
         }
         return null
       }
       
+      console.log('✅ Configuracoes encontradas:', data)
       return data
     } catch (error) {
-      console.error('Unexpected error getting configuracoes:', error)
+      console.error('❌ Unexpected error getting configuracoes:', error)
       return null
     }
   }
 
   async createDefaultConfiguracoes(userId: string): Promise<Configuracoes | null> {
     try {
+      const defaultConfig = {
+        user_id: userId,
+        horario_funcionamento_inicio: '08:00',
+        horario_funcionamento_fim: '18:00',
+        telefone: '(11) 99999-9999',
+        meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
+        entrega: true,
+        taxa_entrega: 5.00,
+        em_ferias: false,
+        horarios_semana: [
+          { day: 'Segunda', open: true, openTime: '08:00', closeTime: '18:00' },
+          { day: 'Terça', open: true, openTime: '08:00', closeTime: '18:00' },
+          { day: 'Quarta', open: true, openTime: '08:00', closeTime: '18:00' },
+          { day: 'Quinta', open: true, openTime: '08:00', closeTime: '18:00' },
+          { day: 'Sexta', open: true, openTime: '08:00', closeTime: '18:00' },
+          { day: 'Sábado', open: true, openTime: '08:00', closeTime: '18:00' },
+          { day: 'Domingo', open: false, openTime: '08:00', closeTime: '18:00' }
+        ],
+        total_pedidos: 0,
+        avaliacao_media: 4.9
+      }
+
+      console.log('📝 Criando configuracoes padrão:', defaultConfig)
+
       const { data, error } = await supabase
         .from('configuracoes')
-        .insert({
-          user_id: userId,
-          horario_funcionamento_inicio: '08:00',
-          horario_funcionamento_fim: '18:00',
-          telefone: '(11) 99999-9999',
-          meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
-          entrega: true,
-          taxa_entrega: 5.00,
-          em_ferias: false
-        })
+        .insert(defaultConfig)
         .select()
         .single()
       
       if (error) {
-        console.error('Error creating default configuracoes:', error)
+        console.error('❌ Error creating default configuracoes:', error)
         return null
       }
       
+      console.log('✅ Configuracoes criadas com sucesso:', data)
       return data
     } catch (error) {
-      console.error('Unexpected error creating default configuracoes:', error)
+      console.error('❌ Unexpected error creating default configuracoes:', error)
       return null
     }
   }
 
   async getConfiguracoesBySlug(slug: string): Promise<Configuracoes | null> {
     try {
-      const { data: designData } = await supabase
+      console.log('🔍 Buscando configuracoes por slug:', slug)
+      const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
         .single()
       
-      if (!designData) return null
+      if (designError || !designData) {
+        console.error('❌ Erro ao buscar user_id pelo slug:', designError)
+        return null
+      }
       
+      console.log('✅ User ID encontrado pelo slug:', designData.user_id)
       return await this.getConfiguracoes(designData.user_id)
     } catch (error) {
-      console.error('Unexpected error getting configuracoes by slug:', error)
+      console.error('❌ Unexpected error getting configuracoes by slug:', error)
       return null
     }
   }
 
   async updateConfiguracoes(userId: string, config: Partial<Configuracoes>): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .from('configuracoes')
-        .upsert({
-          user_id: userId,
-          ...config,
-          updated_at: new Date().toISOString()
-        })
+      console.log('🔄 INICIANDO ATUALIZAÇÃO DE CONFIGURACOES')
+      console.log('👤 User ID:', userId)
+      console.log('📦 Dados a serem atualizados:', config)
       
-      if (error) {
-        console.error('Error updating configuracoes:', error)
+      // Primeiro, vamos verificar se já existe um registro
+      const { data: existingData, error: fetchError } = await supabase
+        .from('configuracoes')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+      
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('❌ Erro ao buscar dados existentes:', fetchError)
         return false
+      }
+      
+      let result
+      if (existingData) {
+        // Se existe, faz update
+        console.log('📝 Atualizando registro existente...')
+        const { data, error } = await supabase
+          .from('configuracoes')
+          .update({
+            ...config,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', userId)
+          .select()
+          .single()
+        
+        result = { data, error }
+      } else {
+        // Se não existe, faz insert
+        console.log('📝 Criando novo registro...')
+        const { data, error } = await supabase
+          .from('configuracoes')
+          .insert({
+            user_id: userId,
+            ...config,
+            updated_at: new Date().toISOString()
+          })
+          .select()
+          .single()
+        
+        result = { data, error }
+      }
+      
+      if (result.error) {
+        console.error('❌ Error updating configuracoes:', result.error)
+        console.error('❌ Detalhes do erro:', {
+          message: result.error.message,
+          details: result.error.details,
+          hint: result.error.hint,
+          code: result.error.code
+        })
+        return false
+      }
+      
+      console.log('✅ Configuracoes atualizadas com sucesso!')
+      console.log('📊 Dados salvos:', result.data)
+      
+      // Verificação adicional: buscar novamente para confirmar
+      console.log('🔍 Verificando se foi salvo corretamente...')
+      const { data: verificationData, error: verificationError } = await supabase
+        .from('configuracoes')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+      
+      if (verificationError) {
+        console.error('❌ Erro na verificação:', verificationError)
+      } else {
+        console.log('✅ Verificação bem-sucedida!')
+        console.log('📊 Configuracoes verificadas:', verificationData)
       }
       
       return true
     } catch (error) {
-      console.error('Unexpected error updating configuracoes:', error)
+      console.error('❌ Unexpected error updating configuracoes:', error)
       return false
     }
   }
@@ -289,6 +376,7 @@ class SupabaseService {
   // Produtos
   async getProdutos(userId: string): Promise<Produto[]> {
     try {
+      console.log('🔍 Buscando produtos para user:', userId)
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
@@ -296,36 +384,43 @@ class SupabaseService {
         .order('created_at', { ascending: false })
       
       if (error) {
-        console.error('Error getting produtos:', error)
+        console.error('❌ Error getting produtos:', error)
         return []
       }
       
+      console.log('✅ Produtos encontrados:', data?.length || 0)
       return data || []
     } catch (error) {
-      console.error('Unexpected error getting produtos:', error)
+      console.error('❌ Unexpected error getting produtos:', error)
       return []
     }
   }
 
   async getProdutosBySlug(slug: string): Promise<Produto[]> {
     try {
-      const { data: designData } = await supabase
+      console.log('🔍 Buscando produtos por slug:', slug)
+      const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
         .single()
       
-      if (!designData) return []
+      if (designError || !designData) {
+        console.error('❌ Erro ao buscar user_id pelo slug:', designError)
+        return []
+      }
       
+      console.log('✅ User ID encontrado pelo slug:', designData.user_id)
       return await this.getProdutos(designData.user_id)
     } catch (error) {
-      console.error('Unexpected error getting produtos by slug:', error)
+      console.error('❌ Unexpected error getting produtos by slug:', error)
       return []
     }
   }
 
   async createProduto(userId: string, produto: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>): Promise<Produto | null> {
     try {
+      console.log('🔄 Criando produto:', produto)
       const { data, error } = await supabase
         .from('produtos')
         .insert({
@@ -338,19 +433,21 @@ class SupabaseService {
         .single()
       
       if (error) {
-        console.error('Error creating produto:', error)
+        console.error('❌ Error creating produto:', error)
         return null
       }
       
+      console.log('✅ Produto criado com sucesso:', data)
       return data
     } catch (error) {
-      console.error('Unexpected error creating produto:', error)
+      console.error('❌ Unexpected error creating produto:', error)
       return null
     }
   }
 
   async updateProduto(id: string, produto: Partial<Produto>): Promise<boolean> {
     try {
+      console.log('🔄 Atualizando produto:', id, produto)
       const { error } = await supabase
         .from('produtos')
         .update({
@@ -360,32 +457,35 @@ class SupabaseService {
         .eq('id', id)
       
       if (error) {
-        console.error('Error updating produto:', error)
+        console.error('❌ Error updating produto:', error)
         return false
       }
       
+      console.log('✅ Produto atualizado com sucesso')
       return true
     } catch (error) {
-      console.error('Unexpected error updating produto:', error)
+      console.error('❌ Unexpected error updating produto:', error)
       return false
     }
   }
 
   async deleteProduto(id: string): Promise<boolean> {
     try {
+      console.log('🔄 Deletando produto:', id)
       const { error } = await supabase
         .from('produtos')
         .delete()
         .eq('id', id)
       
       if (error) {
-        console.error('Error deleting produto:', error)
+        console.error('❌ Error deleting produto:', error)
         return false
       }
       
+      console.log('✅ Produto deletado com sucesso')
       return true
     } catch (error) {
-      console.error('Unexpected error deleting produto:', error)
+      console.error('❌ Unexpected error deleting produto:', error)
       return false
     }
   }
@@ -393,12 +493,13 @@ class SupabaseService {
   // Storage
   async uploadImage(file: File, bucket: string, path: string): Promise<string | null> {
     try {
+      console.log('🔄 Fazendo upload da imagem:', path)
       const { data, error } = await supabase.storage
         .from(bucket)
         .upload(path, file, { cacheControl: '3600', upsert: true })
       
       if (error) {
-        console.error('Error uploading image:', error)
+        console.error('❌ Error uploading image:', error)
         return null
       }
       
@@ -406,27 +507,30 @@ class SupabaseService {
         .from(bucket)
         .getPublicUrl(data.path)
       
+      console.log('✅ Upload realizado com sucesso:', publicUrl)
       return publicUrl
     } catch (error) {
-      console.error('Unexpected error uploading image:', error)
+      console.error('❌ Unexpected error uploading image:', error)
       return null
     }
   }
 
   async deleteImage(bucket: string, path: string): Promise<boolean> {
     try {
+      console.log('🔄 Deletando imagem:', path)
       const { error } = await supabase.storage
         .from(bucket)
         .remove([path])
       
       if (error) {
-        console.error('Error deleting image:', error)
+        console.error('❌ Error deleting image:', error)
         return false
       }
       
+      console.log('✅ Imagem deletada com sucesso')
       return true
     } catch (error) {
-      console.error('Unexpected error deleting image:', error)
+      console.error('❌ Unexpected error deleting image:', error)
       return false
     }
   }
