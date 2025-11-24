@@ -161,44 +161,46 @@ export default function CardapioDemo() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: mockDesignSettings.cor_background }}>
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        {/* Banner superior com logo - ajustado para não sobrepor */}
+        {/* Banner superior reduzido com logo escapando */}
         <div 
-          className="h-64 relative overflow-hidden"
+          className="h-32 relative overflow-hidden"
           style={{ backgroundColor: mockDesignSettings.background_topo_color }}
         >
           {/* Elementos decorativos no banner */}
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-4 text-6xl">🧁</div>
-            <div className="absolute top-12 right-8 text-5xl">🍰</div>
-            <div className="absolute bottom-8 left-12 text-4xl">🎂</div>
-            <div className="absolute bottom-4 right-4 text-5xl">🥧</div>
-          </div>
-          
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
-            {/* Logo */}
-            <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-2xl mb-4 border-4" 
-                 style={{ borderColor: mockDesignSettings.cor_borda }}>
-              <span className="text-5xl">🧁</span>
-            </div>
-            
-            {/* Nome da confeitaria */}
-            <h1 
-              className="text-3xl font-bold text-center mb-2"
-              style={{ color: mockDesignSettings.cor_nome }}
-            >
-              {mockDesignSettings.nome_confeitaria}
-            </h1>
-            
-            {/* Descrição */}
-            <p className="text-white/90 text-center text-sm px-4 leading-relaxed">
-              {mockDesignSettings.descricao}
-            </p>
+            <div className="absolute top-2 left-4 text-4xl">🧁</div>
+            <div className="absolute top-4 right-8 text-3xl">🍰</div>
+            <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
+            <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
           </div>
         </div>
 
-        {/* Conteúdo abaixo do banner - sem margem negativa */}
+        {/* Logo com efeito de escapar do banner */}
+        <div className="relative -mt-16 mb-4">
+          <div className="flex justify-center">
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl border-4" 
+                 style={{ borderColor: mockDesignSettings.cor_borda }}>
+              <span className="text-6xl">🧁</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Conteúdo abaixo do logo */}
         <div className="px-4 pb-4">
-          {/* Card de informações do negócio - agora totalmente visível */}
+          {/* Nome da confeitaria */}
+          <h1 
+            className="text-3xl font-bold text-center mb-2"
+            style={{ color: mockDesignSettings.cor_nome }}
+          >
+            {mockDesignSettings.nome_confeitaria}
+          </h1>
+          
+          {/* Descrição */}
+          <p className="text-gray-600 text-center text-sm px-4 leading-relaxed mb-6">
+            {mockDesignSettings.descricao}
+          </p>
+
+          {/* Card de informações do negócio */}
           <Card className="mb-6 shadow-lg border-0">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">

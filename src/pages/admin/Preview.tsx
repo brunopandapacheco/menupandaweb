@@ -123,48 +123,50 @@ export default function Preview() {
       </Card>
 
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl overflow-hidden border">
-        {/* Banner superior com logo - ajustado para não sobrepor */}
+        {/* Banner superior reduzido com logo escapando */}
         <div 
-          className="h-64 relative overflow-hidden"
+          className="h-32 relative overflow-hidden"
           style={{ backgroundColor: designSettings?.background_topo_color || '#fce7f3' }}
         >
           {/* Elementos decorativos no banner */}
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-4 text-6xl">🧁</div>
-            <div className="absolute top-12 right-8 text-5xl">🍰</div>
-            <div className="absolute bottom-8 left-12 text-4xl">🎂</div>
-            <div className="absolute bottom-4 right-4 text-5xl">🥧</div>
-          </div>
-          
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
-            {/* Logo */}
-            <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-2xl mb-4 border-4" 
-                 style={{ borderColor: designSettings?.cor_borda || '#ec4899' }}>
-              {designSettings?.logo_url ? (
-                <img src={designSettings.logo_url} alt="Logo" className="w-24 h-24 rounded-full object-cover" />
-              ) : (
-                <span className="text-5xl">🧁</span>
-              )}
-            </div>
-            
-            {/* Nome da confeitaria */}
-            <h1 
-              className="text-3xl font-bold text-center mb-2"
-              style={{ color: designSettings?.cor_nome || '#be185d' }}
-            >
-              {designSettings?.nome_confeitaria || 'Doces da Vovó'}
-            </h1>
-            
-            {/* Descrição */}
-            <p className="text-white/90 text-center text-sm px-4 leading-relaxed">
-              Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
-            </p>
+            <div className="absolute top-2 left-4 text-4xl">🧁</div>
+            <div className="absolute top-4 right-8 text-3xl">🍰</div>
+            <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
+            <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
           </div>
         </div>
 
-        {/* Conteúdo abaixo do banner - sem margem negativa */}
+        {/* Logo com efeito de escapar do banner */}
+        <div className="relative -mt-16 mb-4">
+          <div className="flex justify-center">
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl border-4" 
+                 style={{ borderColor: designSettings?.cor_borda || '#ec4899' }}>
+              {designSettings?.logo_url ? (
+                <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
+              ) : (
+                <span className="text-6xl">🧁</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Conteúdo abaixo do logo */}
         <div className="px-4 pb-4">
-          {/* Card de informações do negócio - agora totalmente visível */}
+          {/* Nome da confeitaria */}
+          <h1 
+            className="text-3xl font-bold text-center mb-2"
+            style={{ color: designSettings?.cor_nome || '#be185d' }}
+          >
+            {designSettings?.nome_confeitaria || 'Doces da Vovó'}
+          </h1>
+          
+          {/* Descrição */}
+          <p className="text-gray-600 text-center text-sm px-4 leading-relaxed mb-6">
+            Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
+          </p>
+
+          {/* Card de informações do negócio */}
           <Card className="mb-6 shadow-lg border-0">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
@@ -207,7 +209,7 @@ export default function Preview() {
             </CardContent>
           </Card>
 
-          {/* Campo de busca - igual ao demo */}
+          {/* Campo de busca */}
           <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
@@ -218,7 +220,7 @@ export default function Preview() {
             />
           </div>
 
-          {/* Categorias estilo Instagram - igual ao demo */}
+          {/* Categorias estilo Instagram */}
           <div className="mb-6">
             <h3 className="font-semibold mb-4 text-lg text-gray-800">Categorias</h3>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
@@ -269,7 +271,7 @@ export default function Preview() {
             </div>
           </div>
 
-          {/* Produtos em promoção - igual ao demo */}
+          {/* Produtos em promoção */}
           {promotionalProducts.length > 0 && (
             <div className="mb-6">
               <h3 className="font-semibold mb-4 text-lg flex items-center gap-2">
@@ -344,7 +346,7 @@ export default function Preview() {
             </div>
           )}
 
-          {/* Produtos regulares - igual ao demo */}
+          {/* Produtos regulares */}
           {regularProducts.length > 0 && (
             <div className="mb-6">
               <h3 className="font-semibold mb-4 text-lg text-gray-800">
@@ -417,7 +419,7 @@ export default function Preview() {
             </div>
           )}
 
-          {/* Rodapé - igual ao demo */}
+          {/* Rodapé */}
           <div className="mt-8 text-center text-sm text-gray-600 pb-8 border-t pt-6">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />

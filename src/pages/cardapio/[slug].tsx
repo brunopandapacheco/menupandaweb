@@ -199,33 +199,45 @@ export default function CardapioPublico() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings.cor_background }}>
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        {/* Header com logo e background - ajustado para não sobrepor */}
+        {/* Banner superior reduzido com logo escapando */}
         <div 
-          className="h-48 relative"
+          className="h-32 relative overflow-hidden"
           style={{ backgroundColor: designSettings.background_topo_color }}
         >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-xl">
+          {/* Elementos decorativos no banner */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-2 left-4 text-4xl">🧁</div>
+            <div className="absolute top-4 right-8 text-3xl">🍰</div>
+            <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
+            <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
+          </div>
+        </div>
+
+        {/* Logo com efeito de escapar do banner */}
+        <div className="relative -mt-16 mb-4">
+          <div className="flex justify-center">
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl border-4" 
+                 style={{ borderColor: designSettings.cor_borda }}>
               {designSettings.logo_url ? (
-                <img src={designSettings.logo_url} alt="Logo" className="w-24 h-24 rounded-full object-cover" />
+                <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
               ) : (
-                <span className="text-4xl">🧁</span>
+                <span className="text-6xl">🧁</span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Conteúdo abaixo do banner - sem margem negativa */}
+        {/* Conteúdo abaixo do logo */}
         <div className="px-4 pb-4">
           {/* Nome da confeitaria */}
           <h1 
-            className="text-3xl font-bold text-center mb-4"
+            className="text-3xl font-bold text-center mb-2"
             style={{ color: designSettings.cor_nome }}
           >
             {designSettings.nome_confeitaria}
           </h1>
           
-          {/* Card de informações - agora totalmente visível */}
+          {/* Card de informações */}
           <Card className="mb-6 shadow-sm">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
