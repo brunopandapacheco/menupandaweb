@@ -117,7 +117,12 @@ export default function CardapioDemo() {
     'Pães': '🍞',
     'Sanduíches': '🥪',
     'Sobremesas': '🍰',
-    'Confeitaria': '🧁'
+    'Confeitaria': '🧁',
+    'Brigadeiros': '🍫',
+    'Cookies': '🍪',
+    'Trufas': '🍫',
+    'Pudim': '🍮',
+    'Coxinha': '🥐'
   }
 
   const categories = Array.from(new Set(mockProdutos.map(p => p.categoria))).map(cat => ({

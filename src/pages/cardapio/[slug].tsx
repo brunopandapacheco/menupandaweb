@@ -85,7 +85,12 @@ export default function CardapioPublico() {
     'Pães': '🍞',
     'Sanduíches': '🥪',
     'Sobremesas': '🍰',
-    'Confeitaria': '🧁'
+    'Confeitaria': '🧁',
+    'Brigadeiros': '🍫',
+    'Cookies': '🍪',
+    'Trufas': '🍫',
+    'Pudim': '🍮',
+    'Coxinha': '🥐'
   }
 
   const categories = Array.from(new Set(produtos.map(p => p.categoria))).map(cat => ({
