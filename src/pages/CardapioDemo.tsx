@@ -188,7 +188,7 @@ export default function CardapioDemo() {
           </svg>
         </div>
 
-        {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO */}
+        {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO E BORDA COLADA */}
         <div style={{ position: 'relative', marginTop: '-100px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div 
@@ -202,10 +202,11 @@ export default function CardapioDemo() {
                 boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
                 border: `4px solid ${mockDesignSettings.cor_borda}`,
                 position: 'relative',
-                zIndex: 10
+                zIndex: 10,
+                padding: '0' // Removido padding para logo colar na borda
               }}
             >
-              <img src="/logoteste.webp" alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
+              <img src="/logoteste.webp" alt="Logo" style={{ width: '152px', height: '152px', borderRadius: '50%', objectFit: 'cover' }} />
             </div>
           </div>
         </div>
