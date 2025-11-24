@@ -172,7 +172,7 @@ export default function CardapioPublico() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F9F9F9' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p>Carregando cardápio...</p>
@@ -183,7 +183,7 @@ export default function CardapioPublico() {
 
   if (!designSettings) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F9F9F9' }}>
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Cardápio não encontrado</h1>
           <p className="text-gray-600 mb-4">Esta confeitaria não existe ou está indisponível.</p>
@@ -197,8 +197,8 @@ export default function CardapioPublico() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: designSettings.cor_background }}>
-      <div className="max-w-md mx-auto bg-white min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
+      <div className="max-w-md mx-auto bg-white min-h-screen shadow-sm">
         {/* Banner superior reduzido com logo escapando */}
         <div 
           className="h-32 relative overflow-hidden"
@@ -216,7 +216,7 @@ export default function CardapioPublico() {
         {/* Logo com efeito de escapar do banner */}
         <div className="relative -mt-16 mb-4">
           <div className="flex justify-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl border-4" 
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
                  style={{ borderColor: designSettings.cor_borda }}>
               {designSettings.logo_url ? (
                 <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
@@ -237,8 +237,8 @@ export default function CardapioPublico() {
             {designSettings.nome_confeitaria}
           </h1>
           
-          {/* Card de informações - com sombra envolvente */}
-          <Card className="mb-6 shadow-2xl border-0 bg-white">
+          {/* Card de informações - branco com sombra leve */}
+          <Card className="mb-6 shadow-sm border-0 bg-white">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center gap-2">
@@ -298,7 +298,7 @@ export default function CardapioPublico() {
               </h3>
               <div className="space-y-4">
                 {promotionalProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div 
@@ -362,7 +362,7 @@ export default function CardapioPublico() {
               <h3 className="font-semibold mb-3 text-lg">Todos os Produtos</h3>
               <div className="space-y-4">
                 {regularProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div 

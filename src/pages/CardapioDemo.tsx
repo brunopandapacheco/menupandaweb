@@ -159,8 +159,8 @@ export default function CardapioDemo() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: mockDesignSettings.cor_background }}>
-      <div className="max-w-md mx-auto bg-white min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
+      <div className="max-w-md mx-auto bg-white min-h-screen shadow-sm">
         {/* Banner superior reduzido com logo escapando */}
         <div 
           className="h-32 relative overflow-hidden"
@@ -178,7 +178,7 @@ export default function CardapioDemo() {
         {/* Logo com efeito de escapar do banner */}
         <div className="relative -mt-16 mb-4">
           <div className="flex justify-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl border-4" 
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
                  style={{ borderColor: mockDesignSettings.cor_borda }}>
               <span className="text-6xl">🧁</span>
             </div>
@@ -200,8 +200,8 @@ export default function CardapioDemo() {
             {mockDesignSettings.descricao}
           </p>
 
-          {/* Card de informações do negócio - com sombra envolvente */}
-          <Card className="mb-6 shadow-2xl border-0 bg-white">
+          {/* Card de informações do negócio - branco com sombra leve */}
+          <Card className="mb-6 shadow-sm border-0 bg-white">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
                 <div className="flex items-center gap-2">
@@ -319,11 +319,11 @@ relative mb-6">
               </h3>
               <div className="space-y-4">
                 {promotionalProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-0">
+                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div 
-                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md"
+                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
                           style={{ backgroundColor: mockDesignSettings.cor_background }}
                         >
                           {product.imagem_url ? (
@@ -367,7 +367,7 @@ relative mb-6">
                             </div>
                           </div>
                           <Button 
-                            className="w-full mt-3 h-11 font-semibold shadow-md hover:shadow-lg transition-all"
+                            className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
                             style={{ backgroundColor: mockDesignSettings.cor_borda }}
                             onClick={() => handleWhatsAppOrder(product.nome)}
                           >
@@ -392,11 +392,11 @@ relative mb-6">
               </h3>
               <div className="space-y-4">
                 {regularProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-0">
+                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div 
-                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md"
+                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
                           style={{ backgroundColor: mockDesignSettings.cor_background }}
                         >
                           {product.imagem_url ? (
@@ -430,7 +430,7 @@ relative mb-6">
                             </div>
                           </div>
                           <Button 
-                            className="w-full mt-3 h-11 font-semibold shadow-md hover:shadow-lg transition-all"
+                            className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
                             style={{ backgroundColor: mockDesignSettings.cor_borda }}
                             onClick={() => handleWhatsAppOrder(product.nome)}
                           >

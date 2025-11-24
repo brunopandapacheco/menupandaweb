@@ -59,7 +59,7 @@ export default function Preview() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F9F9F9' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p>Carregando prévia...</p>
@@ -94,7 +94,7 @@ export default function Preview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{ backgroundColor: '#F9F9F9', minHeight: '100vh', padding: '2rem 1rem' }}>
       <Card className="border-2 border-dashed border-primary/20 bg-primary/5">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
@@ -122,7 +122,7 @@ export default function Preview() {
         </CardContent>
       </Card>
 
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl overflow-hidden border">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-sm overflow-hidden border">
         {/* Banner superior reduzido com logo escapando */}
         <div 
           className="h-32 relative overflow-hidden"
@@ -140,7 +140,7 @@ export default function Preview() {
         {/* Logo com efeito de escapar do banner */}
         <div className="relative -mt-16 mb-4">
           <div className="flex justify-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl border-4" 
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
                  style={{ borderColor: designSettings?.cor_borda || '#ec4899' }}>
               {designSettings?.logo_url ? (
                 <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
@@ -166,8 +166,8 @@ export default function Preview() {
             Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
           </p>
 
-          {/* Card de informações do negócio - com sombra envolvente */}
-          <Card className="mb-6 shadow-2xl border-0 bg-white">
+          {/* Card de informações do negócio - branco com sombra leve */}
+          <Card className="mb-6 shadow-sm border-0 bg-white">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
                 <div className="flex items-center gap-2">
@@ -283,11 +283,11 @@ export default function Preview() {
               </h3>
               <div className="space-y-4">
                 {promotionalProducts.slice(0, 3).map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-0">
+                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div 
-                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md"
+                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
                           style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}
                         >
                           {product.imagem_url ? (
@@ -331,7 +331,7 @@ export default function Preview() {
                             </div>
                           </div>
                           <Button 
-                            className="w-full mt-3 h-11 font-semibold shadow-md hover:shadow-lg transition-all"
+                            className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
                             style={{ backgroundColor: designSettings?.cor_borda || '#ec4899' }}
                             onClick={() => handleWhatsAppOrder(product.nome)}
                           >
@@ -355,11 +355,11 @@ export default function Preview() {
               </h3>
               <div className="space-y-4">
                 {regularProducts.slice(0, 3).map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-0">
+                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div 
-                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md"
+                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
                           style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}
                         >
                           {product.imagem_url ? (
@@ -393,7 +393,7 @@ export default function Preview() {
                             </div>
                           </div>
                           <Button 
-                            className="w-full mt-3 h-11 font-semibold shadow-md hover:shadow-lg transition-all"
+                            className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
                             style={{ backgroundColor: designSettings?.cor_borda || '#ec4899' }}
                             onClick={() => handleWhatsAppOrder(product.nome)}
                           >
