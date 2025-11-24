@@ -161,16 +161,6 @@ export default function Preview() {
                       <circle cx="150" cy="70" r="14" fill="white" />
                       <circle cx="250" cy="45" r="16" fill="white" />
                     </g>
-                    
-                    {/* Emojis decorativos */}
-                    <g opacity="0.2" style={{ fontSize: '24px' }}>
-                      <text x="60" y="50" textAnchor="middle">🧁</text>
-                      <text x="380" y="70" textAnchor="middle">🍰</text>
-                      <text x="180" y="35" textAnchor="middle">🎂</text>
-                      <text x="320" y="55" textAnchor="middle">🥧</text>
-                      <text x="140" y="65" textAnchor="middle">🍮</text>
-                      <text x="280" y="40" textAnchor="middle">🎂</text>
-                    </g>
                   </svg>
                 </div>
 
