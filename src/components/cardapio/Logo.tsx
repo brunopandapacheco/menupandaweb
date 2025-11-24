@@ -16,11 +16,11 @@ export function Logo({ logoUrl, borderColor }: LogoProps) {
             alignItems: 'center', 
             justifyContent: 'center', 
             boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-            border: `4px solid ${borderColor}`,
+            border: `6px solid white`, // Borda mais grossa e branca
             position: 'relative',
             zIndex: 10,
             padding: '0',
-            backgroundColor: 'white' // Fundo branco para a logo
+            backgroundColor: 'white'
           }}
         >
           {logoUrl ? (
