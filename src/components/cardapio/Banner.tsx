@@ -9,9 +9,9 @@ export function Banner({ logoUrl, borderColor }: BannerProps) {
       position: 'relative', 
       height: '180px', 
       overflow: 'hidden',
-      backgroundColor: 'transparent' // Transparente - sem cor
-    }}>
-      {/* Removido o SVG e qualquer elemento visual */}
-    </div>
+      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+      backgroundSize: '200% 200%',
+      animation: 'gradient-x 3s ease infinite'
+    }} />
   )
 }

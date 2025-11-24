@@ -5,7 +5,7 @@ interface LogoProps {
 
 export function Logo({ logoUrl, borderColor }: LogoProps) {
   return (
-    <div style={{ position: 'relative', marginTop: '-100px', marginBottom: '16px' }}>
+    <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '16px' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div 
           style={{ 
@@ -20,7 +20,7 @@ export function Logo({ logoUrl, borderColor }: LogoProps) {
             position: 'relative',
             zIndex: 10,
             padding: '0',
-            backgroundColor: 'transparent' // Removido background cinza
+            backgroundColor: 'white' // Fundo branco para a logo
           }}
         >
           {logoUrl ? (
