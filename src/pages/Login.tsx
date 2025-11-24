@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
@@ -7,7 +6,11 @@ export default function Login() {
   const navigate = useNavigate()
   const { user, loading } = useAuth()
 
-  // Se já estiver logado, redireciona diretamente para admin
+  const handleSuccess = () => {
+    // Força uma atualização completa da página para limpar qualquer estado residual
+    window.location.href = '/admin'
+  }
+
   if (loading) {
     return (
       <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-[#d11b70] via-[#ff6fae] to-[#ff9acb]">
@@ -20,12 +23,9 @@ export default function Login() {
   }
 
   if (user) {
-    navigate('/admin', { replace: true })
+    // Se já está logado, redireciona imediatamente
+    handleSuccess()
     return null
-  }
-
-  const handleSuccess = () => {
-    navigate('/admin', { replace: true })
   }
 
   return (

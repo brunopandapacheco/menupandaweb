@@ -7,20 +7,30 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let mounted = true
+
     // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
         
+        if (!mounted) return
+        
         if (error) {
           console.error('Erro ao obter sessão inicial:', error)
+          // Se houver erro de refresh token, limpa a sessão
+          if (error.message?.includes('Refresh Token')) {
+            await supabase.auth.signOut()
+          }
+          setUser(null)
         } else {
           setUser(session?.user ?? null)
         }
       } catch (error) {
         console.error('Erro ao buscar sessão:', error)
+        if (mounted) setUser(null)
       } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
 
@@ -28,13 +38,23 @@ export function useAuth() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return
+      
       console.log('Auth state changed:', event, session?.user?.id)
       
-      setUser(session?.user ?? null)
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('Token refreshed successfully')
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null)
+      } else {
+        setUser(session?.user ?? null)
+      }
+      
       setLoading(false)
     })
 
     return () => {
+      mounted = false
       subscription.unsubscribe()
     }
   }, [])

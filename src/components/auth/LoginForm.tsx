@@ -23,6 +23,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     try {
       console.log('Tentando login com:', email)
 
+      // Limpa qualquer sessão existente antes de fazer login
+      await supabase.auth.signOut()
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -53,7 +56,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         // Redireciona imediatamente após sucesso
         setTimeout(() => {
           onSuccess?.()
-        }, 100)
+        }, 500)
       }
     } catch (error: any) {
       console.error('Erro durante o login:', error)
