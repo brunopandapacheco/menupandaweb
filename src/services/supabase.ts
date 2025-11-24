@@ -5,7 +5,7 @@ class SupabaseService {
   // Design Settings
   async getDesignSettings(userId: string): Promise<DesignSettings | null> {
     try {
-      console.log('Buscando design settings para user:', userId)
+      console.log('🔍 Buscando design settings para user:', userId)
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -13,19 +13,20 @@ class SupabaseService {
         .single()
       
       if (error) {
-        console.error('Error getting design settings:', error)
+        console.error('❌ Error getting design settings:', error)
         // If no record found, create a default one
         if (error.code === 'PGRST116') {
-          console.log('Nenhum registro encontrado, criando padrão...')
+          console.log('📝 Nenhum registro encontrado, criando padrão...')
           return await this.createDefaultDesignSettings(userId)
         }
         return null
       }
       
-      console.log('Design settings encontrados:', data)
+      console.log('✅ Design settings encontrados:', data)
+      console.log('🎨 Banner gradient atual:', data.banner_gradient)
       return data
     } catch (error) {
-      console.error('Unexpected error getting design settings:', error)
+      console.error('❌ Unexpected error getting design settings:', error)
       return null
     }
   }
@@ -55,7 +56,7 @@ class SupabaseService {
         banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
       }
 
-      console.log('Criando design settings padrão:', defaultSettings)
+      console.log('📝 Criando design settings padrão:', defaultSettings)
 
       const { data, error } = await supabase
         .from('design_settings')
@@ -64,21 +65,21 @@ class SupabaseService {
         .single()
       
       if (error) {
-        console.error('Error creating default design settings:', error)
+        console.error('❌ Error creating default design settings:', error)
         return null
       }
       
-      console.log('Design settings criados com sucesso:', data)
+      console.log('✅ Design settings criados com sucesso:', data)
       return data
     } catch (error) {
-      console.error('Unexpected error creating default design settings:', error)
+      console.error('❌ Unexpected error creating default design settings:', error)
       return null
     }
   }
 
   async getDesignSettingsBySlug(slug: string): Promise<DesignSettings | null> {
     try {
-      console.log('Buscando design settings por slug:', slug)
+      console.log('🔍 Buscando design settings por slug:', slug)
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -86,42 +87,101 @@ class SupabaseService {
         .single()
       
       if (error) {
-        console.error('Error getting design settings by slug:', error)
+        console.error('❌ Error getting design settings by slug:', error)
         return null
       }
       
-      console.log('Design settings por slug encontrados:', data)
+      console.log('✅ Design settings por slug encontrados:', data)
       return data
     } catch (error) {
-      console.error('Unexpected error getting design settings by slug:', error)
+      console.error('❌ Unexpected error getting design settings by slug:', error)
       return null
     }
   }
 
   async updateDesignSettings(userId: string, settings: Partial<DesignSettings>): Promise<boolean> {
     try {
-      console.log('Atualizando design settings para user:', userId)
-      console.log('Dados a serem atualizados:', settings)
+      console.log('🔄 INICIANDO ATUALIZAÇÃO DE DESIGN SETTINGS')
+      console.log('👤 User ID:', userId)
+      console.log('📦 Dados a serem atualizados:', settings)
+      console.log('🎨 Banner gradient específico:', settings.banner_gradient)
       
-      const { data, error } = await supabase
+      // Primeiro, vamos verificar se já existe um registro
+      const { data: existingData, error: fetchError } = await supabase
         .from('design_settings')
-        .upsert({
-          user_id: userId,
-          ...settings,
-          updated_at: new Date().toISOString()
-        })
-        .select()
+        .select('*')
+        .eq('user_id', userId)
         .single()
       
-      if (error) {
-        console.error('Error updating design settings:', error)
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('❌ Erro ao buscar dados existentes:', fetchError)
         return false
       }
       
-      console.log('Design settings atualizados com sucesso:', data)
+      let result
+      if (existingData) {
+        // Se existe, faz update
+        console.log('📝 Atualizando registro existente...')
+        const { data, error } = await supabase
+          .from('design_settings')
+          .update({
+            ...settings,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', userId)
+          .select()
+          .single()
+        
+        result = { data, error }
+      } else {
+        // Se não existe, faz insert
+        console.log('📝 Criando novo registro...')
+        const { data, error } = await supabase
+          .from('design_settings')
+          .insert({
+            user_id: userId,
+            ...settings,
+            updated_at: new Date().toISOString()
+          })
+          .select()
+          .single()
+        
+        result = { data, error }
+      }
+      
+      if (result.error) {
+        console.error('❌ Error updating design settings:', result.error)
+        console.error('❌ Detalhes do erro:', {
+          message: result.error.message,
+          details: result.error.details,
+          hint: result.error.hint,
+          code: result.error.code
+        })
+        return false
+      }
+      
+      console.log('✅ Design settings atualizados com sucesso!')
+      console.log('📊 Dados salvos:', result.data)
+      console.log('🎨 Banner gradient salvo:', result.data.banner_gradient)
+      
+      // Verificação adicional: buscar novamente para confirmar
+      console.log('🔍 Verificando se foi salvo corretamente...')
+      const { data: verificationData, error: verificationError } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+      
+      if (verificationError) {
+        console.error('❌ Erro na verificação:', verificationError)
+      } else {
+        console.log('✅ Verificação bem-sucedida!')
+        console.log('🎨 Banner gradient verificado:', verificationData.banner_gradient)
+      }
+      
       return true
     } catch (error) {
-      console.error('Unexpected error updating design settings:', error)
+      console.error('❌ Unexpected error updating design settings:', error)
       return false
     }
   }
