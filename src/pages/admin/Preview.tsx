@@ -127,26 +127,55 @@ export default function Preview() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ maxWidth: '448px', width: '100%' }}>
               <div style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                {/* Banner superior reduzido com logo escapando */}
-                <div 
-                  style={{ 
-                    height: '128px', 
-                    position: 'relative', 
-                    overflow: 'hidden',
-                    backgroundColor: designSettings?.background_topo_color || '#fce7f3' 
-                  }}
-                >
-                  {/* Elementos decorativos no banner */}
-                  <div style={{ position: 'absolute', inset: 0, opacity: 0.1 }}>
-                    <div style={{ position: 'absolute', top: '8px', left: '16px', fontSize: '24px' }}>🧁</div>
-                    <div style={{ position: 'absolute', top: '16px', right: '32px', fontSize: '20px' }}>🍰</div>
-                    <div style={{ position: 'absolute', bottom: '8px', left: '32px', fontSize: '20px' }}>🎂</div>
-                    <div style={{ position: 'absolute', bottom: '16px', right: '16px', fontSize: '20px' }}>🥧</div>
-                  </div>
+                {/* Banner superior com formato curvo e inclinado */}
+                <div style={{ 
+                  position: 'relative', 
+                  height: '180px', 
+                  overflow: 'hidden',
+                  backgroundColor: designSettings?.background_topo_color || '#fce7f3' 
+                }}>
+                  {/* Forma curva e inclinada usando SVG */}
+                  <svg 
+                    style={{ 
+                      position: 'absolute', 
+                      top: 0, 
+                      left: 0, 
+                      width: '100%', 
+                      height: '100%'
+                    }} 
+                    viewBox="0 0 448 180" 
+                    preserveAspectRatio="none"
+                  >
+                    {/* Caminho curvo e inclinado */}
+                    <path 
+                      d="M 0,0 L 448,0 L 448,120 Q 400,140 350,145 Q 300,150 250,145 Q 200,140 150,135 Q 100,130 50,125 Q 25,122 0,120 Z" 
+                      fill={designSettings?.background_topo_color || '#fce7f3'}
+                    />
+                    
+                    {/* Elementos decorativos */}
+                    <g opacity="0.15">
+                      <circle cx="80" cy="40" r="15" fill="white" />
+                      <circle cx="368" cy="60" r="20" fill="white" />
+                      <circle cx="200" cy="30" r="12" fill="white" />
+                      <circle cx="300" cy="50" r="18" fill="white" />
+                      <circle cx="150" cy="70" r="14" fill="white" />
+                      <circle cx="250" cy="45" r="16" fill="white" />
+                    </g>
+                    
+                    {/* Emojis decorativos */}
+                    <g opacity="0.2" style={{ fontSize: '24px' }}>
+                      <text x="60" y="50" textAnchor="middle">🧁</text>
+                      <text x="380" y="70" textAnchor="middle">🍰</text>
+                      <text x="180" y="35" textAnchor="middle">🎂</text>
+                      <text x="320" y="55" textAnchor="middle">🥧</text>
+                      <text x="140" y="65" textAnchor="middle">🍮</text>
+                      <text x="280" y="40" textAnchor="middle">🎂</text>
+                    </g>
+                  </svg>
                 </div>
 
                 {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO */}
-                <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '16px' }}>
+                <div style={{ position: 'relative', marginTop: '-100px', marginBottom: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div 
                       style={{ 
@@ -156,8 +185,10 @@ export default function Preview() {
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center', 
-                        boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                        border: `4px solid ${designSettings?.cor_borda || '#ec4899'}` 
+                        boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
+                        border: `4px solid ${designSettings?.cor_borda || '#ec4899'}`,
+                        position: 'relative',
+                        zIndex: 10
                       }}
                     >
                       {designSettings?.logo_url ? (
