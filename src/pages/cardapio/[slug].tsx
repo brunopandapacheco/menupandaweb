@@ -217,13 +217,13 @@ export default function CardapioPublico() {
           </div>
         </div>
 
-        {/* Logo com efeito de escapar do banner - SEM BACKGROUND */}
-        <div style={{ position: 'relative', marginTop: '-64px', marginBottom: '16px' }}>
+        {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO */}
+        <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div 
               style={{ 
-                width: '128px', 
-                height: '128px', 
+                width: '160px', 
+                height: '160px', 
                 borderRadius: '50%', 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -233,9 +233,9 @@ export default function CardapioPublico() {
               }}
             >
               {designSettings.logo_url ? (
-                <img src={designSettings.logo_url} alt="Logo" style={{ width: '112px', height: '112px', borderRadius: '50%', objectFit: 'cover' }} />
+                <img src={designSettings.logo_url} alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
               ) : (
-                <span style={{ fontSize: '48px' }}>🧁</span>
+                <span style={{ fontSize: '64px' }}>🧁</span>
               )}
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function CardapioPublico() {
               )}
               {configuracoes?.meios_pagamento?.includes('Cartão') && (
                 <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
-                  Cartão
+                  Cardão
                 </Badge>
               )}
               {configuracoes?.meios_pagamento?.includes('Dinheiro') && (
