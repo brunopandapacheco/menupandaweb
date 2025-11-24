@@ -14,7 +14,13 @@ interface CategoryFilterProps {
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
   return (
     <div style={{ marginBottom: '24px' }}>
-      <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '4px 0' }}>
+      <div style={{ 
+        display: 'flex', 
+        gap: '12px', 
+        overflowX: 'auto', 
+        padding: '4px 0',
+        justifyContent: 'center' // Centraliza os botões horizontalmente
+      }}>
         {/* Botão "Todos" */}
         <button
           onClick={() => onCategorySelect(null)}
@@ -30,7 +36,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
             backgroundColor: selectedCategory === null ? '#fce7f3' : 'white',
             cursor: 'pointer',
             transition: 'all 0.2s',
-            padding: '8px'
+            padding: '8px',
+            flexShrink: 0 // Evita que os botões encolham
           }}
           onMouseOver={(e) => {
             if (selectedCategory !== null) {
@@ -66,7 +73,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
               backgroundColor: selectedCategory === category.name ? '#fce7f3' : 'white',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              padding: '8px'
+              padding: '8px',
+              flexShrink: 0 // Evita que os botões encolham
             }}
             onMouseOver={(e) => {
               if (selectedCategory !== category.name) {
