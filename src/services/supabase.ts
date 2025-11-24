@@ -110,13 +110,17 @@ class SupabaseService {
       console.log('📦 Dados a serem atualizados:', settings)
       console.log('🎨 Banner gradient específico:', settings.banner_gradient)
       console.log('🔗 Slug específico:', settings.slug)
+      console.log('🖼️ Logo URL específico:', settings.logo_url)
       
       // Primeiro, vamos verificar se já existe um registro
+      console.log('🔍 Buscando registro existente...')
       const { data: existingData, error: fetchError } = await supabase
         .from('design_settings')
         .select('*')
         .eq('user_id', userId)
         .single()
+      
+      console.log('📊 Resultado da busca:', { existingData, fetchError })
       
       if (fetchError && fetchError.code !== 'PGRST116') {
         console.error('❌ Erro ao buscar dados existentes:', fetchError)
@@ -127,6 +131,11 @@ class SupabaseService {
       if (existingData) {
         // Se existe, faz update
         console.log('📝 Atualizando registro existente...')
+        console.log('📝 Dados do update:', {
+          ...settings,
+          updated_at: new Date().toISOString()
+        })
+        
         const { data, error } = await supabase
           .from('design_settings')
           .update({
@@ -137,10 +146,17 @@ class SupabaseService {
           .select()
           .single()
         
+        console.log('📊 Resultado do update:', { data, error })
         result = { data, error }
       } else {
         // Se não existe, faz insert
         console.log('📝 Criando novo registro...')
+        console.log('📝 Dados do insert:', {
+          user_id: userId,
+          ...settings,
+          updated_at: new Date().toISOString()
+        })
+        
         const { data, error } = await supabase
           .from('design_settings')
           .insert({
@@ -151,6 +167,7 @@ class SupabaseService {
           .select()
           .single()
         
+        console.log('📊 Resultado do insert:', { data, error })
         result = { data, error }
       }
       
@@ -169,6 +186,7 @@ class SupabaseService {
       console.log('📊 Dados salvos:', result.data)
       console.log('🎨 Banner gradient salvo:', result.data.banner_gradient)
       console.log('🔗 Slug salvo:', result.data.slug)
+      console.log('🖼️ Logo URL salvo:', result.data.logo_url)
       
       // Verificação adicional: buscar novamente para confirmar
       console.log('🔍 Verificando se foi salvo corretamente...')
@@ -184,6 +202,7 @@ class SupabaseService {
         console.log('✅ Verificação bem-sucedida!')
         console.log('🎨 Banner gradient verificado:', verificationData.banner_gradient)
         console.log('🔗 Slug verificado:', verificationData.slug)
+        console.log('🖼️ Logo URL verificado:', verificationData.logo_url)
       }
       
       return true
