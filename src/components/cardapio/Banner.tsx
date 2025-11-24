@@ -1,5 +1,3 @@
-import { Bell } from 'lucide-react'
-
 interface BannerProps {
   logoUrl?: string
   borderColor: string
