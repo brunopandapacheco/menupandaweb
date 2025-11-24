@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Banner } from '@/components/cardapio/Banner'
 import { Logo } from '@/components/cardapio/Logo'
-import { StoreInfo } from '@/components/cardapio/StoreInfo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
@@ -27,7 +26,6 @@ const mockConfiguracoes = {
   entrega: true,
   taxa_entrega: 5.00,
   emFerias: false,
-  total_pedidos: 500,
   avaliacao_media: 4.9
 }
 
@@ -150,18 +148,6 @@ export default function CardapioDemo() {
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
-          <StoreInfo
-            telefone={mockConfiguracoes.telefone}
-            horarioFuncionamentoInicio={mockConfiguracoes.horario_funcionamento_inicio}
-            horarioFuncionamentoFim={mockConfiguracoes.horario_funcionamento_fim}
-            meiosPagamento={mockConfiguracoes.meios_pagamento}
-            entrega={mockConfiguracoes.entrega}
-            taxaEntrega={mockConfiguracoes.taxa_entrega}
-            emFerias={mockConfiguracoes.emFerias}
-            totalPedidos={mockConfiguracoes.total_pedidos}
-            avaliacaoMedia={mockConfiguracoes.avaliacao_media}
-          />
-
           {/* Banner promocional */}
           {mockDesignSettings.banner1_url && (
             <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>

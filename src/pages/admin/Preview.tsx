@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Banner } from '@/components/cardapio/Banner'
 import { Logo } from '@/components/cardapio/Logo'
-import { StoreInfo } from '@/components/cardapio/StoreInfo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
@@ -91,18 +90,6 @@ export default function Preview() {
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
-          <StoreInfo
-            telefone={configuracoes?.telefone || '(11) 99999-9999'}
-            horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio || '08:00'}
-            horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim || '18:00'}
-            meiosPagamento={configuracoes?.meios_pagamento || ['Pix', 'Cardão', 'Dinheiro']}
-            entrega={configuracoes?.entrega ?? true}
-            taxaEntrega={configuracoes?.taxa_entrega || 0}
-            emFerias={configuracoes?.em_ferias}
-            totalPedidos={configuracoes?.total_pedidos || 500}
-            avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
-          />
-
           {/* Banner promocional */}
           {designSettings.banner1_url && (
             <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>

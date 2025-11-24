@@ -1,6 +1,5 @@
 export { Banner } from './Banner'
 export { Logo } from './Logo'
-export { StoreInfo } from './StoreInfo'
 export { SearchBar } from './SearchBar'
 export { CategoryFilter } from './CategoryFilter'
 export { ProductCard } from './ProductCard'
