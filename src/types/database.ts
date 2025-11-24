@@ -18,6 +18,7 @@ export interface DesignSettings {
   texto_rodape: string
   categorias?: string[]
   descricao_loja?: string
+  banner_gradient?: string
 }
 
 export interface Configuracoes {
