@@ -32,7 +32,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
             minWidth: '80px',
             height: '80px',
             borderRadius: '50%',
-            border: selectedCategory === null ? '3px solid #ec4899' : '2px solid #e5e7eb',
+            border: selectedCategory === null ? '2px solid #ec4899' : '2px solid #e5e7eb',
             backgroundColor: selectedCategory === null ? '#fce7f3' : 'white',
             cursor: 'pointer',
             transition: 'all 0.2s',
@@ -41,8 +41,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
           }}
           onMouseOver={(e) => {
             if (selectedCategory !== null) {
-              e.currentTarget.style.backgroundColor = '#f9fafb'
-              e.currentTarget.style.borderColor = '#ec4899'
+              e.currentTarget.style.backgroundColor = '#fdf2f8'
+              e.currentTarget.style.borderColor = '#f9a8d4'
             }
           }}
           onMouseOut={(e) => {
@@ -91,7 +91,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 minWidth: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                border: selectedCategory === category.name ? '3px solid #ec4899' : '2px solid #e5e7eb',
+                border: selectedCategory === category.name ? '2px solid #ec4899' : '2px solid #e5e7eb',
                 backgroundColor: selectedCategory === category.name ? '#fce7f3' : 'white',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
@@ -100,8 +100,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
               }}
               onMouseOver={(e) => {
                 if (selectedCategory !== category.name) {
-                  e.currentTarget.style.backgroundColor = '#f9fafb'
-                  e.currentTarget.style.borderColor = '#ec4899'
+                  e.currentTarget.style.backgroundColor = '#fdf2f8'
+                  e.currentTarget.style.borderColor = '#f9a8d4'
                 }
               }}
               onMouseOut={(e) => {
