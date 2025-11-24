@@ -16,7 +16,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
     <div style={{ marginBottom: '24px' }}>
       <div style={{ 
         display: 'flex', 
-        gap: '12px', 
+        gap: '8px', 
         overflowX: 'auto', 
         padding: '4px 0',
         justifyContent: 'center' // Centraliza os botões horizontalmente
