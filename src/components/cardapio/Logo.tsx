@@ -36,7 +36,7 @@ export function Logo({ logoUrl, borderColor, storeName, storeDescription }: Logo
       {/* Título e descrição da loja fora do card */}
       <div style={{ textAlign: 'center', marginTop: '16px', padding: '0 16px' }}>
         <h2 style={{ 
-          fontSize: '24px', 
+          fontSize: '32px', 
           fontWeight: 'bold', 
           color: '#1A1A1A', 
           marginBottom: '8px',
