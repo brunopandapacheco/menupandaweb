@@ -19,7 +19,8 @@ export function Logo({ logoUrl, borderColor }: LogoProps) {
             border: `4px solid ${borderColor}`,
             position: 'relative',
             zIndex: 10,
-            padding: '0'
+            padding: '0',
+            backgroundColor: 'transparent' // Removido background cinza
           }}
         >
           {logoUrl ? (
