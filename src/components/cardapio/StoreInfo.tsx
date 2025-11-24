@@ -21,7 +21,12 @@ export function StoreInfo({
 }: StoreInfoProps) {
   const getStatusMessage = () => {
     if (emFerias) {
-      return { status: 'Fechado', time: 'De férias', color: 'text-red-600' }
+      return { 
+        status: 'Fechado', 
+        time: 'De férias', 
+        color: 'text-red-600',
+        bgColor: '#fee2e2'
+      }
     }
 
     const now = new Date()
@@ -35,9 +40,19 @@ export function StoreInfo({
     const endTime = endHour * 60 + endMinute
     
     if (currentTime >= startTime && currentTime <= endTime) {
-      return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, color: 'text-green-600' }
+      return { 
+        status: 'Aberto', 
+        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
+        color: 'text-green-600',
+        bgColor: '#dcfce7'
+      }
     } else {
-      return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, color: 'text-red-600' }
+      return { 
+        status: 'Fechado', 
+        time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, 
+        color: 'text-red-600',
+        bgColor: '#fee2e2'
+      }
     }
   }
 
@@ -57,8 +72,17 @@ export function StoreInfo({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Clock style={{ width: '16px', height: '16px' }} />
           <div>
-            <p style={{ fontWeight: '600', color: status.color }}>{status.status}</p>
-            <p style={{ color: '#6b7280', fontSize: '12px' }}>{status.time}</p>
+            <p style={{ 
+              fontWeight: '600', 
+              color: status.color,
+              backgroundColor: status.bgColor,
+              padding: '2px 8px',
+              borderRadius: '4px',
+              display: 'inline-block'
+            }}>
+              {status.status}
+            </p>
+            <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px' }}>{status.time}</p>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
