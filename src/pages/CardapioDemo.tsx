@@ -161,12 +161,12 @@ export default function CardapioDemo() {
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white', minHeight: '100vh' }}>
-        {/* Banner superior com formato curvo e inclinado */}
+        {/* Banner superior com formato curvo e inclinado - COR CINZA ESCURO */}
         <div style={{ 
           position: 'relative', 
           height: '180px', 
           overflow: 'hidden',
-          backgroundColor: mockDesignSettings.background_topo_color 
+          backgroundColor: '#2A2A2A' 
         }}>
           {/* Forma curva e inclinada usando SVG */}
           <svg 
@@ -183,7 +183,7 @@ export default function CardapioDemo() {
             {/* Caminho curvo e inclinado */}
             <path 
               d="M 0,0 L 448,0 L 448,120 Q 400,140 350,145 Q 300,150 250,145 Q 200,140 150,135 Q 100,130 50,125 Q 25,122 0,120 Z" 
-              fill={mockDesignSettings.background_topo_color}
+              fill="#2A2A2A"
             />
             
             {/* Elementos decorativos */}
