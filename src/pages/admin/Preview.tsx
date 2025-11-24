@@ -59,9 +59,9 @@ export default function Preview() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5 !important' }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
+      <div style={{ backgroundColor: '#F5F5F5', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '32px', height: '32px', border: '2px solid #ec4899', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }}></div>
           <p>Carregando prévia...</p>
         </div>
       </div>
@@ -94,351 +94,449 @@ export default function Preview() {
   }
 
   return (
-    <div 
-      className="min-h-screen p-4 sm:p-6 lg:p-8" 
-      style={{ 
-        backgroundColor: '#F5F5F5 !important',
-        background: '#F5F5F5 !important'
-      }}
-    >
-      <div className="space-y-6 max-w-7xl mx-auto">
-        <Card className="border-2 border-dashed border-primary/20 bg-primary/5">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Smartphone className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg" style={{ color: '#4A3531' }}>Cardápio Público</h3>
-                  <p className="text-sm text-gray-600">
-                    Compartilhe este link com seus clientes
-                  </p>
-                </div>
-              </div>
-              <Button 
-                onClick={openCardapioPublico} 
-                disabled={!designSettings?.slug}
-                size="lg"
-                className="gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Ver Cardápio
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-center">
-          <div className="max-w-md w-full bg-white rounded-lg shadow-sm overflow-hidden border">
-            {/* Banner superior reduzido com logo escapando */}
-            <div 
-              className="h-32 relative overflow-hidden"
-              style={{ backgroundColor: designSettings?.background_topo_color || '#fce7f3' }}
-            >
-              {/* Elementos decorativos no banner */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-2 left-4 text-4xl">🧁</div>
-                <div className="absolute top-4 right-8 text-3xl">🍰</div>
-                <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
-                <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
-              </div>
-            </div>
-
-            {/* Logo com efeito de escapar do banner */}
-            <div className="relative -mt-16 mb-4">
-              <div className="flex justify-center">
-                <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
-                     style={{ borderColor: designSettings?.cor_borda || '#ec4899' }}>
-                  {designSettings?.logo_url ? (
-                    <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
-                  ) : (
-                    <span className="text-6xl">🧁</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Conteúdo abaixo do logo */}
-            <div className="px-4 pb-4">
-              {/* Nome da confeitaria */}
-              <h1 
-                className="text-3xl font-bold text-center mb-2"
-                style={{ color: designSettings?.cor_nome || '#be185d' }}
-              >
-                {designSettings?.nome_confeitaria || 'Doces da Vovó'}
-              </h1>
-              
-              {/* Descrição */}
-              <p className="text-gray-600 text-center text-sm px-4 leading-relaxed mb-6">
-                Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
-              </p>
-
-              {/* Card de informações do negócio - branco com sombra leve */}
-              <Card className="mb-6 shadow-sm border-0 bg-white">
-                <CardContent className="p-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status.color.includes('green') ? 'bg-green-100' : 'bg-red-100'}`}>
-                        <Clock className={`w-4 h-4 ${status.color.includes('green') ? 'text-green-600' : 'text-red-600'}`} />
-                      </div>
-                      <div>
-                        <p className={`font-semibold ${status.color}`}>{status.status}</p>
-                        <p className="text-gray-600 text-xs">{status.time}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Phone className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <p className="font-semibold text-gray-800">{configuracoes?.telefone || '(11) 99999-9999'}</p>
-                    </div>
+    <div style={{ backgroundColor: '#F5F5F5', minHeight: '100vh', padding: '16px 24px 32px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <Card style={{ border: '2px dashed', borderColor: 'rgba(236, 72, 153, 0.2)', backgroundColor: 'rgba(236, 72, 153, 0.05)' }}>
+            <CardContent style={{ padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '48px', height: '48px', backgroundColor: 'rgba(236, 72, 153, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Smartphone style={{ width: '24px', height: '24px', color: '#ec4899' }} />
                   </div>
-                  
-                  {/* Informações adicionais */}
-                  <div className="flex gap-2 flex-wrap">
-                    {configuracoes?.entrega && (
-                      <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                        <Truck className="w-3 h-3 mr-1" />
-                        Faz entrega
-                      </Badge>
-                    )}
-                    {configuracoes?.meios_pagamento?.includes('Pix') && (
-                      <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                        Pix
-                      </Badge>
-                    )}
-                    {configuracoes?.meios_pagamento?.includes('Cartão') && (
-                      <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200">
-                        Cartão
-                      </Badge>
-                    )}
+                  <div>
+                    <h3 style={{ fontWeight: '600', fontSize: '18px', color: '#4A3531' }}>Cardápio Público</h3>
+                    <p style={{ fontSize: '14px', color: '#6b7280' }}>
+                      Compartilhe este link com seus clientes
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Campo de busca */}
-              <div className="relative mb-6">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="🔍 Buscar produtos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-12 border-2 border-gray-200 focus:border-pink-400 rounded-xl"
-                />
+                </div>
+                <Button 
+                  onClick={openCardapioPublico} 
+                  disabled={!designSettings?.slug}
+                  size="lg"
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <ExternalLink style={{ width: '16px', height: '16px' }} />
+                  Ver Cardápio
+                </Button>
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Categorias estilo Instagram */}
-              <div className="mb-6">
-                <h3 className="font-semibold mb-4 text-lg text-gray-800">Categorias</h3>
-                <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                  <button
-                    onClick={() => setSelectedCategory('todas')}
-                    className={`flex flex-col items-center min-w-fit transition-all ${
-                      selectedCategory === 'todas' ? 'scale-110' : 'scale-100'
-                    }`}
-                  >
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ maxWidth: '448px', width: '100%' }}>
+              <div style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                {/* Banner superior reduzido com logo escapando */}
+                <div 
+                  style={{ 
+                    height: '128px', 
+                    position: 'relative', 
+                    overflow: 'hidden',
+                    backgroundColor: designSettings?.background_topo_color || '#fce7f3' 
+                  }}
+                >
+                  {/* Elementos decorativos no banner */}
+                  <div style={{ position: 'absolute', inset: 0, opacity: 0.1 }}>
+                    <div style={{ position: 'absolute', top: '8px', left: '16px', fontSize: '24px' }}>🧁</div>
+                    <div style={{ position: 'absolute', top: '16px', right: '32px', fontSize: '20px' }}>🍰</div>
+                    <div style={{ position: 'absolute', bottom: '8px', left: '32px', fontSize: '20px' }}>🎂</div>
+                    <div style={{ position: 'absolute', bottom: '16px', right: '16px', fontSize: '20px' }}>🥧</div>
+                  </div>
+                </div>
+
+                {/* Logo com efeito de escapar do banner */}
+                <div style={{ position: 'relative', marginTop: '-64px', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div 
-                      className={`w-16 h-16 rounded-full flex items-center justify-center mb-1 border-2 transition-all ${
-                        selectedCategory === 'todas' 
-                          ? 'border-pink-400 shadow-lg' 
-                          : 'border-gray-200'
-                      }`}
-                      style={{ backgroundColor: selectedCategory === 'todas' ? (designSettings?.cor_borda || '#ec4899') : '#f3f4f6' }}
+                      style={{ 
+                        width: '128px', 
+                        height: '128px', 
+                        backgroundColor: 'white', 
+                        borderRadius: '50%', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+                        border: `4px solid ${designSettings?.cor_borda || '#ec4899'}` 
+                      }}
                     >
-                      <span className="text-2xl">📋</span>
+                      {designSettings?.logo_url ? (
+                        <img src={designSettings.logo_url} alt="Logo" style={{ width: '112px', height: '112px', borderRadius: '50%', objectFit: 'cover' }} />
+                      ) : (
+                        <span style={{ fontSize: '48px' }}>🧁</span>
+                      )}
                     </div>
-                    <span className={`text-xs font-medium ${
-                      selectedCategory === 'todas' ? 'text-pink-600' : 'text-gray-600'
-                    }`}>Todas</span>
-                  </button>
+                  </div>
+                </div>
+
+                {/* Conteúdo abaixo do logo */}
+                <div style={{ padding: '0 16px 16px' }}>
+                  {/* Nome da confeitaria */}
+                  <h1 
+                    style={{ 
+                      fontSize: '28px', 
+                      fontWeight: 'bold', 
+                      textAlign: 'center', 
+                      marginBottom: '8px',
+                      color: designSettings?.cor_nome || '#be185d' 
+                    }}
+                  >
+                    {designSettings?.nome_confeitaria || 'Doces da Vovó'}
+                  </h1>
                   
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setSelectedCategory(category)}
-                      className={`flex flex-col items-center min-w-fit transition-all ${
-                        selectedCategory === category ? 'scale-110' : 'scale-100'
-                      }`}
-                    >
-                      <div 
-                        className={`w-16 h-16 rounded-full flex items-center justify-center mb-1 border-2 transition-all ${
-                          selectedCategory === category 
-                            ? 'border-pink-400 shadow-lg' 
-                            : 'border-gray-200'
-                        }`}
-                        style={{ backgroundColor: selectedCategory === category ? (designSettings?.cor_borda || '#ec4899') : '#f3f4f6' }}
-                      >
-                        <span className="text-2xl">{categoryIcons[category as keyof typeof categoryIcons] || '🍰'}</span>
+                  {/* Descrição */}
+                  <p style={{ color: '#6b7280', textAlign: 'center', fontSize: '14px', padding: '0 16px', lineHeight: '1.5', marginBottom: '24px' }}>
+                    Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
+                  </p>
+
+                  {/* Card de informações - branco com sombra leve */}
+                  <div style={{ 
+                    backgroundColor: 'white', 
+                    borderRadius: '8px', 
+                    padding: '16px', 
+                    marginBottom: '24px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                  }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px', marginBottom: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Clock style={{ width: '16px', height: '16px' }} />
+                        <div>
+                          <p style={{ fontWeight: '600', color: status.color }}>{status.status}</p>
+                          <p style={{ color: '#6b7280', fontSize: '12px' }}>{status.time}</p>
+                        </div>
                       </div>
-                      <span className={`text-xs font-medium ${
-                        selectedCategory === category ? 'text-pink-600' : 'text-gray-600'
-                      }`}>{category}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Phone style={{ width: '16px', height: '16px' }} />
+                        <p style={{ fontWeight: '600' }}>{configuracoes?.telefone || '(11) 99999-9999'}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Informações adicionais */}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {configuracoes?.entrega && (
+                        <Badge variant="secondary" style={{ backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
+                          <Truck style={{ width: '12px', height: '12px', marginRight: '4px' }} />
+                          Faz entrega
+                        </Badge>
+                      )}
+                      {configuracoes?.meios_pagamento?.includes('Pix') && (
+                        <Badge variant="secondary" style={{ backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
+                          Pix
+                        </Badge>
+                      )}
+                      {configuracoes?.meios_pagamento?.includes('Cartão') && (
+                        <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
+                          Cartão
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
 
-              {/* Produtos em promoção */}
-              {promotionalProducts.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-4 text-lg flex items-center gap-2">
-                    <span className="text-2xl">🔥</span>
-                    <span>Ofertas Especiais</span>
-                    <Badge variant="destructive" className="animate-pulse">
-                      {promotionalProducts.length} {promotionalProducts.length === 1 ? 'oferta' : 'ofertas'}
-                    </Badge>
-                  </h3>
-                  <div className="space-y-4">
-                    {promotionalProducts.slice(0, 3).map((product) => (
-                      <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
-                        <CardContent className="p-4">
-                          <div className="flex gap-4">
-                            <div 
-                              className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                              style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}
-                            >
-                              {product.imagem_url ? (
-                                <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-2xl" />
-                              ) : (
-                                <span className="text-3xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                  <h4 className="font-bold text-lg text-gray-800">{product.nome}</h4>
-                                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.descricao}</p>
-                                </div>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => toggleFavorite(product.id)}
-                                  className="p-2 ml-2"
+                  {/* Campo de busca */}
+                  <div style={{ position: 'relative', marginBottom: '24px' }}>
+                    <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '16px', height: '16px' }} />
+                    <input
+                      type="text"
+                      placeholder="🔍 Buscar produtos..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{
+                        width: '100%',
+                        paddingLeft: '40px',
+                        height: '48px',
+                        border: '2px solid #e5e7eb',
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        outline: 'none',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#ec4899'}
+                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                    />
+                  </div>
+
+                  {/* Categorias estilo Instagram */}
+                  <div style={{ marginBottom: '24px' }}>
+                    <h3 style={{ fontWeight: '600', marginBottom: '16px', fontSize: '18px', color: '#1f2937' }}>Categorias</h3>
+                    <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '8px' }}>
+                      <button
+                        onClick={() => setSelectedCategory('todas')}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          minWidth: '64px',
+                          transition: 'transform 0.2s',
+                          transform: selectedCategory === 'todas' ? 'scale(1.1)' : 'scale(1)'
+                        }}
+                      >
+                        <div 
+                          style={{
+                            width: '64px',
+                            height: '64px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: '4px',
+                            border: '2px solid',
+                            transition: 'all 0.2s',
+                            borderColor: selectedCategory === 'todas' ? '#ec4899' : '#e5e7eb',
+                            backgroundColor: selectedCategory === 'todas' ? (designSettings?.cor_borda || '#ec4899') : '#f3f4f6'
+                          }}
+                        >
+                          <span style={{ fontSize: '20px' }}>📋</span>
+                        </div>
+                        <span style={{ 
+                          fontSize: '12px', 
+                          fontWeight: '500',
+                          color: selectedCategory === 'todas' ? '#ec4899' : '#6b7280'
+                        }}>Todas</span>
+                      </button>
+                      
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => setSelectedCategory(category)}
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            minWidth: '64px',
+                            transition: 'transform 0.2s',
+                            transform: selectedCategory === category ? 'scale(1.1)' : 'scale(1)'
+                          }}
+                        >
+                          <div 
+                            style={{
+                              width: '64px',
+                              height: '64px',
+                              borderRadius: '50%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginBottom: '4px',
+                              border: '2px solid',
+                              transition: 'all 0.2s',
+                              borderColor: selectedCategory === category ? '#ec4899' : '#e5e7eb',
+                              backgroundColor: selectedCategory === category ? (designSettings?.cor_borda || '#ec4899') : '#f3f4f6'
+                            }}
+                          >
+                            <span style={{ fontSize: '20px' }}>{categoryIcons[category as keyof typeof categoryIcons] || '🍰'}</span>
+                          </div>
+                          <span style={{ 
+                            fontSize: '12px', 
+                            fontWeight: '500',
+                            color: selectedCategory === category ? '#ec4899' : '#6b7280'
+                          }}>{category}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Produtos em promoção */}
+                  {promotionalProducts.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                      <h3 style={{ fontWeight: '600', marginBottom: '16px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '20px' }}>🔥</span>
+                        <span>Ofertas Especiais</span>
+                        <Badge variant="destructive" style={{ animation: 'pulse 2s infinite' }}>
+                          {promotionalProducts.length} {promotionalProducts.length === 1 ? 'oferta' : 'ofertas'}
+                        </Badge>
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {promotionalProducts.slice(0, 3).map((product) => (
+                          <div key={product.id} style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                            <div style={{ padding: '16px' }}>
+                              <div style={{ display: 'flex', gap: '16px' }}>
+                                <div 
+                                  style={{ 
+                                    width: '96px', 
+                                    height: '96px', 
+                                    borderRadius: '12px', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center', 
+                                    flexShrink: 0,
+                                    backgroundColor: designSettings?.cor_background || '#fef2f2' 
+                                  }}
                                 >
-                                  <Heart 
-                                    className={`w-5 h-5 transition-colors ${
-                                      favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
-                                    }`} 
-                                  />
-                                </Button>
+                                  {product.imagem_url ? (
+                                    <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
+                                  ) : (
+                                    <span style={{ fontSize: '24px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+                                  )}
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1 }}>
+                                      <h4 style={{ fontWeight: '600', fontSize: '18px', color: '#1f2937' }}>{product.nome}</h4>
+                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>{product.descricao}</p>
+                                    </div>
+                                    <button
+                                      onClick={() => toggleFavorite(product.id)}
+                                      style={{ 
+                                        padding: '8px', 
+                                        background: 'none', 
+                                        border: 'none', 
+                                        cursor: 'pointer',
+                                        color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af'
+                                      }}
+                                    >
+                                      <Heart style={{ width: '20px', height: '20px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
+                                    </button>
+                                  </div>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                                    <div>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ fontSize: '14px', color: '#6b7280', textDecoration: 'line-through' }}>
+                                          R$ {product.preco_normal.toFixed(2)}
+                                        </span>
+                                        <Badge variant="destructive" style={{ fontSize: '12px' }}>
+                                          -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
+                                        </Badge>
+                                      </div>
+                                      <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#10b981' }}>
+                                        R$ {product.preco_promocional?.toFixed(2)}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button 
+                                    style={{ 
+                                      width: '100%', 
+                                      marginTop: '12px', 
+                                      height: '44px', 
+                                      fontWeight: '600', 
+                                      backgroundColor: designSettings?.cor_borda || '#ec4899',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      cursor: 'pointer',
+                                      transition: 'transform 0.2s'
+                                    }}
+                                    onClick={() => handleWhatsAppOrder(product.nome)}
+                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                  >
+                                    Pedir pelo WhatsApp
+                                  </button>
+                                </div>
                               </div>
-                              <div className="flex justify-between items-center mt-3">
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-500 line-through">
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Produtos regulares */}
+                  {regularProducts.length > 0 && (
+                    <div style={{ marginBottom: '24px' }}>
+                      <h3 style={{ fontWeight: '600', marginBottom: '16px', fontSize: '18px', color: '#1f2937' }}>
+                        {selectedCategory === 'todas' ? 'Todos os Produtos' : selectedCategory}
+                        <span style={{ fontSize: '14px', color: '#6b7280', marginLeft: '8px' }}>({regularProducts.length})</span>
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {regularProducts.slice(0, 3).map((product) => (
+                          <div key={product.id} style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                            <div style={{ padding: '16px' }}>
+                              <div style={{ display: 'flex', gap: '16px' }}>
+                                <div 
+                                  style={{ 
+                                    width: '96px', 
+                                    height: '96px', 
+                                    borderRadius: '12px', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center', 
+                                    flexShrink: 0,
+                                    backgroundColor: designSettings?.cor_background || '#fef2f2' 
+                                  }}
+                                >
+                                  {product.imagem_url ? (
+                                    <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
+                                  ) : (
+                                    <span style={{ fontSize: '24px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+                                  )}
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1 }}>
+                                      <h4 style={{ fontWeight: '600', fontSize: '18px', color: '#1f2937' }}>{product.nome}</h4>
+                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>{product.descricao}</p>
+                                    </div>
+                                    <button
+                                      onClick={() => toggleFavorite(product.id)}
+                                      style={{ 
+                                        padding: '8px', 
+                                        background: 'none', 
+                                        border: 'none', 
+                                        cursor: 'pointer',
+                                        color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af'
+                                      }}
+                                    >
+                                      <Heart style={{ width: '20px', height: '20px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
+                                    </button>
+                                  </div>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937' }}>
                                       R$ {product.preco_normal.toFixed(2)}
-                                    </span>
-                                    <Badge variant="destructive" className="text-xs">
-                                      -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
-                                    </Badge>
+                                    </div>
                                   </div>
-                                  <div className="text-2xl font-bold text-green-600">
-                                    R$ {product.preco_promocional?.toFixed(2)}
-                                  </div>
+                                  <button 
+                                    style={{ 
+                                      width: '100%', 
+                                      marginTop: '12px', 
+                                      height: '44px', 
+                                      fontWeight: '600', 
+                                      backgroundColor: designSettings?.cor_borda || '#ec4899',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      cursor: 'pointer',
+                                      transition: 'transform 0.2s'
+                                    }}
+                                    onClick={() => handleWhatsAppOrder(product.nome)}
+                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                  >
+                                    Pedir pelo WhatsApp
+                                  </button>
                                 </div>
                               </div>
-                              <Button 
-                                className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
-                                style={{ backgroundColor: designSettings?.cor_borda || '#ec4899' }}
-                                onClick={() => handleWhatsAppOrder(product.nome)}
-                              >
-                                Pedir pelo WhatsApp
-                              </Button>
                             </div>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-              {/* Produtos regulares */}
-              {regularProducts.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-4 text-lg text-gray-800">
-                    {selectedCategory === 'todas' ? 'Todos os Produtos' : selectedCategory}
-                    <span className="text-sm text-gray-500 ml-2">({regularProducts.length})</span>
-                  </h3>
-                  <div className="space-y-4">
-                    {regularProducts.slice(0, 3).map((product) => (
-                      <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
-                        <CardContent className="p-4">
-                          <div className="flex gap-4">
-                            <div 
-                              className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                              style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}
-                            >
-                              {product.imagem_url ? (
-                                <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-2xl" />
-                              ) : (
-                                <span className="text-3xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                  <h4 className="font-bold text-lg text-gray-800">{product.nome}</h4>
-                                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.descricao}</p>
-                                </div>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => toggleFavorite(product.id)}
-                                  className="p-2 ml-2"
-                                >
-                                  <Heart 
-                                    className={`w-5 h-5 transition-colors ${
-                                      favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
-                                    }`} 
-                                  />
-                                </Button>
-                              </div>
-                              <div className="flex justify-between items-center mt-3">
-                                <div className="text-2xl font-bold text-gray-800">
-                                  R$ {product.preco_normal.toFixed(2)}
-                                </div>
-                              </div>
-                              <Button 
-                                className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
-                                style={{ backgroundColor: designSettings?.cor_borda || '#ec4899' }}
-                                onClick={() => handleWhatsAppOrder(product.nome)}
-                              >
-                                Pedir pelo WhatsApp
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  {/* Mensagem quando não há produtos */}
+                  {filteredProducts.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                      <div style={{ width: '80px', height: '80px', backgroundColor: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                        <Search style={{ width: '40px', height: '40px', color: '#9ca3af' }} />
+                      </div>
+                      <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', marginBottom: '8px' }}>Nenhum produto encontrado</h3>
+                      <p style={{ color: '#6b7280' }}>Tente buscar por outro termo ou selecionar outra categoria</p>
+                    </div>
+                  )}
 
-              {/* Mensagem quando não há produtos */}
-              {filteredProducts.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-10 h-10 text-gray-400" />
+                  {/* Rodapé */}
+                  <div style={{ marginTop: '32px', textAlign: 'center', fontSize: '14px', color: '#6b7280', paddingBottom: '32px', borderTop: '1px solid #e5e7eb', paddingTop: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
+                      <Star style={{ width: '16px', height: '16px', color: '#eab308', fill: '#eab308' }} />
+                      <span style={{ fontWeight: '600', color: '#1f2937' }}>{designSettings?.nome_confeitaria || 'Doces da Vovó'}</span>
+                      <Star style={{ width: '16px', height: '16px', color: '#eab308', fill: '#eab308' }} />
+                    </div>
+                    <p>{designSettings?.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999'}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginTop: '12px', fontSize: '12px', color: '#6b7280' }}>
+                      <span>⭐ 4.9 (234 avaliações)</span>
+                      <span>•</span>
+                      <span>📍 2.5 km de distância</span>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Nenhum produto encontrado</h3>
-                  <p className="text-gray-600">Tente buscar por outro termo ou selecionar outra categoria</p>
-                </div>
-              )}
-
-              {/* Rodapé */}
-              <div className="mt-8 text-center text-sm text-gray-600 pb-8 border-t pt-6">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                  <span className="font-semibold text-gray-800">{designSettings?.nome_confeitaria || 'Doces da Vovó'}</span>
-                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                </div>
-                <p>{designSettings?.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999'}</p>
-                <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-500">
-                  <span>⭐ 4.9 (234 avaliações)</span>
-                  <span>•</span>
-                  <span>📍 2.5 km de distância</span>
                 </div>
               </div>
             </div>
