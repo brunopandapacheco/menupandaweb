@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Heart, Phone, Clock, Truck, ArrowLeft } from 'lucide-react'
+import { Search, Heart, Phone, Clock, Truck, ArrowLeft, Bell } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 interface Produto {
@@ -51,13 +51,20 @@ export default function CardapioPublico() {
   const [designSettings, setDesignSettings] = useState<DesignSettings | null>(null)
   const [configuracoes, setConfiguracoes] = useState<Configuracoes | null>(null)
   const [produtos, setProdutos] = useState<Produto[]>([])
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
     if (saved) {
       setFavorites(JSON.parse(saved))
     }
-  }, [])
+
+    // Verificar se notificações já foram solicitadas
+    const savedNotifications = localStorage.getItem(`notifications-${slug}`)
+    if (savedNotifications) {
+      setNotificationsEnabled(JSON.parse(savedNotifications))
+    }
+  }, [slug])
 
   useEffect(() => {
     localStorage.setItem('favorites', JSON.stringify(favorites))
@@ -125,6 +132,37 @@ export default function CardapioPublico() {
         ? prev.filter(id => id !== productId)
         : [...prev, productId]
     )
+  }
+
+  const handleNotificationToggle = async () => {
+    if (!notificationsEnabled) {
+      try {
+        // Solicitar permissão de notificação
+        const permission = await Notification.requestPermission()
+        
+        if (permission === 'granted') {
+          setNotificationsEnabled(true)
+          localStorage.setItem(`notifications-${slug}`, 'true')
+          
+          // Criar notificação de boas-vindas
+          const notification = new Notification(`${designSettings?.nome_confeitaria || 'Confeitaria'}`, {
+            body: '🎉 Notificações ativadas! Você receberá atualizações sobre novos produtos e promoções.',
+            icon: designSettings?.logo_url || '/logoteste.webp',
+            badge: '/logoteste.webp'
+          })
+          
+          // Fechar notificação após 5 segundos
+          setTimeout(() => {
+            notification.close()
+          }, 5000)
+        }
+      } catch (error) {
+        console.error('Erro ao solicitar permissão de notificação:', error)
+      }
+    } else {
+      setNotificationsEnabled(false)
+      localStorage.setItem(`notifications-${slug}`, 'false')
+    }
   }
 
   const getStatusMessage = () => {
@@ -224,6 +262,62 @@ export default function CardapioPublico() {
               fill="#2A2A2A"
             />
           </svg>
+
+          {/* Botão de Notificação - Canto Superior Direito */}
+          <button
+            onClick={handleNotificationToggle}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '16px',
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              backgroundColor: '#FCD34D',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(252, 211, 77, 0.4)',
+              transition: 'all 0.3s ease',
+              zIndex: 20
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'scale(1.1)'
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(252, 211, 77, 0.6)'
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'scale(1)'
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(252, 211, 77, 0.4)'
+            }}
+          >
+            <Bell 
+              size={24} 
+              color={notificationsEnabled ? '#059669' : '#92400E'}
+              fill={notificationsEnabled ? '#059669' : 'none'}
+              style={{ 
+                animation: notificationsEnabled ? 'ring 2s ease-in-out infinite' : 'none'
+              }}
+            />
+          </button>
+
+          {/* Indicador de notificação ativa */}
+          {notificationsEnabled && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#10B981',
+                animation: 'pulse 2s infinite',
+                zIndex: 21
+              }}
+            />
+          )}
         </div>
 
         {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO E BORDA COLADA */}
@@ -559,6 +653,27 @@ export default function CardapioPublico() {
           </div>
         </div>
       </div>
+
+      {/* Estilos CSS para animações */}
+      <style>{`
+        @keyframes ring {
+          0%, 100% { transform: rotate(0deg); }
+          10% { transform: rotate(-15deg); }
+          20% { transform: rotate(15deg); }
+          30% { transform: rotate(-10deg); }
+          40% { transform: rotate(10deg); }
+          50% { transform: rotate(-5deg); }
+          60% { transform: rotate(5deg); }
+          70% { transform: rotate(-2deg); }
+          80% { transform: rotate(2deg); }
+          90% { transform: rotate(-1deg); }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
     </div>
   )
 }
