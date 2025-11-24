@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Upload, Palette, Eye, Type, Image, CheckCircle, Plus, Trash2, Edit2, Save, X } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
+import { useAuth } from '@/hooks/useAuth'
 import { supabaseService } from '@/services/supabase'
 import { generateSlug } from '@/utils/helpers'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -117,6 +118,7 @@ const defaultCategories = [
 
 export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
+  const { user } = useAuth()
   const isMobile = useIsMobile()
   const [selectedGradient, setSelectedGradient] = useState<typeof gradientBackgrounds[0] | null>(null)
   const [activeTab, setActiveTab] = useState('degrades')
@@ -205,16 +207,47 @@ export default function DesignSettings() {
         icon: <CheckCircle className="w-4 h-4" />
       })
       
-      // Força atualização dos dados para garantir que o Preview pegue as informações mais recentes
-      console.log('Forçando recarregamento da página em 1 segundo...')
-      setTimeout(() => {
-        window.location.reload()
-      }, 1000)
+      // Removido o reload forçado - agora apenas atualiza os dados
+      console.log('Recarregando dados do banco...')
+      await loadData()
     } else {
       console.error('❌ Falha ao salvar degrade no banco')
       toast.error('Erro ao aplicar degrade', {
         description: 'Tente novamente mais tarde'
       })
+    }
+  }
+
+  // Adicionar função para recarregar dados
+  const loadData = async () => {
+    if (!user) return
+    
+    console.log('Recarregando dados do banco...')
+    try {
+      const [designData] = await Promise.all([
+        supabaseService.getDesignSettings(user.id)
+      ])
+
+      if (designData) {
+        console.log('Dados recarregados:', designData)
+        setSettings({
+          nome_confeitaria: designData.nome_confeitaria || 'Doces da Vovó',
+          slug: designData.slug || generateSlug(designData.nome_confeitaria || 'Doces da Vovó'),
+          cor_borda: designData.cor_borda || '#ec4899',
+          cor_background: designData.cor_background || '#fef2f2',
+          cor_nome: designData.cor_nome || '#be185d',
+          background_topo_color: designData.background_topo_color || '#fce7f3',
+          texto_rodape: designData.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999',
+          logo_url: designData.logo_url || '',
+          banner1_url: designData.banner1_url || '',
+          banner2_url: designData.banner2_url || '',
+          categorias: designData.categorias || defaultCategories,
+          descricao_loja: designData.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+          banner_gradient: designData.banner_gradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+        })
+      }
+    } catch (error) {
+      console.error('Erro ao recarregar dados:', error)
     }
   }
 
