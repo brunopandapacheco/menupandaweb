@@ -3,6 +3,7 @@ import { Banner } from '@/components/cardapio/Banner'
 import { Logo } from '@/components/cardapio/Logo'
 import { StoreInfo } from '@/components/cardapio/StoreInfo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 
@@ -25,7 +26,7 @@ const mockConfiguracoes = {
   meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
   entrega: true,
   taxa_entrega: 5.00,
-  em_ferias: false
+  emFerias: false
 }
 
 const mockProdutos = [
@@ -57,11 +58,26 @@ const mockProdutos = [
     promocao: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
+  },
+  {
+    id: '3',
+    user_id: 'demo',
+    nome: 'Torta de Limão',
+    descricao: 'Torta azeda com cobertura de merengue',
+    preco_normal: 35.00,
+    imagem_url: '',
+    categoria: 'Tortas',
+    forma_venda: 'unidade',
+    disponivel: true,
+    promocao: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   }
 ]
 
 export default function CardapioDemo() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
 
   useEffect(() => {
@@ -90,10 +106,32 @@ export default function CardapioDemo() {
     window.open(whatsappUrl, '_blank')
   }
 
-  const filteredProducts = mockProdutos.filter(product =>
-    product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  // Obter categorias únicas com ícones
+  const categoryIcons: Record<string, string> = {
+    'Bolos': '🎂',
+    'Cupcakes': '🧁',
+    'Tortas': '🥧',
+    'Doces': '🍮',
+    'Salgados': '🥐',
+    'Bebidas': '🥤',
+    'Pães': '🍞',
+    'Sanduíches': '🥪',
+    'Sobremesas': '🍰',
+    'Confeitaria': '🧁'
+  }
+
+  const categories = Array.from(new Set(mockProdutos.map(p => p.categoria))).map(cat => ({
+    name: cat,
+    icon: categoryIcons[cat] || '🧁'
+  }))
+
+  // Filtrar produtos por busca e categoria
+  const filteredProducts = mockProdutos.filter(product => {
+    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = !selectedCategory || product.categoria === selectedCategory
+    return matchesSearch && matchesCategory
+  })
 
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
@@ -113,7 +151,7 @@ export default function CardapioDemo() {
             meiosPagamento={mockConfiguracoes.meios_pagamento}
             entrega={mockConfiguracoes.entrega}
             taxaEntrega={mockConfiguracoes.taxa_entrega}
-            emFerias={mockConfiguracoes.em_ferias}
+            emFerias={mockConfiguracoes.emFerias}
           />
 
           {/* Banner promocional */}
@@ -128,6 +166,13 @@ export default function CardapioDemo() {
           )}
 
           <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+          {/* Filtro de categorias */}
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+          />
 
           {filteredProducts.length > 0 ? (
             <ProductList

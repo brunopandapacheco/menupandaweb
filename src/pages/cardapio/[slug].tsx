@@ -4,6 +4,7 @@ import { Banner } from '@/components/cardapio/Banner'
 import { Logo } from '@/components/cardapio/Logo'
 import { StoreInfo } from '@/components/cardapio/StoreInfo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { supabaseService } from '@/services/supabase'
@@ -16,6 +17,7 @@ export default function CardapioPublico() {
   const [configuracoes, setConfiguracoes] = useState<Configuracoes | null>(null)
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -73,10 +75,32 @@ export default function CardapioPublico() {
     window.open(whatsappUrl, '_blank')
   }
 
-  const filteredProducts = produtos.filter(product =>
-    product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  // Obter categorias únicas com ícones
+  const categoryIcons: Record<string, string> = {
+    'Bolos': '🎂',
+    'Cupcakes': '🧁',
+    'Tortas': '🥧',
+    'Doces': '🍮',
+    'Salgados': '🥐',
+    'Bebidas': '🥤',
+    'Pães': '🍞',
+    'Sanduíches': '🥪',
+    'Sobremesas': '🍰',
+    'Confeitaria': '🧁'
+  }
+
+  const categories = Array.from(new Set(produtos.map(p => p.categoria))).map(cat => ({
+    name: cat,
+    icon: categoryIcons[cat] || '🧁'
+  }))
+
+  // Filtrar produtos por busca e categoria
+  const filteredProducts = produtos.filter(product => {
+    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = !selectedCategory || product.categoria === selectedCategory
+    return matchesSearch && matchesCategory
+  })
 
   if (loading) {
     return (
@@ -127,6 +151,13 @@ export default function CardapioPublico() {
           )}
 
           <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+          {/* Filtro de categorias */}
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+          />
 
           {filteredProducts.length > 0 ? (
             <ProductList
