@@ -170,8 +170,8 @@ export default function Preview() {
                   </div>
                 </div>
 
-                {/* Conteúdo abaixo do logo */}
-                <div style={{ padding: '0 16px 16px' }}>
+                {/* Conteúdo abaixo do logo - COM BACKGROUND #F5F5F5 */}
+                <div style={{ padding: '0 16px 16px', backgroundColor: '#F5F5F5' }}>
                   {/* Nome da confeitaria */}
                   <h1 
                     style={{ 
@@ -233,27 +233,35 @@ export default function Preview() {
                     </div>
                   </div>
 
-                  {/* Campo de busca */}
-                  <div style={{ position: 'relative', marginBottom: '24px' }}>
-                    <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '16px', height: '16px' }} />
-                    <input
-                      type="text"
-                      placeholder="🔍 Buscar produtos..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      style={{
-                        width: '100%',
-                        paddingLeft: '40px',
-                        height: '48px',
-                        border: '2px solid #e5e7eb',
-                        borderRadius: '12px',
-                        fontSize: '16px',
-                        outline: 'none',
-                        transition: 'border-color 0.2s'
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = '#ec4899'}
-                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-                    />
+                  {/* Campo de busca - CARD BRANCO */}
+                  <div style={{ 
+                    backgroundColor: 'white', 
+                    borderRadius: '8px', 
+                    padding: '16px', 
+                    marginBottom: '24px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                  }}>
+                    <div style={{ position: 'relative' }}>
+                      <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '16px', height: '16px' }} />
+                      <input
+                        type="text"
+                        placeholder="🔍 Buscar produtos..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                          width: '100%',
+                          paddingLeft: '40px',
+                          height: '48px',
+                          border: '2px solid #e5e7eb',
+                          borderRadius: '12px',
+                          fontSize: '16px',
+                          outline: 'none',
+                          transition: 'border-color 0.2s'
+                        }}
+                        onFocus={(e) => e.target.style.borderColor = '#ec4899'}
+                        onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                      />
+                    </div>
                   </div>
 
                   {/* Categorias estilo Instagram */}
@@ -523,8 +531,16 @@ export default function Preview() {
                     </div>
                   )}
 
-                  {/* Rodapé */}
-                  <div style={{ marginTop: '32px', textAlign: 'center', fontSize: '14px', color: '#6b7280', paddingBottom: '32px', borderTop: '1px solid #e5e7eb', paddingTop: '24px' }}>
+                  {/* Rodapé simples - CARD BRANCO */}
+                  <div style={{ 
+                    backgroundColor: 'white', 
+                    borderRadius: '8px', 
+                    padding: '24px 16px', 
+                    textAlign: 'center', 
+                    fontSize: '14px', 
+                    color: '#6b7280',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                  }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
                       <Star style={{ width: '16px', height: '16px', color: '#eab308', fill: '#eab308' }} />
                       <span style={{ fontWeight: '600', color: '#1f2937' }}>{designSettings?.nome_confeitaria || 'Doces da Vovó'}</span>
