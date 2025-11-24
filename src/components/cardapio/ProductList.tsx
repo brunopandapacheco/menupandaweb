@@ -30,6 +30,16 @@ export function ProductList({
   backgroundColor, 
   borderColor 
 }: ProductListProps) {
+  // Agrupar produtos por categoria
+  const produtosPorCategoria = produtos.reduce((acc, produto) => {
+    if (!acc[produto.categoria]) {
+      acc[produto.categoria] = []
+    }
+    acc[produto.categoria].push(produto)
+    return acc
+  }, {} as Record<string, Produto[]>)
+
+  // Separar produtos em promoção e regulares
   const promotionalProducts = produtos.filter(p => p.promocao)
   const regularProducts = produtos.filter(p => !p.promocao)
 
@@ -57,25 +67,34 @@ export function ProductList({
         </div>
       )}
 
-      {/* Produtos regulares */}
-      {regularProducts.length > 0 && (
-        <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>Todos os Produtos</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            {regularProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isFavorite={favorites.includes(product.id)}
-                onToggleFavorite={onToggleFavorite}
-                onOrder={onOrder}
-                backgroundColor={backgroundColor}
-                borderColor={borderColor}
-              />
-            ))}
+      {/* Produtos por categoria */}
+      {Object.entries(produtosPorCategoria).map(([categoria, produtosCategoria]) => {
+        // Filtrar apenas produtos regulares (não promocionais)
+        const produtosRegularesCategoria = produtosCategoria.filter(p => !p.promocao)
+        
+        if (produtosRegularesCategoria.length === 0) return null
+        
+        return (
+          <div key={categoria} style={{ marginBottom: '24px' }}>
+            <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>
+              {categoria}
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              {produtosRegularesCategoria.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  isFavorite={favorites.includes(product.id)}
+                  onToggleFavorite={onToggleFavorite}
+                  onOrder={onOrder}
+                  backgroundColor={backgroundColor}
+                  borderColor={borderColor}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      })}
     </>
   )
 }
