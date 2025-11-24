@@ -65,7 +65,7 @@ export function StoreInfo({
       padding: '24px', 
       marginBottom: '24px',
       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-      border: '1px solid black'
+      border: '0.5px solid #ec4899'
     }}>
       {/* Informações da loja */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px' }}>
