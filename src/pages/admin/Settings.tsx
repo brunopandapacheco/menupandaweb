@@ -57,24 +57,6 @@ export default function Settings() {
     }))
   }
 
-  const applyToAllDays = (openTime: string, closeTime: string) => {
-    setSettings(prev => ({
-      ...prev,
-      horarios_semana: prev.horarios_semana.map(day => 
-        day.open ? { ...day, openTime, closeTime } : day
-      )
-    }))
-  }
-
-  const toggleWeekdays = (open: boolean) => {
-    setSettings(prev => ({
-      ...prev,
-      horarios_semana: prev.horarios_semana.map((day, index) => 
-        index < 5 ? { ...day, open } : day
-      )
-    }))
-  }
-
   if (loading) return <div>Carregando configurações...</div>
 
   const weekdays = settings.horarios_semana.slice(0, 5)
@@ -172,42 +154,6 @@ export default function Settings() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Ações Rápidas */}
-          <div className="flex flex-wrap gap-2 p-4 bg-blue-50 rounded-lg">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => toggleWeekdays(true)}
-              className="text-xs"
-            >
-              Abrir Todos os Dias Úteis
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => toggleWeekdays(false)}
-              className="text-xs"
-            >
-              Fechar Todos os Dias Úteis
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => applyToAllDays('08:00', '18:00')}
-              className="text-xs"
-            >
-              Aplicar 08:00-18:00
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => applyToAllDays('09:00', '17:00')}
-              className="text-xs"
-            >
-              Aplicar 09:00-17:00
-            </Button>
-          </div>
-
           {/* Dias de Semana */}
           <div>
             <div className="flex items-center gap-2 mb-3">
