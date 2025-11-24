@@ -354,7 +354,7 @@ export default function Preview() {
                     </div>
                   </div>
 
-                  {/* Produtos em promoção */}
+                  {/* Produtos em promoção - 2 POR LINHA */}
                   {promotionalProducts.length > 0 && (
                     <div style={{ marginBottom: '24px' }}>
                       <h3 style={{ fontWeight: '600', marginBottom: '16px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -364,83 +364,88 @@ export default function Preview() {
                           {promotionalProducts.length} {promotionalProducts.length === 1 ? 'oferta' : 'ofertas'}
                         </Badge>
                       </h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {promotionalProducts.slice(0, 3).map((product) => (
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        {promotionalProducts.slice(0, 4).map((product) => (
                           <div key={product.id} style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                            <div style={{ padding: '16px' }}>
-                              <div style={{ display: 'flex', gap: '16px' }}>
-                                <div 
-                                  style={{ 
-                                    width: '96px', 
-                                    height: '96px', 
-                                    borderRadius: '12px', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    justifyContent: 'center', 
-                                    flexShrink: 0,
-                                    backgroundColor: designSettings?.cor_background || '#fef2f2' 
-                                  }}
-                                >
-                                  {product.imagem_url ? (
-                                    <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
-                                  ) : (
-                                    <span style={{ fontSize: '24px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
-                                  )}
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <div style={{ flex: 1 }}>
-                                      <h4 style={{ fontWeight: '600', fontSize: '18px', color: '#1f2937' }}>{product.nome}</h4>
-                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>{product.descricao}</p>
-                                    </div>
-                                    <button
-                                      onClick={() => toggleFavorite(product.id)}
-                                      style={{ 
-                                        padding: '8px', 
-                                        background: 'none', 
-                                        border: 'none', 
-                                        cursor: 'pointer',
-                                        color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af'
-                                      }}
-                                    >
-                                      <Heart style={{ width: '20px', height: '20px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
-                                    </button>
-                                  </div>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
-                                    <div>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <span style={{ fontSize: '14px', color: '#6b7280', textDecoration: 'line-through' }}>
-                                          R$ {product.preco_normal.toFixed(2)}
-                                        </span>
-                                        <Badge variant="destructive" style={{ fontSize: '12px' }}>
-                                          -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
-                                        </Badge>
-                                      </div>
-                                      <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#10b981' }}>
-                                        R$ {product.preco_promocional?.toFixed(2)}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <button 
+                            <div style={{ padding: '12px' }}>
+                              {/* Imagem em primeiro */}
+                              <div 
+                                style={{ 
+                                  width: '100%', 
+                                  height: '120px', 
+                                  borderRadius: '8px', 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center', 
+                                  marginBottom: '12px',
+                                  backgroundColor: designSettings?.cor_background || '#fef2f2' 
+                                }}
+                              >
+                                {product.imagem_url ? (
+                                  <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                                ) : (
+                                  <span style={{ fontSize: '32px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+                                )}
+                              </div>
+                              
+                              {/* Conteúdo do produto */}
+                              <div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                                  <h4 style={{ fontWeight: '600', fontSize: '14px', lineHeight: '1.2', flex: 1, color: '#1f2937' }}>{product.nome}</h4>
+                                  <button
+                                    onClick={() => toggleFavorite(product.id)}
                                     style={{ 
-                                      width: '100%', 
-                                      marginTop: '12px', 
-                                      height: '44px', 
-                                      fontWeight: '600', 
-                                      backgroundColor: designSettings?.cor_borda || '#ec4899',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '8px',
+                                      padding: '4px', 
+                                      background: 'none', 
+                                      border: 'none', 
                                       cursor: 'pointer',
-                                      transition: 'transform 0.2s'
+                                      color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af',
+                                      marginLeft: '8px'
                                     }}
-                                    onClick={() => handleWhatsAppOrder(product.nome)}
-                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                                   >
-                                    Pedir pelo WhatsApp
+                                    <Heart style={{ width: '16px', height: '16px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
                                   </button>
                                 </div>
+                                
+                                <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '32px', overflow: 'hidden' }}>
+                                  {product.descricao}
+                                </p>
+                                
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                  <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                      <span style={{ fontSize: '12px', color: '#6b7280', textDecoration: 'line-through' }}>
+                                        R$ {product.preco_normal.toFixed(2)}
+                                      </span>
+                                      <Badge variant="destructive" style={{ fontSize: '10px', padding: '2px 6px' }}>
+                                        -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
+                                      </Badge>
+                                    </div>
+                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981' }}>
+                                      R$ {product.preco_promocional?.toFixed(2)}
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <button 
+                                  style={{ 
+                                    width: '100%', 
+                                    height: '36px', 
+                                    fontWeight: '600', 
+                                    backgroundColor: designSettings?.cor_borda || '#ec4899',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    transition: 'transform 0.2s',
+                                    fontSize: '12px'
+                                  }}
+                                  onClick={() => handleWhatsAppOrder(product.nome)}
+                                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                >
+                                  Pedir
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -449,80 +454,83 @@ export default function Preview() {
                     </div>
                   )}
 
-                  {/* Produtos regulares */}
+                  {/* Produtos regulares - 2 POR LINHA */}
                   {regularProducts.length > 0 && (
                     <div style={{ marginBottom: '24px' }}>
                       <h3 style={{ fontWeight: '600', marginBottom: '16px', fontSize: '18px', color: '#1f2937' }}>
                         {selectedCategory === 'todas' ? 'Todos os Produtos' : selectedCategory}
                         <span style={{ fontSize: '14px', color: '#6b7280', marginLeft: '8px' }}>({regularProducts.length})</span>
                       </h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {regularProducts.slice(0, 3).map((product) => (
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        {regularProducts.slice(0, 4).map((product) => (
                           <div key={product.id} style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                            <div style={{ padding: '16px' }}>
-                              <div style={{ display: 'flex', gap: '16px' }}>
-                                <div 
-                                  style={{ 
-                                    width: '96px', 
-                                    height: '96px', 
-                                    borderRadius: '12px', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    justifyContent: 'center', 
-                                    flexShrink: 0,
-                                    backgroundColor: designSettings?.cor_background || '#fef2f2' 
-                                  }}
-                                >
-                                  {product.imagem_url ? (
-                                    <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
-                                  ) : (
-                                    <span style={{ fontSize: '24px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
-                                  )}
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <div style={{ flex: 1 }}>
-                                      <h4 style={{ fontWeight: '600', fontSize: '18px', color: '#1f2937' }}>{product.nome}</h4>
-                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px' }}>{product.descricao}</p>
-                                    </div>
-                                    <button
-                                      onClick={() => toggleFavorite(product.id)}
-                                      style={{ 
-                                        padding: '8px', 
-                                        background: 'none', 
-                                        border: 'none', 
-                                        cursor: 'pointer',
-                                        color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af'
-                                      }}
-                                    >
-                                      <Heart style={{ width: '20px', height: '20px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
-                                    </button>
-                                  </div>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
-                                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937' }}>
-                                      R$ {product.preco_normal.toFixed(2)}
-                                    </div>
-                                  </div>
-                                  <button 
+                            <div style={{ padding: '12px' }}>
+                              {/* Imagem em primeiro */}
+                              <div 
+                                style={{ 
+                                  width: '100%', 
+                                  height: '120px', 
+                                  borderRadius: '8px', 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center', 
+                                  marginBottom: '12px',
+                                  backgroundColor: designSettings?.cor_background || '#fef2f2' 
+                                }}
+                              >
+                                {product.imagem_url ? (
+                                  <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                                ) : (
+                                  <span style={{ fontSize: '32px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+                                )}
+                              </div>
+                              
+                              {/* Conteúdo do produto */}
+                              <div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                                  <h4 style={{ fontWeight: '600', fontSize: '14px', lineHeight: '1.2', flex: 1, color: '#1f2937' }}>{product.nome}</h4>
+                                  <button
+                                    onClick={() => toggleFavorite(product.id)}
                                     style={{ 
-                                      width: '100%', 
-                                      marginTop: '12px', 
-                                      height: '44px', 
-                                      fontWeight: '600', 
-                                      backgroundColor: designSettings?.cor_borda || '#ec4899',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '8px',
+                                      padding: '4px', 
+                                      background: 'none', 
+                                      border: 'none', 
                                       cursor: 'pointer',
-                                      transition: 'transform 0.2s'
+                                      color: favorites.includes(product.id) ? '#ef4444' : '#9ca3af',
+                                      marginLeft: '8px'
                                     }}
-                                    onClick={() => handleWhatsAppOrder(product.nome)}
-                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                                   >
-                                    Pedir pelo WhatsApp
+                                    <Heart style={{ width: '16px', height: '16px', fill: favorites.includes(product.id) ? '#ef4444' : 'none' }} />
                                   </button>
                                 </div>
+                                
+                                <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '32px', overflow: 'hidden' }}>
+                                  {product.descricao}
+                                </p>
+                                
+                                <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '8px', color: '#1f2937' }}>
+                                  R$ {product.preco_normal.toFixed(2)}
+                                </div>
+                                
+                                <button 
+                                  style={{ 
+                                    width: '100%', 
+                                    height: '36px', 
+                                    fontWeight: '600', 
+                                    backgroundColor: designSettings?.cor_borda || '#ec4899',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    transition: 'transform 0.2s',
+                                    fontSize: '12px'
+                                  }}
+                                  onClick={() => handleWhatsAppOrder(product.nome)}
+                                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                >
+                                  Pedir
+                                </button>
                               </div>
                             </div>
                           </div>
