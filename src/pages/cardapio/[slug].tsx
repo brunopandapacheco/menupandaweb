@@ -263,63 +263,63 @@ export default function CardapioPublico() {
               fill="#2A2A2A"
             />
           </svg>
+        </div>
 
-          {/* Botão de Notificação - Canto Superior Direito */}
-          <button
-            onClick={handleNotificationToggle}
+        {/* Botão de Notificação - TOPO DA PÁGINA, À DIREITA DA LOGO */}
+        <button
+          onClick={handleNotificationToggle}
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            backgroundColor: '#FCD34D',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(252, 211, 77, 0.4)',
+            transition: 'all 0.3s ease',
+            zIndex: 9999
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)'
+            e.currentTarget.style.boxShadow = '0 6px 16px rgba(252, 211, 77, 0.6)'
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'scale(1)'
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(252, 211, 77, 0.4)'
+          }}
+        >
+          <Bell 
+            size={24} 
+            color={notificationsEnabled ? '#059669' : '#92400E'}
+            fill={notificationsEnabled ? '#059669' : 'none'}
+            style={{ 
+              animation: notificationsEnabled ? 'ring 2s ease-in-out infinite' : 'none'
+            }}
+          />
+        </button>
+
+        {/* Indicador de notificação ativa */}
+        {notificationsEnabled && (
+          <div
             style={{
               position: 'absolute',
-              top: '16px',
-              right: '16px',
-              width: '48px',
-              height: '48px',
+              top: '12px',
+              right: '12px',
+              width: '8px',
+              height: '8px',
               borderRadius: '50%',
-              backgroundColor: '#FCD34D',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(252, 211, 77, 0.4)',
-              transition: 'all 0.3s ease',
-              zIndex: 9999
+              backgroundColor: '#10B981',
+              animation: 'pulse 2s infinite',
+              zIndex: 10000
             }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1)'
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(252, 211, 77, 0.6)'
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'scale(1)'
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(252, 211, 77, 0.4)'
-            }}
-          >
-            <Bell 
-              size={24} 
-              color={notificationsEnabled ? '#059669' : '#92400E'}
-              fill={notificationsEnabled ? '#059669' : 'none'}
-              style={{ 
-                animation: notificationsEnabled ? 'ring 2s ease-in-out infinite' : 'none'
-              }}
-            />
-          </button>
-
-          {/* Indicador de notificação ativa */}
-          {notificationsEnabled && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '12px',
-                right: '12px',
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: '#10B981',
-                animation: 'pulse 2s infinite',
-                zIndex: 10000
-              }}
-            />
-          )}
-        </div>
+          />
+        )}
 
         {/* Logo com efeito de escapar do banner - TAMANHO AUMENTADO E BORDA COLADA */}
         <div style={{ position: 'relative', marginTop: '-100px', marginBottom: '16px' }}>
