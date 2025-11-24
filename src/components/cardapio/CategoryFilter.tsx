@@ -12,6 +12,9 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
+  // Limitar a 4 categorias visíveis: "Todos" + 3 primeiras categorias
+  const visibleCategories = categories.slice(0, 3)
+  
   return (
     <div style={{ marginBottom: '24px' }}>
       <div style={{ 
@@ -60,8 +63,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
           <span style={{ fontSize: '9px', fontWeight: '600', textAlign: 'center' }}>Todos</span>
         </button>
 
-        {/* Categorias */}
-        {categories.map((category) => {
+        {/* Apenas 3 categorias visíveis */}
+        {visibleCategories.map((category) => {
           // Mapear categorias para ícones específicos
           const getIconPath = (categoryName: string) => {
             const iconMap: Record<string, string> = {
