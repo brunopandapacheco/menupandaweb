@@ -59,7 +59,7 @@ export default function Preview() {
 
   if (loading) {
     return (
-      <div style={{ backgroundColor: '#F5F5F5', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ backgroundColor: '#F9F9F9', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ width: '32px', height: '32px', border: '2px solid #ec4899', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }}></div>
           <p>Carregando prévia...</p>
@@ -94,7 +94,7 @@ export default function Preview() {
   }
 
   return (
-    <div style={{ backgroundColor: '#F5F5F5', minHeight: '100vh', padding: '16px 24px 32px' }}>
+    <div style={{ backgroundColor: '#F9F9F9', minHeight: '100vh', padding: '16px 24px 32px' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <Card style={{ border: '2px dashed', borderColor: 'rgba(236, 72, 153, 0.2)', backgroundColor: 'rgba(236, 72, 153, 0.05)' }}>
@@ -170,8 +170,8 @@ export default function Preview() {
                   </div>
                 </div>
 
-                {/* Conteúdo abaixo do logo - COM BACKGROUND #F5F5F5 */}
-                <div style={{ padding: '0 16px 16px', backgroundColor: '#F5F5F5' }}>
+                {/* Conteúdo abaixo do logo - COM BACKGROUND #F9F9F9 */}
+                <div style={{ padding: '0 16px 16px', backgroundColor: '#F9F9F9' }}>
                   {/* Nome da confeitaria */}
                   <h1 
                     style={{ 

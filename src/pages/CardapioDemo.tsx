@@ -159,7 +159,7 @@ export default function CardapioDemo() {
   }
 
   return (
-    <div style={{ backgroundColor: '#F5F5F5', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#F9F9F9', minHeight: '100vh' }}>
       <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white', minHeight: '100vh' }}>
         {/* Banner superior reduzido com logo escapando */}
         <div 
@@ -200,8 +200,8 @@ export default function CardapioDemo() {
           </div>
         </div>
 
-        {/* Conteúdo abaixo do logo - COM BACKGROUND #F5F5F5 */}
-        <div style={{ padding: '0 16px 16px', backgroundColor: '#F5F5F5' }}>
+        {/* Conteúdo abaixo do logo - COM BACKGROUND #F9F9F9 */}
+        <div style={{ padding: '0 16px 16px', backgroundColor: '#F9F9F9' }}>
           {/* Nome da confeitaria */}
           <h1 
             style={{ 
