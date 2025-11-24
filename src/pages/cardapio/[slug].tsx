@@ -1,18 +1,52 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search, Heart, Phone, Clock, Truck, MapPin, Star, ExternalLink } from 'lucide-react'
-import { supabaseService } from '@/services/supabase'
-import { DesignSettings, Configuracoes, Produto } from '@/types'
+import { Search, Heart, Phone, Clock, Truck, ArrowLeft } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+
+interface Produto {
+  id: string
+  nome: string
+  descricao: string
+  preco_normal: number
+  preco_promocional?: number
+  imagem_url?: string
+  categoria: string
+  forma_venda: string
+  disponivel: boolean
+  promocao: boolean
+}
+
+interface DesignSettings {
+  nome_confeitaria: string
+  cor_borda: string
+  cor_background: string
+  cor_nome: string
+  background_topo_color: string
+  texto_rodape: string
+  logo_url?: string
+  banner1_url?: string
+  banner2_url?: string
+}
+
+interface Configuracoes {
+  telefone: string
+  horario_funcionamento_inicio: string
+  horario_funcionamento_fim: string
+  meios_pagamento: string[]
+  entrega: boolean
+  taxa_entrega: number
+  em_ferias?: boolean
+}
 
 export default function CardapioPublico() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [favorites, setFavorites] = useState<string[]>([])
-  const [currentBanner, setCurrentBanner] = useState(0)
   const [loading, setLoading] = useState(true)
   const [designSettings, setDesignSettings] = useState<DesignSettings | null>(null)
   const [configuracoes, setConfiguracoes] = useState<Configuracoes | null>(null)
@@ -30,49 +64,60 @@ export default function CardapioPublico() {
   }, [favorites])
 
   useEffect(() => {
-    loadCardapioData()
+    if (slug) {
+      loadData()
+    }
   }, [slug])
 
-  const loadCardapioData = async () => {
+  const loadData = async () => {
     try {
       setLoading(true)
       
-      const designData = await supabaseService.getDesignSettingsBySlug(slug || '')
+      // Buscar design settings pelo slug
+      const { data: designData, error: designError } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('slug', slug)
+        .single()
 
-      if (!designData) {
+      if (designError || !designData) {
+        console.error('Design settings não encontrados:', designError)
         setLoading(false)
         return
       }
 
-      const [configData, produtosData] = await Promise.all([
-        supabaseService.getConfiguracoes(designData.user_id),
-        supabaseService.getProdutos(designData.user_id)
-      ])
+      // Buscar configurações do usuário
+      const { data: configData, error: configError } = await supabase
+        .from('configuracoes')
+        .select('*')
+        .eq('user_id', designData.user_id)
+        .single()
+
+      if (configError) {
+        console.error('Erro ao buscar configurações:', configError)
+      }
+
+      // Buscar produtos do usuário
+      const { data: produtosData, error: produtosError } = await supabase
+        .from('produtos')
+        .select('*')
+        .eq('user_id', designData.user_id)
+        .eq('disponivel', true)
+        .order('created_at', { ascending: false })
+
+      if (produtosError) {
+        console.error('Erro ao buscar produtos:', produtosError)
+      }
 
       setDesignSettings(designData)
       setConfiguracoes(configData)
-      setProdutos(produtosData)
+      setProdutos(produtosData || [])
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
     } finally {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    if (designSettings?.banner1_url || designSettings?.banner2_url) {
-      const banners = []
-      if (designSettings.banner1_url) banners.push({ id: 1, url: designSettings.banner1_url })
-      if (designSettings.banner2_url) banners.push({ id: 2, url: designSettings.banner2_url })
-      
-      if (banners.length > 1) {
-        const interval = setInterval(() => {
-          setCurrentBanner((prev) => (prev + 1) % banners.length)
-        }, 5000)
-        return () => clearInterval(interval)
-      }
-    }
-  }, [designSettings])
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => 
@@ -87,50 +132,24 @@ export default function CardapioPublico() {
       return { status: 'Carregando...', time: '', color: 'text-gray-600' }
     }
 
-    // Verificar se está de férias
     if (configuracoes.em_ferias) {
       return { status: 'Fechado', time: 'De férias', color: 'text-red-600' }
     }
 
     const now = new Date()
-    const currentDay = now.getDay() // 0 = Domingo, 1 = Segunda, etc.
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()
     const currentTime = currentHour * 60 + currentMinute
     
-    // Mapear dias da semana para o array de horários
-    const dayMapping = [6, 0, 1, 2, 3, 4, 5] // Domingo=6, Segunda=0, etc.
-    const todayIndex = dayMapping[currentDay]
-    
-    if (configuracoes.horarios_semana && configuracoes.horarios_semana[todayIndex]) {
-      const todaySchedule = configuracoes.horarios_semana[todayIndex]
-      
-      if (!todaySchedule.open) {
-        return { status: 'Fechado', time: 'Fechado hoje', color: 'text-red-600' }
-      }
-      
-      const [startHour, startMinute] = todaySchedule.openTime.split(':').map(Number)
-      const [endHour, endMinute] = todaySchedule.closeTime.split(':').map(Number)
-      const startTime = startHour * 60 + startMinute
-      const endTime = endHour * 60 + endMinute
-      
-      if (currentTime >= startTime && currentTime <= endTime) {
-        return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, color: 'text-green-600' }
-      } else {
-        return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, color: 'text-red-600' }
-      }
-    }
-    
-    // Fallback para horário único
     const [startHour, startMinute] = configuracoes.horario_funcionamento_inicio.split(':').map(Number)
     const [endHour, endMinute] = configuracoes.horario_funcionamento_fim.split(':').map(Number)
     const startTime = startHour * 60 + startMinute
     const endTime = endHour * 60 + endMinute
     
     if (currentTime >= startTime && currentTime <= endTime) {
-      return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute}`, color: 'text-green-600' }
+      return { status: 'Aberto', time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, color: 'text-green-600' }
     } else {
-      return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute}`, color: 'text-red-600' }
+      return { status: 'Fechado', time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, color: 'text-red-600' }
     }
   }
 
@@ -144,12 +163,6 @@ export default function CardapioPublico() {
   const promotionalProducts = filteredProducts.filter(p => p.promocao)
   const regularProducts = filteredProducts.filter(p => !p.promocao)
 
-  const categories = Array.from(new Set(produtos.map(p => p.categoria)))
-
-  const banners = []
-  if (designSettings?.banner1_url) banners.push({ id: 1, url: designSettings.banner1_url })
-  if (designSettings?.banner2_url) banners.push({ id: 2, url: designSettings.banner2_url })
-
   const handleWhatsAppOrder = (productName: string) => {
     const message = `Olá! Gostaria de fazer um pedido de: ${productName}`
     const phoneNumber = configuracoes?.telefone?.replace(/\D/g, '') || '11999999999'
@@ -159,7 +172,7 @@ export default function CardapioPublico() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p>Carregando cardápio...</p>
@@ -173,7 +186,11 @@ export default function CardapioPublico() {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Cardápio não encontrado</h1>
-          <p className="text-gray-600">Esta confeitaria não existe ou está indisponível.</p>
+          <p className="text-gray-600 mb-4">Esta confeitaria não existe ou está indisponível.</p>
+          <Button onClick={() => navigate('/')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar
+          </Button>
         </div>
       </div>
     )
@@ -239,34 +256,13 @@ export default function CardapioPublico() {
           </Card>
 
           {/* Banner promocional */}
-          {banners.length > 0 && (
-            <div className="relative mb-6 h-40 rounded-lg overflow-hidden shadow-sm">
-              {banners.map((banner, index) => (
-                <div
-                  key={banner.id}
-                  className={`absolute inset-0 transition-opacity duration-1000 ${
-                    index === currentBanner ? 'opacity-100' : 'opacity-0'
-                  }`}
-                >
-                  <img 
-                    src={banner.url} 
-                    alt={`Banner ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-              {banners.length > 1 && (
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-                  {banners.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        index === currentBanner ? 'bg-white' : 'bg-white/50'
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
+          {designSettings.banner1_url && (
+            <div className="mb-6 h-40 rounded-lg overflow-hidden shadow-sm">
+              <img 
+                src={designSettings.banner1_url} 
+                alt="Banner promocional"
+                className="w-full h-full object-cover"
+              />
             </div>
           )}
 
