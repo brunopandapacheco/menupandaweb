@@ -1,15 +1,34 @@
 import { useState, useEffect } from 'react'
 import { useDatabase } from '@/hooks/useDatabase'
-import { Share2, Copy, ExternalLink } from 'lucide-react'
+import { Copy, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { showSuccess } from '@/utils/toast'
 import { generateSlug } from '@/utils/helpers'
+import { Banner } from '@/components/cardapio/Banner'
+import { Logo } from '@/components/cardapio/Logo'
+import { SearchBar } from '@/components/cardapio/SearchBar'
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
+import { ProductList } from '@/components/cardapio/ProductList'
+import { Footer } from '@/components/cardapio/Footer'
 
 export default function Preview() {
-  const { designSettings } = useDatabase()
+  const { designSettings, configuracoes, produtos } = useDatabase()
   const [shareableLink, setShareableLink] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [favorites, setFavorites] = useState<string[]>([])
+
+  useEffect(() => {
+    const saved = localStorage.getItem('favorites')
+    if (saved) {
+      setFavorites(JSON.parse(saved))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites))
+  }, [favorites])
 
   useEffect(() => {
     // Gerar link compartilhável quando as design settings carregarem
@@ -32,73 +51,152 @@ export default function Preview() {
     })
   }
 
-  const openInNewTab = () => {
-    window.open(shareableLink, '_blank')
+  const toggleFavorite = (productId: string) => {
+    setFavorites(prev => 
+      prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    )
+  }
+
+  const handleWhatsAppOrder = (productName: string) => {
+    const message = `Olá! Gostaria de fazer um pedido de: ${productName}`
+    const phoneNumber = configuracoes?.telefone?.replace(/\D/g, '') || '11999999999'
+    const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
+  }
+
+  // Obter categorias únicas com ícones
+  const categoryIcons: Record<string, string> = {
+    'Bolos': '🎂',
+    'Cupcakes': '🧁',
+    'Tortas': '🥧',
+    'Doces': '🍮',
+    'Salgados': '🥐',
+    'Bebidas': '🥤',
+    'Pães': '🍞',
+    'Sanduíches': '🥪',
+    'Sobremesas': '🍰',
+    'Confeitaria': '🧁',
+    'Brigadeiros': '🍫',
+    'Cookies': '🍪',
+    'Trufas': '🍫',
+    'Pudim': '🍮',
+    'Coxinha': '🥐',
+    'Salgadinhos': '🥐',
+    'Pipoca': '🍿'
+  }
+
+  // Usar categorias do designSettings ou categorias padrão
+  const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas']
+  
+  const categories = availableCategories.map(cat => ({
+    name: cat,
+    icon: categoryIcons[cat] || '🧁'
+  }))
+
+  // Filtrar produtos por busca e categoria
+  const filteredProducts = produtos.filter(product => {
+    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = !selectedCategory || product.categoria === selectedCategory
+    return matchesSearch && matchesCategory
+  })
+
+  if (!designSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+        <div>Carregando prévia...</div>
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      {/* Prévia do Cardápio */}
+      {/* Card de Compartilhamento no Topo */}
       <Card className="border-0 shadow-md">
-        <CardHeader>
-          <div className="text-center">
-            <CardTitle className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>Prévia do Cardápio</CardTitle>
-            <CardDescription className="text-gray-600 text-sm">
-              Veja como seu cardápio fica para os clientes
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-gray-600 mb-4">Prévia do seu cardápio</p>
-              <Button onClick={openInNewTab} className="flex items-center gap-2">
-                <ExternalLink className="w-4 h-4" />
-                Abrir Cardápio
-              </Button>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Share2 className="w-5 h-5 text-blue-600" />
+              <div>
+                <h3 className="font-semibold text-gray-800">Compartilhar Cardápio</h3>
+                <p className="text-sm text-gray-600">Link para seus clientes</p>
+              </div>
             </div>
+            <Button
+              onClick={copyToClipboard}
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Copy className="w-4 h-4" />
+              Copiar Link
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Link Compartilhável */}
-      <Card className="border-0 shadow-md">
-        <CardHeader>
-          <div className="text-center">
-            <CardTitle className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>Compartilhar Cardápio</CardTitle>
-            <CardDescription className="text-gray-600 text-sm">
-              Compartilhe seu cardápio com os clientes
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Share2 className="w-4 h-4 text-blue-600" />
-              <span className="font-medium text-blue-800">Link para Compartilhar:</span>
-            </div>
-            <div className="flex gap-2">
-              <Input
-                value={shareableLink}
-                readOnly
-                className="flex-1 font-mono text-sm"
-                onClick={(e) => e.currentTarget.select()}
+      {/* Prévia Real do Cardápio */}
+      <div className="max-w-md mx-auto">
+        <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+          <div style={{ maxWidth: '448px', margin: '0 auto', backgroundColor: 'white' }}>
+            <Banner 
+              logoUrl={designSettings.logo_url} 
+              borderColor={designSettings.cor_borda} 
+              bannerGradient={designSettings.banner_gradient}
+            />
+            <Logo 
+              logoUrl={designSettings.logo_url} 
+              borderColor={designSettings.cor_borda} 
+              storeName={designSettings.nome_confeitaria}
+              storeDescription={designSettings.descricao_loja}
+              avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
+              emFerias={configuracoes?.em_ferias}
+              horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
+              horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
+            />
+            
+            <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
+              {/* Banner promocional */}
+              {designSettings.banner1_url && (
+                <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                  <img 
+                    src={designSettings.banner1_url} 
+                    alt="Banner promocional"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+              )}
+
+              {/* Filtro de categorias */}
+              <CategoryFilter
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategorySelect={setSelectedCategory}
               />
-              <Button
-                size="sm"
-                onClick={copyToClipboard}
-                className="flex items-center gap-2"
-              >
-                <Copy className="w-4 h-4" />
-                Copiar
-              </Button>
+
+              <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+              {filteredProducts.length > 0 ? (
+                <ProductList
+                  produtos={filteredProducts}
+                  favorites={favorites}
+                  onToggleFavorite={toggleFavorite}
+                  onOrder={handleWhatsAppOrder}
+                  backgroundColor={designSettings.cor_background}
+                  borderColor={designSettings.cor_borda}
+                />
+              ) : (
+                <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                  <p>Nenhum produto encontrado</p>
+                </div>
+              )}
+
+              <Footer textoRodape={designSettings.texto_rodape} />
             </div>
-            <p className="text-xs text-blue-600 mt-2">
-              💡 Use este link para compartilhar seu cardápio com os clientes
-            </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
