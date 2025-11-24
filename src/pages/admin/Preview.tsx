@@ -38,6 +38,30 @@ export default function Preview() {
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+      {/* Prévia do Cardápio */}
+      <Card className="border-0 shadow-md">
+        <CardHeader>
+          <div className="text-center">
+            <CardTitle className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>Prévia do Cardápio</CardTitle>
+            <CardDescription className="text-gray-600 text-sm">
+              Veja como seu cardápio fica para os clientes
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">Prévia do seu cardápio</p>
+              <Button onClick={openInNewTab} className="flex items-center gap-2">
+                <ExternalLink className="w-4 h-4" />
+                Abrir Cardápio
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Link Compartilhável */}
       <Card className="border-0 shadow-md">
         <CardHeader>
           <div className="text-center">
@@ -48,7 +72,6 @@ export default function Preview() {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Link Compartilhável */}
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <Share2 className="w-4 h-4 text-blue-600" />
@@ -73,19 +96,6 @@ export default function Preview() {
             <p className="text-xs text-blue-600 mt-2">
               💡 Use este link para compartilhar seu cardápio com os clientes
             </p>
-          </div>
-
-          {/* Botões de Ação */}
-          <div className="flex gap-2 justify-center">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={openInNewTab}
-              className="flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Abrir em Nova Aba
-            </Button>
           </div>
         </CardContent>
       </Card>
