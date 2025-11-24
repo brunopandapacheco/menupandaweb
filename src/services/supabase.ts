@@ -5,6 +5,7 @@ class SupabaseService {
   // Design Settings
   async getDesignSettings(userId: string): Promise<DesignSettings | null> {
     try {
+      console.log('Buscando design settings para user:', userId)
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -15,11 +16,13 @@ class SupabaseService {
         console.error('Error getting design settings:', error)
         // If no record found, create a default one
         if (error.code === 'PGRST116') {
+          console.log('Nenhum registro encontrado, criando padrão...')
           return await this.createDefaultDesignSettings(userId)
         }
         return null
       }
       
+      console.log('Design settings encontrados:', data)
       return data
     } catch (error) {
       console.error('Unexpected error getting design settings:', error)
@@ -39,19 +42,24 @@ class SupabaseService {
         'Tortas'
       ]
 
+      const defaultSettings = {
+        user_id: userId,
+        nome_confeitaria: 'Minha Confeitaria',
+        cor_borda: '#ec4899',
+        cor_background: '#fef2f2',
+        cor_nome: '#be185d',
+        background_topo_color: '#fce7f3',
+        texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+        categorias: defaultCategories,
+        descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+        banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+      }
+
+      console.log('Criando design settings padrão:', defaultSettings)
+
       const { data, error } = await supabase
         .from('design_settings')
-        .insert({
-          user_id: userId,
-          nome_confeitaria: 'Minha Confeitaria',
-          cor_borda: '#ec4899',
-          cor_background: '#fef2f2',
-          cor_nome: '#be185d',
-          background_topo_color: '#fce7f3',
-          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-          categorias: defaultCategories,
-          descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
-        })
+        .insert(defaultSettings)
         .select()
         .single()
       
@@ -60,6 +68,7 @@ class SupabaseService {
         return null
       }
       
+      console.log('Design settings criados com sucesso:', data)
       return data
     } catch (error) {
       console.error('Unexpected error creating default design settings:', error)
@@ -69,6 +78,7 @@ class SupabaseService {
 
   async getDesignSettingsBySlug(slug: string): Promise<DesignSettings | null> {
     try {
+      console.log('Buscando design settings por slug:', slug)
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -80,6 +90,7 @@ class SupabaseService {
         return null
       }
       
+      console.log('Design settings por slug encontrados:', data)
       return data
     } catch (error) {
       console.error('Unexpected error getting design settings by slug:', error)
@@ -89,19 +100,25 @@ class SupabaseService {
 
   async updateDesignSettings(userId: string, settings: Partial<DesignSettings>): Promise<boolean> {
     try {
-      const { error } = await supabase
+      console.log('Atualizando design settings para user:', userId)
+      console.log('Dados a serem atualizados:', settings)
+      
+      const { data, error } = await supabase
         .from('design_settings')
         .upsert({
           user_id: userId,
           ...settings,
           updated_at: new Date().toISOString()
         })
+        .select()
+        .single()
       
       if (error) {
         console.error('Error updating design settings:', error)
         return false
       }
       
+      console.log('Design settings atualizados com sucesso:', data)
       return true
     } catch (error) {
       console.error('Unexpected error updating design settings:', error)

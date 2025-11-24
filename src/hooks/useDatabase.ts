@@ -17,6 +17,7 @@ export function useDatabase() {
   const loadData = async () => {
     if (!user) return
 
+    console.log('Carregando dados do banco para user:', user.id)
     setLoading(true)
     try {
       const [designData, configData, produtosData] = await Promise.all([
@@ -25,6 +26,7 @@ export function useDatabase() {
         supabaseService.getProdutos(user.id)
       ])
 
+      console.log('Dados carregados:', { designData, configData, produtosCount: produtosData?.length })
       setDesignSettings(designData)
       setConfiguracoes(configData)
       setProdutos(produtosData)
@@ -35,8 +37,14 @@ export function useDatabase() {
 
   const saveDesignSettings = async (settings: Partial<DesignSettings>) => {
     if (!user) return false
+    console.log('Salvando design settings:', settings)
     const success = await supabaseService.updateDesignSettings(user.id, settings)
-    if (success) await loadData()
+    if (success) {
+      console.log('Design settings salvos com sucesso, recarregando dados...')
+      await loadData()
+    } else {
+      console.error('Falha ao salvar design settings')
+    }
     return success
   }
 

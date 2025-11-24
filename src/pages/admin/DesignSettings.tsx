@@ -138,6 +138,7 @@ export default function DesignSettings() {
 
   useEffect(() => {
     if (designSettings) {
+      console.log('Atualizando estado local com designSettings:', designSettings)
       setSettings({
         nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
         slug: designSettings.slug || 'doces-da-vo',
@@ -162,27 +163,36 @@ export default function DesignSettings() {
   }
 
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
-    console.log('Aplicando degrade:', gradient.name, gradient.gradient)
+    console.log('=== INICIANDO APLICAÇÃO DE DEGRADE ===')
+    console.log('Degrade selecionado:', gradient.name)
+    console.log('Valor do degrade:', gradient.gradient)
+    console.log('Estado atual antes da atualização:', settings.banner_gradient)
     
     // Atualiza o estado local imediatamente
     const newSettings = { ...settings, banner_gradient: gradient.gradient }
+    console.log('Novo estado a ser salvo:', newSettings.banner_gradient)
+    
     setSettings(newSettings)
     setSelectedGradient(gradient)
     
     // Salva no banco
+    console.log('Salvando no banco...')
     const success = await saveDesignSettings(newSettings)
     
     if (success) {
+      console.log('✅ Degrade salvo com sucesso no banco!')
       toast.success(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`, {
         description: 'O background do seu cardápio agora tem um novo visual',
         icon: <CheckCircle className="w-4 h-4" />
       })
       
       // Força atualização dos dados para garantir que o Preview pegue as informações mais recentes
+      console.log('Forçando recarregamento da página em 1 segundo...')
       setTimeout(() => {
         window.location.reload()
       }, 1000)
     } else {
+      console.error('❌ Falha ao salvar degrade no banco')
       toast.error('Erro ao aplicar degrade', {
         description: 'Tente novamente mais tarde'
       })
