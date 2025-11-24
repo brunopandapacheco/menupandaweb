@@ -108,14 +108,14 @@ export default function Preview() {
             </div>
           )}
 
-          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-
           {/* Filtro de categorias */}
           <CategoryFilter
             categories={categories}
             selectedCategory={selectedCategory}
             onCategorySelect={setSelectedCategory}
           />
+
+          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
           {filteredProducts.length > 0 ? (
             <ProductList
