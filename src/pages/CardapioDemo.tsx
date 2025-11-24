@@ -144,6 +144,9 @@ export default function CardapioDemo() {
           borderColor={mockDesignSettings.cor_borda} 
           storeName={mockDesignSettings.nome_confeitaria}
           avaliacaoMedia={mockConfiguracoes.avaliacao_media}
+          emFerias={mockConfiguracoes.emFerias}
+          horarioFuncionamentoInicio={mockConfiguracoes.horario_funcionamento_inicio}
+          horarioFuncionamentoFim={mockConfiguracoes.horario_funcionamento_fim}
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>

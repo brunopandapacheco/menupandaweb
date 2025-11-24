@@ -127,6 +127,9 @@ export default function CardapioPublico() {
           borderColor={designSettings.cor_borda} 
           storeName={designSettings.nome_confeitaria}
           avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
+          emFerias={configuracoes?.em_ferias}
+          horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
+          horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>

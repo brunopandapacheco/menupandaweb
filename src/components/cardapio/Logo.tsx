@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react'
+import { Star, Clock } from 'lucide-react'
 
 interface LogoProps {
   logoUrl?: string
@@ -6,9 +6,21 @@ interface LogoProps {
   storeName?: string
   storeDescription?: string
   avaliacaoMedia?: number
+  emFerias?: boolean
+  horarioFuncionamentoInicio?: string
+  horarioFuncionamentoFim?: string
 }
 
-export function Logo({ logoUrl, borderColor, storeName, storeDescription, avaliacaoMedia = 4.9 }: LogoProps) {
+export function Logo({ 
+  logoUrl, 
+  borderColor, 
+  storeName, 
+  storeDescription, 
+  avaliacaoMedia = 4.9,
+  emFerias,
+  horarioFuncionamentoInicio = '08:00',
+  horarioFuncionamentoFim = '18:00'
+}: LogoProps) {
   // Renderiza estrelas com base na avaliação
   const renderStars = (rating: number) => {
     const stars = []
@@ -48,6 +60,45 @@ export function Logo({ logoUrl, borderColor, storeName, storeDescription, avalia
     return stars
   }
 
+  const getStatusMessage = () => {
+    if (emFerias) {
+      return { 
+        status: 'Fechado', 
+        time: 'De férias', 
+        color: '#dc2626',
+        bgColor: '#fee2e2'
+      }
+    }
+
+    const now = new Date()
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTime = currentHour * 60 + currentMinute
+    
+    const [startHour, startMinute] = horarioFuncionamentoInicio.split(':').map(Number)
+    const [endHour, endMinute] = horarioFuncionamentoFim.split(':').map(Number)
+    const startTime = startHour * 60 + startMinute
+    const endTime = endHour * 60 + endMinute
+    
+    if (currentTime >= startTime && currentTime <= endTime) {
+      return { 
+        status: 'Aberto', 
+        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
+        color: '#15803d',
+        bgColor: '#dcfce7'
+      }
+    } else {
+      return { 
+        status: 'Fechado', 
+        time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, 
+        color: '#dc2626',
+        bgColor: '#fee2e2'
+      }
+    }
+  }
+
+  const status = getStatusMessage()
+
   return (
     <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '24px' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -60,7 +111,7 @@ export function Logo({ logoUrl, borderColor, storeName, storeDescription, avalia
             alignItems: 'center', 
             justifyContent: 'center', 
             boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-            border: `6px solid white`, // Borda mais grossa e branca
+            border: `6px solid white`,
             position: 'relative',
             zIndex: 10,
             padding: '0',
@@ -95,6 +146,25 @@ export function Logo({ logoUrl, borderColor, storeName, storeDescription, avalia
           <span style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
             {avaliacaoMedia}/5.0
           </span>
+        </div>
+        
+        {/* Status da loja abaixo da avaliação */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+          <Clock style={{ width: '14px', height: '14px' }} />
+          <div>
+            <p style={{ 
+              fontWeight: 'bold', 
+              color: status.color,
+              backgroundColor: status.bgColor,
+              padding: '2px 8px',
+              borderRadius: '4px',
+              display: 'inline-block',
+              fontSize: '14px'
+            }}>
+              {status.status}
+            </p>
+            <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px', textAlign: 'center' }}>{status.time}</p>
+          </div>
         </div>
         
         <p style={{ 

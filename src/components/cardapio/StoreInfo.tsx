@@ -23,45 +23,6 @@ export function StoreInfo({
   totalPedidos = 500,
   avaliacaoMedia = 4.9
 }: StoreInfoProps) {
-  const getStatusMessage = () => {
-    if (emFerias) {
-      return { 
-        status: 'Fechado', 
-        time: 'De férias', 
-        color: 'text-red-600',
-        bgColor: '#fee2e2'
-      }
-    }
-
-    const now = new Date()
-    const currentHour = now.getHours()
-    const currentMinute = now.getMinutes()
-    const currentTime = currentHour * 60 + currentMinute
-    
-    const [startHour, startMinute] = horarioFuncionamentoInicio.split(':').map(Number)
-    const [endHour, endMinute] = horarioFuncionamentoFim.split(':').map(Number)
-    const startTime = startHour * 60 + startMinute
-    const endTime = endHour * 60 + endMinute
-    
-    if (currentTime >= startTime && currentTime <= endTime) {
-      return { 
-        status: 'Aberto', 
-        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
-        color: 'text-green-600',
-        bgColor: '#dcfce7'
-      }
-    } else {
-      return { 
-        status: 'Fechado', 
-        time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, 
-        color: 'text-red-600',
-        bgColor: '#fee2e2'
-      }
-    }
-  }
-
-  const status = getStatusMessage()
-
   return (
     <div style={{ 
       backgroundColor: 'white', 
@@ -71,24 +32,6 @@ export function StoreInfo({
       boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
       border: '0.5px solid #ec4899'
     }}>
-      {/* Status da loja */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '20px' }}>
-        <Clock style={{ width: '16px', height: '16px' }} />
-        <div>
-          <p style={{ 
-            fontWeight: '600', 
-            color: status.color,
-            backgroundColor: status.bgColor,
-            padding: '2px 8px',
-            borderRadius: '4px',
-            display: 'inline-block'
-          }}>
-            {status.status}
-          </p>
-          <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px', textAlign: 'center' }}>{status.time}</p>
-        </div>
-      </div>
-
       {/* Métricas centralizadas */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
         <div style={{ textAlign: 'center' }}>
