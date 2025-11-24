@@ -251,7 +251,8 @@ export default function CardapioPublico() {
               top: 0, 
               left: 0, 
               width: '100%', 
-              height: '100%'
+              height: '100%',
+              zIndex: 1
             }} 
             viewBox="0 0 448 180" 
             preserveAspectRatio="none"
@@ -281,7 +282,7 @@ export default function CardapioPublico() {
               justifyContent: 'center',
               boxShadow: '0 4px 12px rgba(252, 211, 77, 0.4)',
               transition: 'all 0.3s ease',
-              zIndex: 20
+              zIndex: 9999
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'scale(1.1)'
@@ -314,7 +315,7 @@ export default function CardapioPublico() {
                 borderRadius: '50%',
                 backgroundColor: '#10B981',
                 animation: 'pulse 2s infinite',
-                zIndex: 21
+                zIndex: 10000
               }}
             />
           )}
