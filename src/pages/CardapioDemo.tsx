@@ -159,316 +159,316 @@ export default function CardapioDemo() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
-      <div className="max-w-md mx-auto bg-white min-h-screen shadow-sm">
-        {/* Banner superior reduzido com logo escapando */}
-        <div 
-          className="h-32 relative overflow-hidden"
-          style={{ backgroundColor: mockDesignSettings.background_topo_color }}
-        >
-          {/* Elementos decorativos no banner */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-2 left-4 text-4xl">🧁</div>
-            <div className="absolute top-4 right-8 text-3xl">🍰</div>
-            <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
-            <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
-          </div>
-        </div>
-
-        {/* Logo com efeito de escapar do banner */}
-        <div className="relative -mt-16 mb-4">
-          <div className="flex justify-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
-                 style={{ borderColor: mockDesignSettings.cor_borda }}>
-              <span className="text-6xl">🧁</span>
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex justify-center p-4">
+        <div className="max-w-md w-full bg-white min-h-screen shadow-sm">
+          {/* Banner superior reduzido com logo escapando */}
+          <div 
+            className="h-32 relative overflow-hidden"
+            style={{ backgroundColor: mockDesignSettings.background_topo_color }}
+          >
+            {/* Elementos decorativos no banner */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-2 left-4 text-4xl">🧁</div>
+              <div className="absolute top-4 right-8 text-3xl">🍰</div>
+              <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
+              <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
             </div>
           </div>
-        </div>
 
-        {/* Conteúdo abaixo do logo */}
-        <div className="px-4 pb-4">
-          {/* Nome da confeitaria */}
-          <h1 
-            className="text-3xl font-bold text-center mb-2"
-            style={{ color: mockDesignSettings.cor_nome }}
-          >
-            {mockDesignSettings.nome_confeitaria}
-          </h1>
-          
-          {/* Descrição */}
-          <p className="text-gray-600 text-center text-sm px-4 leading-relaxed mb-6">
-            {mockDesignSettings.descricao}
-          </p>
-
-          {/* Card de informações do negócio - branco com sombra leve */}
-          <Card className="mb-6 shadow-sm border-0 bg-white">
-            <CardContent className="p-4">
-              <div className="grid grid-cols-2 gap-4 text-sm mb-3">
-                <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status.color.includes('green') ? 'bg-green-100' : 'bg-red-100'}`}>
-                    <Clock className={`w-4 h-4 ${status.color.includes('green') ? 'text-green-600' : 'text-red-600'}`} />
-                  </div>
-                  <div>
-                    <p className={`font-semibold ${status.color}`}>{status.status}</p>
-                    <p className="text-gray-600 text-xs">{status.time}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Phone className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <p className="font-semibold text-gray-800">{mockConfiguracoes.telefone}</p>
-                </div>
+          {/* Logo com efeito de escapar do banner */}
+          <div className="relative -mt-16 mb-4">
+            <div className="flex justify-center">
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
+                   style={{ borderColor: mockDesignSettings.cor_borda }}>
+                <span className="text-6xl">🧁</span>
               </div>
-              
-              {/* Informações adicionais */}
-              <div className="flex gap-2 flex-wrap">
-                {mockConfiguracoes.entrega && (
-                  <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                    <Truck className="w-3 h-3 mr-1" />
-                    Faz entrega
-                  </Badge>
-                )}
-                {mockConfiguracoes.meios_pagamento.includes('Pix') && (
-                  <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                    Pix
-                  </Badge>
-                )}
-                {mockConfiguracoes.meios_pagamento.includes('Cartão') && (
-                  <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200">
-                    Cartão
-                  </Badge>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Campo de busca */}
-          <div className="
-
-relative mb-6">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              placeholder="🔍 Buscar produtos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-12 border-2 border-gray-200 focus:border-pink-400 rounded-xl"
-            />
+            </div>
           </div>
 
-          {/* Categorias estilo Instagram */}
-          <div className="mb-6">
-            <h3 className="font-semibold mb-4 text-lg text-gray-800">Categorias</h3>
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              <button
-                onClick={() => setSelectedCategory('todas')}
-                className={`flex flex-col items-center min-w-fit transition-all ${
-                  selectedCategory === 'todas' ? 'scale-110' : 'scale-100'
-                }`}
-              >
-                <div 
-                  className={`w-16 h-16 rounded-full flex items-center justify-center mb-1 border-2 transition-all ${
-                    selectedCategory === 'todas' 
-                      ? 'border-pink-400 shadow-lg' 
-                      : 'border-gray-200'
-                  }`}
-                  style={{ backgroundColor: selectedCategory === 'todas' ? mockDesignSettings.cor_borda : '#f3f4f6' }}
-                >
-                  <span className="text-2xl">📋</span>
+          {/* Conteúdo abaixo do logo */}
+          <div className="px-4 pb-4">
+            {/* Nome da confeitaria */}
+            <h1 
+              className="text-3xl font-bold text-center mb-2"
+              style={{ color: mockDesignSettings.cor_nome }}
+            >
+              {mockDesignSettings.nome_confeitaria}
+            </h1>
+            
+            {/* Descrição */}
+            <p className="text-gray-600 text-center text-sm px-4 leading-relaxed mb-6">
+              {mockDesignSettings.descricao}
+            </p>
+
+            {/* Card de informações do negócio - branco com sombra leve */}
+            <Card className="mb-6 shadow-sm border-0 bg-white">
+              <CardContent className="p-4">
+                <div className="grid grid-cols-2 gap-4 text-sm mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status.color.includes('green') ? 'bg-green-100' : 'bg-red-100'}`}>
+                      <Clock className={`w-4 h-4 ${status.color.includes('green') ? 'text-green-600' : 'text-red-600'}`} />
+                    </div>
+                    <div>
+                      <p className={`font-semibold ${status.color}`}>{status.status}</p>
+                      <p className="text-gray-600 text-xs">{status.time}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Phone className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <p className="font-semibold text-gray-800">{mockConfiguracoes.telefone}</p>
+                  </div>
                 </div>
-                <span className={`text-xs font-medium ${
-                  selectedCategory === 'todas' ? 'text-pink-600' : 'text-gray-600'
-                }`}>Todas</span>
-              </button>
-              
-              {categories.map((category) => (
+                
+                {/* Informações adicionais */}
+                <div className="flex gap-2 flex-wrap">
+                  {mockConfiguracoes.entrega && (
+                    <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                      <Truck className="w-3 h-3 mr-1" />
+                      Faz entrega
+                    </Badge>
+                  )}
+                  {mockConfiguracoes.meios_pagamento.includes('Pix') && (
+                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                      Pix
+                    </Badge>
+                  )}
+                  {mockConfiguracoes.meios_pagamento.includes('Cartão') && (
+                    <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200">
+                      Cartão
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Campo de busca */}
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Input
+                placeholder="🔍 Buscar produtos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-12 h-12 border-2 border-gray-200 focus:border-pink-400 rounded-xl"
+              />
+            </div>
+
+            {/* Categorias estilo Instagram */}
+            <div className="mb-6">
+              <h3 className="font-semibold mb-4 text-lg text-gray-800">Categorias</h3>
+              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
                 <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => setSelectedCategory('todas')}
                   className={`flex flex-col items-center min-w-fit transition-all ${
-                    selectedCategory === category ? 'scale-110' : 'scale-100'
+                    selectedCategory === 'todas' ? 'scale-110' : 'scale-100'
                   }`}
                 >
                   <div 
                     className={`w-16 h-16 rounded-full flex items-center justify-center mb-1 border-2 transition-all ${
-                      selectedCategory === category 
+                      selectedCategory === 'todas' 
                         ? 'border-pink-400 shadow-lg' 
                         : 'border-gray-200'
                     }`}
-                    style={{ backgroundColor: selectedCategory === category ? mockDesignSettings.cor_borda : '#f3f4f6' }}
+                    style={{ backgroundColor: selectedCategory === 'todas' ? mockDesignSettings.cor_borda : '#f3f4f6' }}
                   >
-                    <span className="text-2xl">{categoryIcons[category as keyof typeof categoryIcons] || '🍰'}</span>
+                    <span className="text-2xl">📋</span>
                   </div>
                   <span className={`text-xs font-medium ${
-                    selectedCategory === category ? 'text-pink-600' : 'text-gray-600'
-                  }`}>{category}</span>
+                    selectedCategory === 'todas' ? 'text-pink-600' : 'text-gray-600'
+                  }`}>Todas</span>
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Produtos em promoção */}
-          {promotionalProducts.length > 0 && (
-            <div className="mb-6">
-              <h3 className="font-semibold mb-4 text-lg flex items-center gap-2">
-                <span className="text-2xl">🔥</span>
-                <span>Ofertas Especiais</span>
-                <Badge variant="destructive" className="animate-pulse">
-                  {promotionalProducts.length} {promotionalProducts.length === 1 ? 'oferta' : 'ofertas'}
-                </Badge>
-              </h3>
-              <div className="space-y-4">
-                {promotionalProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
-                    <CardContent className="p-4">
-                      <div className="flex gap-4">
-                        <div 
-                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                          style={{ backgroundColor: mockDesignSettings.cor_background }}
-                        >
-                          {product.imagem_url ? (
-                            <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-2xl" />
-                          ) : (
-                            <span className="text-3xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h4 className="font-bold text-lg text-gray-800">{product.nome}</h4>
-                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.descricao}</p>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => toggleFavorite(product.id)}
-                              className="p-2 ml-2"
-                            >
-                              <Heart 
-                                className={`w-5 h-5 transition-colors ${
-                                  favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
-                                }`} 
-                              />
-                            </Button>
-                          </div>
-                          <div className="flex justify-between items-center mt-3">
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-500 line-through">
-                                  R$ {product.preco_normal.toFixed(2)}
-                                </span>
-                                <Badge variant="destructive" className="text-xs">
-                                  -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
-                                </Badge>
-                              </div>
-                              <div className="text-2xl font-bold text-green-600">
-                                R$ {product.preco_promocional?.toFixed(2)}
-                              </div>
-                            </div>
-                          </div>
-                          <Button 
-                            className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
-                            style={{ backgroundColor: mockDesignSettings.cor_borda }}
-                            onClick={() => handleWhatsAppOrder(product.nome)}
-                          >
-                            <ShoppingCart className="w-4 h-4 mr-2" />
-                            Pedir pelo WhatsApp
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`flex flex-col items-center min-w-fit transition-all ${
+                      selectedCategory === category ? 'scale-110' : 'scale-100'
+                    }`}
+                  >
+                    <div 
+                      className={`w-16 h-16 rounded-full flex items-center justify-center mb-1 border-2 transition-all ${
+                        selectedCategory === category 
+                          ? 'border-pink-400 shadow-lg' 
+                          : 'border-gray-200'
+                      }`}
+                      style={{ backgroundColor: selectedCategory === category ? mockDesignSettings.cor_borda : '#f3f4f6' }}
+                    >
+                      <span className="text-2xl">{categoryIcons[category as keyof typeof categoryIcons] || '🍰'}</span>
+                    </div>
+                    <span className={`text-xs font-medium ${
+                      selectedCategory === category ? 'text-pink-600' : 'text-gray-600'
+                    }`}>{category}</span>
+                  </button>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* Produtos regulares */}
-          {regularProducts.length > 0 && (
-            <div className="mb-6">
-              <h3 className="font-semibold mb-4 text-lg text-gray-800">
-                {selectedCategory === 'todas' ? 'Todos os Produtos' : selectedCategory}
-                <span className="text-sm text-gray-500 ml-2">({regularProducts.length})</span>
-              </h3>
-              <div className="space-y-4">
-                {regularProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
-                    <CardContent className="p-4">
-                      <div className="flex gap-4">
-                        <div 
-                          className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                          style={{ backgroundColor: mockDesignSettings.cor_background }}
-                        >
-                          {product.imagem_url ? (
-                            <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-2xl" />
-                          ) : (
-                            <span className="text-3xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h4 className="font-bold text-lg text-gray-800">{product.nome}</h4>
-                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.descricao}</p>
+            {/* Produtos em promoção */}
+            {promotionalProducts.length > 0 && (
+              <div className="mb-6">
+                <h3 className="font-semibold mb-4 text-lg flex items-center gap-2">
+                  <span className="text-2xl">🔥</span>
+                  <span>Ofertas Especiais</span>
+                  <Badge variant="destructive" className="animate-pulse">
+                    {promotionalProducts.length} {promotionalProducts.length === 1 ? 'oferta' : 'ofertas'}
+                  </Badge>
+                </h3>
+                <div className="space-y-4">
+                  {promotionalProducts.map((product) => (
+                    <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
+                      <CardContent className="p-4">
+                        <div className="flex gap-4">
+                          <div 
+                            className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                            style={{ backgroundColor: mockDesignSettings.cor_background }}
+                          >
+                            {product.imagem_url ? (
+                              <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-2xl" />
+                            ) : (
+                              <span className="text-3xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-lg text-gray-800">{product.nome}</h4>
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.descricao}</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => toggleFavorite(product.id)}
+                                className="p-2 ml-2"
+                              >
+                                <Heart 
+                                  className={`w-5 h-5 transition-colors ${
+                                    favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
+                                  }`} 
+                                />
+                              </Button>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => toggleFavorite(product.id)}
-                              className="p-2 ml-2"
+                            <div className="flex justify-between items-center mt-3">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm text-gray-500 line-through">
+                                    R$ {product.preco_normal.toFixed(2)}
+                                  </span>
+                                  <Badge variant="destructive" className="text-xs">
+                                    -{Math.round((1 - product.preco_promocional! / product.preco_normal) * 100)}%
+                                  </Badge>
+                                </div>
+                                <div className="text-2xl font-bold text-green-600">
+                                  R$ {product.preco_promocional?.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <Button 
+                              className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
+                              style={{ backgroundColor: mockDesignSettings.cor_borda }}
+                              onClick={() => handleWhatsAppOrder(product.nome)}
                             >
-                              <Heart 
-                                className={`w-5 h-5 transition-colors ${
-                                  favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
-                                }`} 
-                              />
+                              <ShoppingCart className="w-4 h-4 mr-2" />
+                              Pedir pelo WhatsApp
                             </Button>
                           </div>
-                          <div className="flex justify-between items-center mt-3">
-                            <div className="text-2xl font-bold text-gray-800">
-                              R$ {product.preco_normal.toFixed(2)}
-                            </div>
-                          </div>
-                          <Button 
-                            className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
-                            style={{ backgroundColor: mockDesignSettings.cor_borda }}
-                            onClick={() => handleWhatsAppOrder(product.nome)}
-                          >
-                            <ShoppingCart className="w-4 h-4 mr-2" />
-                            Pedir pelo WhatsApp
-                          </Button>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Mensagem quando não há produtos */}
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-10 h-10 text-gray-400" />
+            {/* Produtos regulares */}
+            {regularProducts.length > 0 && (
+              <div className="mb-6">
+                <h3 className="font-semibold mb-4 text-lg text-gray-800">
+                  {selectedCategory === 'todas' ? 'Todos os Produtos' : selectedCategory}
+                  <span className="text-sm text-gray-500 ml-2">({regularProducts.length})</span>
+                </h3>
+                <div className="space-y-4">
+                  {regularProducts.map((product) => (
+                    <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-0 bg-white">
+                      <CardContent className="p-4">
+                        <div className="flex gap-4">
+                          <div 
+                            className="w-24 h-24 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                            style={{ backgroundColor: mockDesignSettings.cor_background }}
+                          >
+                            {product.imagem_url ? (
+                              <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-2xl" />
+                            ) : (
+                              <span className="text-3xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-lg text-gray-800">{product.nome}</h4>
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.descricao}</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => toggleFavorite(product.id)}
+                                className="p-2 ml-2"
+                              >
+                                <Heart 
+                                  className={`w-5 h-5 transition-colors ${
+                                    favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'
+                                  }`} 
+                                />
+                              </Button>
+                            </div>
+                            <div className="flex justify-between items-center mt-3">
+                              <div className="text-2xl font-bold text-gray-800">
+                                R$ {product.preco_normal.toFixed(2)}
+                              </div>
+                            </div>
+                            <Button 
+                              className="w-full mt-3 h-11 font-semibold shadow-sm hover:shadow-md transition-all"
+                              style={{ backgroundColor: mockDesignSettings.cor_borda }}
+                              onClick={() => handleWhatsAppOrder(product.nome)}
+                            >
+                              <ShoppingCart className="w-4 h-4 mr-2" />
+                              Pedir pelo WhatsApp
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Nenhum produto encontrado</h3>
-              <p className="text-gray-600">Tente buscar por outro termo ou selecionar outra categoria</p>
-            </div>
-          )}
+            )}
 
-          {/* Rodapé */}
-          <div className="mt-8 text-center text-sm text-gray-600 pb-8 border-t pt-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span className="font-semibold text-gray-800">Doces da Vovó</span>
-              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-            </div>
-            <p>{mockDesignSettings.texto_rodape}</p>
-            <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-500">
-              <span>⭐ 4.9 (234 avaliações)</span>
-              <span>•</span>
-              <span>📍 2.5 km de distância</span>
+            {/* Mensagem quando não há produtos */}
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-10 h-10 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Nenhum produto encontrado</h3>
+                <p className="text-gray-600">Tente buscar por outro termo ou selecionar outra categoria</p>
+              </div>
+            )}
+
+            {/* Rodapé */}
+            <div className="mt-8 text-center text-sm text-gray-600 pb-8 border-t pt-6">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                <span className="font-semibold text-gray-800">Doces da Vovó</span>
+                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+              </div>
+              <p>{mockDesignSettings.texto_rodape}</p>
+              <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-500">
+                <span>⭐ 4.9 (234 avaliações)</span>
+                <span>•</span>
+                <span>📍 2.5 km de distância</span>
+              </div>
             </div>
           </div>
         </div>

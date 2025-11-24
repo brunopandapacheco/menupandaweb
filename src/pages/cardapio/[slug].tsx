@@ -172,7 +172,7 @@ export default function CardapioPublico() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F9F9F9' }}>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p>Carregando cardápio...</p>
@@ -183,7 +183,7 @@ export default function CardapioPublico() {
 
   if (!designSettings) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F9F9F9' }}>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Cardápio não encontrado</h1>
           <p className="text-gray-600 mb-4">Esta confeitaria não existe ou está indisponível.</p>
@@ -197,225 +197,227 @@ export default function CardapioPublico() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F9F9F9' }}>
-      <div className="max-w-md mx-auto bg-white min-h-screen shadow-sm">
-        {/* Banner superior reduzido com logo escapando */}
-        <div 
-          className="h-32 relative overflow-hidden"
-          style={{ backgroundColor: designSettings.background_topo_color }}
-        >
-          {/* Elementos decorativos no banner */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-2 left-4 text-4xl">🧁</div>
-            <div className="absolute top-4 right-8 text-3xl">🍰</div>
-            <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
-            <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
-          </div>
-        </div>
-
-        {/* Logo com efeito de escapar do banner */}
-        <div className="relative -mt-16 mb-4">
-          <div className="flex justify-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
-                 style={{ borderColor: designSettings.cor_borda }}>
-              {designSettings.logo_url ? (
-                <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
-              ) : (
-                <span className="text-6xl">🧁</span>
-              )}
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex justify-center p-4">
+        <div className="max-w-md w-full bg-white min-h-screen shadow-sm">
+          {/* Banner superior reduzido com logo escapando */}
+          <div 
+            className="h-32 relative overflow-hidden"
+            style={{ backgroundColor: designSettings.background_topo_color }}
+          >
+            {/* Elementos decorativos no banner */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-2 left-4 text-4xl">🧁</div>
+              <div className="absolute top-4 right-8 text-3xl">🍰</div>
+              <div className="absolute bottom-2 left-8 text-3xl">🎂</div>
+              <div className="absolute bottom-4 right-4 text-3xl">🥧</div>
             </div>
           </div>
-        </div>
 
-        {/* Conteúdo abaixo do logo */}
-        <div className="px-4 pb-4">
-          {/* Nome da confeitaria */}
-          <h1 
-            className="text-3xl font-bold text-center mb-2"
-            style={{ color: designSettings.cor_nome }}
-          >
-            {designSettings.nome_confeitaria}
-          </h1>
-          
-          {/* Card de informações - branco com sombra leve */}
-          <Card className="mb-6 shadow-sm border-0 bg-white">
-            <CardContent className="p-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <div>
-                    <p className={`font-medium ${status.color}`}>{status.status}</p>
-                    <p className="text-gray-600">{status.time}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  <p className="font-medium">{configuracoes?.telefone || '(11) 99999-9999'}</p>
-                </div>
-                {configuracoes?.entrega && (
-                  <div className="flex items-center gap-2">
-                    <Truck className="w-4 h-4" />
-                    <p className="font-medium">Faz entrega</p>
-                  </div>
-                )}
-                {configuracoes?.taxa_entrega && configuracoes.entrega && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-600">Taxa:</span>
-                    <p className="font-medium">R$ {configuracoes.taxa_entrega.toFixed(2)}</p>
-                  </div>
+          {/* Logo com efeito de escapar do banner */}
+          <div className="relative -mt-16 mb-4">
+            <div className="flex justify-center">
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border-4" 
+                   style={{ borderColor: designSettings.cor_borda }}>
+                {designSettings.logo_url ? (
+                  <img src={designSettings.logo_url} alt="Logo" className="w-28 h-28 rounded-full object-cover" />
+                ) : (
+                  <span className="text-6xl">🧁</span>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Banner promocional */}
-          {designSettings.banner1_url && (
-            <div className="mb-6 h-40 rounded-lg overflow-hidden shadow-sm">
-              <img 
-                src={designSettings.banner1_url} 
-                alt="Banner promocional"
-                className="w-full h-full object-cover"
+          {/* Conteúdo abaixo do logo */}
+          <div className="px-4 pb-4">
+            {/* Nome da confeitaria */}
+            <h1 
+              className="text-3xl font-bold text-center mb-2"
+              style={{ color: designSettings.cor_nome }}
+            >
+              {designSettings.nome_confeitaria}
+            </h1>
+            
+            {/* Card de informações - branco com sombra leve */}
+            <Card className="mb-6 shadow-sm border-0 bg-white">
+              <CardContent className="p-4">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    <div>
+                      <p className={`font-medium ${status.color}`}>{status.status}</p>
+                      <p className="text-gray-600">{status.time}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    <p className="font-medium">{configuracoes?.telefone || '(11) 99999-9999'}</p>
+                  </div>
+                  {configuracoes?.entrega && (
+                    <div className="flex items-center gap-2">
+                      <Truck className="w-4 h-4" />
+                      <p className="font-medium">Faz entrega</p>
+                    </div>
+                  )}
+                  {configuracoes?.taxa_entrega && configuracoes.entrega && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-600">Taxa:</span>
+                      <p className="font-medium">R$ {configuracoes.taxa_entrega.toFixed(2)}</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Banner promocional */}
+            {designSettings.banner1_url && (
+              <div className="mb-6 h-40 rounded-lg overflow-hidden shadow-sm">
+                <img 
+                  src={designSettings.banner1_url} 
+                  alt="Banner promocional"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            {/* Campo de busca */}
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Buscar produtos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-12"
               />
             </div>
-          )}
 
-          {/* Campo de busca */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Buscar produtos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12"
-            />
-          </div>
-
-          {/* Lista de produtos */}
-          {promotionalProducts.length > 0 && (
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3 text-lg flex items-center gap-2">
-                <span>🔥</span> Promoções
-              </h3>
-              <div className="space-y-4">
-                {promotionalProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
-                    <CardContent className="p-4">
-                      <div className="flex gap-4">
-                        <div 
-                          className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: designSettings.cor_background }}
-                        >
-                          {product.imagem_url ? (
-                            <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-xl" />
-                          ) : (
-                            <span className="text-3xl">🧁</span>
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-semibold text-lg">{product.nome}</h4>
-                              <p className="text-sm text-gray-600 mt-1">{product.descricao}</p>
+            {/* Lista de produtos */}
+            {promotionalProducts.length > 0 && (
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3 text-lg flex items-center gap-2">
+                  <span>🔥</span> Promoções
+                </h3>
+                <div className="space-y-4">
+                  {promotionalProducts.map((product) => (
+                    <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
+                      <CardContent className="p-4">
+                        <div className="flex gap-4">
+                          <div 
+                            className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: designSettings.cor_background }}
+                          >
+                            {product.imagem_url ? (
+                              <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-xl" />
+                            ) : (
+                              <span className="text-3xl">🧁</span>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-semibold text-lg">{product.nome}</h4>
+                                <p className="text-sm text-gray-600 mt-1">{product.descricao}</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => toggleFavorite(product.id)}
+                                className="p-2"
+                              >
+                                <Heart 
+                                  className={`w-5 h-5 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
+                                />
+                              </Button>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => toggleFavorite(product.id)}
-                              className="p-2"
+                            <div className="flex justify-between items-center mt-3">
+                              <div>
+                                <span className="text-sm text-gray-500 line-through">
+                                  R$ {product.preco_normal.toFixed(2)}
+                                </span>
+                                <div className="text-xl font-bold text-green-600">
+                                  R$ {product.preco_promocional?.toFixed(2)}
+                                </div>
+                              </div>
+                              <Badge variant="destructive" className="animate-pulse">
+                                Promoção
+                              </Badge>
+                            </div>
+                            <Button 
+                              className="w-full mt-3 h-10"
+                              style={{ backgroundColor: designSettings.cor_borda }}
+                              onClick={() => handleWhatsAppOrder(product.nome)}
                             >
-                              <Heart 
-                                className={`w-5 h-5 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
-                              />
+                              Pedir pelo WhatsApp
                             </Button>
                           </div>
-                          <div className="flex justify-between items-center mt-3">
-                            <div>
-                              <span className="text-sm text-gray-500 line-through">
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {regularProducts.length > 0 && (
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3 text-lg">Todos os Produtos</h3>
+                <div className="space-y-4">
+                  {regularProducts.map((product) => (
+                    <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
+                      <CardContent className="p-4">
+                        <div className="flex gap-4">
+                          <div 
+                            className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: designSettings.cor_background }}
+                          >
+                            {product.imagem_url ? (
+                              <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-xl" />
+                            ) : (
+                              <span className="text-3xl">🧁</span>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-semibold text-lg">{product.nome}</h4>
+                                <p className="text-sm text-gray-600 mt-1">{product.descricao}</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => toggleFavorite(product.id)}
+                                className="p-2"
+                              >
+                                <Heart 
+                                  className={`w-5 h-5 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
+                                />
+                              </Button>
+                            </div>
+                            <div className="flex justify-between items-center mt-3">
+                              <div className="text-xl font-bold">
                                 R$ {product.preco_normal.toFixed(2)}
-                              </span>
-                              <div className="text-xl font-bold text-green-600">
-                                R$ {product.preco_promocional?.toFixed(2)}
                               </div>
                             </div>
-                            <Badge variant="destructive" className="animate-pulse">
-                              Promoção
-                            </Badge>
-                          </div>
-                          <Button 
-                            className="w-full mt-3 h-10"
-                            style={{ backgroundColor: designSettings.cor_borda }}
-                            onClick={() => handleWhatsAppOrder(product.nome)}
-                          >
-                            Pedir pelo WhatsApp
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {regularProducts.length > 0 && (
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3 text-lg">Todos os Produtos</h3>
-              <div className="space-y-4">
-                {regularProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-0 bg-white">
-                    <CardContent className="p-4">
-                      <div className="flex gap-4">
-                        <div 
-                          className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: designSettings.cor_background }}
-                        >
-                          {product.imagem_url ? (
-                            <img src={product.imagem_url} alt={product.nome} className="w-full h-full object-cover rounded-xl" />
-                          ) : (
-                            <span className="text-3xl">🧁</span>
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-semibold text-lg">{product.nome}</h4>
-                              <p className="text-sm text-gray-600 mt-1">{product.descricao}</p>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => toggleFavorite(product.id)}
-                              className="p-2"
+                            <Button 
+                              className="w-full mt-3 h-10"
+                              style={{ backgroundColor: designSettings.cor_borda }}
+                              onClick={() => handleWhatsAppOrder(product.nome)}
                             >
-                              <Heart 
-                                className={`w-5 h-5 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
-                              />
+                              Pedir pelo WhatsApp
                             </Button>
                           </div>
-                          <div className="flex justify-between items-center mt-3">
-                            <div className="text-xl font-bold">
-                              R$ {product.preco_normal.toFixed(2)}
-                            </div>
-                          </div>
-                          <Button 
-                            className="w-full mt-3 h-10"
-                            style={{ backgroundColor: designSettings.cor_borda }}
-                            onClick={() => handleWhatsAppOrder(product.nome)}
-                          >
-                            Pedir pelo WhatsApp
-                          </Button>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Rodapé simples */}
-          <div className="mt-8 text-center text-sm text-gray-600 pb-8">
-            <p>{designSettings.texto_rodape}</p>
+            {/* Rodapé simples */}
+            <div className="mt-8 text-center text-sm text-gray-600 pb-8">
+              <p>{designSettings.texto_rodape}</p>
+            </div>
           </div>
         </div>
       </div>
