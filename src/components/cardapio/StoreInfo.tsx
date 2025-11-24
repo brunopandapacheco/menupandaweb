@@ -1,5 +1,4 @@
 import { Clock, Phone, Truck } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
 
 interface StoreInfoProps {
   telefone: string
@@ -54,7 +53,7 @@ export function StoreInfo({
       border: '1px solid black'
     }}>
       {/* Informações da loja */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px', marginBottom: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Clock style={{ width: '16px', height: '16px' }} />
           <div>
@@ -77,25 +76,6 @@ export function StoreInfo({
             <span style={{ fontSize: '12px', color: '#6b7280' }}>Taxa:</span>
             <p style={{ fontWeight: '600' }}>R$ {taxaEntrega.toFixed(2)}</p>
           </div>
-        )}
-      </div>
-      
-      {/* Informações adicionais */}
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        {meiosPagamento.includes('Pix') && (
-          <Badge variant="secondary" style={{ backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
-            Pix
-          </Badge>
-        )}
-        {meiosPagamento.includes('Cardão') && (
-          <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
-            Cardão
-          </Badge>
-        )}
-        {meiosPagamento.includes('Dinheiro') && (
-          <Badge variant="secondary" style={{ backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0' }}>
-            Dinheiro
-          </Badge>
         )}
       </div>
     </div>
