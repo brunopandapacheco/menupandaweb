@@ -151,6 +151,23 @@ class SupabaseService {
     }
   }
 
+  async getConfiguracoesBySlug(slug: string): Promise<Configuracoes | null> {
+    try {
+      const { data: designData } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('slug', slug)
+        .single()
+      
+      if (!designData) return null
+      
+      return await this.getConfiguracoes(designData.user_id)
+    } catch (error) {
+      console.error('Unexpected error getting configuracoes by slug:', error)
+      return null
+    }
+  }
+
   async updateConfiguracoes(userId: string, config: Partial<Configuracoes>): Promise<boolean> {
     try {
       const { error } = await supabase
@@ -190,6 +207,23 @@ class SupabaseService {
       return data || []
     } catch (error) {
       console.error('Unexpected error getting produtos:', error)
+      return []
+    }
+  }
+
+  async getProdutosBySlug(slug: string): Promise<Produto[]> {
+    try {
+      const { data: designData } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('slug', slug)
+        .single()
+      
+      if (!designData) return []
+      
+      return await this.getProdutos(designData.user_id)
+    } catch (error) {
+      console.error('Unexpected error getting produtos by slug:', error)
       return []
     }
   }

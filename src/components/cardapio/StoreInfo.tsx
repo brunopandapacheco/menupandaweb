@@ -2,8 +2,6 @@ import { Clock, Phone, Truck } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 interface StoreInfoProps {
-  nomeConfeitaria: string
-  corNome: string
   telefone: string
   horarioFuncionamentoInicio: string
   horarioFuncionamentoFim: string
@@ -14,8 +12,6 @@ interface StoreInfoProps {
 }
 
 export function StoreInfo({
-  nomeConfeitaria,
-  corNome,
   telefone,
   horarioFuncionamentoInicio,
   horarioFuncionamentoFim,
@@ -56,24 +52,6 @@ export function StoreInfo({
       marginBottom: '24px',
       boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
     }}>
-      {/* Nome da confeitaria */}
-      <h1 
-        style={{ 
-          fontSize: '28px', 
-          fontWeight: 'bold', 
-          textAlign: 'center', 
-          marginBottom: '8px',
-          color: corNome 
-        }}
-      >
-        {nomeConfeitaria}
-      </h1>
-      
-      {/* Descrição */}
-      <p style={{ color: '#6b7280', textAlign: 'center', fontSize: '14px', lineHeight: '1.5', marginBottom: '20px' }}>
-        Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.
-      </p>
-
       {/* Informações da loja */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px', marginBottom: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
