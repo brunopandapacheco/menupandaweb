@@ -24,6 +24,7 @@ class SupabaseService {
       
       console.log('✅ Design settings encontrados:', data)
       console.log('🎨 Banner gradient atual:', data.banner_gradient)
+      console.log('🔗 Slug encontrado:', data.slug)
       return data
     } catch (error) {
       console.error('❌ Unexpected error getting design settings:', error)
@@ -46,6 +47,7 @@ class SupabaseService {
       const defaultSettings = {
         user_id: userId,
         nome_confeitaria: 'Minha Confeitaria',
+        slug: 'minha-confeitaria', // Adicionando slug padrão
         cor_borda: '#ec4899',
         cor_background: '#fef2f2',
         cor_nome: '#be185d',
@@ -88,6 +90,8 @@ class SupabaseService {
       
       if (error) {
         console.error('❌ Error getting design settings by slug:', error)
+        console.error('❌ Slug buscado:', slug)
+        console.error('❌ Erro completo:', error)
         return null
       }
       
@@ -105,6 +109,7 @@ class SupabaseService {
       console.log('👤 User ID:', userId)
       console.log('📦 Dados a serem atualizados:', settings)
       console.log('🎨 Banner gradient específico:', settings.banner_gradient)
+      console.log('🔗 Slug específico:', settings.slug)
       
       // Primeiro, vamos verificar se já existe um registro
       const { data: existingData, error: fetchError } = await supabase
@@ -163,6 +168,7 @@ class SupabaseService {
       console.log('✅ Design settings atualizados com sucesso!')
       console.log('📊 Dados salvos:', result.data)
       console.log('🎨 Banner gradient salvo:', result.data.banner_gradient)
+      console.log('🔗 Slug salvo:', result.data.slug)
       
       // Verificação adicional: buscar novamente para confirmar
       console.log('🔍 Verificando se foi salvo corretamente...')
@@ -177,6 +183,7 @@ class SupabaseService {
       } else {
         console.log('✅ Verificação bem-sucedida!')
         console.log('🎨 Banner gradient verificado:', verificationData.banner_gradient)
+        console.log('🔗 Slug verificado:', verificationData.slug)
       }
       
       return true

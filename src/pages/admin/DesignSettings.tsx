@@ -141,7 +141,7 @@ export default function DesignSettings() {
       console.log('Atualizando estado local com designSettings:', designSettings)
       setSettings({
         nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
-        slug: designSettings.slug || 'doces-da-vo',
+        slug: designSettings.slug || generateSlug(designSettings.nome_confeitaria || 'Doces da Vovó'),
         cor_borda: designSettings.cor_borda || '#ec4899',
         cor_background: designSettings.cor_background || '#fef2f2',
         cor_nome: designSettings.cor_nome || '#be185d',
@@ -157,9 +157,28 @@ export default function DesignSettings() {
     }
   }, [designSettings])
 
+  // Atualizar slug quando o nome da confeitaria mudar
+  const handleNomeChange = (nome: string) => {
+    const newSlug = generateSlug(nome)
+    setSettings(prev => ({
+      ...prev,
+      nome_confeitaria: nome,
+      slug: newSlug
+    }))
+  }
+
   const handleSave = async () => {
+    console.log('🔄 SALVANDO CONFIGURAÇÕES COMPLETAS')
+    console.log('📦 Dados a serem salvos:', settings)
+    console.log('🔗 Slug gerado:', settings.slug)
+    
     const success = await saveDesignSettings(settings)
-    if (success) showSuccess('Configurações salvas!')
+    if (success) {
+      showSuccess('Configurações salvas!')
+      console.log('✅ Configurações salvas com sucesso!')
+    } else {
+      console.error('❌ Falha ao salvar configurações')
+    }
   }
 
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
@@ -224,6 +243,63 @@ export default function DesignSettings() {
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
         <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Cores, fontes e elementos do seu jeito</p>
       </div>
+
+      {/* Informações Básicas */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+            <Type className="w-5 h-5" />
+            Informações Básicas
+          </CardTitle>
+          <CardDescription>
+            Configure o nome e o link do seu cardápio
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="nome_confeitaria">Nome da Confeitaria</Label>
+            <Input
+              id="nome_confeitaria"
+              value={settings.nome_confeitaria}
+              onChange={(e) => handleNomeChange(e.target.value)}
+              placeholder="Nome da sua confeitaria"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="slug">Link do Cardápio (URL)</Label>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">seusite.com/cardapio/</span>
+              <Input
+                id="slug"
+                value={settings.slug}
+                onChange={(e) => setSettings(prev => ({ ...prev, slug: e.target.value }))}
+                placeholder="nome-da-confeitaria"
+                className="flex-1"
+              />
+            </div>
+            <p className="text-xs text-gray-500">
+              Este será o link que seus clientes usarão para acessar seu cardápio
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="descricao_loja">Descrição da Loja</Label>
+            <textarea
+              id="descricao_loja"
+              value={settings.descricao_loja}
+              onChange={(e) => setSettings(prev => ({ ...prev, descricao_loja: e.target.value }))}
+              placeholder="Descreva sua confeitaria..."
+              className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+              rows={3}
+            />
+          </div>
+
+          <Button onClick={handleSave} className="w-full font-[650]" size="lg">
+            Salvar Informações
+          </Button>
+        </CardContent>
+      </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
