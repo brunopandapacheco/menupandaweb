@@ -90,10 +90,15 @@ export default function CardapioPublico() {
     'Cookies': '🍪',
     'Trufas': '🍫',
     'Pudim': '🍮',
-    'Coxinha': '🥐'
+    'Coxinha': '🥐',
+    'Salgadinhos': '🥐',
+    'Pipoca': '🍿'
   }
 
-  const categories = Array.from(new Set(produtos.map(p => p.categoria))).map(cat => ({
+  // Usar categorias do designSettings ou categorias padrão
+  const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas']
+  
+  const categories = availableCategories.map(cat => ({
     name: cat,
     icon: categoryIcons[cat] || '🧁'
   }))
@@ -130,6 +135,7 @@ export default function CardapioPublico() {
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
           storeName={designSettings.nome_confeitaria}
+          storeDescription={designSettings.descricao_loja}
           avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
           emFerias={configuracoes?.em_ferias}
           horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}

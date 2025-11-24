@@ -56,10 +56,15 @@ export default function Preview() {
     'Cookies': '🍪',
     'Trufas': '🍫',
     'Pudim': '🍮',
-    'Coxinha': '🥐'
+    'Coxinha': '🥐',
+    'Salgadinhos': '🥐',
+    'Pipoca': '🍿'
   }
 
-  const categories = Array.from(new Set(produtos.map(p => p.categoria))).map(cat => ({
+  // Usar categorias do designSettings ou categorias padrão
+  const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas']
+  
+  const categories = availableCategories.map(cat => ({
     name: cat,
     icon: categoryIcons[cat] || '🧁'
   }))
@@ -88,6 +93,7 @@ export default function Preview() {
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
           storeName={designSettings.nome_confeitaria}
+          storeDescription={designSettings.descricao_loja}
           avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
           emFerias={configuracoes?.em_ferias}
           horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
@@ -126,7 +132,25 @@ export default function Preview() {
             />
           ) : (
             <div style={{ textAlign: 'center', padding: '48px 0' }}>
-              <p>Nenhum produto encontrado</p>
+              <div style={{ width: '80px', height: '80px', backgroundColor: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <span style={{ fontSize: '32px' }}>🛒</span>
+              </div>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', marginBottom: '8px' }}>Seus produtos cadastrados aparecerão aqui</h3>
+              <p style={{ color: '#6b7280', marginBottom: '16px' }}>Comece adicionando produtos no painel administrativo</p>
+              <button
+                style={{
+                  backgroundColor: designSettings.cor_borda,
+                  color: 'white',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+                onClick={() => window.location.href = '/admin'}
+              >
+                Ir para Produtos
+              </button>
             </div>
           )}
 

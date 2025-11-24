@@ -16,6 +16,8 @@ export interface DesignSettings {
   banner2_url?: string
   background_topo_color: string
   texto_rodape: string
+  categorias?: string[]
+  descricao_loja?: string
 }
 
 export interface Configuracoes {

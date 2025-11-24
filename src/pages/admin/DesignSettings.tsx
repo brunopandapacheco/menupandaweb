@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, Palette, Eye, Type, Image, CheckCircle } from 'lucide-react'
+import { Upload, Palette, Eye, Type, Image, CheckCircle, Plus, Trash2, Edit2, Save, X } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
@@ -85,6 +85,16 @@ const colorPalettes = [
   },
 ]
 
+const defaultCategories = [
+  'Bolos',
+  'Doces', 
+  'Brigadeiros',
+  'Cookies',
+  'Salgadinhos',
+  'Pipoca',
+  'Tortas'
+]
+
 export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
   const isMobile = useIsMobile()
@@ -101,7 +111,12 @@ export default function DesignSettings() {
     logo_url: '',
     banner1_url: '',
     banner2_url: '',
+    categorias: defaultCategories,
+    descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
   })
+  const [newCategory, setNewCategory] = useState('')
+  const [editingCategory, setEditingCategory] = useState<string | null>(null)
+  const [editingValue, setEditingValue] = useState('')
 
   useEffect(() => {
     if (designSettings) {
@@ -116,6 +131,8 @@ export default function DesignSettings() {
         logo_url: designSettings.logo_url || '',
         banner1_url: designSettings.banner1_url || '',
         banner2_url: designSettings.banner2_url || '',
+        categorias: designSettings.categorias || defaultCategories,
+        descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
       })
     }
   }, [designSettings])
@@ -160,6 +177,53 @@ export default function DesignSettings() {
     }
   }
 
+  const addCategory = () => {
+    if (newCategory.trim() && !settings.categorias.includes(newCategory.trim())) {
+      const newSettings = {
+        ...settings,
+        categorias: [...settings.categorias, newCategory.trim()]
+      }
+      setSettings(newSettings)
+      setNewCategory('')
+      saveDesignSettings(newSettings)
+      showSuccess('Categoria adicionada!')
+    }
+  }
+
+  const removeCategory = (category: string) => {
+    const newSettings = {
+      ...settings,
+      categorias: settings.categorias.filter(c => c !== category)
+    }
+    setSettings(newSettings)
+    saveDesignSettings(newSettings)
+    showSuccess('Categoria removida!')
+  }
+
+  const startEditingCategory = (category: string) => {
+    setEditingCategory(category)
+    setEditingValue(category)
+  }
+
+  const saveEditedCategory = () => {
+    if (editingCategory && editingValue.trim() && editingValue !== editingCategory) {
+      const newSettings = {
+        ...settings,
+        categorias: settings.categorias.map(c => c === editingCategory ? editingValue.trim() : c)
+      }
+      setSettings(newSettings)
+      saveDesignSettings(newSettings)
+      showSuccess('Categoria atualizada!')
+    }
+    setEditingCategory(null)
+    setEditingValue('')
+  }
+
+  const cancelEditing = () => {
+    setEditingCategory(null)
+    setEditingValue('')
+  }
+
   if (loading) return <div>Carregando...</div>
 
   const colorLabels = {
@@ -177,7 +241,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="paletas" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
@@ -195,6 +259,12 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Imagens
+          </TabsTrigger>
+          <TabsTrigger 
+            value="categorias" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
+          >
+            Categorias
           </TabsTrigger>
         </TabsList>
 
@@ -368,6 +438,80 @@ export default function DesignSettings() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="categorias">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+                  <Plus className="w-5 h-5" />
+                  Gerenciar Categorias
+                </CardTitle>
+                <CardDescription>
+                  Adicione, edite ou remova categorias de produtos
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Adicionar nova categoria */}
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nova categoria..."
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && addCategory()}
+                      className="flex-1"
+                    />
+                    <Button onClick={addCategory} disabled={!newCategory.trim()}>
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  {/* Lista de categorias */}
+                  <div className="space-y-2">
+                    {settings.categorias.map((category) => (
+                      <div key={category} className="flex items-center gap-2 p-3 border rounded-lg">
+                        {editingCategory === category ? (
+                          <>
+                            <Input
+                              value={editingValue}
+                              onChange={(e) => setEditingValue(e.target.value)}
+                              className="flex-1"
+                              onKeyPress={(e) => e.key === 'Enter' && saveEditedCategory()}
+                            />
+                            <Button size="sm" onClick={saveEditedCategory}>
+                              <Save className="w-4 h-4" />
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={cancelEditing}>
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <span className="flex-1 font-medium">{category}</span>
+                            <Button size="sm" variant="outline" onClick={() => startEditingCategory(category)}>
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button size="sm" variant="destructive" onClick={() => removeCategory(category)}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {settings.categorias.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>Nenhuma categoria cadastrada</p>
+                      <p className="text-sm">Adicione categorias para organizar seus produtos</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
       </Tabs>

@@ -29,6 +29,16 @@ class SupabaseService {
 
   async createDefaultDesignSettings(userId: string): Promise<DesignSettings | null> {
     try {
+      const defaultCategories = [
+        'Bolos',
+        'Doces', 
+        'Brigadeiros',
+        'Cookies',
+        'Salgadinhos',
+        'Pipoca',
+        'Tortas'
+      ]
+
       const { data, error } = await supabase
         .from('design_settings')
         .insert({
@@ -38,7 +48,9 @@ class SupabaseService {
           cor_background: '#fef2f2',
           cor_nome: '#be185d',
           background_topo_color: '#fce7f3',
-          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999'
+          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+          categorias: defaultCategories,
+          descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
         })
         .select()
         .single()

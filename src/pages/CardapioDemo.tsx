@@ -16,6 +16,8 @@ const mockDesignSettings = {
   logo_url: '',
   banner1_url: '',
   banner2_url: '',
+  categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+  descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
 }
 
 const mockConfiguracoes = {
@@ -122,10 +124,12 @@ export default function CardapioDemo() {
     'Tortas': '🥧',
     'Trufas': '🍫',
     'Pudim': '🍮',
-    'Coxinha': '🥐'
+    'Coxinha': '🥐',
+    'Salgadinhos': '🥐',
+    'Pipoca': '🍿'
   }
 
-  const categories = Array.from(new Set(mockProdutos.map(p => p.categoria))).map(cat => ({
+  const categories = mockDesignSettings.categorias.map(cat => ({
     name: cat,
     icon: categoryIcons[cat] || '🧁'
   }))
@@ -146,6 +150,7 @@ export default function CardapioDemo() {
           logoUrl={mockDesignSettings.logo_url} 
           borderColor={mockDesignSettings.cor_borda} 
           storeName={mockDesignSettings.nome_confeitaria}
+          storeDescription={mockDesignSettings.descricao_loja}
           avaliacaoMedia={mockConfiguracoes.avaliacao_media}
           emFerias={mockConfiguracoes.emFerias}
           horarioFuncionamentoInicio={mockConfiguracoes.horario_funcionamento_inicio}
