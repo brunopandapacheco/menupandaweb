@@ -67,12 +67,9 @@ export function ProductList({
         </div>
       )}
 
-      {/* Produtos por categoria */}
+      {/* Produtos por categoria - mostrar TODOS os produtos agrupados */}
       {Object.entries(produtosPorCategoria).map(([categoria, produtosCategoria]) => {
-        // Filtrar apenas produtos regulares (não promocionais)
-        const produtosRegularesCategoria = produtosCategoria.filter(p => !p.promocao)
-        
-        if (produtosRegularesCategoria.length === 0) return null
+        if (produtosCategoria.length === 0) return null
         
         return (
           <div key={categoria} style={{ marginBottom: '24px' }}>
@@ -80,7 +77,7 @@ export function ProductList({
               {categoria}
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              {produtosRegularesCategoria.map((product) => (
+              {produtosCategoria.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
