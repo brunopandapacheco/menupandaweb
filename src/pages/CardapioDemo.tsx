@@ -200,8 +200,8 @@ export default function CardapioDemo() {
             {mockDesignSettings.descricao}
           </p>
 
-          {/* Card de informações do negócio */}
-          <Card className="mb-6 shadow-lg border-0">
+          {/* Card de informações do negócio - com sombra envolvente */}
+          <Card className="mb-6 shadow-2xl border-0 bg-white">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
                 <div className="flex items-center gap-2">

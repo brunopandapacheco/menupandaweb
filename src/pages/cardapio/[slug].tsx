@@ -237,8 +237,8 @@ export default function CardapioPublico() {
             {designSettings.nome_confeitaria}
           </h1>
           
-          {/* Card de informações */}
-          <Card className="mb-6 shadow-sm">
+          {/* Card de informações - com sombra envolvente */}
+          <Card className="mb-6 shadow-2xl border-0 bg-white">
             <CardContent className="p-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center gap-2">
