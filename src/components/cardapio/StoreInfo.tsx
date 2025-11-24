@@ -111,7 +111,7 @@ export function StoreInfo({
       border: '0.5px solid #ec4899'
     }}>
       {/* Status da loja */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '20px' }}>
         <Clock style={{ width: '16px', height: '16px' }} />
         <div>
           <p style={{ 
@@ -124,17 +124,18 @@ export function StoreInfo({
           }}>
             {status.status}
           </p>
-          <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px' }}>{status.time}</p>
+          <p style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px', textAlign: 'center' }}>{status.time}</p>
         </div>
       </div>
 
-      {/* Métricas */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
+      {/* Métricas centralizadas */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+        <div style={{ textAlign: 'center' }}>
           <p style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
             +{totalPedidos} Pedidos realizados
           </p>
         </div>
+        
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
             {renderStars(avaliacaoMedia)}
