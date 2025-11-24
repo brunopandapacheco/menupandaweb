@@ -159,7 +159,7 @@ export default function CardapioDemo() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="flex justify-center p-4">
         <div className="max-w-md w-full bg-white min-h-screen shadow-sm">
           {/* Banner superior reduzido com logo escapando */}

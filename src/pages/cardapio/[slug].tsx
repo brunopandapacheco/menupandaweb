@@ -172,7 +172,7 @@ export default function CardapioPublico() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p>Carregando cardápio...</p>
@@ -183,7 +183,7 @@ export default function CardapioPublico() {
 
   if (!designSettings) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Cardápio não encontrado</h1>
           <p className="text-gray-600 mb-4">Esta confeitaria não existe ou está indisponível.</p>
@@ -197,7 +197,7 @@ export default function CardapioPublico() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="flex justify-center p-4">
         <div className="max-w-md w-full bg-white min-h-screen shadow-sm">
           {/* Banner superior reduzido com logo escapando */}

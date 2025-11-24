@@ -59,7 +59,7 @@ export default function Preview() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p>Carregando prévia...</p>
@@ -94,7 +94,7 @@ export default function Preview() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="space-y-6 max-w-7xl mx-auto">
         <Card className="border-2 border-dashed border-primary/20 bg-primary/5">
           <CardContent className="p-6">
