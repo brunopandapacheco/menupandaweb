@@ -127,14 +127,14 @@ export default function Preview() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ maxWidth: '448px', width: '100%' }}>
               <div style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                {/* Banner superior com formato curvo e inclinado - COR CINZA ESCURO */}
+                {/* Banner superior com formato curvo e inclinado - APENAS COR CINZA ESCURO */}
                 <div style={{ 
                   position: 'relative', 
                   height: '180px', 
                   overflow: 'hidden',
                   backgroundColor: '#2A2A2A' 
                 }}>
-                  {/* Forma curva e inclinada usando SVG */}
+                  {/* Forma curva e inclinada usando SVG - SEM DECORAÇÕES */}
                   <svg 
                     style={{ 
                       position: 'absolute', 
@@ -151,16 +151,6 @@ export default function Preview() {
                       d="M 0,0 L 448,0 L 448,120 Q 400,140 350,145 Q 300,150 250,145 Q 200,140 150,135 Q 100,130 50,125 Q 25,122 0,120 Z" 
                       fill="#2A2A2A"
                     />
-                    
-                    {/* Elementos decorativos */}
-                    <g opacity="0.15">
-                      <circle cx="80" cy="40" r="15" fill="white" />
-                      <circle cx="368" cy="60" r="20" fill="white" />
-                      <circle cx="200" cy="30" r="12" fill="white" />
-                      <circle cx="300" cy="50" r="18" fill="white" />
-                      <circle cx="150" cy="70" r="14" fill="white" />
-                      <circle cx="250" cy="45" r="16" fill="white" />
-                    </g>
                   </svg>
                 </div>
 
