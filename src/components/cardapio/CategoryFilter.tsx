@@ -19,7 +19,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
     <div style={{ marginBottom: '24px' }}>
       <div style={{ 
         display: 'flex', 
-        gap: '6px', 
+        gap: '8px', 
         padding: '4px 0',
         justifyContent: 'center',
         flexWrap: 'wrap' // Permite quebra de linha se necessário
@@ -32,14 +32,14 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '70px',
-            height: '70px',
+            width: '80px',
+            height: '80px',
             borderRadius: '50%',
             border: selectedCategory === null ? '2px solid #ec4899' : '2px solid #e5e7eb',
             backgroundColor: selectedCategory === null ? '#fce7f3' : 'white',
             cursor: 'pointer',
             transition: 'all 0.2s',
-            padding: '6px',
+            padding: '8px',
             flexShrink: 0
           }}
           onMouseOver={(e) => {
@@ -58,9 +58,9 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
           <img 
             src="/icons/iconetodos.png" 
             alt="Todos" 
-            style={{ width: '28px', height: '28px', marginBottom: '3px' }}
+            style={{ width: '32px', height: '32px', marginBottom: '4px' }}
           />
-          <span style={{ fontSize: '9px', fontWeight: '600', textAlign: 'center' }}>Todos</span>
+          <span style={{ fontSize: '10px', fontWeight: '600', textAlign: 'center' }}>Todos</span>
         </button>
 
         {/* Apenas 3 categorias visíveis */}
@@ -91,14 +91,14 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '70px',
-                height: '70px',
+                width: '80px',
+                height: '80px',
                 borderRadius: '50%',
                 border: selectedCategory === category.name ? '2px solid #ec4899' : '2px solid #e5e7eb',
                 backgroundColor: selectedCategory === category.name ? '#fce7f3' : 'white',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                padding: '6px',
+                padding: '8px',
                 flexShrink: 0
               }}
               onMouseOver={(e) => {
@@ -118,12 +118,12 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 <img 
                   src={iconPath} 
                   alt={category.name} 
-                  style={{ width: '28px', height: '28px', marginBottom: '3px' }}
+                  style={{ width: '32px', height: '32px', marginBottom: '4px' }}
                 />
               ) : (
-                <span style={{ fontSize: '20px', marginBottom: '3px' }}>{fallbackIcon}</span>
+                <span style={{ fontSize: '24px', marginBottom: '4px' }}>{fallbackIcon}</span>
               )}
-              <span style={{ fontSize: '9px', fontWeight: '600', textAlign: 'center' }}>{category.name}</span>
+              <span style={{ fontSize: '10px', fontWeight: '600', textAlign: 'center' }}>{category.name}</span>
             </button>
           )
         })}
