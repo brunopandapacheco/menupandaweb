@@ -126,6 +126,7 @@ export default function CardapioPublico() {
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
           storeName={designSettings.nome_confeitaria}
+          avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>

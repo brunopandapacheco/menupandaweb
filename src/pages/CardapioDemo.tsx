@@ -143,6 +143,7 @@ export default function CardapioDemo() {
           logoUrl={mockDesignSettings.logo_url} 
           borderColor={mockDesignSettings.cor_borda} 
           storeName={mockDesignSettings.nome_confeitaria}
+          avaliacaoMedia={mockConfiguracoes.avaliacao_media}
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>

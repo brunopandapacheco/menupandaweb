@@ -1,4 +1,4 @@
-import { Clock, Star } from 'lucide-react'
+import { Clock } from 'lucide-react'
 
 interface StoreInfoProps {
   telefone: string
@@ -62,45 +62,6 @@ export function StoreInfo({
 
   const status = getStatusMessage()
 
-  // Renderiza estrelas com base na avaliação
-  const renderStars = (rating: number) => {
-    const stars = []
-    const fullStars = Math.floor(rating)
-    const hasHalfStar = rating % 1 !== 0
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <Star key={`full-${i}`} size={16} fill="#fbbf24" color="#fbbf24" />
-      )
-    }
-
-    if (hasHalfStar) {
-      stars.push(
-        <div key="half" style={{ position: 'relative', display: 'inline-block' }}>
-          <Star size={16} color="#d1d5db" />
-          <div style={{ 
-            position: 'absolute', 
-            top: 0, 
-            left: 0, 
-            width: '50%', 
-            overflow: 'hidden' 
-          }}>
-            <Star size={16} fill="#fbbf24" color="#fbbf24" />
-          </div>
-        </div>
-      )
-    }
-
-    const emptyStars = 5 - Math.ceil(rating)
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <Star key={`empty-${i}`} size={16} color="#d1d5db" />
-      )
-    }
-
-    return stars
-  }
-
   return (
     <div style={{ 
       backgroundColor: 'white', 
@@ -134,15 +95,6 @@ export function StoreInfo({
           <p style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
             +{totalPedidos} Pedidos realizados
           </p>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-            {renderStars(avaliacaoMedia)}
-          </div>
-          <span style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
-            {avaliacaoMedia}/5.0
-          </span>
         </div>
       </div>
     </div>
