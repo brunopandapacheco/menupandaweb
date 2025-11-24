@@ -184,7 +184,7 @@ export default function Preview() {
                       {designSettings?.logo_url ? (
                         <img src={designSettings.logo_url} alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
                       ) : (
-                        <span style={{ fontSize: '64px' }}>🧁</span>
+                        <img src="/logoteste.webp" alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
                       )}
                     </div>
                   </div>
@@ -252,7 +252,7 @@ export default function Preview() {
                           Pix
                         </Badge>
                       )}
-                      {configuracoes?.meios_pagamento?.includes('Cartão') && (
+                      {configuracoes?.meios_pagamento?.includes('Cardão') && (
                         <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
                           Cardão
                         </Badge>

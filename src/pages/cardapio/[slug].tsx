@@ -256,7 +256,7 @@ export default function CardapioPublico() {
               {designSettings.logo_url ? (
                 <img src={designSettings.logo_url} alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
               ) : (
-                <span style={{ fontSize: '64px' }}>🧁</span>
+                <img src="/logoteste.webp" alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
               )}
             </div>
           </div>

@@ -215,7 +215,7 @@ export default function CardapioDemo() {
                 zIndex: 10
               }}
             >
-              <span style={{ fontSize: '64px' }}>🧁</span>
+              <img src="/logoteste.webp" alt="Logo" style={{ width: '144px', height: '144px', borderRadius: '50%', objectFit: 'cover' }} />
             </div>
           </div>
         </div>
@@ -282,7 +282,7 @@ export default function CardapioDemo() {
                   Pix
                 </Badge>
               )}
-              {mockConfiguracoes.meios_pagamento.includes('Cartão') && (
+              {mockConfiguracoes.meios_pagamento.includes('Cardão') && (
                 <Badge variant="secondary" style={{ backgroundColor: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff' }}>
                   Cardão
                 </Badge>
