@@ -169,6 +169,40 @@ export default function DesignSettings() {
     }))
   }
 
+  const handleSaveNome = async () => {
+    console.log('🔄 SALVANDO NOME DA CONFEITARIA')
+    console.log('📦 Nome:', settings.nome_confeitaria)
+    console.log('🔗 Slug gerado:', settings.slug)
+    
+    const success = await saveDesignSettings({
+      nome_confeitaria: settings.nome_confeitaria,
+      slug: settings.slug
+    })
+    
+    if (success) {
+      showSuccess('Nome salvo com sucesso!')
+      console.log('✅ Nome salvo com sucesso!')
+    } else {
+      console.error('❌ Falha ao salvar nome')
+    }
+  }
+
+  const handleSaveDescricao = async () => {
+    console.log('🔄 SALVANDO DESCRIÇÃO DA LOJA')
+    console.log('📦 Descrição:', settings.descricao_loja)
+    
+    const success = await saveDesignSettings({
+      descricao_loja: settings.descricao_loja
+    })
+    
+    if (success) {
+      showSuccess('Descrição salva com sucesso!')
+      console.log('✅ Descrição salva com sucesso!')
+    } else {
+      console.error('❌ Falha ao salvar descrição')
+    }
+  }
+
   const handleSave = async () => {
     console.log('🔄 SALVANDO CONFIGURAÇÕES COMPLETAS')
     console.log('📦 Dados a serem salvos:', settings)
@@ -277,62 +311,56 @@ export default function DesignSettings() {
         <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Cores, fontes e elementos do seu jeito</p>
       </div>
 
-      {/* Informações Básicas */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
-            <Type className="w-5 h-5" />
-            Informações Básicas
-          </CardTitle>
-          <CardDescription>
-            Configure o nome e o link do seu cardápio
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="nome_confeitaria">Nome da Confeitaria</Label>
-            <Input
-              id="nome_confeitaria"
-              value={settings.nome_confeitaria}
-              onChange={(e) => handleNomeChange(e.target.value)}
-              placeholder="Nome da sua confeitaria"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="slug">Link do Cardápio (URL)</Label>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">seusite.com/cardapio/</span>
+      {/* Informações Básicas Simplificadas */}
+      <div className="space-y-6">
+        {/* Nome da Loja */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+              <Type className="w-5 h-5" />
+              Nome da loja
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
               <Input
-                id="slug"
-                value={settings.slug}
-                onChange={(e) => setSettings(prev => ({ ...prev, slug: e.target.value }))}
-                placeholder="nome-da-confeitaria"
-                className="flex-1"
+                value={settings.nome_confeitaria}
+                onChange={(e) => handleNomeChange(e.target.value)}
+                placeholder="Nome da sua confeitaria"
               />
             </div>
-            <p className="text-xs text-gray-500">
-              Este será o link que seus clientes usarão para acessar seu cardápio
-            </p>
-          </div>
+            
+            <Button onClick={handleSaveNome} className="w-full font-[650]" size="lg">
+              Salvar
+            </Button>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-2">
-            <Label htmlFor="descricao_loja">Descrição da Loja</Label>
-            <textarea
-              id="descricao_loja"
-              value={settings.descricao_loja}
-              onChange={(e) => setSettings(prev => ({ ...prev, descricao_loja: e.target.value }))}
-              placeholder="Descreva sua confeitaria..."
-              className="w-full p-3 border border-gray-300 rounded-lg resize-none"
-              rows={3}
-            />
-          </div>
-
-          <Button onClick={handleSave} className="w-full font-[650]" size="lg">
-            Salvar Informações
-          </Button>
-        </CardContent>
-      </Card>
+        {/* Descrição da Loja */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+              <Type className="w-5 h-5" />
+              Descrição da loja
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <textarea
+                value={settings.descricao_loja}
+                onChange={(e) => setSettings(prev => ({ ...prev, descricao_loja: e.target.value }))}
+                placeholder="Descreva sua confeitaria..."
+                className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+                rows={3}
+              />
+            </div>
+            
+            <Button onClick={handleSaveDescricao} className="w-full font-[650]" size="lg">
+              Salvar
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
