@@ -298,9 +298,10 @@ export default function DesignSettings() {
                       <Button 
                         size="sm" 
                         className="w-full font-[650] text-xs"
+                        style={{ backgroundColor: '#1A1A1A', color: 'white' }}
                         onClick={() => applyGradient(gradient)}
                       >
-                        Aplicar Degrade
+                        Aplicar
                       </Button>
                     </CardContent>
                   </Card>
