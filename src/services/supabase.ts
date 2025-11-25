@@ -14,6 +14,11 @@ export class SupabaseService {
         .single()
       
       if (error) {
+        if (error.code === 'PGRST116') {
+          // No rows returned - this is expected for new users
+          console.log('📝 No design settings found for user')
+          return null
+        }
         console.error('❌ getDesignSettings error:', error)
         throw error
       }
@@ -22,6 +27,43 @@ export class SupabaseService {
       return data
     } catch (error) {
       console.error('❌ Error getting design settings:', error)
+      return null
+    }
+  }
+
+  async createDefaultDesignSettings(userId: string): Promise<DesignSettings | null> {
+    try {
+      const defaultSettings = {
+        user_id: userId,
+        nome_confeitaria: 'Minha Confeitaria',
+        slug: `minha-confeitaria-${Date.now()}`,
+        cor_borda: '#ec4899',
+        cor_background: '#fef2f2',
+        cor_nome: '#be185d',
+        background_topo_color: '#fce7f3',
+        texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+        categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+        descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+        banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+      }
+
+      console.log('📝 Creating default design settings:', defaultSettings)
+
+      const { data, error } = await supabase
+        .from('design_settings')
+        .insert(defaultSettings)
+        .select()
+        .single()
+      
+      if (error) {
+        console.error('❌ Error creating default design settings:', error)
+        return null
+      }
+      
+      console.log('✅ Default design settings created:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Unexpected error creating default design settings:', error)
       return null
     }
   }

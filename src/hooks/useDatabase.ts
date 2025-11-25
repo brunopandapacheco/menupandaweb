@@ -35,17 +35,29 @@ export function useDatabase() {
     
     try {
       // Carregar dados em paralelo
-      const [designData, configData, produtosData] = await Promise.all([
+      let [designData, configData, produtosData] = await Promise.all([
         supabaseService.getDesignSettings(user.id),
         supabaseService.getConfiguracoes(user.id),
         supabaseService.getProdutos(user.id)
       ])
 
-      console.log('📊 loadData: Data loaded:', {
+      console.log('📊 loadData: Initial data loaded:', {
         designData: !!designData,
         configData: !!configData,
         produtosCount: produtosData?.length || 0
       })
+
+      // Se não tiver design settings, criar padrão
+      if (!designData) {
+        console.log('📝 No design settings found, creating default...')
+        designData = await supabaseService.createDefaultDesignSettings(user.id)
+        console.log('✅ Default design settings created:', designData)
+      }
+
+      // Se não tiver configurações, o método getConfiguracoes já cria o padrão
+      if (!configData) {
+        console.log('⚠️ No config data after getConfiguracoes, this should not happen')
+      }
 
       // Atualizar estados
       setDesignSettings(designData)
