@@ -286,7 +286,7 @@ export default function DesignSettings() {
               <CardDescription>Esse degrade fica atrás da logotipo</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {gradientBackgrounds.map((gradient) => (
                   <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
                     <CardContent className="p-6">
