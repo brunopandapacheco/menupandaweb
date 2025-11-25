@@ -324,38 +324,8 @@ export default function DesignSettings() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <div 
-                        className="w-24 h-24 rounded-lg border-2 border-gray-200 shadow-sm mx-auto mb-3 cursor-pointer hover:scale-105 transition-transform"
-                        style={{ background: settings.banner_gradient }}
-                        onClick={() => {
-                          const input = document.getElementById('gradient-input') as HTMLInputElement
-                          if (input) input.click()
-                        }}
-                      />
-                      <Label className="font-medium text-sm">Cor do Degrade</Label>
-                      <p className="text-xs text-gray-500">Background animado</p>
-                    </div>
-                    <Input
-                      id="gradient-input"
-                      type="color"
-                      value={settings.cor_borda}
-                      onChange={(e) => updateColor('cor_borda', e.target.value)}
-                      className="hidden"
-                    />
-                    <div className="space-y-2">
-                      <Label className="text-xs text-gray-600">Cor Principal:</Label>
-                      <Input
-                        type="color"
-                        value={settings.cor_borda}
-                        onChange={(e) => updateColor('cor_borda', e.target.value)}
-                        className="w-full h-10"
-                      />
-                    </div>
-                  </div>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Cor da Borda da Logo */}
                   <div className="space-y-4">
                     <div className="text-center">
                       <div 
@@ -378,6 +348,7 @@ export default function DesignSettings() {
                     />
                   </div>
 
+                  {/* Cor do Título da Loja */}
                   <div className="space-y-4">
                     <div className="text-center">
                       <div 
