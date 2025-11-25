@@ -240,8 +240,25 @@ export default function DesignSettings() {
   }
 
   const updateColor = (colorKey: keyof typeof settings, value: string) => {
+    console.log(`🎨 Atualizando cor ${colorKey}: ${value}`)
     const newSettings = { ...settings, [colorKey]: value }
     setSettings(newSettings)
+  }
+
+  const handleColorSave = async () => {
+    console.log('💾 Salvando cores personalizadas...')
+    console.log('📦 Estado atual:', settings)
+    
+    const success = await saveDesignSettings(settings)
+    if (success) {
+      showSuccess('Cores salvas com sucesso!')
+      console.log('✅ Cores salvas com sucesso!')
+      
+      // Recarregar dados para garantir que foi salvo
+      await loadData()
+    } else {
+      console.error('❌ Falha ao salvar cores')
+    }
   }
 
   if (loading) return <div>Carregando...</div>
@@ -375,7 +392,7 @@ export default function DesignSettings() {
                 </div>
 
                 <div className="mt-8 pt-6 border-t">
-                  <Button onClick={handleSave} className="w-full font-[650]" size="lg">
+                  <Button onClick={handleColorSave} className="w-full font-[650]" size="lg">
                     Salvar Cores
                   </Button>
                 </div>
