@@ -15,92 +15,92 @@ import { toast } from 'sonner'
 
 const gradientBackgrounds = [
   {
-    name: 'Rosa Clássico',
-    description: 'Degrade rosa suave e elegante',
+    name: 'Clássico',
+    description: 'Degrade rosa suave',
     gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
     colors: ['#d11b70', '#ff6fae', '#ff9acb']
   },
   {
-    name: 'Azul Celeste',
-    description: 'Degrade azul claro e refrescante',
+    name: 'Celeste',
+    description: 'Degrade azul claro',
     gradient: 'linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #E0F6FF 100%)',
     colors: ['#87CEEB', '#B0E0E6', '#E0F6FF']
   },
   {
-    name: 'Rosa Vibrante',
-    description: 'Degrade rosa intenso e energético',
+    name: 'Vibrante',
+    description: 'Degrade rosa intenso',
     gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)',
     colors: ['#FF1493', '#FF69B4', '#FFB6C1']
   },
   {
-    name: 'Rosa Pink',
-    description: 'Degrade pink moderno e divertido',
+    name: 'Pink',
+    description: 'Degrade pink moderno',
     gradient: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 50%, #FFC0CB 100%)',
     colors: ['#FF69B4', '#FFB6C1', '#FFC0CB']
   },
   {
-    name: 'Azul Oceano',
-    description: 'Degrade azul profundo e tranquilo',
+    name: 'Oceano',
+    description: 'Degrade azul profundo',
     gradient: 'linear-gradient(135deg, #4682B4 0%, #87CEEB 50%, #B0E0E6 100%)',
     colors: ['#4682B4', '#87CEEB', '#B0E0E6']
   },
   {
-    name: 'Rosa Magenta',
-    description: 'Degrade magenta vibrante e ousado',
+    name: 'Magenta',
+    description: 'Degrade magenta ousado',
     gradient: 'linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FF69B4 100%)',
     colors: ['#8B008B', '#FF1493', '#FF69B4']
   },
   {
-    name: 'Rosa Baby',
-    description: 'Degrade rosa baby suave e delicado',
+    name: 'Baby',
+    description: 'Degrade rosê suave',
     gradient: 'linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 50%, #FFE4E1 100%)',
     colors: ['#FFB6C1', '#FFC0CB', '#FFE4E1']
   },
   {
-    name: 'Rosa Fúcsia',
-    description: 'Degrade fúcsia intenso e marcante',
+    name: 'Fúcsia',
+    description: 'Degrade fúcsia intenso',
     gradient: 'linear-gradient(135deg, #FF00FF 0%, #FF1493 50%, #FF69B4 100%)',
     colors: ['#FF00FF', '#FF1493', '#FF69B4']
   },
   {
-    name: 'Rosa Coral',
-    description: 'Degrade coral quente e acolhedor',
+    name: 'Coral',
+    description: 'Degrade coral quente',
     gradient: 'linear-gradient(135deg, #FF7F50 0%, #FFA07A 50%, #FFB6C1 100%)',
     colors: ['#FF7F50', '#FFA07A', '#FFB6C1']
   },
   {
-    name: 'Rosa Lavanda',
-    description: 'Degrade rosa lavanda suave e romântico',
+    name: 'Lavanda',
+    description: 'Degrade romântico',
     gradient: 'linear-gradient(135deg, #E6E6FA 0%, #FFB6C1 50%, #FFC0CB 100%)',
     colors: ['#E6E6FA', '#FFB6C1', '#FFC0CB']
   },
   {
-    name: 'Azul Céu',
-    description: 'Degrade azul céu claro e sereno',
+    name: 'Céu',
+    description: 'Degrade azul sereno',
     gradient: 'linear-gradient(135deg, #87CEEB 0%, #ADD8E6 50%, #B0E0E6 100%)',
     colors: ['#87CEEB', '#ADD8E6', '#B0E0E6']
   },
   {
-    name: 'Roxo Lilás',
-    description: 'Degrade roxo lilás claro e elegante',
+    name: 'Lilás',
+    description: 'Degrade lilás claro',
     gradient: 'linear-gradient(135deg, #DDA0DD 0%, #E6E6FA 50%, #F0E6FF 100%)',
     colors: ['#DDA0DD', '#E6E6FA', '#F0E6FF']
   },
   {
-    name: 'Roxo Ametista',
-    description: 'Degrade roxo ametista escuro e sofisticado',
+    name: 'Ametista',
+    description: 'Degrade roxo nobre',
     gradient: 'linear-gradient(135deg, #4B0082 0%, #663399 50%, #8B008B 100%)',
     colors: ['#4B0082', '#663399', '#8B008B']
   },
   {
-    name: 'Roxo Violeta',
-    description: 'Degrade roxo violeta intenso e misterioso',
+    name: 'Violeta',
+    description: 'Degrade roxo intenso',
     gradient: 'linear-gradient(135deg, #8A2BE2 0%, #9370DB 50%, #BA55D3 100%)',
     colors: ['#8A2BE2', '#9370DB', '#BA55D3']
   },
   {
-    name: 'Roxo Índigo',
-    description: 'Degrade roxo índigo profundo e nobre',
+    name: 'Índigo',
+    description: 'Degrade roxo profundo',
     gradient: 'linear-gradient(135deg, #4B0082 0%, #6A0DAD 50%, #7B68EE 100%)',
     colors: ['#4B0082', '#6A0DAD', '#7B68EE']
   }
