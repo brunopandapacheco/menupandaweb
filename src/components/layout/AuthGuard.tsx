@@ -12,12 +12,20 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     if (!loading && !user) {
+      console.log('AuthGuard: User not authenticated, redirecting to login')
       navigate('/login')
     }
   }, [user, loading, navigate])
 
   if (loading) {
-    return <div>Carregando...</div>
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p>Carregando...</p>
+        </div>
+      </div>
+    )
   }
 
   return user ? <>{children}</> : null
