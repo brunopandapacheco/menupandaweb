@@ -11,68 +11,148 @@ export function useDatabase() {
   const [produtos, setProdutos] = useState<Produto[]>([])
 
   useEffect(() => {
-    if (user) loadData()
+    if (user) {
+      console.log('🔄 useDatabase: User detected, loading data...')
+      loadData()
+    } else {
+      console.log('🔄 useDatabase: No user, clearing data...')
+      setLoading(false)
+      setDesignSettings(null)
+      setConfiguracoes(null)
+      setProdutos([])
+    }
   }, [user])
 
   const loadData = async () => {
-    if (!user) return
+    if (!user) {
+      console.log('❌ loadData: No user provided')
+      setLoading(false)
+      return
+    }
 
-    console.log('Carregando dados do banco para user:', user.id)
+    console.log('🔄 loadData: Starting data load for user:', user.id)
     setLoading(true)
+    
     try {
+      // Carregar dados em paralelo
       const [designData, configData, produtosData] = await Promise.all([
         supabaseService.getDesignSettings(user.id),
         supabaseService.getConfiguracoes(user.id),
         supabaseService.getProdutos(user.id)
       ])
 
-      console.log('Dados carregados:', { designData, configData, produtosCount: produtosData?.length })
+      console.log('📊 loadData: Data loaded:', {
+        designData: !!designData,
+        configData: !!configData,
+        produtosCount: produtosData?.length || 0
+      })
+
+      // Atualizar estados
       setDesignSettings(designData)
       setConfiguracoes(configData)
-      setProdutos(produtosData)
+      setProdutos(produtosData || [])
+      
+      console.log('✅ loadData: Data loaded successfully')
+    } catch (error) {
+      console.error('❌ loadData: Error loading data:', error)
     } finally {
       setLoading(false)
+      console.log('🏁 loadData: Loading completed')
     }
   }
 
   const saveDesignSettings = async (settings: Partial<DesignSettings>) => {
-    if (!user) return false
-    console.log('Salvando design settings:', settings)
+    if (!user) {
+      console.error('❌ saveDesignSettings: No user')
+      return false
+    }
+    
+    console.log('💾 saveDesignSettings: Saving...', settings)
     const success = await supabaseService.updateDesignSettings(user.id, settings)
+    
     if (success) {
-      console.log('Design settings salvos com sucesso, recarregando dados...')
+      console.log('✅ saveDesignSettings: Saved successfully, reloading data...')
       await loadData()
     } else {
-      console.error('Falha ao salvar design settings')
+      console.error('❌ saveDesignSettings: Failed to save')
     }
+    
     return success
   }
 
   const saveConfiguracoes = async (config: Partial<Configuracoes>) => {
-    if (!user) return false
+    if (!user) {
+      console.error('❌ saveConfiguracoes: No user')
+      return false
+    }
+    
+    console.log('💾 saveConfiguracoes: Saving...', config)
     const success = await supabaseService.updateConfiguracoes(user.id, config)
-    if (success) await loadData()
+    
+    if (success) {
+      console.log('✅ saveConfiguracoes: Saved successfully, reloading data...')
+      await loadData()
+    } else {
+      console.error('❌ saveConfiguracoes: Failed to save')
+    }
+    
     return success
   }
 
   const addProduto = async (produto: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
-    if (!user) return null
+    if (!user) {
+      console.error('❌ addProduto: No user')
+      return null
+    }
+    
+    console.log('➕ addProduto: Adding...', produto)
     const result = await supabaseService.createProduto(user.id, produto)
-    if (result) await loadData()
+    
+    if (result) {
+      console.log('✅ addProduto: Added successfully, reloading data...')
+      await loadData()
+    } else {
+      console.error('❌ addProduto: Failed to add')
+    }
+    
     return result
   }
 
   const editProduto = async (id: string, produto: Partial<Produto>) => {
-    if (!user) return false
+    if (!user) {
+      console.error('❌ editProduto: No user')
+      return false
+    }
+    
+    console.log('✏️ editProduto: Updating...', id, produto)
     const success = await supabaseService.updateProduto(id, produto)
-    if (success) await loadData()
+    
+    if (success) {
+      console.log('✅ editProduto: Updated successfully, reloading data...')
+      await loadData()
+    } else {
+      console.error('❌ editProduto: Failed to update')
+    }
+    
     return success
   }
 
   const removeProduto = async (id: string) => {
-    if (!user) return false
+    if (!user) {
+      console.error('❌ removeProduto: No user')
+      return false
+    }
+    
+    console.log('🗑️ removeProduto: Removing...', id)
     const success = await supabaseService.deleteProduto(id)
-    if (success) await loadData()
+    
+    if (success) {
+      console.log('✅ removeProduto: Removed successfully, reloading data...')
+      await loadData()
+    } else {
+      console.error('❌ removeProduto: Failed to remove')
+    }
+    
     return success
   }
 
