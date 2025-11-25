@@ -263,7 +263,7 @@ export default function DesignSettings() {
             value="degrades" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
-            Degrade animado
+            Degrade
           </TabsTrigger>
           <TabsTrigger 
             value="cores" 
@@ -275,7 +275,7 @@ export default function DesignSettings() {
             value="imagens" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
-            Imagens
+            Banners
           </TabsTrigger>
         </TabsList>
 
@@ -283,6 +283,7 @@ export default function DesignSettings() {
           <Card>
             <CardHeader className="text-center">
               <CardTitle style={{ color: '#4A3531' }}>Degrade animado</CardTitle>
+              <CardDescription>Esse degrade fica atrás da logotipo</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
