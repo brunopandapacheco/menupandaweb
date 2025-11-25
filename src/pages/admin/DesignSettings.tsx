@@ -263,7 +263,7 @@ export default function DesignSettings() {
             value="degrades" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
-            Degrades
+            Degrade animado
           </TabsTrigger>
           <TabsTrigger 
             value="cores" 
@@ -281,11 +281,8 @@ export default function DesignSettings() {
 
         <TabsContent value="degrades">
           <Card>
-            <CardHeader>
-              <CardTitle style={{ color: '#4A3531' }}>Degrades para o Background</CardTitle>
-              <CardDescription>
-                Escolha um degrade para o background animado atrás da logo no seu cardápio
-              </CardDescription>
+            <CardHeader className="text-center">
+              <CardTitle style={{ color: '#4A3531' }}>Degrade animado</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
