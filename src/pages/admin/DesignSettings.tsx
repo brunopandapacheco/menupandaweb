@@ -218,7 +218,7 @@ export default function DesignSettings() {
           cor_background: designData.cor_background || '#fef2f2',
           cor_nome: designData.cor_nome || '#be185d',
           background_topo_color: designData.background_topo_color || '#fce7f3',
-          texto_rodape: designData.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999',
+          texto_rodape: designSettings.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999',
           logo_url: designData.logo_url || '',
           banner1_url: designData.banner1_url || '',
           banner2_url: designData.banner2_url || '',
@@ -286,23 +286,23 @@ export default function DesignSettings() {
               <CardDescription>Esse degrade fica atrás da logotipo</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 gap-4">
                 {gradientBackgrounds.map((gradient) => (
                   <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
-                    <CardContent className="p-6">
-                      <div className="text-center mb-4">
-                        <h3 className="font-black text-xl" style={{ color: '#4A3531' }}>{gradient.name}</h3>
-                        <p className="text-sm text-gray-600">{gradient.description}</p>
+                    <CardContent className="p-4">
+                      <div className="text-center mb-3">
+                        <h3 className="font-black text-lg" style={{ color: '#4A3531' }}>{gradient.name}</h3>
+                        <p className="text-xs text-gray-600">{gradient.description}</p>
                       </div>
                       
                       <div 
-                        className="w-full h-32 rounded-lg mb-6 shadow-sm"
+                        className="w-full h-24 rounded-lg mb-4 shadow-sm"
                         style={{ background: gradient.gradient }}
                       />
                       
                       <Button 
                         size="sm" 
-                        className="w-full font-[650]"
+                        className="w-full font-[650] text-xs"
                         onClick={() => applyGradient(gradient)}
                       >
                         Aplicar Degrade
