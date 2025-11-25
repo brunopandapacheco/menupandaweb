@@ -99,7 +99,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-gray-700"
           style={{
             WebkitTextFillColor: 'rgb(55, 65, 81)',
-            color: 'rgb(55, 65, 81)'
+            color: 'rgb(55, 65, 81)',
+            outline: 'none',
+            boxShadow: 'none'
           }}
         />
       </div>
