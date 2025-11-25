@@ -172,14 +172,12 @@ export default function DesignSettings() {
     console.log('Valor do degrade:', gradient.gradient)
     console.log('Estado atual antes da atualização:', settings.banner_gradient)
     
-    // Atualiza o estado local imediatamente
     const newSettings = { ...settings, banner_gradient: gradient.gradient }
     console.log('Novo estado a ser salvo:', newSettings.banner_gradient)
     
     setSettings(newSettings)
     setSelectedGradient(gradient)
     
-    // Salva no banco
     console.log('Salvando no banco...')
     const success = await saveDesignSettings(newSettings)
     
@@ -190,7 +188,6 @@ export default function DesignSettings() {
         icon: <CheckCircle className="w-4 h-4" />
       })
       
-      // Removido o reload forçado - agora apenas atualiza os dados
       console.log('Recarregando dados do banco...')
       await loadData()
     } else {
@@ -201,7 +198,6 @@ export default function DesignSettings() {
     }
   }
 
-  // Adicionar função para recarregar dados
   const loadData = async () => {
     if (!user) return
     
@@ -292,7 +288,6 @@ export default function DesignSettings() {
                     <CardContent className="p-4">
                       <div className="text-center mb-3">
                         <h3 className="font-black text-lg" style={{ color: '#4A3531' }}>{gradient.name}</h3>
-                        <p className="text-xs text-gray-600">{gradient.description}</p>
                       </div>
                       
                       <div 
@@ -329,7 +324,6 @@ export default function DesignSettings() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Cor do Degrade */}
                   <div className="space-y-4">
                     <div className="text-center">
                       <div 
@@ -361,7 +355,6 @@ export default function DesignSettings() {
                     </div>
                   </div>
 
-                  {/* Cor da Borda da Logo */}
                   <div className="space-y-4">
                     <div className="text-center">
                       <div 
@@ -384,7 +377,6 @@ export default function DesignSettings() {
                     />
                   </div>
 
-                  {/* Cor do Título da Loja */}
                   <div className="space-y-4">
                     <div className="text-center">
                       <div 
