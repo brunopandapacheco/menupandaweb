@@ -296,23 +296,9 @@ export default function DesignSettings() {
                       </div>
                       
                       <div 
-                        className="w-full h-24 rounded-lg mb-4 shadow-sm"
+                        className="w-full h-32 rounded-lg mb-6 shadow-sm"
                         style={{ background: gradient.gradient }}
                       />
-                      
-                      <div className="flex gap-2 mb-4">
-                        {gradient.colors.map((color, index) => (
-                          <div key={index} className="flex-1 text-center">
-                            <div 
-                              className="w-full h-8 rounded border-2 border-gray-200 shadow-sm mb-1"
-                              style={{ backgroundColor: color }}
-                            />
-                            <span className="text-xs font-mono text-gray-500">
-                              {color}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
                       
                       <Button 
                         size="sm" 
