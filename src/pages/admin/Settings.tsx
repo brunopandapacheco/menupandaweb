@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Clock, Calendar, Power, Sun, Moon, Plane } from 'lucide-react'
+import { Clock, Calendar, Power, Sun, Moon, Plane, Type } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
+import { generateSlug } from '@/utils/helpers'
 
 interface DaySchedule {
   day: string
@@ -26,11 +27,16 @@ const weekDays: DaySchedule[] = [
 ]
 
 export default function Settings() {
-  const { configuracoes, saveConfiguracoes, loading } = useDatabase()
+  const { designSettings, configuracoes, saveConfiguracoes, saveDesignSettings, loading } = useDatabase()
   const [settings, setSettings] = useState({
     em_ferias: false,
     data_retorno_ferias: '',
     horarios_semana: weekDays
+  })
+  const [designSettingsLocal, setDesignSettingsLocal] = useState({
+    nome_confeitaria: 'Doces da Vovó',
+    slug: 'doces-da-vo',
+    descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
   })
 
   useEffect(() => {
@@ -43,9 +49,49 @@ export default function Settings() {
     }
   }, [configuracoes])
 
+  useEffect(() => {
+    if (designSettings) {
+      setDesignSettingsLocal({
+        nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
+        slug: designSettings.slug || generateSlug(designSettings.nome_confeitaria || 'Doces da Vovó'),
+        descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
+      })
+    }
+  }, [designSettings])
+
   const handleSave = async () => {
     const success = await saveConfiguracoes(settings)
     if (success) showSuccess('Configurações salvas!')
+  }
+
+  const handleNomeChange = (nome: string) => {
+    const newSlug = generateSlug(nome)
+    setDesignSettingsLocal(prev => ({
+      ...prev,
+      nome_confeitaria: nome,
+      slug: newSlug
+    }))
+  }
+
+  const handleSaveNome = async () => {
+    const success = await saveDesignSettings({
+      nome_confeitaria: designSettingsLocal.nome_confeitaria,
+      slug: designSettingsLocal.slug
+    })
+    
+    if (success) {
+      showSuccess('Nome salvo com sucesso!')
+    }
+  }
+
+  const handleSaveDescricao = async () => {
+    const success = await saveDesignSettings({
+      descricao_loja: designSettingsLocal.descricao_loja
+    })
+    
+    if (success) {
+      showSuccess('Descrição salva com sucesso!')
+    }
   }
 
   const updateDaySchedule = (index: number, field: keyof DaySchedule, value: any) => {
@@ -72,6 +118,57 @@ export default function Settings() {
           </div>
         </CardHeader>
       </Card>
+
+      {/* Informações da Loja */}
+      <div className="space-y-6">
+        {/* Nome da Loja */}
+        <Card className="border-0 shadow-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+              <Type className="w-5 h-5" />
+              Nome da loja
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                value={designSettingsLocal.nome_confeitaria}
+                onChange={(e) => handleNomeChange(e.target.value)}
+                placeholder="Nome da sua confeitaria"
+              />
+            </div>
+            
+            <Button onClick={handleSaveNome} className="w-full font-[650]" size="lg">
+              Salvar
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Descrição da Loja */}
+        <Card className="border-0 shadow-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+              <Type className="w-5 h-5" />
+              Descrição da loja
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <textarea
+                value={designSettingsLocal.descricao_loja}
+                onChange={(e) => setDesignSettingsLocal(prev => ({ ...prev, descricao_loja: e.target.value }))}
+                placeholder="Descreva sua confeitaria..."
+                className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+                rows={3}
+              />
+            </div>
+            
+            <Button onClick={handleSaveDescricao} className="w-full font-[650]" size="lg">
+              Salvar
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Status da Loja */}
       <Card className="border-0 shadow-md">

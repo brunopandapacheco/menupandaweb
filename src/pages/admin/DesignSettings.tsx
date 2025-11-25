@@ -123,8 +123,6 @@ export default function DesignSettings() {
   const [selectedGradient, setSelectedGradient] = useState<typeof gradientBackgrounds[0] | null>(null)
   const [activeTab, setActiveTab] = useState('degrades')
   const [settings, setSettings] = useState({
-    nome_confeitaria: 'Doces da Vovó',
-    slug: 'doces-da-vo',
     cor_borda: '#ec4899',
     cor_background: '#fef2f2',
     cor_nome: '#be185d',
@@ -134,7 +132,6 @@ export default function DesignSettings() {
     banner1_url: '',
     banner2_url: '',
     categorias: defaultCategories,
-    descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
     banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
   })
 
@@ -142,8 +139,6 @@ export default function DesignSettings() {
     if (designSettings) {
       console.log('Atualizando estado local com designSettings:', designSettings)
       setSettings({
-        nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
-        slug: designSettings.slug || generateSlug(designSettings.nome_confeitaria || 'Doces da Vovó'),
         cor_borda: designSettings.cor_borda || '#ec4899',
         cor_background: designSettings.cor_background || '#fef2f2',
         cor_nome: designSettings.cor_nome || '#be185d',
@@ -153,60 +148,14 @@ export default function DesignSettings() {
         banner1_url: designSettings.banner1_url || '',
         banner2_url: designSettings.banner2_url || '',
         categorias: designSettings.categorias || defaultCategories,
-        descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
         banner_gradient: designSettings.banner_gradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
       })
     }
   }, [designSettings])
 
-  // Atualizar slug quando o nome da confeitaria mudar
-  const handleNomeChange = (nome: string) => {
-    const newSlug = generateSlug(nome)
-    setSettings(prev => ({
-      ...prev,
-      nome_confeitaria: nome,
-      slug: newSlug
-    }))
-  }
-
-  const handleSaveNome = async () => {
-    console.log('🔄 SALVANDO NOME DA CONFEITARIA')
-    console.log('📦 Nome:', settings.nome_confeitaria)
-    console.log('🔗 Slug gerado:', settings.slug)
-    
-    const success = await saveDesignSettings({
-      nome_confeitaria: settings.nome_confeitaria,
-      slug: settings.slug
-    })
-    
-    if (success) {
-      showSuccess('Nome salvo com sucesso!')
-      console.log('✅ Nome salvo com sucesso!')
-    } else {
-      console.error('❌ Falha ao salvar nome')
-    }
-  }
-
-  const handleSaveDescricao = async () => {
-    console.log('🔄 SALVANDO DESCRIÇÃO DA LOJA')
-    console.log('📦 Descrição:', settings.descricao_loja)
-    
-    const success = await saveDesignSettings({
-      descricao_loja: settings.descricao_loja
-    })
-    
-    if (success) {
-      showSuccess('Descrição salva com sucesso!')
-      console.log('✅ Descrição salva com sucesso!')
-    } else {
-      console.error('❌ Falha ao salvar descrição')
-    }
-  }
-
   const handleSave = async () => {
     console.log('🔄 SALVANDO CONFIGURAÇÕES COMPLETAS')
     console.log('📦 Dados a serem salvos:', settings)
-    console.log('🔗 Slug gerado:', settings.slug)
     
     const success = await saveDesignSettings(settings)
     if (success) {
@@ -265,8 +214,6 @@ export default function DesignSettings() {
       if (designData) {
         console.log('Dados recarregados:', designData)
         setSettings({
-          nome_confeitaria: designData.nome_confeitaria || 'Doces da Vovó',
-          slug: designData.slug || generateSlug(designData.nome_confeitaria || 'Doces da Vovó'),
           cor_borda: designData.cor_borda || '#ec4899',
           cor_background: designData.cor_background || '#fef2f2',
           cor_nome: designData.cor_nome || '#be185d',
@@ -276,7 +223,6 @@ export default function DesignSettings() {
           banner1_url: designData.banner1_url || '',
           banner2_url: designData.banner2_url || '',
           categorias: designData.categorias || defaultCategories,
-          descricao_loja: designData.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
           banner_gradient: designData.banner_gradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
         })
       }
@@ -312,7 +258,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="degrades" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
@@ -330,12 +276,6 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Imagens
-          </TabsTrigger>
-          <TabsTrigger 
-            value="config" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
-          >
-            Config
           </TabsTrigger>
         </TabsList>
 
@@ -550,58 +490,6 @@ export default function DesignSettings() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="config">
-          <div className="space-y-6">
-            {/* Nome da Loja */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
-                  <Type className="w-5 h-5" />
-                  Nome da loja
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Input
-                    value={settings.nome_confeitaria}
-                    onChange={(e) => handleNomeChange(e.target.value)}
-                    placeholder="Nome da sua confeitaria"
-                  />
-                </div>
-                
-                <Button onClick={handleSaveNome} className="w-full font-[650]" size="lg">
-                  Salvar
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Descrição da Loja */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
-                  <Type className="w-5 h-5" />
-                  Descrição da loja
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <textarea
-                    value={settings.descricao_loja}
-                    onChange={(e) => setSettings(prev => ({ ...prev, descricao_loja: e.target.value }))}
-                    placeholder="Descreva sua confeitaria..."
-                    className="w-full p-3 border border-gray-300 rounded-lg resize-none"
-                    rows={3}
-                  />
-                </div>
-                
-                <Button onClick={handleSaveDescricao} className="w-full font-[650]" size="lg">
-                  Salvar
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </TabsContent>
       </Tabs>
