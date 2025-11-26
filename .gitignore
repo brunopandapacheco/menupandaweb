@@ -32,3 +32,19 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# GitHub
+.github
+
+# Build artifacts
+build
+*.tgz
+*.tar.gz
+
+# Coverage
+coverage
+*.lcov
+
+# Temporary files
+*.tmp
+*.temp
