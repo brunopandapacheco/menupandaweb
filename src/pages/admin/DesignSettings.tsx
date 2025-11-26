@@ -1,62 +1,46 @@
 import { useState, useEffect } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Upload, Palette, Eye, Type, Image, CheckCircle } from 'lucide-react'
-import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
-import { useAuth } from '@/hooks/useAuth'
-import { supabaseService } from '@/services/supabase'
-import { toast } from 'sonner'
+import { showSuccess, showError } from '@/utils/toast'
+import { CheckCircle } from 'lucide-react'
+
+const predefinedColors = [
+  { name: 'Rosa', value: '#ec4899' },
+  { name: 'Rosa Escuro', value: '#be185d' },
+  { name: 'Vermelho', value: '#ef4444' },
+  { name: 'Laranja', value: '#f97316' },
+  { name: 'Amarelo', value: '#eab308' }
+]
 
 const gradientBackgrounds = [
-  {
-    name: 'Clássico',
-    description: 'Degrade rosa suave',
-    gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-    colors: ['#d11b70', '#ff6fae', '#ff9acb']
-  },
-  {
-    name: 'Celeste',
-    description: 'Degrade azul claro',
-    gradient: 'linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #E0F6FF 100%)',
-    colors: ['#87CEEB', '#B0E0E6', '#E0F6FF']
-  },
-  {
-    name: 'Vibrante',
-    description: 'Degrade rosa intenso',
-    gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)',
-    colors: ['#FF1493', '#FF69B4', '#FFB6C1']
-  },
-  {
-    name: 'Pink',
-    description: 'Degrade pink moderno',
-    gradient: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 50%, #FFC0CB 100%)',
-    colors: ['#FF69B4', '#FFB6C1', '#FFC0CB']
-  },
-  {
-    name: 'Oceano',
-    description: 'Degrade azul profundo',
-    gradient: 'linear-gradient(135deg, #4682B4 0%, #87CEEB 50%, #B0E0E6 100%)',
-    colors: ['#4682B4', '#87CEEB', '#B0E0E6']
-  },
-  {
-    name: 'Magenta',
-    description: 'Degrade magenta ousado',
-    gradient: 'linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FF69B4 100%)',
-    colors: ['#8B008B', '#FF1493', '#FF69B4']
-  }
+  { name: 'Rosa Neon', gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' },
+  { name: 'Aurora', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+  { name: 'Pôr do Sol', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+  { name: 'Oceano', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+  { name: 'Floresta', gradient: 'linear-gradient(135deg, #38ef7d 0%, #11998e 100%)' },
+  { name: 'Fogo', gradient: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)' }
 ]
 
 export default function DesignSettings() {
   const { designSettings, saveDesignSettings, loading } = useDatabase()
-  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState('degrades')
   const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)')
+  const [corBorda, setCorBorda] = useState('#ec4899')
+  const [corNome, setCorNome] = useState('#be185d')
 
   useEffect(() => {
-    if (designSettings?.banner_gradient) {
-      setBannerGradient(designSettings.banner_gradient)
+    if (designSettings) {
+      if (designSettings.banner_gradient) {
+        setBannerGradient(designSettings.banner_gradient)
+      }
+      if (designSettings.cor_borda) {
+        setCorBorda(designSettings.cor_borda)
+      }
+      if (designSettings.cor_nome) {
+        setCorNome(designSettings.cor_nome)
+      }
     }
   }, [designSettings])
 
@@ -72,15 +56,29 @@ export default function DesignSettings() {
     
     if (success) {
       console.log('✅ Degrade salvo com sucesso no banco!')
-      toast.success(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`, {
-        description: 'O background do seu cardápio agora tem um novo visual',
-        icon: <CheckCircle className="w-4 h-4" />
-      })
+      showSuccess(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`)
     } else {
       console.error('❌ Falha ao salvar degrade no banco')
-      toast.error('Erro ao aplicar degrade', {
-        description: 'Tente novamente mais tarde'
-      })
+      showError('Erro ao aplicar degrade')
+    }
+  }
+
+  const saveColors = async () => {
+    console.log('=== SALVANDO CORES ===')
+    console.log('Cor da borda:', corBorda)
+    console.log('Cor do nome:', corNome)
+    
+    const success = await saveDesignSettings({ 
+      cor_borda: corBorda,
+      cor_nome: corNome
+    })
+    
+    if (success) {
+      console.log('✅ Cores salvas com sucesso no banco!')
+      showSuccess('🎨 Cores atualizadas com sucesso!')
+    } else {
+      console.error('❌ Falha ao salvar cores no banco')
+      showError('Erro ao salvar cores')
     }
   }
 
@@ -90,7 +88,7 @@ export default function DesignSettings() {
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="text-center sm:text-left pt-8 sm:pt-0">
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
-        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha o background animado do seu cardápio</p>
+        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha o background animado e as cores do seu cardápio</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -102,10 +100,10 @@ export default function DesignSettings() {
             Background Animado
           </TabsTrigger>
           <TabsTrigger 
-            value="preview" 
+            value="cores" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
-            Visualização
+            Cores
           </TabsTrigger>
         </TabsList>
 
@@ -145,38 +143,98 @@ export default function DesignSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="preview">
+        <TabsContent value="cores">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle style={{ color: '#4A3531' }}>Prévia do Background</CardTitle>
-              <CardDescription>Veja como ficará o seu cardápio</CardDescription>
+              <CardTitle style={{ color: '#4A3531' }}>Cores do Cardápio</CardTitle>
+              <CardDescription>Personalize as cores principais do seu cardápio</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div 
-                  className="w-full h-48 rounded-lg shadow-lg"
-                  style={{ 
-                    background: bannerGradient,
-                    backgroundSize: '200% 200%',
-                    animation: 'gradient-x 3s ease infinite'
-                  }}
-                >
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center text-white">
-                      <div className="w-20 h-20 rounded-full border-4 border-white mx-auto mb-4 bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                        <span className="text-2xl">🧁</span>
-                      </div>
-                      <h3 className="text-xl font-bold">Sua Logo Aqui</h3>
-                    </div>
+            <CardContent className="space-y-6">
+              {/* Cor da Borda da Logo */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                  Cor da Borda da Logo
+                </label>
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-16 h-16 rounded-full border-4 shadow-md"
+                    style={{ borderColor: corBorda }}
+                  />
+                  <input
+                    type="color"
+                    value={corBorda}
+                    onChange={(e) => setCorBorda(e.target.value)}
+                    className="w-20 h-10 rounded cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={corBorda}
+                    onChange={(e) => setCorBorda(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="#ec4899"
+                  />
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {predefinedColors.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setCorBorda(color.value)}
+                      className="w-full h-8 rounded border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Cor do Nome da Loja */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                  Cor do Nome da Loja
+                </label>
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-16 h-16 rounded-lg shadow-md flex items-center justify-center font-bold text-white"
+                    style={{ backgroundColor: corNome }}
+                  >
+                    Aa
                   </div>
+                  <input
+                    type="color"
+                    value={corNome}
+                    onChange={(e) => setCorNome(e.target.value)}
+                    className="w-20 h-10 rounded cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={corNome}
+                    onChange={(e) => setCorNome(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="#be185d"
+                  />
                 </div>
-                
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-2">Background atual:</p>
-                  <code className="text-xs bg-gray-100 p-2 rounded block">
-                    {bannerGradient}
-                  </code>
+                <div className="grid grid-cols-5 gap-2">
+                  {predefinedColors.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setCorNome(color.value)}
+                      className="w-full h-8 rounded border-2 border-gray-200 hover:border-gray-400 transition-colors"
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    />
+                  ))}
                 </div>
+              </div>
+
+              {/* Botão Salvar */}
+              <div className="pt-4">
+                <Button 
+                  onClick={saveColors}
+                  className="w-full py-3 font-[650]"
+                  style={{ backgroundColor: '#1A1A1A', color: 'white' }}
+                >
+                  Salvar Cores
+                </Button>
               </div>
             </CardContent>
           </Card>
