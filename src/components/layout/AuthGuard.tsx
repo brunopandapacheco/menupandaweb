@@ -14,7 +14,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
     // Se não estiver mais carregando e não houver usuário, redirecionar para login
     if (!loading && !user) {
       console.log('Usuário não autenticado, redirecionando para login')
-      navigate('/login')
+      navigate('/login', { replace: true })
     }
   }, [user, loading, navigate])
 

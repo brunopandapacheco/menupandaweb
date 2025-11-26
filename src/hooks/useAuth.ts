@@ -40,16 +40,21 @@ export function useAuth() {
       
       console.log('🔄 Auth state changed:', event, session?.user?.email)
       
+      // Só atualiza o estado se realmente houver mudança
       if (event === 'SIGNED_OUT') {
         console.log('👋 Usuário deslogado')
         setUser(null)
       } else if (event === 'TOKEN_REFRESHED') {
         console.log('🔄 Token atualizado')
-        setUser(session?.user ?? null)
+        // Não atualiza o usuário se já existir
+        if (!user) {
+          setUser(session?.user ?? null)
+        }
       } else if (event === 'SIGNED_IN') {
         console.log('✅ Usuário logado')
         setUser(session?.user ?? null)
-      } else {
+      } else if (event === 'INITIAL_SESSION') {
+        console.log('📋 Sessão inicial carregada')
         setUser(session?.user ?? null)
       }
     })
@@ -58,7 +63,7 @@ export function useAuth() {
       mounted = false
       subscription.unsubscribe()
     }
-  }, [])
+  }, [user])
 
   const signOut = async () => {
     try {

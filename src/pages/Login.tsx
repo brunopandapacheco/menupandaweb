@@ -1,6 +1,7 @@
 import { LoginForm } from '@/components/auth/LoginForm'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { useEffect } from 'react'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -10,6 +11,14 @@ export default function Login() {
     // Força uma atualização completa da página para limpar qualquer estado residual
     window.location.href = '/admin'
   }
+
+  useEffect(() => {
+    // Se já está logado, redireciona imediatamente
+    if (user && !loading) {
+      console.log('Usuário já logado, redirecionando para admin...')
+      navigate('/admin', { replace: true })
+    }
+  }, [user, loading, navigate])
 
   if (loading) {
     return (
@@ -24,7 +33,6 @@ export default function Login() {
 
   if (user) {
     // Se já está logado, redireciona imediatamente
-    handleSuccess()
     return null
   }
 
