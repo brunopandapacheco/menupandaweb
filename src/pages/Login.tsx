@@ -26,8 +26,8 @@ export default function Login() {
       <div className="max-w-md w-full p-8">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg overflow-hidden">
-            <img src="/logopandamenu.png" alt="Logo" className="w-full h-full object-cover" />
+          <div className="mx-auto mb-4">
+            <img src="/logopandamenu.png" alt="Logo" className="w-32 h-32 mx-auto" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Panda Menu</h1>
           <p className="text-gray-600">Cardápio Digital para Confeiteiras</p>
