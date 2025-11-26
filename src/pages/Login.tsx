@@ -27,7 +27,7 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg overflow-hidden">
-            <img src="/logoteste.webp" alt="Logo" className="w-full h-full object-cover" />
+            <img src="/logopandamenu.png" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Panda Menu</h1>
           <p className="text-gray-600">Cardápio Digital para Confeiteiras</p>
