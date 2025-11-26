@@ -72,21 +72,54 @@ export class SupabaseService {
     try {
       console.log('💾 updateDesignSettings: Updating for user:', userId, settings)
       
-      // Primeiro, verificar quais colunas existem na tabela
-      const { data: columns, error: columnsError } = await supabase
+      // Primeiro, verificar se o registro já existe
+      const { data: existingRecord, error: checkError } = await supabase
         .from('design_settings')
-        .select('*')
+        .select('user_id')
         .eq('user_id', userId)
-        .limit(1)
         .single()
       
-      if (columnsError && columnsError.code !== 'PGRST116') {
-        console.error('❌ Error checking table structure:', columnsError)
+      if (checkError && checkError.code === 'PGRST116') {
+        // Se não existe, criar novo registro
+        console.log('📝 No existing record found, creating new one...')
+        const defaultSettings = {
+          user_id: userId,
+          nome_confeitaria: 'Minha Confeitaria',
+          slug: `minha-confeitaria-${Date.now()}`,
+          cor_borda: '#ec4899',
+          cor_background: '#fef2f2',
+          cor_nome: '#be185d',
+          background_topo_color: '#fce7f3',
+          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+          descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+          banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+          ...settings // Adicionar as configurações personalizadas
+        }
+
+        const { error: insertError } = await supabase
+          .from('design_settings')
+          .insert(defaultSettings)
+        
+        if (insertError) {
+          console.error('❌ Error creating new design settings:', insertError)
+          return false
+        }
+        
+        console.log('✅ New design settings created successfully')
+        return true
+      }
+      
+      if (checkError) {
+        console.error('❌ Error checking existing record:', checkError)
         return false
       }
       
+      // Se existe, fazer UPDATE
+      console.log('📝 Existing record found, updating...')
+      
       // Filtrar apenas os campos que existem na tabela
-      const validSettings: any = { user_id: userId }
+      const validSettings: any = {}
       
       // Lista de campos válidos conhecidos
       const validFields = [
@@ -114,11 +147,11 @@ export class SupabaseService {
         }
       })
       
-      console.log('📦 Settings to save:', validSettings)
+      console.log('📦 Settings to update:', validSettings)
       
       const { error } = await supabase
         .from('design_settings')
-        .upsert(validSettings)
+        .update(validSettings)
         .eq('user_id', userId)
       
       if (error) {
