@@ -35,14 +35,14 @@ export class SupabaseService {
     try {
       const defaultSettings = {
         user_id: userId,
-        nome_loja: 'Minha Confeitaria', // CORRIGIDO: nome_loja em vez de nome_confeitaria
+        nome_loja: 'Minha Confeitaria',
         slug: `minha-confeitaria-${Date.now()}`,
         cor_borda: '#ec4899',
         cor_background: '#fef2f2',
         cor_nome: '#be185d',
         background_topo_color: '#fce7f3',
         texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-        categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+        categorias: ['Bolos', 'Doces', 'Salgados'], // CORRIGIDO: categorias padrão
         descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
         banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
       }
@@ -84,14 +84,14 @@ export class SupabaseService {
         console.log('📝 No existing record found, creating new one...')
         const defaultSettings = {
           user_id: userId,
-          nome_loja: 'Minha Confeitaria', // CORRIGIDO: nome_loja em vez de nome_confeitaria
+          nome_loja: 'Minha Confeitaria',
           slug: `minha-confeitaria-${Date.now()}`,
           cor_borda: '#ec4899',
           cor_background: '#fef2f2',
           cor_nome: '#be185d',
           background_topo_color: '#fce7f3',
           texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+          categorias: ['Bolos', 'Doces', 'Salgados'], // CORRIGIDO: categorias padrão
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
           ...settings // Add any custom configurations
@@ -121,9 +121,9 @@ export class SupabaseService {
       // Filter only fields that exist in the table
       const validSettings: any = {}
       
-      // List of known valid fields - CORRIGIDOS
+      // List of known valid fields
       const validFields = [
-        'nome_loja', // CORRIGIDO: nome_loja em vez de nome_confeitaria
+        'nome_loja',
         'slug', 
         'cor_borda',
         'cor_background',

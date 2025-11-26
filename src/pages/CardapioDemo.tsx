@@ -10,13 +10,13 @@ const mockDesignSettings = {
   nome_confeitaria: 'Doces da Vovó',
   cor_borda: '#ec4899',
   cor_background: '#fef2f2',
-  cor_nome: '#be185d', // Adicionando cor do nome
+  cor_nome: '#be185d',
   background_topo_color: '#fce7f3',
   texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
   logo_url: '',
   banner1_url: '',
   banner2_url: '',
-  categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+  categorias: ['Bolos', 'Doces', 'Salgados'], // CORRIGIDO: categorias padrão
   descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
   banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
 }
@@ -55,7 +55,7 @@ const mockProdutos = [
     descricao: 'Delicioso brigadeiro com chocolate granulado',
     preco_normal: 3.50,
     imagem_url: '',
-    categoria: 'Brigadeiros',
+    categoria: 'Doces',
     forma_venda: 'unidade',
     disponivel: true,
     promocao: false,
@@ -65,11 +65,11 @@ const mockProdutos = [
   {
     id: '3',
     user_id: 'demo',
-    nome: 'Cookie de Chocolate',
-    descricao: 'Cookie quentinho com gotas de chocolate',
+    nome: 'Salgado de Frango',
+    descricao: 'Coxinha crocante com frango desfiado',
     preco_normal: 6.00,
     imagem_url: '',
-    categoria: 'Cookies',
+    categoria: 'Salgados',
     forma_venda: 'unidade',
     disponivel: true,
     promocao: false,
@@ -112,17 +112,17 @@ export default function CardapioDemo() {
   // Obter categorias únicas com ícones
   const categoryIcons: Record<string, string> = {
     'Bolos': '🎂',
-    'Brigadeiros': '🍫',
-    'Cookies': '🍪',
     'Doces': '🍮',
     'Salgados': '🥐',
+    'Brigadeiros': '🍫',
+    'Cookies': '🍪',
+    'Tortas': '🥧',
     'Bebidas': '🥤',
     'Pães': '🍞',
     'Sanduíches': '🥪',
     'Sobremesas': '🍰',
     'Confeitaria': '🧁',
     'Cupcakes': '🧁',
-    'Tortas': '🥧',
     'Trufas': '🍫',
     'Pudim': '🍮',
     'Coxinha': '🥐',
@@ -160,7 +160,7 @@ export default function CardapioDemo() {
           emFerias={mockConfiguracoes.emFerias}
           horarioFuncionamentoInicio={mockConfiguracoes.horario_funcionamento_inicio}
           horarioFuncionamentoFim={mockConfiguracoes.horario_funcionamento_fim}
-          corNome={mockDesignSettings.cor_nome} // Passando a cor do nome
+          corNome={mockDesignSettings.cor_nome}
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>

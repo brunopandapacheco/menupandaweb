@@ -55,4 +55,4 @@ export interface Produto {
   updated_at: string
 }
 
-export type { User, DesignSettings, Configuracoes, Produto }
+export type { User, DesignSettings, Configuracoes, Produto, DaySchedule }

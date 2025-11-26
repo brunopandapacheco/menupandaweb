@@ -82,21 +82,21 @@ export default function CardapioPublico() {
     'Doces': '🍮',
     'Salgados': '🥐',
     'Bebidas': '🥤',
-    'Pães': '',
+    'Pães': '🍞',
     'Sanduíches': '🥪',
-    'Sobremesas': '',
+    'Sobremesas': '🍰',
     'Confeitaria': '🧁',
-    'Brigadeiros': '',
-    'Cookies': '',
-    'Trufas': '',
-    'Pudim': '',
-    'Coxinha': '',
-    'Salgadinhos': '',
-    'Pipoca': ''
+    'Brigadeiros': '🍫',
+    'Cookies': '🍪',
+    'Trufas': '🍫',
+    'Pudim': '🍮',
+    'Coxinha': '🥐',
+    'Salgadinhos': '🥐',
+    'Pipoca': '🍿'
   }
 
   // Usar categorias do designSettings or categorias padrão
-  const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas']
+  const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Salgados']
   
   const categories = availableCategories.map(cat => ({
     name: cat,
@@ -138,13 +138,13 @@ export default function CardapioPublico() {
         <Logo 
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
-          storeName={designSettings.nome_loja} // CORRIGIDO: nome_loja em vez de nome_confeitaria
+          storeName={designSettings.nome_loja}
           storeDescription={designSettings.descricao_loja}
           avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
           emFerias={configuracoes?.em_ferias}
           horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
           horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
-          corNome={designSettings.cor_nome} // Passando a cor do nome
+          corNome={designSettings.cor_nome}
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
