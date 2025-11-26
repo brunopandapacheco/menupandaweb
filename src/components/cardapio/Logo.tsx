@@ -113,7 +113,7 @@ export function Logo({
             alignItems: 'center', 
             justifyContent: 'center', 
             boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-            border: `10px solid ${borderColor}`, // Borda de 10px
+            border: `8px solid ${borderColor}`, // Borda de 8px
             position: 'relative',
             zIndex: 10,
             padding: '0',
@@ -122,15 +122,15 @@ export function Logo({
         >
           {logoUrl ? (
             <img src={logoUrl} alt="Logo" style={{ 
-              width: '140px', // Reduzido de 152px para 140px (160 - 20px da borda)
-              height: '140px', // Reduzido de 152px para 140px
+              width: '144px', // 160 - 16px da borda
+              height: '144px', // 160 - 16px da borda
               borderRadius: '50%', 
               objectFit: 'cover' 
             }} />
           ) : (
             <img src="/logoteste.webp" alt="Logo" style={{ 
-              width: '140px', // Reduzido de 152px para 140px
-              height: '140px', // Reduzido de 152px para 140px
+              width: '144px', // 160 - 16px da borda
+              height: '144px', // 160 - 16px da borda
               borderRadius: '50%', 
               objectFit: 'cover' 
             }} />

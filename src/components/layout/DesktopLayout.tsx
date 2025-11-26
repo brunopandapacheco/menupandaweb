@@ -22,7 +22,7 @@ export function DesktopLayout({ children, activeTab = 'preview', onTabChange }: 
 
   return (
     <div className="min-h-screen bg-pink-50 flex">
-      <div className="w-64 bg-[#df0065] border-r border-pink-200 flex flex-col">
+      <div className="w-64 bg-[#380019] border-r border-pink-200 flex flex-col">
         <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
@@ -42,9 +42,9 @@ export function DesktopLayout({ children, activeTab = 'preview', onTabChange }: 
                   key={tab.id}
                   variant={activeTab === tab.id ? 'default' : 'ghost'}
                   className={cn(
-                    "w-full justify-start gap-3 h-12 text-white hover:bg-white hover:text-[#df0065]",
+                    "w-full justify-start gap-3 h-12 text-white hover:bg-white hover:text-[#380019]",
                     activeTab === tab.id 
-                      ? "bg-white text-[#df0065] hover:bg-white hover:text-[#df0065]" 
+                      ? "bg-white text-[#380019] hover:bg-white hover:text-[#380019]" 
                       : ""
                   )}
                   onClick={() => onTabChange?.(tab.id)}
