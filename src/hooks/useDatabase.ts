@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from './useAuth'
 import { supabaseService } from '@/services/supabase'
-import { DesignSettings, Configuracoes, Produto } from '@/types'
+import { DesignSettings, Configuracoes, Produto } from '@/types/database'
 
 export function useDatabase() {
   const { user } = useAuth()
@@ -34,17 +34,17 @@ export function useDatabase() {
     setLoading(true)
     
     try {
-      // Carregar dados em paralelo
-      let [designData, configData, produtosData] = await Promise.all([
+      // Carregar datas em paralelo
+      let [designData, configData, productsData] = await Promise.all([
         supabaseService.getDesignSettings(user.id),
         supabaseService.getConfiguracoes(user.id),
-        supabaseService.getProdutos(user.id)
+        supabaseService.getProducts(user.id)
       ])
 
       console.log('📊 loadData: Initial data loaded:', {
         designData: !!designData,
         configData: !!configData,
-        produtosCount: produtosData?.length || 0
+        productsCount: productsData?.length || 0
       })
 
       // Se não tiver design settings, criar padrão
@@ -54,15 +54,15 @@ export function useDatabase() {
         console.log('✅ Default design settings created:', designData)
       }
 
-      // Se não tiver configurações, o método getConfiguracoes já cria o padrão
+      // Se não tiver configurações, o method getConfiguracoes already creates padrão
       if (!configData) {
         console.log('⚠️ No config data after getConfiguracoes, this should not happen')
       }
 
-      // Atualizar estados
+      // Atualizar states
       setDesignSettings(designData)
       setConfiguracoes(configData)
-      setProdutos(produtosData || [])
+      setProdutos(productsData || [])
       
       console.log('✅ loadData: Data loaded successfully')
     } catch (error) {
@@ -111,14 +111,14 @@ export function useDatabase() {
     return success
   }
 
-  const addProduto = async (produto: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
+  const addProduto = async (product: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
     if (!user) {
       console.error('❌ addProduto: No user')
       return null
     }
     
-    console.log('➕ addProduto: Adding...', produto)
-    const result = await supabaseService.createProduto(user.id, produto)
+    console.log('➕ addProduto: Adding...', product)
+    const result = await supabaseService.createProduct(user.id, product)
     
     if (result) {
       console.log('✅ addProduto: Added successfully, reloading data...')
@@ -130,14 +130,14 @@ export function useDatabase() {
     return result
   }
 
-  const editProduto = async (id: string, produto: Partial<Produto>) => {
+  const editProduto = async (id: string, product: Partial<Produto>) => {
     if (!user) {
       console.error('❌ editProduto: No user')
       return false
     }
     
-    console.log('✏️ editProduto: Updating...', id, produto)
-    const success = await supabaseService.updateProduto(id, produto)
+    console.log('✏️ editProduto: Updating...', id, product)
+    const success = await supabaseService.updateProduct(id, product)
     
     if (success) {
       console.log('✅ editProduto: Updated successfully, reloading data...')
@@ -156,7 +156,7 @@ export function useDatabase() {
     }
     
     console.log('🗑️ removeProduto: Removing...', id)
-    const success = await supabaseService.deleteProduto(id)
+    const success = await supabaseService.deleteProduct(id)
     
     if (success) {
       console.log('✅ removeProduto: Removed successfully, reloading data...')

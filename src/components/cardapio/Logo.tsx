@@ -21,9 +21,17 @@ export function Logo({
   emFerias,
   horarioFuncionamentoInicio = '08:00',
   horarioFuncionamentoFim = '18:00',
-  corNome = '#1A1A1A' // Valor padrão
+  corNome = '#1A1A1A' // Value padrão
 }: LogoProps) {
-  // Renderiza estrelas com base na avaliação
+  // Debug logs
+  console.log('Logo component props:', {
+    storeName,
+    storeDescription,
+    corNome,
+    borderColor
+  })
+
+  // Renderiza estrelas with base na avaliação
   const renderStars = (rating: number) => {
     const stars = []
     const fullStars = Math.floor(rating)
@@ -85,7 +93,7 @@ export function Logo({
     if (currentTime >= startTime && currentTime <= endTime) {
       return { 
         status: 'Aberto', 
-        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
+        time: `Date às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
         color: '#15803d',
         bgColor: '#dcfce7'
       }
@@ -138,19 +146,19 @@ export function Logo({
         </div>
       </div>
       
-      {/* Título e descrição da loja fora do card */}
+      {/* Título and description of store outside card */}
       <div style={{ textAlign: 'center', marginTop: '20px', padding: '0 16px' }}>
         <h2 style={{ 
           fontSize: '32px', 
           fontWeight: 'bold', 
-          color: corNome, // Aplicando a cor dinâmica aqui
+          color: corNome, // Applying dynamic color here
           marginBottom: '8px',
           lineHeight: '1.2'
         }}>
           {storeName || 'Doces da Vovó'}
         </h2>
         
-        {/* Avaliação abaixo do nome */}
+        {/* Rating below name */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
             {renderStars(avaliacaoMedia)}
@@ -160,7 +168,7 @@ export function Logo({
           </span>
         </div>
         
-        {/* Status da loja abaixo da avaliação */}
+        {/* Store status below rating */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
           <div>
             <p style={{ 
@@ -184,7 +192,7 @@ export function Logo({
           maxWidth: '300px',
           margin: '0 auto'
         }}>
-          {storeDescription || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'}
+          {storeDescription || 'Há more de 20 years transformando moments speciais in doces inesquecíveis. Feito with amor and os melhores ingredients.'}
         </p>
       </div>
     </div>

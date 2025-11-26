@@ -7,7 +7,7 @@ import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { supabaseService } from '@/services/supabase'
-import { DesignSettings, Configuracoes, Produto } from '@/types'
+import { DesignSettings, Configuracoes, Produto } from '@/types/database'
 
 export default function CardapioPublico() {
   const { slug } = useParams<{ slug: string }>()
@@ -39,15 +39,15 @@ export default function CardapioPublico() {
 
     const loadData = async () => {
       try {
-        const [designData, configData, produtosData] = await Promise.all([
+        const [designData, configData, productsData] = await Promise.all([
           supabaseService.getDesignSettingsBySlug(slug),
           supabaseService.getConfiguracoesBySlug(slug),
-          supabaseService.getProdutosBySlug(slug)
+          supabaseService.getProductsBySlug(slug)
         ])
 
         setDesignSettings(designData)
         setConfiguracoes(configData)
-        setProdutos(produtosData)
+        setProdutos(productsData)
       } catch (error) {
         console.error('Error loading cardapio:', error)
         navigate('/')
@@ -74,7 +74,7 @@ export default function CardapioPublico() {
     window.open(whatsappUrl, '_blank')
   }
 
-  // Obter categorias únicas com ícones
+  // Obter categorias únicas with ícones
   const categoryIcons: Record<string, string> = {
     'Bolos': '🎂',
     'Cupcakes': '🧁',
@@ -82,20 +82,20 @@ export default function CardapioPublico() {
     'Doces': '🍮',
     'Salgados': '🥐',
     'Bebidas': '🥤',
-    'Pães': '🍞',
+    'Pães': '',
     'Sanduíches': '🥪',
-    'Sobremesas': '🍰',
+    'Sobremesas': '',
     'Confeitaria': '🧁',
-    'Brigadeiros': '🍫',
-    'Cookies': '🍪',
-    'Trufas': '🍫',
-    'Pudim': '🍮',
-    'Coxinha': '🥐',
-    'Salgadinhos': '🥐',
-    'Pipoca': '🍿'
+    'Brigadeiros': '',
+    'Cookies': '',
+    'Trufas': '',
+    'Pudim': '',
+    'Coxinha': '',
+    'Salgadinhos': '',
+    'Pipoca': ''
   }
 
-  // Usar categorias do designSettings ou categorias padrão
+  // Usar categorias do designSettings or categorias padrão
   const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas']
   
   const categories = availableCategories.map(cat => ({
@@ -103,7 +103,7 @@ export default function CardapioPublico() {
     icon: categoryIcons[cat] || '🧁'
   }))
 
-  // Filtrar produtos por busca e categoria
+  // Filtrar produtos by busca and category
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
@@ -122,7 +122,7 @@ export default function CardapioPublico() {
   if (!designSettings) {
     return (
       <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div>Cardápio não encontrado</div>
+        <div>Cardápio not found</div>
       </div>
     )
   }
@@ -159,7 +159,7 @@ export default function CardapioPublico() {
             </div>
           )}
 
-          {/* Filtro de categorias */}
+          {/* Filtro of categorias */}
           <CategoryFilter
             categories={categories}
             selectedCategory={selectedCategory}

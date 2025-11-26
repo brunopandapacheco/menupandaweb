@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import { DesignSettings, Configuracoes, Produto } from '@/types'
+import { DesignSettings, Configuracoes, Produto } from '@/types/database'
 
 export class SupabaseService {
   // Design Settings
@@ -72,7 +72,7 @@ export class SupabaseService {
     try {
       console.log('💾 updateDesignSettings: Updating for user:', userId, settings)
       
-      // Primeiro, verificar se o registro já existe
+      // Primeiro, verify if is record already exists
       const { data: existingRecord, error: checkError } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -80,7 +80,7 @@ export class SupabaseService {
         .single()
       
       if (checkError && checkError.code === 'PGRST116') {
-        // Se não existe, criar novo registro
+        // If doesn't exist, create new record
         console.log('📝 No existing record found, creating new one...')
         const defaultSettings = {
           user_id: userId,
@@ -94,7 +94,7 @@ export class SupabaseService {
           categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-          ...settings // Adicionar as configurações personalizadas
+          ...settings // Add any custom configurations
         }
 
         const { error: insertError } = await supabase
@@ -115,13 +115,13 @@ export class SupabaseService {
         return false
       }
       
-      // Se existe, fazer UPDATE
+      // If exists, do UPDATE
       console.log('📝 Existing record found, updating...')
       
-      // Filtrar apenas os campos que existem na tabela
+      // Filter only fields that exist in the table
       const validSettings: any = {}
       
-      // Lista de campos válidos conhecidos
+      // List of known valid fields
       const validFields = [
         'nome_confeitaria',
         'slug', 
@@ -138,7 +138,7 @@ export class SupabaseService {
         'banner_gradient'
       ]
       
-      // Adicionar apenas campos válidos
+      // Add only valid fields
       Object.keys(settings).forEach(key => {
         if (validFields.includes(key)) {
           validSettings[key] = settings[key as keyof DesignSettings]
@@ -167,7 +167,7 @@ export class SupabaseService {
     }
   }
 
-  // Configurações
+  // Configurations
   async getConfiguracoes(userId: string): Promise<Configuracoes | null> {
     try {
       console.log('🔍 getConfiguracoes: Querying for user:', userId)
@@ -271,10 +271,10 @@ export class SupabaseService {
     }
   }
 
-  // Produtos
-  async getProdutos(userId: string): Promise<Produto[]> {
+  // Products
+  async getProducts(userId: string): Promise<Produto[]> {
     try {
-      console.log('🔍 getProdutos: Querying for user:', userId)
+      console.log('🔍 getProducts: Querying for user:', userId)
       
       const { data, error } = await supabase
         .from('produtos')
@@ -283,66 +283,66 @@ export class SupabaseService {
         .order('created_at', { ascending: false })
       
       if (error) {
-        console.error('❌ getProdutos error:', error)
+        console.error('❌ getProducts error:', error)
         throw error
       }
       
-      console.log('✅ getProdutos success:', data?.length || 0, 'products')
+      console.log('✅ getProducts success:', data?.length || 0, 'products')
       return data || []
     } catch (error) {
-      console.error('❌ Error getting produtos:', error)
+      console.error('❌ Error getting products:', error)
       return []
     }
   }
 
-  async createProduto(userId: string, produto: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>): Promise<Produto | null> {
+  async createProduct(userId: string, product: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>): Promise<Produto | null> {
     try {
-      console.log('➕ createProduto: Creating for user:', userId, produto)
+      console.log('➕ createProduct: Creating for user:', userId, product)
       
       const { data, error } = await supabase
         .from('produtos')
-        .insert({ ...produto, user_id: userId })
+        .insert({ ...product, user_id: userId })
         .select()
         .single()
       
       if (error) {
-        console.error('❌ createProduto error:', error)
+        console.error('❌ createProduct error:', error)
         throw error
       }
       
-      console.log('✅ createProduto success:', data)
+      console.log('✅ createProduct success:', data)
       return data
     } catch (error) {
-      console.error('❌ Error creating produto:', error)
+      console.error('❌ Error creating product:', error)
       return null
     }
   }
 
-  async updateProduto(id: string, produto: Partial<Produto>): Promise<boolean> {
+  async updateProduct(id: string, product: Partial<Produto>): Promise<boolean> {
     try {
-      console.log('✏️ updateProduto: Updating:', id, produto)
+      console.log('✏️ updateProduct: Updating:', id, product)
       
       const { error } = await supabase
         .from('produtos')
-        .update(produto)
+        .update(product)
         .eq('id', id)
       
       if (error) {
-        console.error('❌ updateProduto error:', error)
+        console.error('❌ updateProduct error:', error)
         return false
       }
       
-      console.log('✅ updateProduto success')
+      console.log('✅ updateProduct success')
       return true
     } catch (error) {
-      console.error('❌ Error updating produto:', error)
+      console.error('❌ Error updating product:', error)
       return false
     }
   }
 
-  async deleteProduto(id: string): Promise<boolean> {
+  async deleteProduct(id: string): Promise<boolean> {
     try {
-      console.log('🗑️ deleteProduto: Deleting:', id)
+      console.log('🗑️ deleteProduct: Deleting:', id)
       
       const { error } = await supabase
         .from('produtos')
@@ -350,14 +350,14 @@ export class SupabaseService {
         .eq('id', id)
       
       if (error) {
-        console.error('❌ deleteProduto error:', error)
+        console.error('❌ deleteProduct error:', error)
         return false
       }
       
-      console.log('✅ deleteProduto success')
+      console.log('✅ deleteProduct success')
       return true
     } catch (error) {
-      console.error('❌ Error deleting produto:', error)
+      console.error('❌ Error deleting product:', error)
       return false
     }
   }
@@ -422,9 +422,9 @@ export class SupabaseService {
     }
   }
 
-  async getProdutosBySlug(slug: string): Promise<Produto[]> {
+  async getProductsBySlug(slug: string): Promise<Produto[]> {
     try {
-      console.log('🔍 getProdutosBySlug: Querying for slug:', slug)
+      console.log('🔍 getProductsBySlug: Querying for slug:', slug)
       
       // First get the design_settings to find the user_id
       const { data: designData, error: designError } = await supabase
@@ -434,11 +434,11 @@ export class SupabaseService {
         .single()
       
       if (designError || !designData) {
-        console.error('❌ getProdutosBySlug: Could not find user for slug:', designError)
+        console.error('❌ getProductsBySlug: Could not find user for slug:', designError)
         return []
       }
       
-      // Then get produtos by user_id
+      // Then get products by user_id
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
@@ -446,14 +446,14 @@ export class SupabaseService {
         .order('created_at', { ascending: false })
       
       if (error) {
-        console.error('❌ getProdutosBySlug error:', error)
+        console.error('❌ getProductsBySlug error:', error)
         throw error
       }
       
-      console.log('✅ getProdutosBySlug success:', data?.length || 0, 'products')
+      console.log('✅ getProductsBySlug success:', data?.length || 0, 'products')
       return data || []
     } catch (error) {
-      console.error('❌ Error getting produtos by slug:', error)
+      console.error('❌ Error getting products by slug:', error)
       return []
     }
   }

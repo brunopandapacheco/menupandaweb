@@ -99,12 +99,12 @@ export default function TestDatabase() {
 
     // Teste 4: Produtos
     try {
-      const produtosData = await supabaseService.getProdutos(user.id)
+      const productsData = await supabaseService.getProducts(user.id)
       newTests[3] = { 
         name: 'Produtos', 
         status: 'success', 
-        message: `${produtosData.length} produtos encontrados`,
-        details: { count: produtosData.length }
+        message: `${productsData.length} produtos encontrados`,
+        details: { count: productsData.length }
       }
     } catch (error: any) {
       newTests[3] = { 
@@ -118,7 +118,7 @@ export default function TestDatabase() {
     try {
       const testDesign = {
         nome_confeitaria: 'Teste Atualização',
-        slug: 'teste-atualizacao',
+        slug: 'teste-atualização',
         cor_borda: '#ff0000'
       }
       

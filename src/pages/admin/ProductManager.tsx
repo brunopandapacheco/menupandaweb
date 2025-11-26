@@ -12,7 +12,7 @@ import { Plus, Edit, Trash2, Upload, X, GripVertical, Filter } from 'lucide-reac
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
-import { Produto } from '@/types'
+import { Produto } from '@/types/database'
 
 const saleTypes = [
   { value: 'kg', label: 'Kg' },
