@@ -111,7 +111,7 @@ export function Logo({
             alignItems: 'center', 
             justifyContent: 'center', 
             boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-            border: `6px solid white`,
+            border: `6px solid ${borderColor}`,
             position: 'relative',
             zIndex: 10,
             padding: '0',
