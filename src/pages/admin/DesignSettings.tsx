@@ -56,28 +56,49 @@ export default function DesignSettings() {
   const [domingoAberto, setDomingoAberto] = useState(false)
 
   useEffect(() => {
+    console.log('🔄 DesignSettings useEffect - Carregando dados do designSettings:', designSettings)
+    
     if (designSettings) {
+      console.log('📝 Aplicando valores do designSettings ao estado local:')
+      
       if (designSettings.banner_gradient) {
+        console.log('  - Banner gradient:', designSettings.banner_gradient)
         setBannerGradient(designSettings.banner_gradient)
       }
+      
       if (designSettings.cor_borda) {
+        console.log('  - Cor borda:', designSettings.cor_borda)
         setCorBorda(designSettings.cor_borda)
       }
+      
       if (designSettings.cor_nome) {
+        console.log('  - Cor nome:', designSettings.cor_nome)
         setCorNome(designSettings.cor_nome)
       }
+      
       if (designSettings.nome_confeitaria) {
+        console.log('  - Nome confeitaria:', designSettings.nome_confeitaria)
         setNomeLoja(designSettings.nome_confeitaria)
+      } else {
+        console.log('  - Nome confeitaria: não encontrado, usando valor padrão')
       }
+      
       if (designSettings.descricao_loja) {
+        console.log('  - Descrição loja:', designSettings.descricao_loja)
         setDescricaoLoja(designSettings.descricao_loja)
       }
+      
       if (designSettings.texto_rodape) {
+        console.log('  - Texto rodapé:', designSettings.texto_rodape)
         setTextoRodape(designSettings.texto_rodape)
       }
+      
       if (designSettings.logo_url) {
+        console.log('  - Logo URL:', designSettings.logo_url)
         setLogoUrl(designSettings.logo_url)
       }
+    } else {
+      console.log('⚠️ designSettings está nulo ou indefinido')
     }
   }, [designSettings])
 
@@ -145,14 +166,45 @@ export default function DesignSettings() {
   }
 
   const saveConfig = async () => {
-    console.log('=== SALVANDO CONFIGURAÇÕES ===')
+    console.log('=== INICIANDO SALVAMENTO DE CONFIGURAÇÕES ===')
+    console.log('Valores atuais:')
+    console.log('  - Nome da loja:', nomeLoja)
+    console.log('  - Descrição da loja:', descricaoLoja)
+    console.log('  - Texto do rodapé:', textoRodape)
+    console.log('  - Logo URL:', logoUrl)
     
-    const success = await saveDesignSettings({
-      nome_confeitaria: nomeLoja,
-      descricao_loja: descricaoLoja,
-      texto_rodape: textoRodape,
-      logo_url: logoUrl
-    })
+    const settingsToUpdate: any = {}
+    
+    if (nomeLoja && nomeLoja.trim()) {
+      settingsToUpdate.nome_confeitaria = nomeLoja.trim()
+      console.log('  ✓ Adicionando nome_confeitaria ao update')
+    }
+    
+    if (descricaoLoja && descricaoLoja.trim()) {
+      settingsToUpdate.descricao_loja = descricaoLoja.trim()
+      console.log('  ✓ Adicionando descricao_loja ao update')
+    }
+    
+    if (textoRodape && textoRodape.trim()) {
+      settingsToUpdate.texto_rodape = textoRodape.trim()
+      console.log('  ✓ Adicionando texto_rodape ao update')
+    }
+    
+    if (logoUrl && logoUrl.trim()) {
+      settingsToUpdate.logo_url = logoUrl.trim()
+      console.log('  ✓ Adicionando logo_url ao update')
+    }
+    
+    console.log('📦 Objeto final para atualizar:', settingsToUpdate)
+    
+    if (Object.keys(settingsToUpdate).length === 0) {
+      console.log('❌ Nenhum campo válido para atualizar')
+      showError('Por favor, preencha pelo menos um campo')
+      return
+    }
+    
+    console.log('Enviando para saveDesignSettings...')
+    const success = await saveDesignSettings(settingsToUpdate)
     
     if (success) {
       console.log('✅ Configurações salvas com sucesso no banco!')
@@ -401,10 +453,14 @@ export default function DesignSettings() {
                   <Input
                     id="nomeLoja"
                     value={nomeLoja}
-                    onChange={(e) => setNomeLoja(e.target.value)}
+                    onChange={(e) => {
+                      console.log('📝 Input nomeLoja mudou para:', e.target.value)
+                      setNomeLoja(e.target.value)
+                    }}
                     placeholder="Nome da sua confeitaria"
                     className="w-full"
                   />
+                  <p className="text-xs text-gray-500">Valor atual: "{nomeLoja}"</p>
                 </div>
 
                 {/* Descrição da Loja */}
@@ -415,11 +471,15 @@ export default function DesignSettings() {
                   <Textarea
                     id="descricaoLoja"
                     value={descricaoLoja}
-                    onChange={(e) => setDescricaoLoja(e.target.value)}
+                    onChange={(e) => {
+                      console.log('📝 Input descricaoLoja mudou para:', e.target.value)
+                      setDescricaoLoja(e.target.value)
+                    }}
                     placeholder="Descreva sua confeitaria..."
                     rows={3}
                     className="w-full"
                   />
+                  <p className="text-xs text-gray-500">Valor atual: "{descricaoLoja}"</p>
                 </div>
 
                 {/* Texto do Rodapé */}
@@ -430,10 +490,14 @@ export default function DesignSettings() {
                   <Input
                     id="textoRodape"
                     value={textoRodape}
-                    onChange={(e) => setTextoRodape(e.target.value)}
+                    onChange={(e) => {
+                      console.log('📝 Input textoRodape mudou para:', e.target.value)
+                      setTextoRodape(e.target.value)
+                    }}
                     placeholder="Faça seu pedido! 📞 (11) 99999-9999"
                     className="w-full"
                   />
+                  <p className="text-xs text-gray-500">Valor atual: "{textoRodape}"</p>
                 </div>
 
                 {/* Logo da Loja */}
@@ -466,12 +530,16 @@ export default function DesignSettings() {
                       </Button>
                     </div>
                   </div>
+                  <p className="text-xs text-gray-500">Logo URL atual: "{logoUrl}"</p>
                 </div>
 
                 {/* Botão Salvar - Design Moderno */}
                 <div className="pt-6">
                   <Button 
-                    onClick={saveConfig}
+                    onClick={() => {
+                      console.log('🔄 Botão Salvar Configurações clicado!')
+                      saveConfig()
+                    }}
                     className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     Salvar Configurações
