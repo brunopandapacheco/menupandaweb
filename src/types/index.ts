@@ -1,6 +1,2 @@
-import { User, DesignSettings, Configuracoes, Produto } from './database'
-
-export type { User, DesignSettings, Configuracoes, Produto }
-
-export type AuthMode = 'login' | 'register' | 'reset'
-export type DeviceType = 'mobile' | 'tablet' | 'desktop'
+export type { User } from '@supabase/supabase-js'
+export type { DesignSettings, Configuracoes, Produto } from './database'

@@ -13,8 +13,8 @@ export interface DesignSettings {
   categorias?: string[]
   descricao_loja?: string
   banner_gradient?: string
-  banner1_url?: string // Adicionando propriedade faltante
-  banner2_url?: string // Adicionando propriedade faltante
+  banner1_url?: string
+  banner2_url?: string
 }
 
 export interface Configuracoes {
@@ -55,4 +55,4 @@ export interface Produto {
   updated_at: string
 }
 
-// Removendo export duplicado para evitar conflitos
+export type { User, DesignSettings, Configuracoes, Produto }

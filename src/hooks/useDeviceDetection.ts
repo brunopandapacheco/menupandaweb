@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { DeviceType } from '@/types'
+
+export type DeviceType = 'mobile' | 'tablet' | 'desktop'
 
 export function useDeviceDetection(): DeviceType {
   const [device, setDevice] = useState<DeviceType>('desktop')
