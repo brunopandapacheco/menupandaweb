@@ -113,7 +113,7 @@ export function Logo({
             alignItems: 'center', 
             justifyContent: 'center', 
             boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-            border: `6px solid ${borderColor}`,
+            border: `10px solid ${borderColor}`, // Aumentado de 6px para 10px
             position: 'relative',
             zIndex: 10,
             padding: '0',
