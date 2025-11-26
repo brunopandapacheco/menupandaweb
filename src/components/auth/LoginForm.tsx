@@ -21,18 +21,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     setLoading(true)
 
     try {
-      console.log('Tentando login com:', email)
-
-      // Limpa qualquer sessão existente antes de fazer login
-      await supabase.auth.signOut()
+      console.log('🔐 Tentando login com:', email)
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: {
+          // Não limpar sessão existente
+        }
       })
 
       if (error) {
-        console.error('Erro de login:', error)
+        console.error('❌ Erro de login:', error)
         
         if (error.message?.includes('Invalid login credentials')) {
           showError('Email ou senha incorretos.')
@@ -45,21 +45,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       }
 
       if (data.user) {
-        console.log('Login bem-sucedido:', data.user.id)
-        
-        if (rememberMe) {
-          localStorage.setItem('rememberMe', 'true')
-        }
+        console.log('✅ Login bem-sucedido:', data.user.email)
+        console.log('🔄 Sessão:', data.session)
         
         showSuccess('Login realizado com sucesso!')
         
-        // Redireciona imediatamente após sucesso
+        // Aguardar um pouco para garantir que a sessão foi salva
         setTimeout(() => {
           onSuccess?.()
-        }, 500)
+        }, 1000)
       }
     } catch (error: any) {
-      console.error('Erro durante o login:', error)
+      console.error('❌ Erro durante o login:', error)
       showError('Ocorreu um erro ao tentar fazer login. Tente novamente.')
     } finally {
       setLoading(false)

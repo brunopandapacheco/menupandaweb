@@ -12,22 +12,20 @@ export function useAuth() {
     // Get initial session
     const getInitialSession = async () => {
       try {
+        console.log('🔍 Buscando sessão inicial...')
         const { data: { session }, error } = await supabase.auth.getSession()
         
         if (!mounted) return
         
         if (error) {
-          console.error('Erro ao obter sessão inicial:', error)
-          // Se houver erro de refresh token, limpa a sessão
-          if (error.message?.includes('Refresh Token')) {
-            await supabase.auth.signOut()
-          }
+          console.error('❌ Erro ao obter sessão inicial:', error)
           setUser(null)
         } else {
+          console.log('✅ Sessão inicial encontrada:', session?.user?.email)
           setUser(session?.user ?? null)
         }
       } catch (error) {
-        console.error('Erro ao buscar sessão:', error)
+        console.error('❌ Erro ao buscar sessão:', error)
         if (mounted) setUser(null)
       } finally {
         if (mounted) setLoading(false)
@@ -40,17 +38,20 @@ export function useAuth() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return
       
-      console.log('Auth state changed:', event, session?.user?.id)
+      console.log('🔄 Auth state changed:', event, session?.user?.email)
       
-      if (event === 'TOKEN_REFRESHED') {
-        console.log('Token refreshed successfully')
-      } else if (event === 'SIGNED_OUT') {
+      if (event === 'SIGNED_OUT') {
+        console.log('👋 Usuário deslogado')
         setUser(null)
+      } else if (event === 'TOKEN_REFRESHED') {
+        console.log('🔄 Token atualizado')
+        setUser(session?.user ?? null)
+      } else if (event === 'SIGNED_IN') {
+        console.log('✅ Usuário logado')
+        setUser(session?.user ?? null)
       } else {
         setUser(session?.user ?? null)
       }
-      
-      setLoading(false)
     })
 
     return () => {
@@ -61,13 +62,16 @@ export function useAuth() {
 
   const signOut = async () => {
     try {
+      console.log('👋 Iniciando logout...')
       const { error } = await supabase.auth.signOut()
       if (error) {
-        console.error('Erro ao fazer logout:', error)
+        console.error('❌ Erro ao fazer logout:', error)
+      } else {
+        console.log('✅ Logout realizado com sucesso')
+        setUser(null)
       }
-      setUser(null)
     } catch (error) {
-      console.error('Erro durante o logout:', error)
+      console.error('❌ Erro durante o logout:', error)
     }
   }
 
