@@ -13,7 +13,6 @@ const tabs = [
   { id: 'preview', label: 'Prévia do Cardápio', icon: Eye },
   { id: 'design', label: 'Design', icon: Palette },
   { id: 'products', label: 'Produtos', icon: ShoppingBag },
-  { id: 'settings', label: 'Configurações', icon: Settings },
 ]
 
 export function DesktopLayout({ children, activeTab = 'preview', onTabChange }: DesktopLayoutProps) {

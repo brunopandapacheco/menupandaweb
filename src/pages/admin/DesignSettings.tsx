@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
-import { CheckCircle, Palette, Sparkles } from 'lucide-react'
+import { CheckCircle, Palette, Sparkles, Settings, Upload } from 'lucide-react'
 
 const predefinedColors = [
   { name: 'Rosa', value: '#ec4899' },
@@ -29,11 +32,17 @@ const gradientBackgrounds = [
 ]
 
 export default function DesignSettings() {
-  const { designSettings, saveDesignSettings, loading } = useDatabase()
-  const [activeTab, setActiveTab] = useState('degrades')
+  const { designSettings, configuracoes, saveDesignSettings, saveConfiguracoes, loading } = useDatabase()
+  const [activeTab, setActiveTab] = useState('background')
   const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)')
   const [corBorda, setCorBorda] = useState('#ec4899')
   const [corNome, setCorNome] = useState('#be185d')
+  
+  // Estados para configurações
+  const [nomeLoja, setNomeLoja] = useState('')
+  const [descricaoLoja, setDescricaoLoja] = useState('')
+  const [textoRodape, setTextoRodape] = useState('')
+  const [logoUrl, setLogoUrl] = useState('')
 
   useEffect(() => {
     if (designSettings) {
@@ -45,6 +54,18 @@ export default function DesignSettings() {
       }
       if (designSettings.cor_nome) {
         setCorNome(designSettings.cor_nome)
+      }
+      if (designSettings.nome_confeitaria) {
+        setNomeLoja(designSettings.nome_confeitaria)
+      }
+      if (designSettings.descricao_loja) {
+        setDescricaoLoja(designSettings.descricao_loja)
+      }
+      if (designSettings.texto_rodape) {
+        setTextoRodape(designSettings.texto_rodape)
+      }
+      if (designSettings.logo_url) {
+        setLogoUrl(designSettings.logo_url)
       }
     }
   }, [designSettings])
@@ -87,22 +108,55 @@ export default function DesignSettings() {
     }
   }
 
+  const saveConfig = async () => {
+    console.log('=== SALVANDO CONFIGURAÇÕES ===')
+    
+    const success = await saveDesignSettings({
+      nome_confeitaria: nomeLoja,
+      descricao_loja: descricaoLoja,
+      texto_rodape: textoRodape,
+      logo_url: logoUrl
+    })
+    
+    if (success) {
+      console.log('✅ Configurações salvas com sucesso no banco!')
+      showSuccess('⚙️ Configurações atualizadas com sucesso!')
+    } else {
+      console.error('❌ Falha ao salvar configurações no banco')
+      showError('Erro ao salvar configurações')
+    }
+  }
+
+  const handleLogoUpload = async (file: File) => {
+    if (!file) return
+    
+    // Aqui você implementaria o upload da logo
+    // Por enquanto, vamos apenas simular
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const result = e.target?.result as string
+      setLogoUrl(result)
+      showSuccess('Logo carregada com sucesso!')
+    }
+    reader.readAsDataURL(file)
+  }
+
   if (loading) return <div>Carregando...</div>
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="text-center sm:text-left pt-8 sm:pt-0">
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
-        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha o background animado e as cores do seu cardápio</p>
+        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha o background, cores e configurações do seu cardápio</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
-            value="degrades" 
+            value="background" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
-            Background Animado
+            Background
           </TabsTrigger>
           <TabsTrigger 
             value="cores" 
@@ -110,12 +164,18 @@ export default function DesignSettings() {
           >
             Cores
           </TabsTrigger>
+          <TabsTrigger 
+            value="configuracao" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
+          >
+            Configuração
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="degrades">
+        <TabsContent value="background">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle style={{ color: '#4A3531' }}>Background Animado</CardTitle>
+              <CardTitle style={{ color: '#4A3531' }}>Background</CardTitle>
               <CardDescription>Escolha o degrade animado que fica atrás da logo</CardDescription>
             </CardHeader>
             <CardContent>
@@ -249,6 +309,112 @@ export default function DesignSettings() {
                     className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-[#d11b70] to-[#ff6fae] hover:from-[#b0195f] hover:to-[#ff5a9d] transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     Aplicar Cores
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="configuracao">
+          <div className="space-y-6">
+            {/* Card Principal - Configurações */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <div className="flex justify-center mb-2">
+                  <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+                    <Settings className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Configurações</CardTitle>
+                <CardDescription className="text-base">
+                  Informações básicas da sua loja
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
+                {/* Nome da Loja */}
+                <div className="space-y-2">
+                  <Label htmlFor="nomeLoja" className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                    Nome da Loja
+                  </Label>
+                  <Input
+                    id="nomeLoja"
+                    value={nomeLoja}
+                    onChange={(e) => setNomeLoja(e.target.value)}
+                    placeholder="Nome da sua confeitaria"
+                    className="w-full"
+                  />
+                </div>
+
+                {/* Descrição da Loja */}
+                <div className="space-y-2">
+                  <Label htmlFor="descricaoLoja" className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                    Descrição da Loja
+                  </Label>
+                  <Textarea
+                    id="descricaoLoja"
+                    value={descricaoLoja}
+                    onChange={(e) => setDescricaoLoja(e.target.value)}
+                    placeholder="Descreva sua confeitaria..."
+                    rows={3}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* Texto do Rodapé */}
+                <div className="space-y-2">
+                  <Label htmlFor="textoRodape" className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                    Texto do Rodapé
+                  </Label>
+                  <Input
+                    id="textoRodape"
+                    value={textoRodape}
+                    onChange={(e) => setTextoRodape(e.target.value)}
+                    placeholder="Faça seu pedido! 📞 (11) 99999-9999"
+                    className="w-full"
+                  />
+                </div>
+
+                {/* Logo da Loja */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                    Logo da Loja
+                  </Label>
+                  <div className="flex items-center gap-4">
+                    {logoUrl && (
+                      <div className="w-20 h-20 rounded-full border-2 border-gray-200 overflow-hidden">
+                        <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleLogoUpload(file)
+                        }}
+                        className="hidden"
+                        id="logo-upload"
+                      />
+                      <Button asChild variant="outline" className="w-full">
+                        <label htmlFor="logo-upload" className="cursor-pointer">
+                          <Upload className="w-4 h-4 mr-2" />
+                          {logoUrl ? 'Trocar Logo' : 'Enviar Logo'}
+                        </label>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botão Salvar - Design Moderno */}
+                <div className="pt-6">
+                  <Button 
+                    onClick={saveConfig}
+                    className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Salvar Configurações
                   </Button>
                 </div>
               </CardContent>

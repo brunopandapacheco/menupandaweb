@@ -13,7 +13,6 @@ const tabs = [
   { id: 'preview', label: 'Prévia', icon: Eye },
   { id: 'design', label: 'Design', icon: Palette },
   { id: 'products', label: 'Produtos', icon: ShoppingBag },
-  { id: 'settings', label: 'Config', icon: Settings },
 ]
 
 export function MobileLayout({ children, activeTab = 'preview', onTabChange }: MobileLayoutProps) {
@@ -26,7 +25,7 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
       </div>
       
       <div className="fixed bottom-0 left-0 right-0 bg-[#1A1A1A] border-t border-pink-200 rounded-t-2xl">
-        <div className="grid grid-cols-4 gap-1 p-2">
+        <div className="grid grid-cols-3 gap-1 p-2">
           {tabs.map((tab) => {
             return (
               <Button

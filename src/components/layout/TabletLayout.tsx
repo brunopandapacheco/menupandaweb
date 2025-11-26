@@ -13,7 +13,6 @@ const tabs = [
   { id: 'preview', label: 'Prévia', icon: Eye },
   { id: 'design', label: 'Design', icon: Palette },
   { id: 'products', label: 'Produtos', icon: ShoppingBag },
-  { id: 'settings', label: 'Configurações', icon: Settings },
 ]
 
 export function TabletLayout({ children, activeTab = 'preview', onTabChange }: TabletLayoutProps) {
