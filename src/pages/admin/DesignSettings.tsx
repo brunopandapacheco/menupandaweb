@@ -8,7 +8,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
-import { CheckCircle, Palette, Sparkles, Settings, Upload, Clock, Calendar } from 'lucide-react'
+import { CheckCircle, Palette, Sparkles, Settings, Upload, Clock, Calendar, Image as ImageIcon } from 'lucide-react'
+import { supabaseService } from '@/services/supabase'
 
 const predefinedColors = [
   { name: 'Rosa', value: '#ec4899' },
@@ -44,6 +45,7 @@ export default function DesignSettings() {
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [textoRodape, setTextoRodape] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
+  const [uploadingLogo, setUploadingLogo] = useState(false)
 
   // Estados para horários
   const [horarioSemanaAbre, setHorarioSemanaAbre] = useState('08:00')
@@ -76,7 +78,7 @@ export default function DesignSettings() {
         setCorNome(designSettings.cor_nome)
       }
       
-      if (designSettings.nome_loja) { // CORRIGIDO: nome_loja em vez de nome_confeitaria
+      if (designSettings.nome_loja) {
         console.log('  - Nome loja:', designSettings.nome_loja)
         setNomeLoja(designSettings.nome_loja)
       } else {
@@ -139,7 +141,7 @@ export default function DesignSettings() {
     
     if (success) {
       console.log('✅ Degrade salvo com sucesso no banco!')
-      showSuccess(`🌈 Degrade "${gradient.name}" aplicado com sucesso!`)
+      showSuccess('🌈 Degrade "' + gradient.name + '" aplicado com sucesso!')
     } else {
       console.error('❌ Falha ao salvar degrade no banco')
       showError('Erro ao aplicar degrade')
@@ -176,7 +178,7 @@ export default function DesignSettings() {
     const settingsToUpdate: any = {}
     
     if (nomeLoja && nomeLoja.trim()) {
-      settingsToUpdate.nome_loja = nomeLoja.trim() // CORRIGIDO: nome_loja em vez de nome_confeitaria
+      settingsToUpdate.nome_loja = nomeLoja.trim()
       console.log('  ✓ Adicionando nome_loja ao update')
     }
     
@@ -242,15 +244,49 @@ export default function DesignSettings() {
   const handleLogoUpload = async (file: File) => {
     if (!file) return
     
-    // Aqui você implementaria o upload da logo
-    // Por enquanto, vamos apenas simular
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const result = e.target?.result as string
-      setLogoUrl(result)
-      showSuccess('Logo carregada com sucesso!')
+    setUploadingLogo(true)
+    
+    try {
+      console.log('📤 Iniciando upload da logo...')
+      
+      // Validar arquivo
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Arquivo não é uma imagem')
+      }
+      
+      if (file.size > 5 * 1024 * 1024) { // 5MB
+        throw new Error('Arquivo muito grande (máximo 5MB)')
+      }
+      
+      console.log('✅ Arquivo validado:', file.name, file.type, file.size)
+      
+      // Fazer upload
+      const fileName = 'logo-' + Date.now() + '.' + file.name.split('.').pop()
+      const url = await supabaseService.uploadImage(file, 'images', fileName)
+      
+      if (!url) {
+        throw new Error('Falha no upload da imagem')
+      }
+      
+      console.log('✅ Upload realizado:', url)
+      
+      // Salvar no banco
+      const success = await saveDesignSettings({ logo_url: url })
+      
+      if (success) {
+        console.log('✅ Logo salva no banco')
+        setLogoUrl(url)
+        showSuccess('🖼️ Logo atualizada com sucesso!')
+      } else {
+        throw new Error('Falha ao salvar URL no banco')
+      }
+      
+    } catch (error: any) {
+      console.error('❌ Erro no upload da logo:', error)
+      showError(error.message || 'Erro ao fazer upload da logo')
+    } finally {
+      setUploadingLogo(false)
     }
-    reader.readAsDataURL(file)
   }
 
   if (loading) return <div>Carregando...</div>
@@ -263,7 +299,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="background" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
@@ -281,6 +317,12 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Configuração
+          </TabsTrigger>
+          <TabsTrigger 
+            value="imagens" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
+          >
+            Imagens
           </TabsTrigger>
         </TabsList>
 
@@ -350,11 +392,12 @@ export default function DesignSettings() {
                       <button
                         key={color.value}
                         onClick={() => setCorBorda(color.value)}
-                        className={`aspect-square rounded-xl border-2 transition-all hover:scale-105 ${
-                          corBorda === color.value 
+                        className={
+                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                          (corBorda === color.value 
                             ? 'border-gray-800 shadow-lg scale-105' 
-                            : 'border-gray-200 hover:border-gray-400'
-                        }`}
+                            : 'border-gray-200 hover:border-gray-400')
+                        }
                         style={{ backgroundColor: color.value }}
                         title={color.name}
                       >
@@ -396,11 +439,12 @@ export default function DesignSettings() {
                       <button
                         key={color.value}
                         onClick={() => setCorNome(color.value)}
-                        className={`aspect-square rounded-xl border-2 transition-all hover:scale-105 ${
-                          corNome === color.value 
+                        className={
+                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                          (corNome === color.value 
                             ? 'border-gray-800 shadow-lg scale-105' 
-                            : 'border-gray-200 hover:border-gray-400'
-                        }`}
+                            : 'border-gray-200 hover:border-gray-400')
+                        }
                         style={{ backgroundColor: color.value }}
                         title={color.name}
                       >
@@ -500,39 +544,6 @@ export default function DesignSettings() {
                   <p className="text-xs text-gray-500">Valor atual: "{textoRodape}"</p>
                 </div>
 
-                {/* Logo da Loja */}
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium" style={{ color: '#4A3531' }}>
-                    Logo da Loja
-                  </Label>
-                  <div className="flex items-center gap-4">
-                    {logoUrl && (
-                      <div className="w-20 h-20 rounded-full border-2 border-gray-200 overflow-hidden">
-                        <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0]
-                          if (file) handleLogoUpload(file)
-                        }}
-                        className="hidden"
-                        id="logo-upload"
-                      />
-                      <Button asChild variant="outline" className="w-full">
-                        <label htmlFor="logo-upload" className="cursor-pointer">
-                          <Upload className="w-4 h-4 mr-2" />
-                          {logoUrl ? 'Trocar Logo' : 'Enviar Logo'}
-                        </label>
-                      </Button>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-500">Logo URL atual: "{logoUrl}"</p>
-                </div>
-
                 {/* Botão Salvar - Design Moderno */}
                 <div className="pt-6">
                   <Button 
@@ -595,80 +606,62 @@ export default function DesignSettings() {
 
                 {/* Sábado */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-purple-500" />
-                      <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Sábado</h3>
-                    </div>
-                    <Switch
-                      checked={sabadoAberto}
-                      onCheckedChange={setSabadoAberto}
-                      className="data-[state=checked]:bg-green-600"
-                    />
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-purple-500" />
+                    <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Sábado</h3>
                   </div>
-                  {sabadoAberto && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="sabadoAbre" className="text-sm font-medium">Horário de Abertura</Label>
-                        <Input
-                          id="sabadoAbre"
-                          type="time"
-                          value={horarioSabadoAbre}
-                          onChange={(e) => setHorarioSabadoAbre(e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="sabadoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
-                        <Input
-                          id="sabadoFecha"
-                          type="time"
-                          value={horarioSabadoFecha}
-                          onChange={(e) => setHorarioSabadoFecha(e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="sabadoAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                      <Input
+                        id="sabadoAbre"
+                        type="time"
+                        value={horarioSabadoAbre}
+                        onChange={(e) => setHorarioSabadoAbre(e.target.value)}
+                        className="w-full"
+                      />
                     </div>
-                  )}
+                    <div className="space-y-2">
+                      <Label htmlFor="sabadoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                      <Input
+                        id="sabadoFecha"
+                        type="time"
+                        value={horarioSabadoFecha}
+                        onChange={(e) => setHorarioSabadoFecha(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Domingo */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-blue-500" />
-                      <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Domingo</h3>
-                    </div>
-                    <Switch
-                      checked={domingoAberto}
-                      onCheckedChange={setDomingoAberto}
-                      className="data-[state=checked]:bg-green-600"
-                    />
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-blue-500" />
+                    <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Domingo</h3>
                   </div>
-                  {domingoAberto && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="domingoAbre" className="text-sm font-medium">Horário de Abertura</Label>
-                        <Input
-                          id="domingoAbre"
-                          type="time"
-                          value={horarioDomingoAbre}
-                          onChange={(e) => setHorarioDomingoAbre(e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="domingoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
-                        <Input
-                          id="domingoFecha"
-                          type="time"
-                          value={horarioDomingoFecha}
-                          onChange={(e) => setHorarioDomingoFecha(e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="domingoAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                      <Input
+                        id="domingoAbre"
+                        type="time"
+                        value={horarioDomingoAbre}
+                        onChange={(e) => setHorarioDomingoAbre(e.target.value)}
+                        className="w-full"
+                      />
                     </div>
-                  )}
+                    <div className="space-y-2">
+                      <Label htmlFor="domingoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                      <Input
+                        id="domingoFecha"
+                        type="time"
+                        value={horarioDomingoFecha}
+                        onChange={(e) => setHorarioDomingoFecha(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Botão Salvar - Design Moderno */}
@@ -679,6 +672,94 @@ export default function DesignSettings() {
                   >
                     Salvar Horários
                   </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="imagens">
+          <div className="space-y-6">
+            {/* Card Principal - Imagens */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <div className="flex justify-center mb-2">
+                  <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+                    <ImageIcon className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Imagens</CardTitle>
+                <CardDescription className="text-base">
+                  Personalize a logo da sua loja
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
+                {/* Logo da Loja */}
+                <div className="space-y-4">
+                  <Label className="text-sm font-medium" style={{ color: '#4A3531' }}>
+                    Logo da Loja
+                  </Label>
+                  
+                  <div className="flex items-center gap-6">
+                    {/* Preview da Logo Atual */}
+                    <div className="flex-shrink-0">
+                      {logoUrl ? (
+                        <div className="w-32 h-32 rounded-full border-4 border-gray-200 overflow-hidden shadow-lg">
+                          <img 
+                            src={logoUrl} 
+                            alt="Logo atual" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-32 h-32 rounded-full border-4 border-gray-200 flex items-center justify-center bg-gray-50 shadow-lg">
+                          <ImageIcon className="w-12 h-12 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Upload da Nova Logo */}
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) handleLogoUpload(file)
+                          }}
+                          className="hidden"
+                          id="logo-upload"
+                        />
+                        <Button 
+                          asChild 
+                          variant="outline" 
+                          className="w-full"
+                          disabled={uploadingLogo}
+                        >
+                          <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
+                            <Upload className="w-4 h-4" />
+                            {uploadingLogo ? 'Enviando...' : 'Enviar Nova Logo'}
+                          </label>
+                        </Button>
+                      </div>
+                      
+                      <div className="text-xs text-gray-500 space-y-1">
+                        <p>• Formatos aceitos: PNG, JPEG, WEBP</p>
+                        <p>• Tamanho máximo: 5MB</p>
+                        <p>• A logo aparecerá no topo do cardápio</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* URL da Logo */}
+                  {logoUrl && (
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <Label className="text-xs font-medium text-gray-600">URL da Logo:</Label>
+                      <p className="text-xs text-gray-700 break-all mt-1">{logoUrl}</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
