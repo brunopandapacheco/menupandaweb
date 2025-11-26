@@ -72,9 +72,53 @@ export class SupabaseService {
     try {
       console.log('💾 updateDesignSettings: Updating for user:', userId, settings)
       
+      // Primeiro, verificar quais colunas existem na tabela
+      const { data: columns, error: columnsError } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .limit(1)
+        .single()
+      
+      if (columnsError && columnsError.code !== 'PGRST116') {
+        console.error('❌ Error checking table structure:', columnsError)
+        return false
+      }
+      
+      // Filtrar apenas os campos que existem na tabela
+      const validSettings: any = { user_id: userId }
+      
+      // Lista de campos válidos conhecidos
+      const validFields = [
+        'nome_confeitaria',
+        'slug', 
+        'cor_borda',
+        'cor_background',
+        'cor_nome',
+        'background_topo_color',
+        'texto_rodape',
+        'logo_url',
+        'banner1_url',
+        'banner2_url',
+        'categorias',
+        'descricao_loja',
+        'banner_gradient'
+      ]
+      
+      // Adicionar apenas campos válidos
+      Object.keys(settings).forEach(key => {
+        if (validFields.includes(key)) {
+          validSettings[key] = settings[key as keyof DesignSettings]
+        } else {
+          console.warn(`⚠️ Ignoring field ${key} - not found in table`)
+        }
+      })
+      
+      console.log('📦 Settings to save:', validSettings)
+      
       const { error } = await supabase
         .from('design_settings')
-        .upsert({ ...settings, user_id: userId })
+        .upsert(validSettings)
         .eq('user_id', userId)
       
       if (error) {
