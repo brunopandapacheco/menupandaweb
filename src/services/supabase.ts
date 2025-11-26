@@ -42,7 +42,7 @@ export class SupabaseService {
         cor_nome: '#be185d',
         background_topo_color: '#fce7f3',
         texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-        categorias: ['Bolos', 'Doces', 'Salgados'], // CORRIGIDO: categorias padrão
+        categorias: ['Bolos', 'Doces', 'Salgados'], // Categorias padrão corrigidas
         descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
         banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
       }
@@ -72,6 +72,13 @@ export class SupabaseService {
     try {
       console.log('💾 updateDesignSettings: Updating for user:', userId, settings)
       
+      // Se tiver categorias na atualização, substituir Brigadeiros por Salgados
+      if (settings.categorias) {
+        settings.categorias = settings.categorias.map(cat => 
+          cat === 'Brigadeiros' ? 'Salgados' : cat
+        ).filter((cat, index, arr) => arr.indexOf(cat) === index) // Remove duplicatas
+      }
+      
       // Primeiro, verify if is record already exists
       const { data: existingRecord, error: checkError } = await supabase
         .from('design_settings')
@@ -82,6 +89,8 @@ export class SupabaseService {
       if (checkError && checkError.code === 'PGRST116') {
         // If doesn't exist, create new record
         console.log('📝 No existing record found, creating new one...')
+        const defaultCategories = ['Bolos', 'Doces', 'Salgados'] // Categorias padrão corrigidas
+        
         const defaultSettings = {
           user_id: userId,
           nome_loja: 'Minha Confeitaria',
@@ -91,10 +100,17 @@ export class SupabaseService {
           cor_nome: '#be185d',
           background_topo_color: '#fce7f3',
           texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-          categorias: ['Bolos', 'Doces', 'Salgados'], // CORRIGIDO: categorias padrão
+          categorias: defaultCategories,
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
           ...settings // Add any custom configurations
+        }
+
+        // Garantir que não tenha Brigadeiros nas categorias
+        if (defaultSettings.categorias) {
+          defaultSettings.categorias = defaultSettings.categorias.map(cat => 
+            cat === 'Brigadeiros' ? 'Salgados' : cat
+          ).filter((cat, index, arr) => arr.indexOf(cat) === index)
         }
 
         const { error: insertError } = await supabase
@@ -288,7 +304,14 @@ export class SupabaseService {
       }
       
       console.log('✅ getProducts success:', data?.length || 0, 'products')
-      return data || []
+      
+      // Substituir Brigadeiros por Salgados nos produtos retornados
+      const processedData = (data || []).map(product => ({
+        ...product,
+        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
+      }))
+      
+      return processedData
     } catch (error) {
       console.error('❌ Error getting products:', error)
       return []
@@ -299,9 +322,15 @@ export class SupabaseService {
     try {
       console.log('➕ createProduct: Creating for user:', userId, product)
       
+      // Substituir Brigadeiros por Salgados se necessário
+      const processedProduct = {
+        ...product,
+        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
+      }
+      
       const { data, error } = await supabase
         .from('produtos')
-        .insert({ ...product, user_id: userId })
+        .insert({ ...processedProduct, user_id: userId })
         .select()
         .single()
       
@@ -322,9 +351,15 @@ export class SupabaseService {
     try {
       console.log('✏️ updateProduct: Updating:', id, product)
       
+      // Substituir Brigadeiros por Salgados se necessário
+      const processedProduct = {
+        ...product,
+        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
+      }
+      
       const { error } = await supabase
         .from('produtos')
-        .update(product)
+        .update(processedProduct)
         .eq('id', id)
       
       if (error) {
@@ -451,7 +486,14 @@ export class SupabaseService {
       }
       
       console.log('✅ getProductsBySlug success:', data?.length || 0, 'products')
-      return data || []
+      
+      // Substituir Brigadeiros por Salgados nos produtos retornados
+      const processedData = (data || []).map(product => ({
+        ...product,
+        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
+      }))
+      
+      return processedData
     } catch (error) {
       console.error('❌ Error getting products by slug:', error)
       return []
@@ -481,6 +523,59 @@ export class SupabaseService {
     } catch (error) {
       console.error('❌ Error uploading image:', error)
       return null
+    }
+  }
+
+  // Método para migrar dados existentes
+  async migrateBrigadeirosToSalgados(): Promise<boolean> {
+    try {
+      console.log('🔄 Iniciando migração de Brigadeiros para Salgados...')
+      
+      // Atualizar produtos
+      const { error: productsError } = await supabase
+        .from('produtos')
+        .update({ categoria: 'Salgados' })
+        .eq('categoria', 'Brigadeiros')
+      
+      if (productsError) {
+        console.error('❌ Erro ao migrar produtos:', productsError)
+        return false
+      }
+      
+      // Atualizar design_settings
+      const { data: designSettings, error: fetchError } = await supabase
+        .from('design_settings')
+        .select('id, categorias, user_id')
+        .not('categorias', 'is', null)
+      
+      if (fetchError) {
+        console.error('❌ Erro ao buscar design_settings:', fetchError)
+        return false
+      }
+      
+      for (const setting of designSettings || []) {
+        if (setting.categorias && setting.categorias.includes('Brigadeiros')) {
+          const updatedCategories = setting.categorias.map((cat: string) => 
+            cat === 'Brigadeiros' ? 'Salgados' : cat
+          ).filter((cat: string, index: number, arr: string[]) => arr.indexOf(cat) === index) // Remove duplicatas
+          
+          const { error: updateError } = await supabase
+            .from('design_settings')
+            .update({ categorias: updatedCategories })
+            .eq('id', setting.id)
+          
+          if (updateError) {
+            console.error(`❌ Erro ao atualizar design_settings ${setting.id}:`, updateError)
+            return false
+          }
+        }
+      }
+      
+      console.log('✅ Migração concluída com sucesso!')
+      return true
+    } catch (error) {
+      console.error('❌ Erro durante migração:', error)
+      return false
     }
   }
 }

@@ -55,4 +55,5 @@ export interface Produto {
   updated_at: string
 }
 
-export type { User, DesignSettings, Configuracoes, Produto, DaySchedule }
+// Only export User from supabase, the others are already exported as interfaces above
+export type { User }
