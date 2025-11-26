@@ -24,13 +24,10 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' }}>
       <div className="max-w-md w-full p-8">
-        {/* Logo */}
+        {/* Title */}
         <div className="text-center mb-8">
-          <div className="mx-auto mb-4">
-            <img src="/logopandamenu.png" alt="Logo" className="w-32 h-32 mx-auto" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Panda Menu</h1>
-          <p className="text-gray-600">Cardápio Digital para Confeiteiras</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Panda Menu</h1>
+          <p className="text-white">Cardápio Digital para Confeiteiras</p>
         </div>
 
         {/* Login Form */}
@@ -41,13 +38,6 @@ export default function Login() {
           </div>
           
           <LoginForm onSuccess={() => navigate('/admin')} />
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-500">
-            © 2025 Panda Menu. Todos os direitos reservados.
-          </p>
         </div>
       </div>
     </div>
