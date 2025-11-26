@@ -5,17 +5,15 @@ import { MobileLayout } from '@/components/layout/MobileLayout'
 import { TabletLayout } from '@/components/layout/TabletLayout'
 import { DesktopLayout } from '@/components/layout/DesktopLayout'
 import Preview from './Preview'
-import Dashboard from './Dashboard'
 import DesignSettings from './DesignSettings'
 import ProductManager from './ProductManager'
 import Settings from './Settings'
 
 export default function AdminLayout() {
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeTab, setActiveTab] = useState('preview')
   const device = useDeviceDetection()
 
   const content = {
-    dashboard: <Dashboard />,
     preview: <Preview />,
     design: <DesignSettings />,
     products: <ProductManager />,

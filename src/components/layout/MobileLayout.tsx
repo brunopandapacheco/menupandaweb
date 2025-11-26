@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Home, Settings, Palette, ShoppingBag, Eye } from 'lucide-react'
+import { Settings, Palette, ShoppingBag, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -14,10 +14,9 @@ const tabs = [
   { id: 'design', label: 'Design', icon: Palette },
   { id: 'products', label: 'Produtos', icon: ShoppingBag },
   { id: 'settings', label: 'Config', icon: Settings },
-  { id: 'dashboard', label: 'Status', icon: Home },
 ]
 
-export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }: MobileLayoutProps) {
+export function MobileLayout({ children, activeTab = 'preview', onTabChange }: MobileLayoutProps) {
   const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
 
   return (
@@ -27,7 +26,7 @@ export function MobileLayout({ children, activeTab = 'dashboard', onTabChange }:
       </div>
       
       <div className="fixed bottom-0 left-0 right-0 bg-[#1A1A1A] border-t border-pink-200 rounded-t-2xl">
-        <div className="grid grid-cols-5 gap-1 p-2">
+        <div className="grid grid-cols-4 gap-1 p-2">
           {tabs.map((tab) => {
             return (
               <Button

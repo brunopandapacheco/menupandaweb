@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Home, Settings, Palette, ShoppingBag, Menu } from 'lucide-react'
+import { Settings, Palette, ShoppingBag, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -10,14 +10,13 @@ interface TabletLayoutProps {
 }
 
 const tabs = [
-  { id: 'dashboard', label: 'Painel', icon: Home },
-  { id: 'preview', label: 'Prévia', icon: Menu },
+  { id: 'preview', label: 'Prévia', icon: Eye },
   { id: 'design', label: 'Design', icon: Palette },
   { id: 'products', label: 'Produtos', icon: ShoppingBag },
   { id: 'settings', label: 'Configurações', icon: Settings },
 ]
 
-export function TabletLayout({ children, activeTab = 'dashboard', onTabChange }: TabletLayoutProps) {
+export function TabletLayout({ children, activeTab = 'preview', onTabChange }: TabletLayoutProps) {
   const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
   const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Menu Bolo'
   const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
