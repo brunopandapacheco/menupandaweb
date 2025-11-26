@@ -196,6 +196,7 @@ export default function Preview() {
               emFerias={configuracoes?.em_ferias}
               horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
               horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
+              corNome={designSettings.cor_nome} // Passando a cor do nome
             />
             
             <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>

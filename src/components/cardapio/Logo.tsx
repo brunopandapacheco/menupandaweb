@@ -9,6 +9,7 @@ interface LogoProps {
   emFerias?: boolean
   horarioFuncionamentoInicio?: string
   horarioFuncionamentoFim?: string
+  corNome?: string // Adicionando a prop corNome
 }
 
 export function Logo({ 
@@ -19,7 +20,8 @@ export function Logo({
   avaliacaoMedia = 4.9,
   emFerias,
   horarioFuncionamentoInicio = '08:00',
-  horarioFuncionamentoFim = '18:00'
+  horarioFuncionamentoFim = '18:00',
+  corNome = '#1A1A1A' // Valor padrão
 }: LogoProps) {
   // Renderiza estrelas com base na avaliação
   const renderStars = (rating: number) => {
@@ -131,7 +133,7 @@ export function Logo({
         <h2 style={{ 
           fontSize: '32px', 
           fontWeight: 'bold', 
-          color: '#1A1A1A', 
+          color: corNome, // Aplicando a cor dinâmica aqui
           marginBottom: '8px',
           lineHeight: '1.2'
         }}>

@@ -10,7 +10,7 @@ const mockDesignSettings = {
   nome_confeitaria: 'Doces da Vovó',
   cor_borda: '#ec4899',
   cor_background: '#fef2f2',
-  cor_nome: '#be185d',
+  cor_nome: '#be185d', // Adicionando cor do nome
   background_topo_color: '#fce7f3',
   texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
   logo_url: '',
@@ -160,6 +160,7 @@ export default function CardapioDemo() {
           emFerias={mockConfiguracoes.emFerias}
           horarioFuncionamentoInicio={mockConfiguracoes.horario_funcionamento_inicio}
           horarioFuncionamentoFim={mockConfiguracoes.horario_funcionamento_fim}
+          corNome={mockDesignSettings.cor_nome} // Passando a cor do nome
         />
         
         <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
