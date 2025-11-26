@@ -138,7 +138,7 @@ export default function CardapioPublico() {
         <Logo 
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
-          storeName={designSettings.nome_confeitaria}
+          storeName={designSettings.nome_loja} // CORRIGIDO: nome_loja em vez de nome_confeitaria
           storeDescription={designSettings.descricao_loja}
           avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
           emFerias={configuracoes?.em_ferias}

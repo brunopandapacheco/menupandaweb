@@ -35,7 +35,7 @@ export class SupabaseService {
     try {
       const defaultSettings = {
         user_id: userId,
-        nome_confeitaria: 'Minha Confeitaria',
+        nome_loja: 'Minha Confeitaria', // CORRIGIDO: nome_loja em vez de nome_confeitaria
         slug: `minha-confeitaria-${Date.now()}`,
         cor_borda: '#ec4899',
         cor_background: '#fef2f2',
@@ -84,7 +84,7 @@ export class SupabaseService {
         console.log('📝 No existing record found, creating new one...')
         const defaultSettings = {
           user_id: userId,
-          nome_confeitaria: 'Minha Confeitaria',
+          nome_loja: 'Minha Confeitaria', // CORRIGIDO: nome_loja em vez de nome_confeitaria
           slug: `minha-confeitaria-${Date.now()}`,
           cor_borda: '#ec4899',
           cor_background: '#fef2f2',
@@ -121,9 +121,9 @@ export class SupabaseService {
       // Filter only fields that exist in the table
       const validSettings: any = {}
       
-      // List of known valid fields
+      // List of known valid fields - CORRIGIDOS
       const validFields = [
-        'nome_confeitaria',
+        'nome_loja', // CORRIGIDO: nome_loja em vez de nome_confeitaria
         'slug', 
         'cor_borda',
         'cor_background',

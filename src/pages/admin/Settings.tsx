@@ -34,7 +34,7 @@ export default function Settings() {
     horarios_semana: weekDays
   })
   const [designSettingsLocal, setDesignSettingsLocal] = useState({
-    nome_confeitaria: 'Doces da Vovó',
+    nome_loja: 'Doces da Vovó', // CORRIGIDO: nome_loja em vez de nome_confeitaria
     slug: 'doces-da-vo',
     descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
   })
@@ -52,8 +52,8 @@ export default function Settings() {
   useEffect(() => {
     if (designSettings) {
       setDesignSettingsLocal({
-        nome_confeitaria: designSettings.nome_confeitaria || 'Doces da Vovó',
-        slug: designSettings.slug || generateSlug(designSettings.nome_confeitaria || 'Doces da Vovó'),
+        nome_loja: designSettings.nome_loja || 'Doces da Vovó', // CORRIGIDO: nome_loja em vez de nome_confeitaria
+        slug: designSettings.slug || generateSlug(designSettings.nome_loja || 'Doces da Vovó'),
         descricao_loja: designSettings.descricao_loja || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
       })
     }
@@ -68,14 +68,14 @@ export default function Settings() {
     const newSlug = generateSlug(nome)
     setDesignSettingsLocal(prev => ({
       ...prev,
-      nome_confeitaria: nome,
+      nome_loja: nome, // CORRIGIDO: nome_loja em vez de nome_confeitaria
       slug: newSlug
     }))
   }
 
   const handleSaveNome = async () => {
     const success = await saveDesignSettings({
-      nome_confeitaria: designSettingsLocal.nome_confeitaria,
+      nome_loja: designSettingsLocal.nome_loja, // CORRIGIDO: nome_loja em vez de nome_confeitaria
       slug: designSettingsLocal.slug
     })
     
@@ -132,7 +132,7 @@ export default function Settings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Input
-                value={designSettingsLocal.nome_confeitaria}
+                value={designSettingsLocal.nome_loja}
                 onChange={(e) => handleNomeChange(e.target.value)}
                 placeholder="Nome da sua confeitaria"
               />

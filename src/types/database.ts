@@ -1,24 +1,20 @@
-export interface User {
-  id: string
-  email: string
-  created_at: string
-}
+import { User } from '@supabase/supabase-js'
 
 export interface DesignSettings {
   user_id: string
   slug?: string
   logo_url?: string
-  nome_confeitaria: string
+  nome_loja: string
   cor_borda: string
   cor_background: string
   cor_nome: string
-  banner1_url?: string
-  banner2_url?: string
   background_topo_color: string
   texto_rodape: string
   categorias?: string[]
   descricao_loja?: string
   banner_gradient?: string
+  banner1_url?: string // Adicionando propriedade faltante
+  banner2_url?: string // Adicionando propriedade faltante
 }
 
 export interface Configuracoes {
@@ -58,3 +54,5 @@ export interface Produto {
   created_at: string
   updated_at: string
 }
+
+// Removendo export duplicado para evitar conflitos

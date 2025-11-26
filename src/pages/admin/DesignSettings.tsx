@@ -76,11 +76,11 @@ export default function DesignSettings() {
         setCorNome(designSettings.cor_nome)
       }
       
-      if (designSettings.nome_confeitaria) {
-        console.log('  - Nome confeitaria:', designSettings.nome_confeitaria)
-        setNomeLoja(designSettings.nome_confeitaria)
+      if (designSettings.nome_loja) { // CORRIGIDO: nome_loja em vez de nome_confeitaria
+        console.log('  - Nome loja:', designSettings.nome_loja)
+        setNomeLoja(designSettings.nome_loja)
       } else {
-        console.log('  - Nome confeitaria: não encontrado, usando valor padrão')
+        console.log('  - Nome loja: não encontrado, usando valor padrão')
       }
       
       if (designSettings.descricao_loja) {
@@ -176,8 +176,8 @@ export default function DesignSettings() {
     const settingsToUpdate: any = {}
     
     if (nomeLoja && nomeLoja.trim()) {
-      settingsToUpdate.nome_confeitaria = nomeLoja.trim()
-      console.log('  ✓ Adicionando nome_confeitaria ao update')
+      settingsToUpdate.nome_loja = nomeLoja.trim() // CORRIGIDO: nome_loja em vez de nome_confeitaria
+      console.log('  ✓ Adicionando nome_loja ao update')
     }
     
     if (descricaoLoja && descricaoLoja.trim()) {

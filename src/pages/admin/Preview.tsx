@@ -41,9 +41,9 @@ export default function Preview() {
         const baseUrl = window.location.origin
         const link = `${baseUrl}/cardapio/${designSettings.slug}`
         setShareableLink(link)
-      } else if (designSettings.nome_confeitaria) {
+      } else if (designSettings.nome_loja) { // CORRIGIDO: nome_loja em vez de nome_confeitaria
         // Se não tiver slug, usa o name of store
-        const slug = generateSlug(designSettings.nome_confeitaria)
+        const slug = generateSlug(designSettings.nome_loja)
         const baseUrl = window.location.origin
         const link = `${baseUrl}/cardapio/${slug}`
         setShareableLink(link)
@@ -141,7 +141,7 @@ export default function Preview() {
             <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Configure your store first</h3>
             <p className="text-gray-600 mb-4">
-              You need to configure basic information of your store before viewing the preview.
+              You need to configure the basic information of your store before viewing the preview.
             </p>
             <Button onClick={() => window.location.href = '/admin?tab=design'}>
               Configure Design
@@ -199,7 +199,7 @@ export default function Preview() {
             <Logo 
               logoUrl={designSettings.logo_url} 
               borderColor={designSettings.cor_borda} 
-              storeName={designSettings.nome_confeitaria}
+              storeName={designSettings.nome_loja} // CORRIGIDO: nome_loja em vez de nome_confeitaria
               storeDescription={designSettings.descricao_loja}
               avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
               emFerias={configuracoes?.em_ferias}
