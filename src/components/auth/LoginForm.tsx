@@ -27,7 +27,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         email,
         password,
         options: {
-          // Não limpar sessão existente
+          // Garante que a sessão seja persistida
         }
       })
 
@@ -44,15 +44,25 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         return
       }
 
-      if (data.user) {
+      if (data.user && data.session) {
         console.log('✅ Login bem-sucedido:', data.user.email)
-        console.log('🔄 Sessão:', data.session)
+        console.log('🔄 Sessão criada:', data.session)
+        console.log('🔑 Access token:', data.session.access_token ? 'Presente' : 'Ausente')
+        console.log('🔑 Refresh token:', data.session.refresh_token ? 'Presente' : 'Ausente')
         
         showSuccess('Login realizado com sucesso!')
         
         // Aguardar um pouco para garantir que a sessão foi salva
         setTimeout(() => {
-          onSuccess?.()
+          // Verificar se a sessão foi realmente salva
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            console.log('🔍 Verificação pós-login:', session?.user?.email)
+            if (session) {
+              onSuccess?.()
+            } else {
+              showError('Erro ao persistir sessão. Tente novamente.')
+            }
+          })
         }, 1000)
       }
     } catch (error: any) {

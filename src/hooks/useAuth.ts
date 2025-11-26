@@ -22,6 +22,7 @@ export function useAuth() {
           setUser(null)
         } else {
           console.log('✅ Sessão inicial encontrada:', session?.user?.email)
+          console.log('📊 Dados completos da sessão:', session)
           setUser(session?.user ?? null)
         }
       } catch (error) {
@@ -39,19 +40,17 @@ export function useAuth() {
       if (!mounted) return
       
       console.log('🔄 Auth state changed:', event, session?.user?.email)
+      console.log('📊 Session data:', session)
       
-      // Só atualiza o estado se realmente houver mudança
+      // Sempre atualiza o usuário com base na sessão atual
       if (event === 'SIGNED_OUT') {
         console.log('👋 Usuário deslogado')
         setUser(null)
-      } else if (event === 'TOKEN_REFRESHED') {
-        console.log('🔄 Token atualizado')
-        // Não atualiza o usuário se já existir
-        if (!user) {
-          setUser(session?.user ?? null)
-        }
       } else if (event === 'SIGNED_IN') {
         console.log('✅ Usuário logado')
+        setUser(session?.user ?? null)
+      } else if (event === 'TOKEN_REFRESHED') {
+        console.log('🔄 Token atualizado')
         setUser(session?.user ?? null)
       } else if (event === 'INITIAL_SESSION') {
         console.log('📋 Sessão inicial carregada')
@@ -63,7 +62,7 @@ export function useAuth() {
       mounted = false
       subscription.unsubscribe()
     }
-  }, [user])
+  }, []) // Removido [user] do array de dependências
 
   const signOut = async () => {
     try {
