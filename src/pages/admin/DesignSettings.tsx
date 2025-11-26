@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch'
 import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
-import { CheckCircle, Palette, Sparkles, Settings, Upload } from 'lucide-react'
+import { CheckCircle, Palette, Sparkles, Settings, Upload, Clock, Calendar } from 'lucide-react'
 
 const predefinedColors = [
   { name: 'Rosa', value: '#ec4899' },
@@ -44,6 +45,16 @@ export default function DesignSettings() {
   const [textoRodape, setTextoRodape] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
 
+  // Estados para horários
+  const [horarioSemanaAbre, setHorarioSemanaAbre] = useState('08:00')
+  const [horarioSemanaFecha, setHorarioSemanaFecha] = useState('18:00')
+  const [horarioSabadoAbre, setHorarioSabadoAbre] = useState('08:00')
+  const [horarioSabadoFecha, setHorarioSabadoFecha] = useState('18:00')
+  const [horarioDomingoAbre, setHorarioDomingoAbre] = useState('08:00')
+  const [horarioDomingoFecha, setHorarioDomingoFecha] = useState('18:00')
+  const [sabadoAberto, setSabadoAberto] = useState(true)
+  const [domingoAberto, setDomingoAberto] = useState(false)
+
   useEffect(() => {
     if (designSettings) {
       if (designSettings.banner_gradient) {
@@ -69,6 +80,31 @@ export default function DesignSettings() {
       }
     }
   }, [designSettings])
+
+  useEffect(() => {
+    if (configuracoes) {
+      if (configuracoes.horarios_semana) {
+        const horarios = configuracoes.horarios_semana
+        // Dia de semana (Segunda a Sexta)
+        if (horarios[0]) {
+          setHorarioSemanaAbre(horarios[0].openTime)
+          setHorarioSemanaFecha(horarios[0].closeTime)
+        }
+        // Sábado
+        if (horarios[5]) {
+          setHorarioSabadoAbre(horarios[5].openTime)
+          setHorarioSabadoFecha(horarios[5].closeTime)
+          setSabadoAberto(horarios[5].open)
+        }
+        // Domingo
+        if (horarios[6]) {
+          setHorarioDomingoAbre(horarios[6].openTime)
+          setHorarioDomingoFecha(horarios[6].closeTime)
+          setDomingoAberto(horarios[6].open)
+        }
+      }
+    }
+  }, [configuracoes])
 
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
     console.log('=== INICIANDO APLICAÇÃO DE DEGRADE ===')
@@ -127,6 +163,30 @@ export default function DesignSettings() {
     }
   }
 
+  const saveHorarios = async () => {
+    console.log('=== SALVANDO HORÁRIOS ===')
+    
+    const horarios_semana = [
+      { day: 'Segunda', open: true, openTime: horarioSemanaAbre, closeTime: horarioSemanaFecha },
+      { day: 'Terça', open: true, openTime: horarioSemanaAbre, closeTime: horarioSemanaFecha },
+      { day: 'Quarta', open: true, openTime: horarioSemanaAbre, closeTime: horarioSemanaFecha },
+      { day: 'Quinta', open: true, openTime: horarioSemanaAbre, closeTime: horarioSemanaFecha },
+      { day: 'Sexta', open: true, openTime: horarioSemanaAbre, closeTime: horarioSemanaFecha },
+      { day: 'Sábado', open: sabadoAberto, openTime: horarioSabadoAbre, closeTime: horarioSabadoFecha },
+      { day: 'Domingo', open: domingoAberto, openTime: horarioDomingoAbre, closeTime: horarioDomingoFecha }
+    ]
+
+    const success = await saveConfiguracoes({ horarios_semana })
+    
+    if (success) {
+      console.log('✅ Horários salvos com sucesso no banco!')
+      showSuccess('🕐 Horários atualizados com sucesso!')
+    } else {
+      console.error('❌ Falha ao salvar horários no banco')
+      showError('Erro ao salvar horários')
+    }
+  }
+
   const handleLogoUpload = async (file: File) => {
     if (!file) return
     
@@ -151,7 +211,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="background" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
@@ -169,6 +229,12 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
           >
             Configuração
+          </TabsTrigger>
+          <TabsTrigger 
+            value="horarios" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650]"
+          >
+            Horários
           </TabsTrigger>
         </TabsList>
 
@@ -415,6 +481,145 @@ export default function DesignSettings() {
                     className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     Salvar Configurações
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="horarios">
+          <div className="space-y-6">
+            {/* Card Principal - Horários */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <div className="flex justify-center mb-2">
+                  <div className="p-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
+                    <Clock className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Horários de Funcionamento</CardTitle>
+                <CardDescription className="text-base">
+                  Configure os horários de atendimento da sua loja
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
+                {/* Dia de Semana (Segunda a Sexta) */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-orange-500" />
+                    <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Dia de Semana (Segunda a Sexta)</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="semanaAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                      <Input
+                        id="semanaAbre"
+                        type="time"
+                        value={horarioSemanaAbre}
+                        onChange={(e) => setHorarioSemanaAbre(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="semanaFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                      <Input
+                        id="semanaFecha"
+                        type="time"
+                        value={horarioSemanaFecha}
+                        onChange={(e) => setHorarioSemanaFecha(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sábado */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-purple-500" />
+                      <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Sábado</h3>
+                    </div>
+                    <Switch
+                      checked={sabadoAberto}
+                      onCheckedChange={setSabadoAberto}
+                      className="data-[state=checked]:bg-green-600"
+                    />
+                  </div>
+                  {sabadoAberto && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="sabadoAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                        <Input
+                          id="sabadoAbre"
+                          type="time"
+                          value={horarioSabadoAbre}
+                          onChange={(e) => setHorarioSabadoAbre(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="sabadoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                        <Input
+                          id="sabadoFecha"
+                          type="time"
+                          value={horarioSabadoFecha}
+                          onChange={(e) => setHorarioSabadoFecha(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Domingo */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-blue-500" />
+                      <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Domingo</h3>
+                    </div>
+                    <Switch
+                      checked={domingoAberto}
+                      onCheckedChange={setDomingoAberto}
+                      className="data-[state=checked]:bg-green-600"
+                    />
+                  </div>
+                  {domingoAberto && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="domingoAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                        <Input
+                          id="domingoAbre"
+                          type="time"
+                          value={horarioDomingoAbre}
+                          onChange={(e) => setHorarioDomingoAbre(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="domingoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                        <Input
+                          id="domingoFecha"
+                          type="time"
+                          value={horarioDomingoFecha}
+                          onChange={(e) => setHorarioDomingoFecha(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Botão Salvar - Design Moderno */}
+                <div className="pt-6">
+                  <Button 
+                    onClick={saveHorarios}
+                    className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Salvar Horários
                   </Button>
                 </div>
               </CardContent>
