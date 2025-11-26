@@ -194,24 +194,6 @@ export default function DesignSettings() {
                       </button>
                     ))}
                   </div>
-                  
-                  {/* Input Hex - Design Minimalista */}
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm font-medium text-gray-600">HEX:</span>
-                    <input
-                      type="text"
-                      value={corBorda}
-                      onChange={(e) => setCorBorda(e.target.value)}
-                      className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      placeholder="#ec4899"
-                    />
-                    <input
-                      type="color"
-                      value={corBorda}
-                      onChange={(e) => setCorBorda(e.target.value)}
-                      className="w-12 h-12 rounded-lg cursor-pointer border-2 border-gray-200"
-                    />
-                  </div>
                 </div>
 
                 {/* Divisor Elegante */}
@@ -257,24 +239,6 @@ export default function DesignSettings() {
                         )}
                       </button>
                     ))}
-                  </div>
-                  
-                  {/* Input Hex - Design Minimalista */}
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm font-medium text-gray-600">HEX:</span>
-                    <input
-                      type="text"
-                      value={corNome}
-                      onChange={(e) => setCorNome(e.target.value)}
-                      className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      placeholder="#be185d"
-                    />
-                    <input
-                      type="color"
-                      value={corNome}
-                      onChange={(e) => setCorNome(e.target.value)}
-                      className="w-12 h-12 rounded-lg cursor-pointer border-2 border-gray-200"
-                    />
                   </div>
                 </div>
 
