@@ -278,11 +278,26 @@ export default function ProductManager() {
 
                   <CardContent className="p-4">
                     {/* Nome do Produto */}
-                    <div className="mb-3">
-                      <h3 className="text-lg font-bold text-gray-800 mb-1">{product.nome}</h3>
+                    <div className="mb-2">
+                      <h3 className="text-lg font-bold text-gray-800">{product.nome}</h3>
                     </div>
 
-                    {/* Preço + Tipo juntos */}
+                    {/* Descrição do Produto */}
+                    {product.descricao && (
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.descricao}</p>
+                    )}
+
+                    {/* Tag do Tipo de Venda */}
+                    <div className="mb-3">
+                      <Badge 
+                        variant="secondary" 
+                        className="bg-purple-100 text-purple-700 font-medium capitalize"
+                      >
+                        {product.forma_venda}
+                      </Badge>
+                    </div>
+
+                    {/* Preço */}
                     <div className="mb-3">
                       {product.promocao && product.preco_promocional ? (
                         <div>
@@ -290,12 +305,12 @@ export default function ProductManager() {
                             R$ {product.preco_normal.toFixed(2)}
                           </span>
                           <div className="text-lg font-bold text-green-600">
-                            R$ {product.preco_promocional.toFixed(2)} {product.forma_venda}
+                            R$ {product.preco_promocional.toFixed(2)}
                           </div>
                         </div>
                       ) : (
                         <div className="text-lg font-bold text-gray-800">
-                          R$ {product.preco_normal.toFixed(2)} {product.forma_venda}
+                          R$ {product.preco_normal.toFixed(2)}
                         </div>
                       )}
                     </div>
