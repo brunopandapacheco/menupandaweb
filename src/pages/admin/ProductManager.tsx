@@ -237,8 +237,8 @@ export default function ProductManager() {
               const images = getProductImages(product.imagem_url)
               return (
                 <Card key={product.id} className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
-                  {/* Imagem do Produto */}
-                  <div className="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100">
+                  {/* Imagem do Produto - Container quadrado 1:1 */}
+                  <div className="relative aspect-square bg-gradient-to-br from-purple-100 to-pink-100">
                     {images.length > 0 ? (
                       <img 
                         src={images[0]} 
