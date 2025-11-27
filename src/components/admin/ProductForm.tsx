@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, X, GripVertical, Package, DollarSign, Tag, Image as ImageIcon, Check, Star, Trash2 } from 'lucide-react'
+import { Upload, X, GripVertical, DollarSign, Image as ImageIcon, Check, Star, Trash2 } from 'lucide-react'
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 
@@ -175,8 +175,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       {/* Seção de Informações Básicas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="nome" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <Package className="w-4 h-4 text-purple-600" />
+          <Label htmlFor="nome" className="text-sm font-semibold text-gray-700">
             Nome do Produto *
           </Label>
           <Input
@@ -190,8 +189,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <Tag className="w-4 h-4 text-purple-600" />
+          <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700">
             Categoria *
           </Label>
           <Input
