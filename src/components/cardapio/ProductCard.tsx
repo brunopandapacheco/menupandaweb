@@ -117,7 +117,13 @@ export function ProductCard({
                   <Badge 
                     variant="secondary" 
                     className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-                    style={{ fontSize: '10px', padding: '2px 4px', height: 'auto', lineHeight: '1' }}
+                    style={{ 
+                      fontSize: '10px', 
+                      padding: '2px 4px', 
+                      height: 'auto', 
+                      lineHeight: '1',
+                      pointerEvents: 'none'
+                    }}
                   >
                     {product.forma_venda}
                   </Badge>
@@ -132,7 +138,13 @@ export function ProductCard({
               <Badge 
                 variant="secondary" 
                 className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-                style={{ fontSize: '10px', padding: '2px 4px', height: 'auto', lineHeight: '1' }}
+                style={{ 
+                  fontSize: '10px', 
+                  padding: '2px 4px', 
+                  height: 'auto', 
+                  lineHeight: '1',
+                  pointerEvents: 'none'
+                }}
               >
                 {product.forma_venda}
               </Badge>
