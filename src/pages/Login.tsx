@@ -24,17 +24,10 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' }}>
       <div className="max-w-md w-full p-8">
-        {/* Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Panda Menu</h1>
-          <p className="text-white">Cardápio Digital para Confeiteiras</p>
-        </div>
-
         {/* Login Form */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-center text-gray-900">Bem-vindo!</h2>
-            <p className="text-center text-gray-600 mt-2">Faça login para acessar seu painel</p>
+            <h2 className="text-2xl font-bold text-center text-gray-900">Faça login para acessar o seu painel</h2>
           </div>
           
           <LoginForm onSuccess={() => navigate('/admin')} />
