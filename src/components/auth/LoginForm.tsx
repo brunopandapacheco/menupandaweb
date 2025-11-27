@@ -89,7 +89,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           required
           disabled={loading}
           placeholder="Digite seu email"
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 transition-all duration-200 text-gray-700"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 text-gray-700"
         />
       </div>
       
@@ -106,7 +106,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             required
             disabled={loading}
             placeholder="Digite sua senha"
-            className="w-full px-4 py-3 pr-12 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 transition-all duration-200 text-gray-700"
+            className="w-full px-4 py-3 pr-12 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 text-gray-700"
             style={{ 
               color: '#374151',
               WebkitTextFillColor: '#374151'
