@@ -8,7 +8,7 @@ export function Banner({ logoUrl, borderColor, bannerGradient }: BannerProps) {
   return (
     <div style={{ 
       position: 'relative', 
-      height: '180px', 
+      height: '140px', // Reduzido de 180px para 140px
       overflow: 'hidden',
       background: bannerGradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
       backgroundSize: '200% 200%',
