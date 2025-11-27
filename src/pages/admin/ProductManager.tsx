@@ -296,7 +296,7 @@ export default function ProductManager() {
                               R$ {product.preco_normal.toFixed(2)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-0.5">
+                          <div className="flex items-center gap-1">
                             <span className="text-base font-bold text-green-600">
                               R$ {product.preco_promocional.toFixed(2)}
                             </span>
@@ -313,14 +313,12 @@ export default function ProductManager() {
                           <span className="text-base font-bold text-gray-800">
                             R$ {product.preco_normal.toFixed(2)}
                           </span>
-                          <div className="flex items-center gap-0.5">
-                            <Badge 
-                              variant="secondary" 
-                              className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-                            >
-                              {product.forma_venda}
-                            </Badge>
-                          </div>
+                          <Badge 
+                            variant="secondary" 
+                            className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
+                          >
+                            {product.forma_venda}
+                          </Badge>
                         </div>
                       )}
                     </div>
