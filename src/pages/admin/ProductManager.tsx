@@ -187,7 +187,10 @@ export default function ProductManager() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-2">Gerenciar Produtos</h1>
-            <p className="text-pink-100 text-lg">Adicione e organize seus produtos de forma simples</p>
+            <p className="text-pink-100 text-lg">
+              <span className="hidden sm:inline">Adicione e organize seus produtos facilmente</span>
+              <span className="sm:hidden">Adicione e organize seus<br />produtos facilmente</span>
+            </p>
           </div>
         </div>
       </div>
