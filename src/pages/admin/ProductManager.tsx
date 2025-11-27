@@ -287,30 +287,38 @@ export default function ProductManager() {
                       <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.descricao}</p>
                     )}
 
-                    {/* Tag do Tipo de Venda */}
-                    <div className="mb-3">
-                      <Badge 
-                        variant="secondary" 
-                        className="bg-purple-100 text-purple-700 font-medium capitalize"
-                      >
-                        {product.forma_venda}
-                      </Badge>
-                    </div>
-
-                    {/* Preço */}
+                    {/* Preço e Tipo de Venda na mesma linha */}
                     <div className="mb-3">
                       {product.promocao && product.preco_promocional ? (
-                        <div>
-                          <span className="text-sm text-gray-400 line-through">
-                            R$ {product.preco_normal.toFixed(2)}
-                          </span>
-                          <div className="text-lg font-bold text-green-600">
-                            R$ {product.preco_promocional.toFixed(2)}
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-400 line-through">
+                              R$ {product.preco_normal.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold text-green-600">
+                              R$ {product.preco_promocional.toFixed(2)}
+                            </span>
+                            <Badge 
+                              variant="secondary" 
+                              className="bg-purple-100 text-purple-700 font-medium capitalize text-xs"
+                            >
+                              {product.forma_venda}
+                            </Badge>
                           </div>
                         </div>
                       ) : (
-                        <div className="text-lg font-bold text-gray-800">
-                          R$ {product.preco_normal.toFixed(2)}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-lg font-bold text-gray-800">
+                            R$ {product.preco_normal.toFixed(2)}
+                          </span>
+                          <Badge 
+                            variant="secondary" 
+                            className="bg-purple-100 text-purple-700 font-medium capitalize text-xs"
+                          >
+                            {product.forma_venda}
+                          </Badge>
                         </div>
                       )}
                     </div>
