@@ -243,18 +243,6 @@ export default function Preview() {
             <Footer textoRodape={designSettings.texto_rodape} />
           </div>
         </div>
-
-        {/* Botão para sair do modo tela cheia (opcional) */}
-        <div className="fixed bottom-4 left-4 z-50">
-          <Button
-            onClick={() => window.history.back()}
-            size="sm"
-            className="bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white shadow-lg border border-gray-200 rounded-full px-3 py-2 h-auto"
-          >
-            <X className="w-4 h-4" />
-            <span className="ml-1 text-xs font-medium">Voltar</span>
-          </Button>
-        </div>
       </div>
     )
   }
