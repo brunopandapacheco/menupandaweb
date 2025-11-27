@@ -221,7 +221,7 @@ export default function ProductManager() {
               </div>
               <Button 
                 onClick={() => openDialog()}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Novo Produto
@@ -232,7 +232,7 @@ export default function ProductManager() {
 
         {/* Grid de Produtos - ESPAÇAMENTO REDUZIDO */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
             {filteredProducts.map((product) => {
               const images = getProductImages(product.imagem_url)
               return (
@@ -357,7 +357,7 @@ export default function ProductManager() {
             {selectedCategory === 'todas' && (
               <Button 
                 onClick={() => openDialog()}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Cadastrar Primeiro Produto
