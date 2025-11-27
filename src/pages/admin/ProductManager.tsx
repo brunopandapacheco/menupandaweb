@@ -78,9 +78,18 @@ export default function ProductManager() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    const success = await removeProduto(id)
-    if (success) showSuccess('Produto excluído!')
+  const handleDelete = async () => {
+    if (!editingProduct?.id) return
+    
+    // Confirmação adicional
+    if (confirm(`Tem certeza que deseja excluir o produto "${editingProduct.nome}"? Esta ação não poderá ser desfeita.`)) {
+      const success = await removeProduto(editingProduct.id)
+      if (success) {
+        showSuccess('Produto excluído!')
+        setIsDialogOpen(false)
+        setEditingProduct(null)
+      }
+    }
   }
 
   const openDialog = (product?: Produto) => {
@@ -256,23 +265,13 @@ export default function ProductManager() {
                       </div>
                     )}
                     <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <div className="flex gap-1">
-                        <Button 
-                          size="sm" 
-                          className="bg-white/90 hover:bg-white text-purple-600 shadow-lg"
-                          onClick={() => openDialog(product)}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="destructive"
-                          className="bg-red-500/90 hover:bg-red-600 text-white shadow-lg"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <Button 
+                        size="sm" 
+                        className="bg-white/90 hover:bg-white text-purple-600 shadow-lg rounded-lg p-2"
+                        onClick={() => openDialog(product)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
 
@@ -367,12 +366,27 @@ export default function ProductManager() {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
           <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">
-                {editingProduct?.id ? 'Editar Produto' : 'Novo Produto'}
-              </DialogTitle>
-              <DialogDescription className="text-pink-100">
-                Preencha as informações do produto
-              </DialogDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <DialogTitle className="text-2xl font-bold">
+                    {editingProduct?.id ? 'Editar Produto' : 'Novo Produto'}
+                  </DialogTitle>
+                  <DialogDescription className="text-pink-100">
+                    Preencha as informações do produto
+                  </DialogDescription>
+                </div>
+                {editingProduct?.id && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleDelete}
+                    className="bg-red-600 hover:bg-red-700 text-white font-medium"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Excluir
+                  </Button>
+                )}
+              </div>
             </DialogHeader>
           </div>
           
