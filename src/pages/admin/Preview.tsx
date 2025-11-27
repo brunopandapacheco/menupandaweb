@@ -11,6 +11,7 @@ import { SearchBar } from '@/components/cardapio/SearchBar'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 type PreviewDevice = 'mobile' | 'tablet' | 'desktop'
 
@@ -21,6 +22,7 @@ export default function Preview() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isDataLoaded, setIsDataLoaded] = useState(false)
+  const device = useDeviceDetection()
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
@@ -311,34 +313,49 @@ export default function Preview() {
         </div>
       </div>
 
-      {/* Preview Container - 3 dispositivos lado a lado */}
+      {/* Preview Container - Responsivo */}
       <div className="max-w-7xl mx-auto p-4">
-        <div className="flex justify-center items-start gap-4 flex-wrap lg:flex-nowrap">
-          <DevicePreview
-            device="mobile"
-            title="Celular"
-            icon={Smartphone}
-            width="320px"
-            height="600px"
-            maxWidth="320px"
-          />
-          <DevicePreview
-            device="tablet"
-            title="Tablet"
-            icon={Tablet}
-            width="500px"
-            height="700px"
-            maxWidth="500px"
-          />
-          <DevicePreview
-            device="desktop"
-            title="Computador"
-            icon={Monitor}
-            width="600px"
-            height="800px"
-            maxWidth="600px"
-          />
-        </div>
+        {device === 'mobile' ? (
+          // Versão Mobile - Apenas celular
+          <div className="flex justify-center">
+            <DevicePreview
+              device="mobile"
+              title="Celular"
+              icon={Smartphone}
+              width="100%"
+              height="600px"
+              maxWidth="400px"
+            />
+          </div>
+        ) : (
+          // Versão Desktop/Tablet - 3 dispositivos lado a lado
+          <div className="flex justify-center items-start gap-4 flex-wrap lg:flex-nowrap">
+            <DevicePreview
+              device="mobile"
+              title="Celular"
+              icon={Smartphone}
+              width="320px"
+              height="600px"
+              maxWidth="320px"
+            />
+            <DevicePreview
+              device="tablet"
+              title="Tablet"
+              icon={Tablet}
+              width="500px"
+              height="700px"
+              maxWidth="500px"
+            />
+            <DevicePreview
+              device="desktop"
+              title="Computador"
+              icon={Monitor}
+              width="600px"
+              height="800px"
+              maxWidth="600px"
+            />
+          </div>
+        )}
       </div>
     </div>
   )
