@@ -35,10 +35,6 @@ export default function Login() {
             />
           </div>
           
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-center text-gray-900">Faça login para acessar o seu painel</h2>
-          </div>
-          
           <LoginForm onSuccess={() => navigate('/admin')} />
         </div>
       </div>
