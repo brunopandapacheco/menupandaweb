@@ -363,7 +363,7 @@ export default function ProductManager() {
 
       {/* Dialog de Cadastro/Edição */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
           <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
             <DialogHeader>
               <div>
@@ -384,7 +384,7 @@ export default function ProductManager() {
                 <ImageIcon className="w-5 h-5 text-purple-600" />
                 <h3 className="text-lg font-semibold text-purple-800">Imagens do Produto</h3>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[0, 1].map((index) => {
                   const images = getProductImages(editingProduct?.imagem_url || '')
                   return (
@@ -455,7 +455,7 @@ export default function ProductManager() {
             </div>
 
             {/* Seção de Informações Básicas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="nome" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                   <Package className="w-4 h-4 text-purple-600" />
@@ -504,7 +504,7 @@ export default function ProductManager() {
                 <DollarSign className="w-5 h-5 text-green-600" />
                 <h3 className="text-lg font-semibold text-green-800">Preços</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="preco_normal" className="text-sm font-semibold text-gray-700">
                     Preço Normal *
@@ -597,7 +597,7 @@ export default function ProductManager() {
             {/* Botão Excluir (abaixo da caixa de status) */}
             {editingProduct?.id && (
               <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <Trash2 className="w-5 h-5 text-red-600" />
                     <div>
@@ -608,7 +608,7 @@ export default function ProductManager() {
                   <Button
                     variant="destructive"
                     onClick={handleDelete}
-                    className="bg-red-600 hover:bg-red-700 text-white font-medium"
+                    className="bg-red-600 hover:bg-red-700 text-white font-medium w-full sm:w-auto"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Excluir Produto
@@ -618,17 +618,17 @@ export default function ProductManager() {
             )}
 
             {/* Botões de Ação Principais */}
-            <div className="flex justify-end gap-3 pt-6 border-t">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t">
               <Button 
                 variant="outline" 
                 onClick={() => setIsDialogOpen(false)}
-                className="px-6 py-2"
+                className="w-full sm:w-auto px-6 py-2"
               >
                 Cancelar
               </Button>
               <Button 
                 onClick={handleSave}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
+                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
               >
                 {editingProduct?.id ? 'Atualizar' : 'Criar'} Produto
               </Button>
