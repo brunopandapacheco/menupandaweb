@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, Edit, Trash2, Upload, X, GripVertical, Filter, Package, DollarSign, Tag, Image as ImageIcon, Check } from 'lucide-react'
+import { Plus, Edit, Trash2, Upload, X, GripVertical, Filter, Package, DollarSign, Tag, Image as ImageIcon, Check, Star } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabaseService } from '@/services/supabase'
@@ -384,10 +384,10 @@ export default function ProductManager() {
               <div className="flex items-center gap-3 mb-4">
                 <ImageIcon className="w-5 h-5 text-purple-600" />
                 <h3 className="text-lg font-semibold text-purple-800">Imagens do Produto</h3>
-                <span className="text-sm text-purple-600">(até 3 imagens)</span>
+                <span className="text-sm text-purple-600">(até 2 imagens)</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                {[0, 1, 2].map((index) => {
+              <div className="grid grid-cols-2 gap-4">
+                {[0, 1].map((index) => {
                   const images = getProductImages(editingProduct?.imagem_url || '')
                   return (
                     <div key={index} className="relative">
@@ -417,6 +417,13 @@ export default function ProductManager() {
                           >
                             <X className="w-4 h-4" />
                           </Button>
+                          {/* Indicador de capa */}
+                          {index === 0 && (
+                            <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                              <Star className="w-3 h-3" />
+                              Capa
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div className="border-2 border-dashed border-purple-300 rounded-lg h-32 flex items-center justify-center bg-white hover:bg-purple-50 transition-colors">
@@ -433,7 +440,9 @@ export default function ProductManager() {
                           <Button asChild size="sm" variant="ghost" className="h-full w-full">
                             <label htmlFor={`product-image-${index}`} className="cursor-pointer flex flex-col items-center justify-center gap-2">
                               <Upload className="w-6 h-6 text-purple-400" />
-                              <span className="text-xs text-purple-500">Adicionar imagem</span>
+                              <span className="text-xs text-purple-500">
+                                {index === 0 ? 'Capa' : 'Adicionar'}
+                              </span>
                             </label>
                           </Button>
                         </div>
@@ -443,7 +452,7 @@ export default function ProductManager() {
                 })}
               </div>
               <p className="text-xs text-purple-600 text-center mt-3">
-                💡 Arraste as imagens para reordenar a posição
+                💡 Arraste as imagens para reordenar a posição. A primeira imagem será sempre a capa.
               </p>
             </div>
 
