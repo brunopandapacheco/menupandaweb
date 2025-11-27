@@ -27,7 +27,7 @@ export default function Login() {
         {/* Login Form */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           {/* Logo acima do formulário */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-2">
             <img 
               src="/imagemmenu.png" 
               alt="Login" 
