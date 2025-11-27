@@ -46,7 +46,7 @@ export function ProductList({
             <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '20px' }}>🔥</span> Promoções
             </h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {promotionalProducts.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -68,7 +68,7 @@ export function ProductList({
             <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>
               Todos os Produtos
             </h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {regularProducts.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -100,7 +100,7 @@ export function ProductList({
           <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '20px' }}>🔥</span> Promoções - {selectedCategory}
           </h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {promocoesCategoria.map((product) => (
               <ProductCard
                 key={product.id}
@@ -122,7 +122,7 @@ export function ProductList({
           <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>
             {selectedCategory}
           </h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {regularesCategoria.map((product) => (
               <ProductCard
                 key={product.id}
