@@ -79,7 +79,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <Label htmlFor="email" className="text-sm font-medium text-black">
           Email
         </Label>
-        <input
+        <Input
           id="email"
           type="email"
           value={email}
@@ -87,13 +87,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           required
           disabled={loading}
           placeholder="Digite seu email"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-gray-700"
-          style={{
-            WebkitTextFillColor: 'rgb(55, 65, 81)',
-            color: 'rgb(55, 65, 81)',
-            outline: 'none',
-            boxShadow: 'none'
-          }}
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 text-gray-700"
         />
       </div>
       
@@ -101,7 +95,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <Label htmlFor="password" className="text-sm font-medium text-black">
           Senha
         </Label>
-        <input
+        <Input
           id="password"
           type="password"
           value={password}
@@ -109,13 +103,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           required
           disabled={loading}
           placeholder="Digite sua senha"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-gray-700"
-          style={{
-            WebkitTextFillColor: 'rgb(55, 65, 81)',
-            color: 'rgb(55, 65, 81)',
-            outline: 'none',
-            boxShadow: 'none'
-          }}
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 text-gray-700"
         />
       </div>
       
