@@ -192,6 +192,7 @@ export default function CardapioDemo() {
               onOrder={handleWhatsAppOrder}
               backgroundColor={mockDesignSettings.cor_background}
               borderColor={mockDesignSettings.cor_borda}
+              selectedCategory={selectedCategory}
             />
           ) : (
             <div style={{ textAlign: 'center', padding: '48px 0' }}>

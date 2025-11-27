@@ -176,6 +176,7 @@ export default function CardapioPublico() {
               onOrder={handleWhatsAppOrder}
               backgroundColor={designSettings.cor_background}
               borderColor={designSettings.cor_borda}
+              selectedCategory={selectedCategory}
             />
           ) : (
             <div style={{ textAlign: 'center', padding: '48px 0' }}>
