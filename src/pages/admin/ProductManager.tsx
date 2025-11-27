@@ -277,13 +277,9 @@ export default function ProductManager() {
                   </div>
 
                   <CardContent className="p-4">
-                    {/* Nome e Categoria */}
+                    {/* Nome do Produto */}
                     <div className="mb-3">
                       <h3 className="text-lg font-bold text-gray-800 mb-1">{product.nome}</h3>
-                      <div className="flex items-center gap-2">
-                        <Tag className="w-4 h-4 text-purple-500" />
-                        <span className="text-sm text-purple-600 font-medium">{product.categoria}</span>
-                      </div>
                     </div>
 
                     {/* Descrição */}
@@ -320,20 +316,12 @@ export default function ProductManager() {
                       </div>
                     </div>
 
-                    {/* Badges */}
-                    <div className="flex gap-2">
-                      <Badge 
-                        variant={product.disponivel ? 'default' : 'secondary'}
-                        className={product.disponivel ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}
-                      >
-                        {product.disponivel ? 'Disponível' : 'Indisponível'}
+                    {/* Badge de Promoção (apenas se estiver em promoção) */}
+                    {product.promocao && (
+                      <Badge variant="destructive" className="bg-red-100 text-red-700">
+                        Promoção
                       </Badge>
-                      {product.promocao && (
-                        <Badge variant="destructive" className="bg-red-100 text-red-700">
-                          Promoção
-                        </Badge>
-                      )}
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               )
