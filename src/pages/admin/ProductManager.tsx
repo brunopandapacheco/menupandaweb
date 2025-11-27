@@ -282,38 +282,22 @@ export default function ProductManager() {
                       <h3 className="text-lg font-bold text-gray-800 mb-1">{product.nome}</h3>
                     </div>
 
-                    {/* Descrição */}
-                    {product.descricao && (
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.descricao}</p>
-                    )}
-
-                    {/* Preço e Tipo */}
-                    <div className="space-y-2 mb-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-500">Tipo:</span>
-                        <span className="text-sm font-medium bg-purple-100 text-purple-700 px-2 py-1 rounded-full capitalize">
-                          {product.forma_venda}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-500">Preço:</span>
-                        <div className="text-right">
-                          {product.promocao && product.preco_promocional ? (
-                            <div>
-                              <span className="text-sm text-gray-400 line-through">
-                                R$ {product.preco_normal.toFixed(2)}
-                              </span>
-                              <div className="text-lg font-bold text-green-600">
-                                R$ {product.preco_promocional.toFixed(2)}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="text-lg font-bold text-gray-800">
-                              R$ {product.preco_normal.toFixed(2)}
-                            </div>
-                          )}
+                    {/* Preço + Tipo juntos */}
+                    <div className="mb-3">
+                      {product.promocao && product.preco_promocional ? (
+                        <div>
+                          <span className="text-sm text-gray-400 line-through">
+                            R$ {product.preco_normal.toFixed(2)}
+                          </span>
+                          <div className="text-lg font-bold text-green-600">
+                            R$ {product.preco_promocional.toFixed(2)} {product.forma_venda}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="text-lg font-bold text-gray-800">
+                          R$ {product.preco_normal.toFixed(2)} {product.forma_venda}
+                        </div>
+                      )}
                     </div>
 
                     {/* Badge de Promoção (apenas se estiver em promoção) */}
