@@ -9,7 +9,7 @@ interface LogoProps {
   emFerias?: boolean
   horarioFuncionamentoInicio?: string
   horarioFuncionamentoFim?: string
-  corNome?: string // Adicionando a prop corNome
+  corNome?: string
 }
 
 export function Logo({ 
@@ -21,7 +21,7 @@ export function Logo({
   emFerias,
   horarioFuncionamentoInicio = '08:00',
   horarioFuncionamentoFim = '18:00',
-  corNome = '#1A1A1A' // Value padrão
+  corNome = '#1A1A1A'
 }: LogoProps) {
   // Debug logs
   console.log('Logo component props:', {
@@ -30,6 +30,18 @@ export function Logo({
     corNome,
     borderColor
   })
+
+  // Limitar o tamanho do nome da loja
+  const getDisplayName = (name?: string): string => {
+    if (!name) return 'Doces da Vovó'
+    
+    // Limitar a 30 caracteres
+    if (name.length > 30) {
+      return name.substring(0, 30) + '...'
+    }
+    
+    return name
+  }
 
   // Renderiza estrelas with base na avaliação
   const renderStars = (rating: number) => {
@@ -108,6 +120,7 @@ export function Logo({
   }
 
   const status = getStatusMessage()
+  const displayName = getDisplayName(storeName)
 
   return (
     <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '24px' }}>
@@ -149,13 +162,17 @@ export function Logo({
       {/* Título and description of store outside card */}
       <div style={{ textAlign: 'center', marginTop: '20px', padding: '0 16px' }}>
         <h2 style={{ 
-          fontSize: '32px', 
+          fontSize: '28px', // Reduzido de 32px para 28px
           fontWeight: 'bold', 
           color: corNome, // Applying dynamic color here
           marginBottom: '8px',
-          lineHeight: '1.2'
+          lineHeight: '1.3', // Adicionado lineHeight para melhor quebra
+          wordWrap: 'break-word', // Garante quebra de palavra
+          overflowWrap: 'break-word', // Alternativa para compatibilidade
+          maxWidth: '280px', // Limita largura máxima
+          margin: '0 auto 8px' // Centralizado com margem
         }}>
-          {storeName || 'Doces da Vovó'}
+          {displayName}
         </h2>
         
         {/* Rating below name */}
@@ -190,9 +207,11 @@ export function Logo({
           color: '#6b7280', 
           lineHeight: '1.4',
           maxWidth: '300px',
-          margin: '0 auto'
+          margin: '0 auto',
+          wordWrap: 'break-word', // Garante quebra de palavra
+          overflowWrap: 'break-word' // Alternativa para compatibilidade
         }}>
-          {storeDescription || 'Há more de 20 years transformando moments speciais in doces inesquecíveis. Feito with amor and os melhores ingredients.'}
+          {storeDescription || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'}
         </p>
       </div>
     </div>
