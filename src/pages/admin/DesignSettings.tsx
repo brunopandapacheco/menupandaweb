@@ -35,7 +35,7 @@ const gradientBackgrounds = [
 
 export default function DesignSettings() {
   const { designSettings, configuracoes, saveDesignSettings, saveConfiguracoes, loading } = useDatabase()
-  const [activeTab, setActiveTab] = useState('background')
+  const [activeTab, setActiveTab] = useState('cores')
   const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)')
   const [corBorda, setCorBorda] = useState('#ec4899')
   const [corNome, setCorNome] = useState('#be185d')
@@ -295,17 +295,11 @@ export default function DesignSettings() {
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="text-center sm:text-left pt-8 sm:pt-0">
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
-        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha o background, cores e configurações do seu cardápio</p>
+        <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha as cores, imagens e configurações do seu cardápio</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
-          <TabsTrigger 
-            value="background" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
-          >
-            Background
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
@@ -313,58 +307,64 @@ export default function DesignSettings() {
             Cores
           </TabsTrigger>
           <TabsTrigger 
-            value="configuracao" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
-          >
-            Configuração
-          </TabsTrigger>
-          <TabsTrigger 
             value="imagens" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Imagens
           </TabsTrigger>
+          <TabsTrigger 
+            value="configuracao" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
+          >
+            Configuração
+          </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="background">
-          <Card>
-            <CardHeader className="text-center">
-              <CardTitle style={{ color: '#4A3531' }}>Background</CardTitle>
-              <CardDescription>Escolha o degrade animado que fica atrás da logo</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {gradientBackgrounds.map((gradient) => (
-                  <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
-                    <CardContent className="p-4">
-                      <div className="text-center mb-3">
-                        <h3 className="font-black text-lg" style={{ color: '#4A3531' }}>{gradient.name}</h3>
-                      </div>
-                      
-                      <div 
-                        className="w-full h-24 rounded-lg mb-4 shadow-sm"
-                        style={{ background: gradient.gradient }}
-                      />
-                      
-                      <Button 
-                        size="sm" 
-                        className="w-full font-[650] text-xs"
-                        style={{ backgroundColor: '#1A1A1A', color: 'white' }}
-                        onClick={() => applyGradient(gradient)}
-                      >
-                        Aplicar
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         <TabsContent value="cores">
           <div className="space-y-6">
-            {/* Card Principal - Design Limpo */}
+            {/* Card de Background - Agora dentro de Cores */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <div className="flex justify-center mb-2">
+                  <div className="p-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full">
+                    <Palette className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
+                <CardDescription className="text-base">
+                  Escolha o degrade animado que fica atrás da logo
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  {gradientBackgrounds.map((gradient) => (
+                    <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
+                      <CardContent className="p-4">
+                        <div className="text-center mb-3">
+                          <h3 className="font-black text-lg" style={{ color: '#4A3531' }}>{gradient.name}</h3>
+                        </div>
+                        
+                        <div 
+                          className="w-full h-24 rounded-lg mb-4 shadow-sm"
+                          style={{ background: gradient.gradient }}
+                        />
+                        
+                        <Button 
+                          size="sm" 
+                          className="w-full font-[650] text-xs"
+                          style={{ backgroundColor: '#1A1A1A', color: 'white' }}
+                          onClick={() => applyGradient(gradient)}
+                        >
+                          Aplicar
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card Principal - Paleta de Cores */}
             <Card className="border-0 shadow-lg">
               <CardHeader className="text-center pb-4">
                 <div className="flex justify-center mb-2">
@@ -466,6 +466,86 @@ export default function DesignSettings() {
                   >
                     Aplicar Cores
                   </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="imagens">
+          <div className="space-y-6">
+            {/* Card Principal - Logo da Loja */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <div className="flex justify-center mb-2">
+                  <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
+                <CardDescription className="text-base">
+                  Personalize a logo que aparecerá no topo do seu cardápio
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-6">
+                {/* Preview da Logo - Centralizado e Grande */}
+                <div className="flex justify-center">
+                  <div className="relative">
+                    {logoUrl ? (
+                      <div className="w-48 h-48 rounded-full border-4 border-gray-200 overflow-hidden shadow-xl">
+                        <img 
+                          src={logoUrl} 
+                          alt="Logo da loja" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
+                        <div className="text-center">
+                          <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                          <p className="text-sm text-gray-500">Nenhuma logo</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Botão de Upload - Centralizado */}
+                <div className="flex justify-center">
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleLogoUpload(file)
+                        }}
+                        className="hidden"
+                        id="logo-upload"
+                      />
+                      <Button 
+                        asChild 
+                        size="lg"
+                        className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        disabled={uploadingLogo}
+                      >
+                        <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
+                          <Upload className="w-5 h-5" />
+                          {uploadingLogo ? 'Enviando...' : 'Trocar Logo'}
+                        </label>
+                      </Button>
+                    </div>
+                    
+                    {/* Informações de Formato */}
+                    <div className="text-center">
+                      <div className="inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
+                        <ImageIcon className="w-4 h-4" />
+                        <span>PNG, JPEG, WEBP • Máx. 5MB</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -672,86 +752,6 @@ export default function DesignSettings() {
                   >
                     Salvar Horários
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="imagens">
-          <div className="space-y-6">
-            {/* Card Principal - Logo da Loja */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader className="text-center pb-4">
-                <div className="flex justify-center mb-2">
-                  <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                    <Camera className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
-                <CardDescription className="text-base">
-                  Personalize a logo que aparecerá no topo do seu cardápio
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="space-y-6">
-                {/* Preview da Logo - Centralizado e Grande */}
-                <div className="flex justify-center">
-                  <div className="relative">
-                    {logoUrl ? (
-                      <div className="w-48 h-48 rounded-full border-4 border-gray-200 overflow-hidden shadow-xl">
-                        <img 
-                          src={logoUrl} 
-                          alt="Logo da loja" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
-                        <div className="text-center">
-                          <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                          <p className="text-sm text-gray-500">Nenhuma logo</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                {/* Botão de Upload - Centralizado */}
-                <div className="flex justify-center">
-                  <div className="space-y-4">
-                    <div>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0]
-                          if (file) handleLogoUpload(file)
-                        }}
-                        className="hidden"
-                        id="logo-upload"
-                      />
-                      <Button 
-                        asChild 
-                        size="lg"
-                        className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-                        disabled={uploadingLogo}
-                      >
-                        <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
-                          <Upload className="w-5 h-5" />
-                          {uploadingLogo ? 'Enviando...' : 'Trocar Logo'}
-                        </label>
-                      </Button>
-                    </div>
-                    
-                    {/* Informações de Formato */}
-                    <div className="text-center">
-                      <div className="inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
-                        <ImageIcon className="w-4 h-4" />
-                        <span>PNG, JPEG, WEBP • Máx. 5MB</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>
