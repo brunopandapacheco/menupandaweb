@@ -40,6 +40,19 @@ export function ProductCard({
   backgroundColor, 
   borderColor 
 }: ProductCardProps) {
+  // Função para obter a primeira imagem válida
+  const getFirstImage = (imagemUrl?: string): string | null => {
+    if (!imagemUrl) return null
+    
+    // Divide por vírgula e remove espaços em branco
+    const images = imagemUrl.split(',').map(img => img.trim()).filter(Boolean)
+    
+    // Retorna a primeira imagem válida
+    return images.length > 0 ? images[0] : null
+  }
+
+  const firstImage = getFirstImage(product.imagem_url)
+
   return (
     <div style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
       <div style={{ padding: '12px' }}>
@@ -56,8 +69,8 @@ export function ProductCard({
             backgroundColor: backgroundColor 
           }}
         >
-          {product.imagem_url ? (
-            <img src={product.imagem_url} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+          {firstImage ? (
+            <img src={firstImage} alt={product.nome} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
           ) : (
             <span style={{ fontSize: '32px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
           )}

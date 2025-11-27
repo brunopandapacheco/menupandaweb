@@ -47,7 +47,7 @@ export default function Preview() {
   }, [favorites])
 
   useEffect(() => {
-    // Verificar if os datas were carregados
+    // Verificar if os datas foram carregados
     if (!loading && designSettings) {
       setIsDataLoaded(true)
       
@@ -57,7 +57,7 @@ export default function Preview() {
         const link = `${baseUrl}/cardapio/${designSettings.slug}`
         setShareableLink(link)
       } else if (designSettings.nome_loja) {
-        // Se não tiver slug, usa o name of store
+        // Se não tiver slug, usa o nome da loja
         const slug = generateSlug(designSettings.nome_loja)
         const baseUrl = window.location.origin
         const link = `${baseUrl}/cardapio/${slug}`
@@ -93,13 +93,13 @@ export default function Preview() {
   }
 
   const handleWhatsAppOrder = (productName: string) => {
-    const message = `Olá! Gostaria of making an order of: ${productName}`
+    const message = `Olá! Gostaria de fazer um pedido de: ${productName}`
     const phoneNumber = configuracoes?.telefone?.replace(/\D/g, '') || '11999999999'
     const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
   }
 
-  // Obter categorias únicas with ícones
+  // Obter categorias únicas com ícones
   const categoryIcons: Record<string, string> = {
     'Bolos': '🎂',
     'Cupcakes': '🧁',
@@ -120,7 +120,7 @@ export default function Preview() {
     'Pipoca': '🍿'
   }
 
-  // Usar categorias do designSettings or categorias padrão
+  // Usar categorias do designSettings ou categorias padrão
   const availableCategories = designSettings?.categorias || ['Bolos', 'Doces', 'Salgados']
   
   const categories = availableCategories.map(cat => ({
@@ -128,7 +128,7 @@ export default function Preview() {
     icon: categoryIcons[cat] || ''
   }))
 
-  // Filtrar products by search and category
+  // Filtrar produtos por busca e categoria
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
@@ -208,18 +208,18 @@ export default function Preview() {
             />
             
             <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
-              {/* Banner promotional */}
+              {/* Banner promocional */}
               {designSettings?.banner1_url && (
                 <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                   <img 
                     src={designSettings.banner1_url} 
-                    alt="Banner promotional"
+                    alt="Banner promocional"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
               )}
 
-              {/* Filter of categories */}
+              {/* Filtro de categorias */}
               <CategoryFilter
                 categories={categories}
                 selectedCategory={selectedCategory}
@@ -240,11 +240,11 @@ export default function Preview() {
                 />
               ) : (
                 <div style={{ textAlign: 'center', padding: '48px 0' }}>
-                  <p className="text-gray-500">No product found</p>
+                  <p className="text-gray-500">Nenhum produto encontrado</p>
                   <p className="text-sm text-gray-400 mt-2">
                     {produtos.length === 0 
-                      ? 'Add products in the "Products" tab to see them here' 
-                      : 'Try adjusting the search or category filters'
+                      ? 'Adicione produtos na aba "Produtos" para vê-los aqui' 
+                      : 'Tente ajustar a busca ou os filtros de categoria'
                     }
                   </p>
                 </div>
@@ -258,7 +258,7 @@ export default function Preview() {
     </div>
   )
 
-  // State of loading
+  // Estado de carregamento
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
@@ -277,12 +277,12 @@ export default function Preview() {
         <Card className="max-w-md mx-auto">
           <CardContent className="p-6 text-center">
             <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Configure your store first</h3>
+            <h3 className="text-lg font-semibold mb-2">Configure sua loja primeiro</h3>
             <p className="text-gray-600 mb-4">
-              You need to configure the basic information of your store before viewing the preview.
+              Você precisa configurar as informações básicas da sua loja antes de visualizar a prévia.
             </p>
             <Button onClick={() => window.location.href = '/admin?tab=design'}>
-              Configure Design
+              Configurar Design
             </Button>
           </CardContent>
         </Card>
@@ -292,7 +292,7 @@ export default function Preview() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      {/* Card of Sharing at Top */}
+      {/* Card de Compartilhamento no Topo */}
       <div className="sticky top-0 z-50 bg-white shadow-md">
         <div className="max-w-7xl mx-auto p-4">
           <Card className="border-0 shadow-md">
@@ -301,8 +301,8 @@ export default function Preview() {
                 <div className="flex items-center gap-3">
                   <Share2 className="w-5 h-5 text-blue-600" />
                   <div>
-                    <h3 className="font-semibold text-gray-800">Share Cardápio</h3>
-                    <p className="text-sm text-gray-600">Link for your customers</p>
+                    <h3 className="font-semibold text-gray-800">Compartilhar Cardápio</h3>
+                    <p className="text-sm text-gray-600">Link para seus clientes</p>
                   </div>
                 </div>
                 <Button
@@ -312,7 +312,7 @@ export default function Preview() {
                   disabled={!shareableLink}
                 >
                   <Copy className="w-4 h-4" />
-                  Copy Link
+                  Copiar Link
                 </Button>
               </div>
               {shareableLink && (
@@ -325,7 +325,7 @@ export default function Preview() {
         </div>
       </div>
 
-      {/* Preview Container - Condicional baseado no dispositivo */}
+      {/* Container de Prévia - Condicional baseado no dispositivo */}
       <div className="max-w-7xl mx-auto p-4">
         {isMobile ? (
           // No celular: mostra apenas o preview mobile
