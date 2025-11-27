@@ -11,7 +11,6 @@ import { SearchBar } from '@/components/cardapio/SearchBar'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
-import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 type PreviewDevice = 'mobile' | 'tablet' | 'desktop'
 
@@ -22,7 +21,19 @@ export default function Preview() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isDataLoaded, setIsDataLoaded] = useState(false)
-  const device = useDeviceDetection()
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detectar se é dispositivo móvel
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
@@ -60,9 +71,10 @@ export default function Preview() {
     console.log('Preview component state:', {
       designSettings,
       configuracoes,
-      loading
+      loading,
+      isMobile
     })
-  }, [designSettings, configuracoes, loading])
+  }, [designSettings, configuracoes, loading, isMobile])
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareableLink).then(() => {
@@ -313,22 +325,22 @@ export default function Preview() {
         </div>
       </div>
 
-      {/* Preview Container - Responsivo */}
+      {/* Preview Container - Condicional baseado no dispositivo */}
       <div className="max-w-7xl mx-auto p-4">
-        {device === 'mobile' ? (
-          // Versão Mobile - Apenas celular
+        {isMobile ? (
+          // No celular: mostra apenas o preview mobile
           <div className="flex justify-center">
             <DevicePreview
               device="mobile"
               title="Celular"
               icon={Smartphone}
-              width="100%"
+              width="320px"
               height="600px"
-              maxWidth="400px"
+              maxWidth="90vw"
             />
           </div>
         ) : (
-          // Versão Desktop/Tablet - 3 dispositivos lado a lado
+          // No computador: mostra os 3 previews lado a lado
           <div className="flex justify-center items-start gap-4 flex-wrap lg:flex-nowrap">
             <DevicePreview
               device="mobile"

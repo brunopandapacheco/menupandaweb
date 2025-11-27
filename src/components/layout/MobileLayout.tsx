@@ -24,7 +24,10 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
         {children}
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 bg-[#380019] border-t border-pink-200 rounded-t-2xl">
+      <div className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl" 
+           style={{
+             background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+           }}>
         <div className="grid grid-cols-3 gap-1 p-2">
           {tabs.map((tab) => {
             return (
