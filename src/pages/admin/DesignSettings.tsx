@@ -10,6 +10,7 @@ import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
 import { CheckCircle, Palette, Sparkles, Settings, Upload, Clock, Calendar, Image as ImageIcon, Camera } from 'lucide-react'
 import { supabaseService } from '@/services/supabase'
+import { LogoCropper } from '@/components/LogoCropper'
 
 const predefinedColors = [
   { name: 'Rosa', value: '#ec4899' },
@@ -46,6 +47,8 @@ export default function DesignSettings() {
   const [textoRodape, setTextoRodape] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [showCropper, setShowCropper] = useState(false)
 
   // Estados para horários
   const [horarioSemanaAbre, setHorarioSemanaAbre] = useState('08:00')
@@ -241,27 +244,39 @@ export default function DesignSettings() {
     }
   }
 
-  const handleLogoUpload = async (file: File) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
     if (!file) return
+
+    // Validar arquivo
+    if (!file.type.startsWith('image/')) {
+      showError('Arquivo não é uma imagem')
+      return
+    }
     
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      showError('Arquivo muito grande (máximo 5MB)')
+      return
+    }
+
+    setSelectedFile(file)
+    setShowCropper(true)
+  }
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    if (!selectedFile) return
+
     setUploadingLogo(true)
-    
+    setShowCropper(false)
+
     try {
-      console.log('📤 Iniciando upload da logo...')
+      console.log('📤 Iniciando upload da logo cropada...')
       
-      // Validar arquivo
-      if (!file.type.startsWith('image/')) {
-        throw new Error('Arquivo não é uma imagem')
-      }
-      
-      if (file.size > 5 * 1024 * 1024) { // 5MB
-        throw new Error('Arquivo muito grande (máximo 5MB)')
-      }
-      
-      console.log('✅ Arquivo validado:', file.name, file.type, file.size)
+      // Criar arquivo a partir do blob
+      const fileName = 'logo-' + Date.now() + '.jpg'
+      const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
       
       // Fazer upload
-      const fileName = 'logo-' + Date.now() + '.' + file.name.split('.').pop()
       const url = await supabaseService.uploadImage(file, 'images', fileName)
       
       if (!url) {
@@ -286,7 +301,13 @@ export default function DesignSettings() {
       showError(error.message || 'Erro ao fazer upload da logo')
     } finally {
       setUploadingLogo(false)
+      setSelectedFile(null)
     }
+  }
+
+  const handleCropCancel = () => {
+    setShowCropper(false)
+    setSelectedFile(null)
   }
 
   if (loading) return <div>Carregando...</div>
@@ -518,12 +539,10 @@ export default function DesignSettings() {
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0]
-                          if (file) handleLogoUpload(file)
-                        }}
+                        onChange={handleFileSelect}
                         className="hidden"
                         id="logo-upload"
+                        disabled={uploadingLogo}
                       />
                       <Button 
                         asChild 
@@ -533,7 +552,7 @@ export default function DesignSettings() {
                       >
                         <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
                           <Upload className="w-5 h-5" />
-                          {uploadingLogo ? 'Enviando...' : 'Trocar Logo'}
+                          {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
                         </label>
                       </Button>
                     </div>
@@ -542,7 +561,7 @@ export default function DesignSettings() {
                     <div className="text-center">
                       <div className="inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
                         <ImageIcon className="w-4 h-4" />
-                        <span>PNG, JPEG, WEBP • Máx. 5MB</span>
+                        <span>PNG, JPEG, WEBP • Máx. 5MB • Com ajuste de zoom e rotação</span>
                       </div>
                     </div>
                   </div>
@@ -758,6 +777,15 @@ export default function DesignSettings() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Modal de Crop */}
+      {showCropper && selectedFile && (
+        <LogoCropper
+          imageFile={selectedFile}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </div>
   )
 }
