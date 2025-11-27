@@ -32,12 +32,43 @@ export default function ProductManager() {
   const handleSave = async () => {
     if (!editingProduct) return
 
+    // Validações obrigatórias
+    if (!editingProduct.nome?.trim()) {
+      showError('Nome do produto é obrigatório')
+      return
+    }
+
+    if (!editingProduct.categoria?.trim()) {
+      showError('Categoria do produto é obrigatória')
+      return
+    }
+
+    // Garantir que o preço sempre tenha um valor válido
+    const precoNormal = parseFloat(editingProduct.preco_normal?.toString() || '0')
+    if (precoNormal <= 0) {
+      showError('Preço normal deve ser maior que zero')
+      return
+    }
+
+    // Preparar objeto com valores validados
+    const productData = {
+      nome: editingProduct.nome.trim(),
+      descricao: editingProduct.descricao?.trim() || '',
+      preco_normal: precoNormal,
+      preco_promocional: editingProduct.promocao ? parseFloat(editingProduct.preco_promocional?.toString() || '0') : null,
+      imagem_url: editingProduct.imagem_url || '',
+      categoria: editingProduct.categoria.trim(),
+      forma_venda: editingProduct.forma_venda || 'unidade',
+      disponivel: editingProduct.disponivel !== false,
+      promocao: editingProduct.promocao || false,
+    }
+
     try {
       if (editingProduct.id) {
-        const success = await editProduto(editingProduct.id, editingProduct)
+        const success = await editProduto(editingProduct.id, productData)
         if (success) showSuccess('Produto atualizado!')
       } else {
-        const result = await addProduto(editingProduct as Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>)
+        const result = await addProduto(productData as Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>)
         if (result) showSuccess('Produto criado!')
       }
       setIsDialogOpen(false)
@@ -372,21 +403,23 @@ export default function ProductManager() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="nome">Nome do Produto</Label>
+                <Label htmlFor="nome">Nome do Produto *</Label>
                 <Input
                   id="nome"
                   value={editingProduct?.nome || ''}
                   onChange={(e) => setEditingProduct(prev => ({ ...prev, nome: e.target.value }))}
                   placeholder="Ex: Bolo de Chocolate"
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="categoria">Categoria</Label>
+                <Label htmlFor="categoria">Categoria *</Label>
                 <Input
                   id="categoria"
                   value={editingProduct?.categoria || ''}
                   onChange={(e) => setEditingProduct(prev => ({ ...prev, categoria: e.target.value }))}
                   placeholder="Ex: Bolos"
+                  required
                 />
               </div>
             </div>
@@ -404,14 +437,19 @@ export default function ProductManager() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="preco_normal">Preço Normal</Label>
+                <Label htmlFor="preco_normal">Preço Normal *</Label>
                 <Input
                   id="preco_normal"
                   type="number"
                   step="0.01"
+                  min="0.01"
                   value={editingProduct?.preco_normal || ''}
-                  onChange={(e) => setEditingProduct(prev => ({ ...prev, preco_normal: parseFloat(e.target.value) || 0 }))}
+                  onChange={(e) => setEditingProduct(prev => ({ 
+                    ...prev, 
+                    preco_normal: parseFloat(e.target.value) || 0 
+                  }))}
                   placeholder="0.00"
+                  required
                 />
               </div>
               <div className="space-y-2">
@@ -451,8 +489,12 @@ export default function ProductManager() {
                     id="preco_promocional"
                     type="number"
                     step="0.01"
+                    min="0.01"
                     value={editingProduct?.preco_promocional || ''}
-                    onChange={(e) => setEditingProduct(prev => ({ ...prev, preco_promocional: parseFloat(e.target.value) || 0 }))}
+                    onChange={(e) => setEditingProduct(prev => ({ 
+                      ...prev, 
+                      preco_promocional: parseFloat(e.target.value) || 0 
+                    }))}
                     placeholder="0.00"
                   />
                 </div>
@@ -462,7 +504,7 @@ export default function ProductManager() {
             <div className="flex items-center space-x-2">
               <Switch
                 id="disponivel"
-                checked={editingProduct?.disponivel || false}
+                checked={editingProduct?.disponivel !== false}
                 onCheckedChange={(checked) => setEditingProduct(prev => ({ ...prev, disponivel: checked }))}
               />
               <Label htmlFor="disponivel">Disponível</Label>
