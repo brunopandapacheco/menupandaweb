@@ -183,11 +183,11 @@ export default function ProductManager() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white">
+      <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-2">Gerenciar Produtos</h1>
-            <p className="text-purple-100 text-lg">Adicione e organize seus produtos de forma simples</p>
+            <p className="text-pink-100 text-lg">Adicione e organize seus produtos de forma simples</p>
           </div>
         </div>
       </div>
@@ -367,12 +367,12 @@ export default function ProductManager() {
       {/* Dialog de Cadastro/Edição */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
-          <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white p-6 rounded-t-2xl">
+          <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">
                 {editingProduct?.id ? 'Editar Produto' : 'Novo Produto'}
               </DialogTitle>
-              <DialogDescription className="text-purple-100">
+              <DialogDescription className="text-pink-100">
                 Preencha as informações do produto
               </DialogDescription>
             </DialogHeader>
