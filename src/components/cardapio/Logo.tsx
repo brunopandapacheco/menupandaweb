@@ -43,6 +43,18 @@ export function Logo({
     return name
   }
 
+  // Limitar o tamanho da descrição da loja
+  const getDisplayDescription = (description?: string): string => {
+    if (!description) return 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'
+    
+    // Limitar a 120 caracteres
+    if (description.length > 120) {
+      return description.substring(0, 120) + '...'
+    }
+    
+    return description
+  }
+
   // Renderiza estrelas with base na avaliação
   const renderStars = (rating: number) => {
     const stars = []
@@ -121,6 +133,7 @@ export function Logo({
 
   const status = getStatusMessage()
   const displayName = getDisplayName(storeName)
+  const displayDescription = getDisplayDescription(storeDescription)
 
   return (
     <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '24px' }}>
@@ -202,6 +215,7 @@ export function Logo({
           </div>
         </div>
         
+        {/* Store Description - Com limitação e quebra de linha */}
         <p style={{ 
           fontSize: '14px', 
           color: '#6b7280', 
@@ -209,9 +223,14 @@ export function Logo({
           maxWidth: '300px',
           margin: '0 auto',
           wordWrap: 'break-word', // Garante quebra de palavra
-          overflowWrap: 'break-word' // Alternativa para compatibilidade
+          overflowWrap: 'break-word', // Alternativa para compatibilidade
+          minHeight: '40px', // Altura mínima para consistência
+          display: '-webkit-box',
+          WebkitLineClamp: 3, // Máximo de 3 linhas
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden'
         }}>
-          {storeDescription || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'}
+          {displayDescription}
         </p>
       </div>
     </div>
