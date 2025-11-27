@@ -110,14 +110,32 @@ export function ProductCard({
                     -{Math.round((1 - product.preco_promocional / product.preco_normal) * 100)}%
                   </Badge>
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981' }}>
-                  R$ {product.preco_promocional.toFixed(2)}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                  <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981' }}>
+                    R$ {product.preco_promocional.toFixed(2)}
+                  </span>
+                  <Badge 
+                    variant="secondary" 
+                    className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
+                    style={{ fontSize: '10px', padding: '2px 4px', height: 'auto', lineHeight: '1' }}
+                  >
+                    {product.forma_venda}
+                  </Badge>
                 </div>
               </div>
             </div>
           ) : (
-            <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '8px' }}>
-              R$ {product.preco_normal.toFixed(2)}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                R$ {product.preco_normal.toFixed(2)}
+              </span>
+              <Badge 
+                variant="secondary" 
+                className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
+                style={{ fontSize: '10px', padding: '2px 4px', height: 'auto', lineHeight: '1' }}
+              >
+                {product.forma_venda}
+              </Badge>
             </div>
           )}
           
