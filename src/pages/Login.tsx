@@ -29,8 +29,8 @@ export default function Login() {
           {/* Logo acima do formulário */}
           <div className="flex justify-center mb-6">
             <img 
-              src="/logoempresa.png" 
-              alt="Logo da Empresa" 
+              src="/imagemmenu.png" 
+              alt="Login" 
               className="w-32 h-32 object-contain"
             />
           </div>
