@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { ProductForm } from './ProductForm'
@@ -18,7 +18,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   const [isSaving, setIsSaving] = useState(false)
 
   // Reset local product when dialog changes
-  useState(() => {
+  useEffect(() => {
     if (isOpen) {
       setLocalProduct(product || {
         nome: '',
