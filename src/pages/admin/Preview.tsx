@@ -21,7 +21,6 @@ export default function Preview() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isDataLoaded, setIsDataLoaded] = useState(false)
-  const [selectedDevice, setSelectedDevice] = useState<PreviewDevice>('mobile')
 
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
@@ -123,21 +122,127 @@ export default function Preview() {
     return matchesSearch && matchesCategory
   })
 
-  // Obter dimensões do dispositivo
-  const getDeviceDimensions = () => {
-    switch (selectedDevice) {
-      case 'mobile':
-        return { width: '375px', height: '667px', maxWidth: '375px' }
-      case 'tablet':
-        return { width: '768px', height: '1024px', maxWidth: '768px' }
-      case 'desktop':
-        return { width: '100%', height: '100%', maxWidth: '448px' }
-      default:
-        return { width: '375px', height: '667px', maxWidth: '375px' }
-    }
-  }
+  // Componente de preview individual
+  const DevicePreview = ({ device, title, icon: Icon, width, height, maxWidth }: { 
+    device: PreviewDevice, 
+    title: string, 
+    icon: any, 
+    width: string, 
+    height: string, 
+    maxWidth: string 
+  }) => (
+    <div className="flex flex-col items-center">
+      <div className="flex items-center gap-2 mb-3">
+        <Icon className="w-4 h-4 text-gray-600" />
+        <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
+      </div>
+      <div 
+        className="bg-gray-900 rounded-lg shadow-2xl overflow-hidden"
+        style={{
+          width: width,
+          height: height,
+          maxWidth: maxWidth,
+          minHeight: '500px'
+        }}
+      >
+        {/* Device Frame */}
+        {device === 'mobile' && (
+          <div className="bg-gray-900 p-2">
+            <div className="bg-black rounded-full h-3 w-16 mx-auto mb-1"></div>
+          </div>
+        )}
+        {device === 'tablet' && (
+          <div className="bg-gray-900 p-2">
+            <div className="bg-black rounded-full h-2 w-12 mx-auto mb-1"></div>
+          </div>
+        )}
+        {device === 'desktop' && (
+          <div className="bg-gray-100 p-2">
+            <div className="text-center text-xs text-gray-500 mb-1">Desktop</div>
+          </div>
+        )}
 
-  const deviceDimensions = getDeviceDimensions()
+        {/* Preview Content */}
+        <div 
+          className="bg-white overflow-auto"
+          style={{ 
+            height: device === 'desktop' ? 'calc(100% - 30px)' : 'calc(100% - 30px)',
+            width: '100%'
+          }}
+        >
+          <div style={{ 
+            maxWidth: device === 'desktop' ? '448px' : 'none',
+            margin: device === 'desktop' ? '0 auto' : '0',
+            backgroundColor: 'white',
+            minHeight: '100%'
+          }}>
+            <Banner 
+              logoUrl={designSettings?.logo_url} 
+              borderColor={designSettings?.cor_borda} 
+              bannerGradient={designSettings?.banner_gradient}
+            />
+            <Logo 
+              logoUrl={designSettings?.logo_url} 
+              borderColor={designSettings?.cor_borda} 
+              storeName={designSettings?.nome_loja}
+              storeDescription={designSettings?.descricao_loja}
+              avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
+              emFerias={configuracoes?.em_ferias}
+              horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
+              horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
+              corNome={designSettings?.cor_nome}
+            />
+            
+            <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
+              {/* Banner promotional */}
+              {designSettings?.banner1_url && (
+                <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                  <img 
+                    src={designSettings.banner1_url} 
+                    alt="Banner promotional"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+              )}
+
+              {/* Filter of categories */}
+              <CategoryFilter
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategorySelect={setSelectedCategory}
+              />
+
+              <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+              {filteredProducts.length > 0 ? (
+                <ProductList
+                  produtos={filteredProducts}
+                  favorites={favorites}
+                  onToggleFavorite={toggleFavorite}
+                  onOrder={handleWhatsAppOrder}
+                  backgroundColor={designSettings?.cor_background}
+                  borderColor={designSettings?.cor_borda}
+                  selectedCategory={selectedCategory}
+                />
+              ) : (
+                <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                  <p className="text-gray-500">No product found</p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    {produtos.length === 0 
+                      ? 'Add products in the "Products" tab to see them here' 
+                      : 'Try adjusting the search or category filters'
+                    }
+                  </p>
+                </div>
+              )}
+
+              <Footer textoRodape={designSettings?.texto_rodape} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
   // State of loading
   if (loading) {
@@ -206,157 +311,33 @@ export default function Preview() {
         </div>
       </div>
 
-      {/* Device Selector */}
+      {/* Preview Container - 3 dispositivos lado a lado */}
       <div className="max-w-7xl mx-auto p-4">
-        <Card className="border-0 shadow-md mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-gray-800">Visualizar em:</h3>
-                <p className="text-sm text-gray-600">Escolha o dispositivo para preview</p>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant={selectedDevice === 'mobile' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedDevice('mobile')}
-                  className="flex items-center gap-2"
-                >
-                  <Smartphone className="w-4 h-4" />
-                  Celular
-                </Button>
-                <Button
-                  variant={selectedDevice === 'tablet' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedDevice('tablet')}
-                  className="flex items-center gap-2"
-                >
-                  <Tablet className="w-4 h-4" />
-                  Tablet
-                </Button>
-                <Button
-                  variant={selectedDevice === 'desktop' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedDevice('desktop')}
-                  className="flex items-center gap-2"
-                >
-                  <Monitor className="w-4 h-4" />
-                  Computador
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Preview Container */}
-      <div className="max-w-7xl mx-auto p-4">
-        <div className="flex justify-center">
-          <div 
-            className="bg-gray-900 rounded-lg shadow-2xl overflow-hidden"
-            style={{
-              width: deviceDimensions.width,
-              height: deviceDimensions.height,
-              maxWidth: deviceDimensions.maxWidth,
-              minHeight: '600px'
-            }}
-          >
-            {/* Device Frame */}
-            {selectedDevice === 'mobile' && (
-              <div className="bg-gray-900 p-2">
-                <div className="bg-black rounded-full h-4 w-20 mx-auto mb-2"></div>
-              </div>
-            )}
-            {selectedDevice === 'tablet' && (
-              <div className="bg-gray-900 p-3">
-                <div className="bg-black rounded-full h-3 w-16 mx-auto mb-2"></div>
-              </div>
-            )}
-            {selectedDevice === 'desktop' && (
-              <div className="bg-gray-100 p-4">
-                <div className="text-center text-xs text-gray-500 mb-2">Desktop Preview</div>
-              </div>
-            )}
-
-            {/* Preview Content */}
-            <div 
-              className="bg-white overflow-auto"
-              style={{ 
-                height: selectedDevice === 'desktop' ? 'calc(100% - 40px)' : 'calc(100% - 40px)',
-                width: '100%'
-              }}
-            >
-              <div style={{ 
-                maxWidth: selectedDevice === 'desktop' ? '448px' : 'none',
-                margin: selectedDevice === 'desktop' ? '0 auto' : '0',
-                backgroundColor: 'white',
-                minHeight: '100%'
-              }}>
-                <Banner 
-                  logoUrl={designSettings.logo_url} 
-                  borderColor={designSettings.cor_borda} 
-                  bannerGradient={designSettings.banner_gradient}
-                />
-                <Logo 
-                  logoUrl={designSettings.logo_url} 
-                  borderColor={designSettings.cor_borda} 
-                  storeName={designSettings.nome_loja}
-                  storeDescription={designSettings.descricao_loja}
-                  avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
-                  emFerias={configuracoes?.em_ferias}
-                  horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
-                  horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
-                  corNome={designSettings.cor_nome}
-                />
-                
-                <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
-                  {/* Banner promotional */}
-                  {designSettings.banner1_url && (
-                    <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                      <img 
-                        src={designSettings.banner1_url} 
-                        alt="Banner promotional"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    </div>
-                  )}
-
-                  {/* Filter of categories */}
-                  <CategoryFilter
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    onCategorySelect={setSelectedCategory}
-                  />
-
-                  <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-
-                  {filteredProducts.length > 0 ? (
-                    <ProductList
-                      produtos={filteredProducts}
-                      favorites={favorites}
-                      onToggleFavorite={toggleFavorite}
-                      onOrder={handleWhatsAppOrder}
-                      backgroundColor={designSettings.cor_background}
-                      borderColor={designSettings.cor_borda}
-                      selectedCategory={selectedCategory}
-                    />
-                  ) : (
-                    <div style={{ textAlign: 'center', padding: '48px 0' }}>
-                      <p className="text-gray-500">No product found</p>
-                      <p className="text-sm text-gray-400 mt-2">
-                        {produtos.length === 0 
-                          ? 'Add products in the "Products" tab to see them here' 
-                          : 'Try adjusting the search or category filters'
-                        }
-                      </p>
-                    </div>
-                  )}
-
-                  <Footer textoRodape={designSettings.texto_rodape} />
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="flex justify-center items-start gap-4 flex-wrap lg:flex-nowrap">
+          <DevicePreview
+            device="mobile"
+            title="Celular"
+            icon={Smartphone}
+            width="320px"
+            height="600px"
+            maxWidth="320px"
+          />
+          <DevicePreview
+            device="tablet"
+            title="Tablet"
+            icon={Tablet}
+            width="500px"
+            height="700px"
+            maxWidth="500px"
+          />
+          <DevicePreview
+            device="desktop"
+            title="Computador"
+            icon={Monitor}
+            width="600px"
+            height="800px"
+            maxWidth="600px"
+          />
         </div>
       </div>
     </div>
