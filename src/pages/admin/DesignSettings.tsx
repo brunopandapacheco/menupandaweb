@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
-import { CheckCircle, Palette, Sparkles, Settings, Upload, Clock, Calendar, Image as ImageIcon } from 'lucide-react'
+import { CheckCircle, Palette, Sparkles, Settings, Upload, Clock, Calendar, Image as ImageIcon, Camera } from 'lucide-react'
 import { supabaseService } from '@/services/supabase'
 
 const predefinedColors = [
@@ -680,86 +680,78 @@ export default function DesignSettings() {
 
         <TabsContent value="imagens">
           <div className="space-y-6">
-            {/* Card Principal - Imagens */}
+            {/* Card Principal - Logo da Loja */}
             <Card className="border-0 shadow-lg">
               <CardHeader className="text-center pb-4">
                 <div className="flex justify-center mb-2">
                   <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                    <ImageIcon className="w-6 h-6 text-white" />
+                    <Camera className="w-6 h-6 text-white" />
                   </div>
                 </div>
-                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Imagens</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
                 <CardDescription className="text-base">
-                  Personalize a logo da sua loja
+                  Personalize a logo que aparecerá no topo do seu cardápio
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="space-y-6">
-                {/* Logo da Loja */}
-                <div className="space-y-4">
-                  <Label className="text-sm font-medium" style={{ color: '#4A3531' }}>
-                    Logo da Loja
-                  </Label>
-                  
-                  <div className="flex items-center gap-6">
-                    {/* Preview da Logo Atual */}
-                    <div className="flex-shrink-0">
-                      {logoUrl ? (
-                        <div className="w-32 h-32 rounded-full border-4 border-gray-200 overflow-hidden shadow-lg">
-                          <img 
-                            src={logoUrl} 
-                            alt="Logo atual" 
-                            className="w-full h-full object-cover"
-                          />
+                {/* Preview da Logo - Centralizado e Grande */}
+                <div className="flex justify-center">
+                  <div className="relative">
+                    {logoUrl ? (
+                      <div className="w-48 h-48 rounded-full border-4 border-gray-200 overflow-hidden shadow-xl">
+                        <img 
+                          src={logoUrl} 
+                          alt="Logo da loja" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
+                        <div className="text-center">
+                          <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                          <p className="text-sm text-gray-500">Nenhuma logo</p>
                         </div>
-                      ) : (
-                        <div className="w-32 h-32 rounded-full border-4 border-gray-200 flex items-center justify-center bg-gray-50 shadow-lg">
-                          <ImageIcon className="w-12 h-12 text-gray-400" />
-                        </div>
-                      )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Botão de Upload - Centralizado */}
+                <div className="flex justify-center">
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) handleLogoUpload(file)
+                        }}
+                        className="hidden"
+                        id="logo-upload"
+                      />
+                      <Button 
+                        asChild 
+                        size="lg"
+                        className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        disabled={uploadingLogo}
+                      >
+                        <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
+                          <Upload className="w-5 h-5" />
+                          {uploadingLogo ? 'Enviando...' : 'Trocar Logo'}
+                        </label>
+                      </Button>
                     </div>
                     
-                    {/* Upload da Nova Logo */}
-                    <div className="flex-1 space-y-4">
-                      <div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0]
-                            if (file) handleLogoUpload(file)
-                          }}
-                          className="hidden"
-                          id="logo-upload"
-                        />
-                        <Button 
-                          asChild 
-                          variant="outline" 
-                          className="w-full"
-                          disabled={uploadingLogo}
-                        >
-                          <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
-                            <Upload className="w-4 h-4" />
-                            {uploadingLogo ? 'Enviando...' : 'Enviar Nova Logo'}
-                          </label>
-                        </Button>
-                      </div>
-                      
-                      <div className="text-xs text-gray-500 space-y-1">
-                        <p>• Formatos aceitos: PNG, JPEG, WEBP</p>
-                        <p>• Tamanho máximo: 5MB</p>
-                        <p>• A logo aparecerá no topo do cardápio</p>
+                    {/* Informações de Formato */}
+                    <div className="text-center">
+                      <div className="inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
+                        <ImageIcon className="w-4 h-4" />
+                        <span>PNG, JPEG, WEBP • Máx. 5MB</span>
                       </div>
                     </div>
                   </div>
-                  
-                  {/* URL da Logo */}
-                  {logoUrl && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <Label className="text-xs font-medium text-gray-600">URL da Logo:</Label>
-                      <p className="text-xs text-gray-700 break-all mt-1">{logoUrl}</p>
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
