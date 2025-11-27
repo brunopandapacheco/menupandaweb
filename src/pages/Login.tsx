@@ -26,6 +26,15 @@ export default function Login() {
       <div className="max-w-md w-full p-8">
         {/* Login Form */}
         <div className="bg-white rounded-lg shadow-lg p-6">
+          {/* Logo acima do formulário */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/logoempresa.png" 
+              alt="Logo da Empresa" 
+              className="w-32 h-32 object-contain"
+            />
+          </div>
+          
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-center text-gray-900">Faça login para acessar o seu painel</h2>
           </div>
