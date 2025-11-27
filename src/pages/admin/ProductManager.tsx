@@ -230,9 +230,9 @@ export default function ProductManager() {
           </div>
         </div>
 
-        {/* Grid de Produtos */}
+        {/* Grid de Produtos - ESPAÇAMENTO REDUZIDO */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {filteredProducts.map((product) => {
               const images = getProductImages(product.imagem_url)
               return (
@@ -276,10 +276,10 @@ export default function ProductManager() {
                     </div>
                   </div>
 
-                  <CardContent className="p-6">
+                  <CardContent className="p-4">
                     {/* Nome e Categoria */}
-                    <div className="mb-4">
-                      <h3 className="text-xl font-bold text-gray-800 mb-1">{product.nome}</h3>
+                    <div className="mb-3">
+                      <h3 className="text-lg font-bold text-gray-800 mb-1">{product.nome}</h3>
                       <div className="flex items-center gap-2">
                         <Tag className="w-4 h-4 text-purple-500" />
                         <span className="text-sm text-purple-600 font-medium">{product.categoria}</span>
@@ -288,11 +288,11 @@ export default function ProductManager() {
 
                     {/* Descrição */}
                     {product.descricao && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.descricao}</p>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.descricao}</p>
                     )}
 
                     {/* Preço e Tipo */}
-                    <div className="space-y-3 mb-4">
+                    <div className="space-y-2 mb-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-500">Tipo:</span>
                         <span className="text-sm font-medium bg-purple-100 text-purple-700 px-2 py-1 rounded-full capitalize">
@@ -307,12 +307,12 @@ export default function ProductManager() {
                               <span className="text-sm text-gray-400 line-through">
                                 R$ {product.preco_normal.toFixed(2)}
                               </span>
-                              <div className="text-xl font-bold text-green-600">
+                              <div className="text-lg font-bold text-green-600">
                                 R$ {product.preco_promocional.toFixed(2)}
                               </div>
                             </div>
                           ) : (
-                            <div className="text-xl font-bold text-gray-800">
+                            <div className="text-lg font-bold text-gray-800">
                               R$ {product.preco_normal.toFixed(2)}
                             </div>
                           )}
