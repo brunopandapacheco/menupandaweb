@@ -1,0 +1,144 @@
+import { useState } from 'react'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { ProductForm } from './ProductForm'
+import { Produto } from '@/types/database'
+import { showSuccess, showError } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
+
+interface ProductDialogProps {
+  isOpen: boolean
+  onClose: () => void
+  product: Partial<Produto> | null
+}
+
+export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) {
+  const { addProduto, editProduto, removeProduto } = useDatabase()
+  const [localProduct, setLocalProduct] = useState<Partial<Produto> | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+
+  // Reset local product when dialog changes
+  useState(() => {
+    if (isOpen) {
+      setLocalProduct(product || {
+        nome: '',
+        descricao: '',
+        preco_normal: 0,
+        preco_promocional: 0,
+        imagem_url: '',
+        categoria: '',
+        forma_venda: 'unidade',
+        disponivel: true,
+        promocao: false,
+      })
+    }
+  }, [isOpen, product])
+
+  const handleSave = async () => {
+    if (!localProduct) return
+
+    // Validações obrigatórias
+    if (!localProduct.nome?.trim()) {
+      showError('Nome do produto é obrigatório')
+      return
+    }
+
+    if (!localProduct.categoria?.trim()) {
+      showError('Categoria do produto é obrigatória')
+      return
+    }
+
+    // Garantir que o preço sempre tenha um valor válido
+    const precoNormal = parseFloat(localProduct.preco_normal?.toString() || '0')
+    if (precoNormal <= 0 || isNaN(precoNormal)) {
+      showError('Preço normal deve ser maior que zero')
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      if (localProduct.id) {
+        const success = await editProduto(localProduct.id, localProduct)
+        if (success) showSuccess('Produto atualizado!')
+      } else {
+        const result = await addProduto(localProduct as Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>)
+        if (result) showSuccess('Produto criado!')
+      }
+      onClose()
+    } catch {
+      showError('Erro ao salvar produto')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!localProduct?.id || !removeProduto) return
+    
+    if (confirm(`Tem certeza que deseja excluir o produto "${localProduct.nome}"? Esta ação não poderá ser desfeita.`)) {
+      setIsSaving(true)
+      try {
+        const success = await removeProduto(localProduct.id)
+        if (success) {
+          showSuccess('Produto excluído!')
+          onClose()
+        }
+      } catch {
+        showError('Erro ao excluir produto')
+      } finally {
+        setIsSaving(false)
+      }
+    }
+  }
+
+  const handleFieldChange = (updatedProduct: Partial<Produto>) => {
+    setLocalProduct(updatedProduct)
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
+        <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
+          <DialogHeader>
+            <div>
+              <DialogTitle className="text-2xl font-bold">
+                {localProduct?.id ? 'Editar Produto' : 'Novo Produto'}
+              </DialogTitle>
+              <DialogDescription className="text-pink-100">
+                Preencha as informações do produto
+              </DialogDescription>
+            </div>
+          </DialogHeader>
+        </div>
+        
+        <div className="p-6 space-y-6">
+          <ProductForm
+            product={localProduct}
+            onSave={handleFieldChange}
+            onDelete={localProduct?.id ? handleDelete : undefined}
+            onCancel={onClose}
+          />
+
+          {/* Botões de Ação Principais */}
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t">
+            <Button 
+              variant="outline" 
+              onClick={onClose}
+              disabled={isSaving}
+              className="w-full sm:w-auto px-6 py-2"
+            >
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleSave}
+              disabled={isSaving}
+              className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
+            >
+              {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
