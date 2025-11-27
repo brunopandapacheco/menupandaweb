@@ -594,10 +594,17 @@ export default function ProductManager() {
               </div>
             </div>
 
-            {/* Botões de Ação */}
-            <div className="flex justify-between items-center pt-6 border-t">
-              <div>
-                {editingProduct?.id && (
+            {/* Botão Excluir (abaixo da caixa de status) */}
+            {editingProduct?.id && (
+              <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Trash2 className="w-5 h-5 text-red-600" />
+                    <div>
+                      <h3 className="text-base font-semibold text-red-800">Ações Permanentes</h3>
+                      <p className="text-sm text-red-600">Excluir este produto permanentemente</p>
+                    </div>
+                  </div>
                   <Button
                     variant="destructive"
                     onClick={handleDelete}
@@ -606,23 +613,25 @@ export default function ProductManager() {
                     <Trash2 className="w-4 h-4 mr-2" />
                     Excluir Produto
                   </Button>
-                )}
+                </div>
               </div>
-              <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setIsDialogOpen(false)}
-                  className="px-6 py-2"
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  onClick={handleSave}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
-                >
-                  {editingProduct?.id ? 'Atualizar' : 'Criar'} Produto
-                </Button>
-              </div>
+            )}
+
+            {/* Botões de Ação Principais */}
+            <div className="flex justify-end gap-3 pt-6 border-t">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsDialogOpen(false)}
+                className="px-6 py-2"
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={handleSave}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
+              >
+                {editingProduct?.id ? 'Atualizar' : 'Criar'} Produto
+              </Button>
             </div>
           </div>
         </DialogContent>
