@@ -302,7 +302,7 @@ export default function ProductManager() {
                             </span>
                             <Badge 
                               variant="secondary" 
-                              className="bg-purple-100 text-purple-700 font-medium capitalize text-xs"
+                              className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
                             >
                               {product.forma_venda}
                             </Badge>
@@ -315,7 +315,7 @@ export default function ProductManager() {
                           </span>
                           <Badge 
                             variant="secondary" 
-                            className="bg-purple-100 text-purple-700 font-medium capitalize text-xs"
+                            className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
                           >
                             {product.forma_venda}
                           </Badge>
