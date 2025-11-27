@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useDatabase } from '@/hooks/useDatabase'
-import { Copy, Share2, AlertCircle, Monitor, Tablet, Smartphone } from 'lucide-react'
+import { Copy, Share2, AlertCircle, Monitor, Tablet, Smartphone, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { showSuccess, showError } from '@/utils/toast'
 import { generateSlug } from '@/utils/helpers'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
 import { Logo } from '@/components/cardapio/Logo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
@@ -21,20 +22,10 @@ export default function Preview() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isDataLoaded, setIsDataLoaded] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [showShareButton, setShowShareButton] = useState(true)
+  const device = useDeviceDetection()
 
   // Detectar se é dispositivo móvel
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
   useEffect(() => {
     const saved = localStorage.getItem('favorites')
     if (saved) {
@@ -72,9 +63,9 @@ export default function Preview() {
       designSettings,
       configuracoes,
       loading,
-      isMobile
+      device
     })
-  }, [designSettings, configuracoes, loading, isMobile])
+  }, [designSettings, configuracoes, loading, device])
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareableLink).then(() => {
@@ -136,7 +127,139 @@ export default function Preview() {
     return matchesSearch && matchesCategory
   })
 
-  // Componente de preview individual
+  // Estado de carregamento
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando prévia...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Se não há design settings
+  if (!designSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
+        <Card className="max-w-md mx-auto">
+          <CardContent className="p-6 text-center">
+            <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Configure sua loja primeiro</h3>
+            <p className="text-gray-600 mb-4">
+              Você precisa configurar as informações básicas da sua loja antes de visualizar a prévia.
+            </p>
+            <Button onClick={() => window.location.href = '/admin?tab=design'}>
+              Configurar Design
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Se for mobile, mostrar preview em tela cheia
+  if (device === 'mobile') {
+    return (
+      <div className="relative min-h-screen bg-white">
+        {/* Botão Compartilhar Sutil no Topo */}
+        {showShareButton && (
+          <div className="fixed top-4 right-4 z-50">
+            <Button
+              onClick={copyToClipboard}
+              size="sm"
+              className="bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white shadow-lg border border-gray-200 rounded-full px-3 py-2 h-auto"
+              disabled={!shareableLink}
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="ml-1 text-xs font-medium">Compartilhar</span>
+            </Button>
+          </div>
+        )}
+
+        {/* Preview em Tela Cheia */}
+        <div className="w-full min-h-screen bg-white">
+          <Banner 
+            logoUrl={designSettings.logo_url} 
+            borderColor={designSettings.cor_borda} 
+            bannerGradient={designSettings.banner_gradient}
+          />
+          <Logo 
+            logoUrl={designSettings.logo_url} 
+            borderColor={designSettings.cor_borda} 
+            storeName={designSettings.nome_loja}
+            storeDescription={designSettings.descricao_loja}
+            avaliacaoMedia={configuracoes?.avaliacao_media || 4.9}
+            emFerias={configuracoes?.em_ferias}
+            horarioFuncionamentoInicio={configuracoes?.horario_funcionamento_inicio}
+            horarioFuncionamentoFim={configuracoes?.horario_funcionamento_fim}
+            corNome={designSettings.cor_nome}
+          />
+          
+          <div style={{ padding: '0 16px 16px', backgroundColor: '#FFFFFF' }}>
+            {/* Banner promocional */}
+            {designSettings.banner1_url && (
+              <div style={{ marginBottom: '24px', height: '160px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                <img 
+                  src={designSettings.banner1_url} 
+                  alt="Banner promocional"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            )}
+
+            {/* Filtro de categorias */}
+            <CategoryFilter
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategorySelect={setSelectedCategory}
+            />
+
+            <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+
+            {filteredProducts.length > 0 ? (
+              <ProductList
+                produtos={filteredProducts}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+                onOrder={handleWhatsAppOrder}
+                backgroundColor={designSettings.cor_background}
+                borderColor={designSettings.cor_borda}
+                selectedCategory={selectedCategory}
+              />
+            ) : (
+              <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                <p className="text-gray-500">Nenhum produto encontrado</p>
+                <p className="text-sm text-gray-400 mt-2">
+                  {produtos.length === 0 
+                    ? 'Adicione produtos na aba "Produtos" para vê-los aqui' 
+                    : 'Tente ajustar a busca ou os filtros de categoria'
+                  }
+                </p>
+              </div>
+            )}
+
+            <Footer textoRodape={designSettings.texto_rodape} />
+          </div>
+        </div>
+
+        {/* Botão para sair do modo tela cheia (opcional) */}
+        <div className="fixed bottom-4 left-4 z-50">
+          <Button
+            onClick={() => window.history.back()}
+            size="sm"
+            className="bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-white shadow-lg border border-gray-200 rounded-full px-3 py-2 h-auto"
+          >
+            <X className="w-4 h-4" />
+            <span className="ml-1 text-xs font-medium">Voltar</span>
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  // Componente de preview individual para desktop/tablet
   const DevicePreview = ({ device, title, icon: Icon, width, height, maxWidth }: { 
     device: PreviewDevice, 
     title: string, 
@@ -258,38 +381,7 @@ export default function Preview() {
     </div>
   )
 
-  // Estado de carregamento
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando prévia...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Se não há design settings
-  if (!designSettings) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F5F5' }}>
-        <Card className="max-w-md mx-auto">
-          <CardContent className="p-6 text-center">
-            <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Configure sua loja primeiro</h3>
-            <p className="text-gray-600 mb-4">
-              Você precisa configurar as informações básicas da sua loja antes de visualizar a prévia.
-            </p>
-            <Button onClick={() => window.location.href = '/admin?tab=design'}>
-              Configurar Design
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
+  // Layout para desktop/tablet
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       {/* Card de Compartilhamento no Topo */}
@@ -325,49 +417,34 @@ export default function Preview() {
         </div>
       </div>
 
-      {/* Container de Prévia - Condicional baseado no dispositivo */}
+      {/* Container de Prévia para desktop/tablet */}
       <div className="max-w-7xl mx-auto p-4">
-        {isMobile ? (
-          // No celular: mostra apenas o preview mobile
-          <div className="flex justify-center">
-            <DevicePreview
-              device="mobile"
-              title="Celular"
-              icon={Smartphone}
-              width="320px"
-              height="600px"
-              maxWidth="90vw"
-            />
-          </div>
-        ) : (
-          // No computador: mostra os 3 previews lado a lado
-          <div className="flex justify-center items-start gap-4 flex-wrap lg:flex-nowrap">
-            <DevicePreview
-              device="mobile"
-              title="Celular"
-              icon={Smartphone}
-              width="320px"
-              height="600px"
-              maxWidth="320px"
-            />
-            <DevicePreview
-              device="tablet"
-              title="Tablet"
-              icon={Tablet}
-              width="500px"
-              height="700px"
-              maxWidth="500px"
-            />
-            <DevicePreview
-              device="desktop"
-              title="Computador"
-              icon={Monitor}
-              width="600px"
-              height="800px"
-              maxWidth="600px"
-            />
-          </div>
-        )}
+        <div className="flex justify-center items-start gap-4 flex-wrap lg:flex-nowrap">
+          <DevicePreview
+            device="mobile"
+            title="Celular"
+            icon={Smartphone}
+            width="320px"
+            height="600px"
+            maxWidth="320px"
+          />
+          <DevicePreview
+            device="tablet"
+            title="Tablet"
+            icon={Tablet}
+            width="500px"
+            height="700px"
+            maxWidth="500px"
+          />
+          <DevicePreview
+            device="desktop"
+            title="Computador"
+            icon={Monitor}
+            width="600px"
+            height="800px"
+            maxWidth="600px"
+          />
+        </div>
       </div>
     </div>
   )
