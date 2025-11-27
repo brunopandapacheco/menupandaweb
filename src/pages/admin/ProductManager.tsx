@@ -232,7 +232,7 @@ export default function ProductManager() {
 
         {/* Grid de Produtos */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             {filteredProducts.map((product) => {
               const images = getProductImages(product.imagem_url)
               return (
