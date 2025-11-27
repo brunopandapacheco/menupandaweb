@@ -366,26 +366,13 @@ export default function ProductManager() {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
           <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
             <DialogHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <DialogTitle className="text-2xl font-bold">
-                    {editingProduct?.id ? 'Editar Produto' : 'Novo Produto'}
-                  </DialogTitle>
-                  <DialogDescription className="text-pink-100">
-                    Preencha as informações do produto
-                  </DialogDescription>
-                </div>
-                {editingProduct?.id && (
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={handleDelete}
-                    className="bg-red-600 hover:bg-red-700 text-white font-medium"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Excluir
-                  </Button>
-                )}
+              <div>
+                <DialogTitle className="text-2xl font-bold">
+                  {editingProduct?.id ? 'Editar Produto' : 'Novo Produto'}
+                </DialogTitle>
+                <DialogDescription className="text-pink-100">
+                  Preencha as informações do produto
+                </DialogDescription>
               </div>
             </DialogHeader>
           </div>
@@ -608,20 +595,34 @@ export default function ProductManager() {
             </div>
 
             {/* Botões de Ação */}
-            <div className="flex justify-end gap-3 pt-6 border-t">
-              <Button 
-                variant="outline" 
-                onClick={() => setIsDialogOpen(false)}
-                className="px-6 py-2"
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleSave}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
-              >
-                {editingProduct?.id ? 'Atualizar' : 'Criar'} Produto
-              </Button>
+            <div className="flex justify-between items-center pt-6 border-t">
+              <div>
+                {editingProduct?.id && (
+                  <Button
+                    variant="destructive"
+                    onClick={handleDelete}
+                    className="bg-red-600 hover:bg-red-700 text-white font-medium"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Excluir Produto
+                  </Button>
+                )}
+              </div>
+              <div className="flex gap-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsDialogOpen(false)}
+                  className="px-6 py-2"
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  onClick={handleSave}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
+                >
+                  {editingProduct?.id ? 'Atualizar' : 'Criar'} Produto
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
