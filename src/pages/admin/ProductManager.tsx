@@ -104,7 +104,10 @@ export default function ProductManager() {
       disponivel: true,
       promocao: false,
     })
-    setIsDialogOpen(true)
+    // Pequeno delay para garantir que o diálogo abra antes de qualquer foco automático
+    setTimeout(() => {
+      setIsDialogOpen(true)
+    }, 50)
   }
 
   const validateImageFormat = (file: File): boolean => {
@@ -468,6 +471,7 @@ export default function ProductManager() {
                   placeholder="Ex: Bolo de Chocolate"
                   className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
                   required
+                  autoFocus={false}
                 />
               </div>
               <div className="space-y-2">
