@@ -290,32 +290,32 @@ export default function ProductManager() {
                     {/* Preço e Tipo de Venda na mesma linha */}
                     <div className="mb-3">
                       {product.promocao && product.preco_promocional ? (
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
                             <span className="text-sm text-gray-400 line-through">
                               R$ {product.preco_normal.toFixed(2)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg font-bold text-green-600">
+                          <div className="flex items-center gap-1">
+                            <span className="text-base font-bold text-green-600">
                               R$ {product.preco_promocional.toFixed(2)}
                             </span>
                             <Badge 
                               variant="secondary" 
-                              className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
+                              className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm ml-1"
                             >
                               {product.forma_venda}
                             </Badge>
                           </div>
                         </div>
                       ) : (
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-lg font-bold text-gray-800">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-base font-bold text-gray-800">
                             R$ {product.preco_normal.toFixed(2)}
                           </span>
                           <Badge 
                             variant="secondary" 
-                            className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
+                            className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm ml-1"
                           >
                             {product.forma_venda}
                           </Badge>
