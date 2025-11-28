@@ -54,7 +54,7 @@ export function ColorSettings({
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
           <CardDescription className="text-base">
-            Escolha o degrade animado que fica atrás da logo
+            Escolha o degrade animado que<br />fica atrás da logo
           </CardDescription>
         </CardHeader>
         <CardContent>
