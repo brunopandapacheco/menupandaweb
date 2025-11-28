@@ -73,12 +73,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
                 Categorias Selecionadas ({mainCategories.length}/3)
               </h3>
-              <div className="text-sm text-gray-500">
-                {mainCategories.length === 0 && 'Selecione categorias abaixo'}
-                {mainCategories.length === 1 && 'Selecione mais 2 categorias'}
-                {mainCategories.length === 2 && 'Selecione mais 1 categoria'}
-                {mainCategories.length === 3 && 'Máximo atingido!'}
-              </div>
             </div>
             
             {mainCategories.length > 0 && (
