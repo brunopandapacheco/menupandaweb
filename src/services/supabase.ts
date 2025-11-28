@@ -193,7 +193,7 @@ export class SupabaseService {
         .from('configuracoes')
         .select('*')
         .eq('user_id', userId)
-        .single()
+        .maybeSingle() // Usar maybeSingle() em vez de single() para evitar erro 406
       
       if (error) {
         if (error.code === 'PGRST116') {
@@ -400,11 +400,11 @@ export class SupabaseService {
         .from('design_settings')
         .select('*')
         .eq('slug', slug)
-        .single()
+        .maybeSingle() // Usar maybeSingle() para evitar erro 406
       
       if (error) {
         console.error('❌ getDesignSettingsBySlug error:', error)
-        throw error
+        return null
       }
       
       console.log('✅ getDesignSettingsBySlug success:', data)
@@ -424,7 +424,7 @@ export class SupabaseService {
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
-        .single()
+        .maybeSingle() // Usar maybeSingle() para evitar erro 406
       
       if (designError || !designData) {
         console.error('❌ getConfiguracoesBySlug: Could not find user for slug:', designError)
@@ -436,7 +436,7 @@ export class SupabaseService {
         .from('configuracoes')
         .select('*')
         .eq('user_id', designData.user_id)
-        .single()
+        .maybeSingle() // Usar maybeSingle() para evitar erro 406
       
       if (error) {
         console.error('❌ getConfiguracoesBySlug error:', error)
@@ -460,7 +460,7 @@ export class SupabaseService {
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
-        .single()
+        .maybeSingle() // Usar maybeSingle() para evitar erro 406
       
       if (designError || !designData) {
         console.error('❌ getProductsBySlug: Could not find user for slug:', designError)
