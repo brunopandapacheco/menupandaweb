@@ -53,9 +53,11 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
       
       console.log('✅ Upload realizado:', url)
       
-      // Salvar no banco
+      // Salvar no banco - APENAS UMA VEZ
       onSaveLogo(url)
       onLogoUrlChange(url)
+      
+      // Apenas uma mensagem de sucesso
       showSuccess('🖼️ Logo atualizada com sucesso!')
       
     } catch (error: any) {

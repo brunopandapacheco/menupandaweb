@@ -119,6 +119,17 @@ export default function DesignSettings() {
     }
   }
 
+  // CORREÇÃO: Separar salvamento da logo das configurações gerais
+  const saveLogoOnly = async (url: string) => {
+    const success = await saveDesignSettings({ logo_url: url })
+    
+    if (success) {
+      showSuccess('🖼️ Logo atualizada com sucesso!')
+    } else {
+      showError('Erro ao salvar logo')
+    }
+  }
+
   const saveConfig = async () => {
     const settingsToUpdate: any = {}
     
@@ -134,10 +145,7 @@ export default function DesignSettings() {
       settingsToUpdate.texto_rodape = textoRodape.trim()
     }
     
-    if (logoUrl && logoUrl.trim()) {
-      settingsToUpdate.logo_url = logoUrl.trim()
-    }
-    
+    // NÃO incluir logo_url aqui - é salvo separadamente
     if (Object.keys(settingsToUpdate).length === 0) {
       showError('Por favor, preencha pelo menos um campo')
       return
@@ -241,7 +249,7 @@ export default function DesignSettings() {
           <ImageSettings
             logoUrl={logoUrl}
             onLogoUrlChange={setLogoUrl}
-            onSaveLogo={saveConfig}
+            onSaveLogo={saveLogoOnly} // CORREÇÃO: Usar função específica para logo
           />
         </TabsContent>
 
