@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Palette, Sparkles, CheckCircle } from 'lucide-react'
+import { Sparkles, CheckCircle } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 const predefinedColors = [
@@ -52,11 +52,6 @@ export function ColorSettings({
       {/* Card de Background */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full">
-              <Palette className="w-6 h-6 text-white" />
-            </div>
-          </div>
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
           <CardDescription className="text-base">
             Escolha o degrade animado que fica atrás da logo
@@ -94,11 +89,6 @@ export function ColorSettings({
       {/* Card Principal - Paleta de Cores */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full">
-              <Palette className="w-6 h-6 text-white" />
-            </div>
-          </div>
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Paleta de Cores</CardTitle>
           <CardDescription className="text-base">
             Personalize as cores do seu cardápio
