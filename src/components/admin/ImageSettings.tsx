@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Camera, Upload } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
 
@@ -77,11 +77,6 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
       {/* Card Principal - Logo da Loja */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-              <Camera className="w-6 h-6 text-white" />
-            </div>
-          </div>
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
           <CardDescription className="text-base">
             Personalize a logo que aparecerá no topo do seu cardápio
@@ -103,7 +98,6 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
               ) : (
                 <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
                   <div className="text-center">
-                    <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">Nenhuma logo</p>
                   </div>
                 </div>
