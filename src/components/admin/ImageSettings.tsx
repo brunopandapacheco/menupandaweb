@@ -140,7 +140,7 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
                   <ImageIcon className="w-4 h-4" />
-                  <span>PNG, JPEG ou WEBP • Tamanho máximo: 5MB • Com ajuste de zoom e rotação</span>
+                  <span>PNG, JPEG ou WEBP • Tamanho máximo: 5MB</span>
                 </div>
               </div>
             </div>
