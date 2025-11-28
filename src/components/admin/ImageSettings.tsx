@@ -79,7 +79,7 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
       {/* Card Principal - Logo da Loja */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
           <CardDescription className="text-base">
             Personalize a logo que aparecerá no topo do seu cardápio
           </CardDescription>
