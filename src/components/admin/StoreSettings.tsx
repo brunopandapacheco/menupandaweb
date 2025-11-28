@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Settings, Clock, Calendar } from 'lucide-react'
+import { Clock, Calendar } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 interface StoreSettingsProps {
@@ -64,11 +64,6 @@ export function StoreSettings({
       {/* Card Principal - Configurações */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
-              <Settings className="w-6 h-6 text-white" />
-            </div>
-          </div>
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Configurações</CardTitle>
           <CardDescription className="text-base">
             Informações básicas da sua loja
