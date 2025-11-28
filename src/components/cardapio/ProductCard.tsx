@@ -95,7 +95,7 @@ export function ProductCard({
             </button>
           </div>
           
-          <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '32px', overflow: 'hidden' }}>
+          <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '64px', overflow: 'hidden' }}>
             {product.descricao}
           </p>
           
