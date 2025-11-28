@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Grid3X3, X, Plus } from 'lucide-react'
+import { X, Plus } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 const allCategories = [
@@ -60,11 +60,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       {/* Card Principais Categorias */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
-              <Grid3X3 className="w-6 h-6 text-white" />
-            </div>
-          </div>
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Principais Categorias</CardTitle>
           <CardDescription className="text-base">
             Escolha até 3 categorias para destacar na tela inicial do seu cardápio
