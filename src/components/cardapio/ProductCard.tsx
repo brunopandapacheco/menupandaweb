@@ -95,7 +95,18 @@ export function ProductCard({
             </button>
           </div>
           
-          <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px', lineHeight: '1.3', height: '64px', overflow: 'hidden' }}>
+          <p style={{ 
+            fontSize: '12px', 
+            color: '#6b7280', 
+            marginBottom: '8px', 
+            lineHeight: '1.3', 
+            height: '78px', // 5 linhas: 12px * 1.3 * 5 = 78px
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: 'vertical',
+            textOverflow: 'ellipsis'
+          }}>
             {product.descricao}
           </p>
           
