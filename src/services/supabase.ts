@@ -134,7 +134,7 @@ export class SupabaseService {
       // If exists, do UPDATE
       console.log('📝 Existing record found, updating...')
       
-      // Filter only fields that exist in the table
+      // Filter only fields that exist in table
       const validSettings: any = {}
       
       // List of known valid fields
@@ -188,32 +188,24 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoes: Querying for user:', userId)
       
-      const { data: allData, error: allError } = await supabase
+      // CORREÇÃO: Usar .single() para garantir apenas um resultado
+      const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
         .eq('user_id', userId)
+        .single()
       
-      if (allError) {
-        console.error('❌ getConfiguracoes error:', allError)
+      if (error) {
+        if (error.code === 'PGRST116') {
+          console.log('📝 No config found, creating default...')
+          return await this.createDefaultConfiguracoes(userId)
+        }
+        console.error('❌ getConfiguracoes error:', error)
         return null
       }
       
-      if (!allData || allData.length === 0) {
-        console.log('📝 No config found, creating default...')
-        return await this.createDefaultConfiguracoes(userId)
-      }
-      
-      if (allData.length > 1) {
-        console.log('⚠️ Multiple configs found, using most recent')
-        const sortedData = allData.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        )
-        console.log('✅ getConfiguracoes success (most recent):', sortedData[0])
-        return sortedData[0]
-      }
-      
-      console.log('✅ getConfiguracoes success:', allData[0])
-      return allData[0]
+      console.log('✅ getConfiguracoes success:', data)
+      return data
     } catch (error) {
       console.error('❌ Unexpected error getting configuracoes:', error)
       return null
@@ -269,10 +261,12 @@ export class SupabaseService {
     try {
       console.log('💾 updateConfiguracoes: Updating for user:', userId, config)
       
+      // CORREÇÃO: Usar upsert para evitar duplicatas
       const { error } = await supabase
         .from('configuracoes')
-        .upsert({ ...config, user_id: userId })
-        .eq('user_id', userId)
+        .upsert({ ...config, user_id: userId }, {
+          onConflict: 'user_id'
+        })
       
       if (error) {
         console.error('❌ updateConfiguracoes error:', error)
@@ -425,7 +419,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoesBySlug: Querying for slug:', slug)
       
-      // First get the design_settings to find the user_id
+      // First get the design_settings to find user_id
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -461,7 +455,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getProductsBySlug: Querying for slug:', slug)
       
-      // First get the design_settings to find the user_id
+      // First get the design_settings to find user_id
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
