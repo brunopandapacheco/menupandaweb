@@ -114,7 +114,7 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
           {/* Botão de Upload - Centralizado */}
           <div className="flex justify-center">
             <div className="space-y-4">
-              <div>
+              <div className="flex justify-center">
                 <input
                   type="file"
                   accept="image/*"
