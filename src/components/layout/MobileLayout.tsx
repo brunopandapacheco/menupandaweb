@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Settings, Palette, ShoppingBag, Eye } from 'lucide-react'
+import { Settings, Palette, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -12,7 +12,7 @@ interface MobileLayoutProps {
 const tabs = [
   { id: 'preview', label: 'Prévia', icon: Eye },
   { id: 'design', label: 'Design', icon: Palette },
-  { id: 'products', label: 'Produtos', icon: ShoppingBag },
+  { id: 'products', label: 'Produtos', icon: Settings },
 ]
 
 export function MobileLayout({ children, activeTab = 'preview', onTabChange }: MobileLayoutProps) {

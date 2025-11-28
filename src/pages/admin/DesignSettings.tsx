@@ -205,7 +205,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
@@ -217,12 +217,6 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Imagens
-          </TabsTrigger>
-          <TabsTrigger 
-            value="categorias" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
-          >
-            Categorias
           </TabsTrigger>
           <TabsTrigger 
             value="configuracao" 
@@ -253,41 +247,43 @@ export default function DesignSettings() {
           />
         </TabsContent>
 
-        <TabsContent value="categorias">
-          <CategorySettings
-            mainCategories={mainCategories}
-            onMainCategoriesChange={setMainCategories}
-            onSaveCategories={saveMainCategories}
-          />
-        </TabsContent>
-
         <TabsContent value="configuracao">
-          <StoreSettings
-            nomeLoja={nomeLoja}
-            descricaoLoja={descricaoLoja}
-            textoRodape={textoRodape}
-            horarioSemanaAbre={horarioSemanaAbre}
-            horarioSemanaFecha={horarioSemanaFecha}
-            horarioSabadoAbre={horarioSabadoAbre}
-            horarioSabadoFecha={horarioSabadoFecha}
-            horarioDomingoAbre={horarioDomingoAbre}
-            horarioDomingoFecha={horarioDomingoFecha}
-            sabadoAberto={sabadoAberto}
-            domingoAberto={domingoAberto}
-            onNomeLojaChange={setNomeLoja}
-            onDescricaoLojaChange={setDescricaoLoja}
-            onTextoRodapeChange={setTextoRodape}
-            onHorarioSemanaAbreChange={setHorarioSemanaAbre}
-            onHorarioSemanaFechaChange={setHorarioSemanaFecha}
-            onHorarioSabadoAbreChange={setHorarioSabadoAbre}
-            onHorarioSabadoFechaChange={setHorarioSabadoFecha}
-            onHorarioDomingoAbreChange={setHorarioDomingoAbre}
-            onHorarioDomingoFechaChange={setHorarioDomingoFecha}
-            onSabadoAbertoChange={setSabadoAberto}
-            onDomingoAbertoChange={setDomingoAberto}
-            onSaveConfig={saveConfig}
-            onSaveHorarios={saveHorarios}
-          />
+          <div className="space-y-8">
+            {/* Categorias */}
+            <CategorySettings
+              mainCategories={mainCategories}
+              onMainCategoriesChange={setMainCategories}
+              onSaveCategories={saveMainCategories}
+            />
+            
+            {/* Configurações da Loja */}
+            <StoreSettings
+              nomeLoja={nomeLoja}
+              descricaoLoja={descricaoLoja}
+              textoRodape={textoRodape}
+              horarioSemanaAbre={horarioSemanaAbre}
+              horarioSemanaFecha={horarioSemanaFecha}
+              horarioSabadoAbre={horarioSabadoAbre}
+              horarioSabadoFecha={horarioSabadoFecha}
+              horarioDomingoAbre={horarioDomingoAbre}
+              horarioDomingoFecha={horarioDomingoFecha}
+              sabadoAberto={sabadoAberto}
+              domingoAberto={domingoAberto}
+              onNomeLojaChange={setNomeLoja}
+              onDescricaoLojaChange={setDescricaoLoja}
+              onTextoRodapeChange={setTextoRodape}
+              onHorarioSemanaAbreChange={setHorarioSemanaAbre}
+              onHorarioSemanaFechaChange={setHorarioSemanaFecha}
+              onHorarioSabadoAbreChange={setHorarioSabadoAbre}
+              onHorarioSabadoFechaChange={setHorarioSabadoFecha}
+              onHorarioDomingoAbreChange={setHorarioDomingoAbre}
+              onHorarioDomingoFechaChange={setHorarioDomingoFecha}
+              onSabadoAbertoChange={setSabadoAberto}
+              onDomingoAbertoChange={setDomingoAberto}
+              onSaveConfig={saveConfig}
+              onSaveHorarios={saveHorarios}
+            />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
