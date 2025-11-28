@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Camera, Upload, Image as ImageIcon } from 'lucide-react'
+import { Camera, Upload } from 'lucide-react'
 import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
 
@@ -139,7 +139,6 @@ export function ImageSettings({ logoUrl, onLogoUrlChange, onSaveLogo }: ImageSet
               {/* Informações de Formato */}
               <div className="text-center">
                 <div className="inline-flex items-start gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
-                  <ImageIcon className="w-4 h-4 mt-0.5" />
                   <div className="text-left leading-tight">
                     <div>Formatos permitidos: Png, Jpeg e Webp</div>
                     <div>Tamanho máximo: 5MB</div>
