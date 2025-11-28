@@ -60,7 +60,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       {/* Card Principais Categorias */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Principais Categorias</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Principais Categorias</CardTitle>
           <CardDescription className="text-base">
             Escolha até 3 categorias para destacar na tela inicial do seu cardápio
           </CardDescription>
