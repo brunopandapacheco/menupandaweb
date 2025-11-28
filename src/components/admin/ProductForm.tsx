@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, X, GripVertical, DollarSign, Image as ImageIcon, Check, Star, Trash2 } from 'lucide-react'
+import { Upload, X, GripVertical, DollarSign, Image as ImageIcon, Check, Star, Trash2, Plus } from 'lucide-react'
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 
@@ -24,8 +24,24 @@ const saleTypes = [
   { value: 'outros', label: 'Outros' }
 ]
 
+// Categorias pré-definidas para confeiteiras
+const predefinedCategories = [
+  'Bolo Simples',
+  'Bolo Decorado', 
+  'Bolos Caseiros',
+  'Bolo no Pote',
+  'Brigadeiro Gourmet',
+  'Doces Finos',
+  'Pipoca Gourmet',
+  'Topos de Bolos',
+  'Tortas Doces',
+  'Tortas Salgadas'
+]
+
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
 
   const handleImageUpload = async (file: File, index: number) => {
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
@@ -90,6 +106,25 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
   const handleFieldChange = (field: keyof Produto, value: any) => {
     onSave({ ...product, [field]: value })
+  }
+
+  const handleCreateNewCategory = () => {
+    if (!newCategoryName.trim()) return
+    
+    // Adiciona a nova categoria ao produto
+    handleFieldChange('categoria', newCategoryName.trim())
+    setNewCategoryName('')
+    setIsCreatingNewCategory(false)
+  }
+
+  const handleCategorySelect = (value: string) => {
+    if (value === 'create-new') {
+      setIsCreatingNewCategory(true)
+    } else {
+      handleFieldChange('categoria', value)
+      setIsCreatingNewCategory(false)
+      setNewCategoryName('')
+    }
   }
 
   return (
@@ -192,14 +227,60 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700">
             Categoria *
           </Label>
-          <Input
-            id="categoria"
-            value={product?.categoria || ''}
-            onChange={(e) => handleFieldChange('categoria', e.target.value)}
-            placeholder="Ex: Bolos"
-            className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
-            required
-          />
+          {!isCreatingNewCategory ? (
+            <Select
+              value={product?.categoria || ''}
+              onValueChange={handleCategorySelect}
+            >
+              <SelectTrigger className="border-purple-200 focus:border-purple-500 focus:ring-purple-500">
+                <SelectValue placeholder="Selecione uma categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                {predefinedCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+                <SelectItem value="create-new" className="text-purple-600 font-medium">
+                  <div className="flex items-center gap-2">
+                    <Plus className="w-4 h-4" />
+                    Criar nova categoria
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  placeholder="Digite o nome da nova categoria"
+                  className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
+                  autoFocus
+                />
+                <Button
+                  onClick={handleCreateNewCategory}
+                  disabled={!newCategoryName.trim()}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  <Check className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsCreatingNewCategory(false)
+                    setNewCategoryName('')
+                  }}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-gray-500">
+                Digite o nome e clique em ✓ para criar
+              </p>
+            </div>
+          )}
         </div>
       </div>
       
