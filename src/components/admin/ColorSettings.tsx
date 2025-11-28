@@ -52,7 +52,7 @@ export function ColorSettings({
       {/* Card de Background */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
           <CardDescription className="text-base">
             Escolha o degrade animado que<br />fica atrás da logo
           </CardDescription>
@@ -89,7 +89,7 @@ export function ColorSettings({
       {/* Card Principal - Paleta de Cores */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Paleta de Cores</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Paleta de Cores</CardTitle>
           <CardDescription className="text-base">
             Personalize as cores do seu cardápio
           </CardDescription>
