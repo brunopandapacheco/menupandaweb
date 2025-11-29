@@ -38,11 +38,11 @@ export class SupabaseService {
         nome_loja: 'Minha Confeitaria',
         slug: `minha-confeitaria-${Date.now()}`,
         cor_borda: '#ec4899',
-        cor_background: '#ffffff', // CORRIGIDO: Branco em vez de #fef2f2
+        cor_background: '#ffffff',
         cor_nome: '#be185d',
         background_topo_color: '#fce7f3',
         texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-        categorias: ['Bolos', 'Doces', 'Salgados'], // Categorias padrão corrigidas
+        categorias: ['Bolos', 'Doces', 'Salgados'], // Categorias padrão atualizadas
         descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
         banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
         background_image_url: '',
@@ -74,14 +74,7 @@ export class SupabaseService {
     try {
       console.log('💾 updateDesignSettings: Updating for user:', userId, settings)
       
-      // Se tiver categorias na atualização, substituir Brigadeiros por Salgados
-      if (settings.categorias) {
-        settings.categorias = settings.categorias.map(cat => 
-          cat === 'Brigadeiros' ? 'Salgados' : cat
-        ).filter((cat, index, arr) => arr.indexOf(cat) === index) // Remove duplicatas
-      }
-      
-      // Primeiro, verify if is record already exists
+      // Primeiro, verify if record already exists
       const { data: existingRecord, error: checkError } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -91,14 +84,14 @@ export class SupabaseService {
       if (checkError && checkError.code === 'PGRST116') {
         // If doesn't exist, create new record
         console.log('📝 No existing record found, creating new one...')
-        const defaultCategories = ['Bolos', 'Doces', 'Salgados'] // Categorias padrão corrigidas
+        const defaultCategories = ['Bolos', 'Doces', 'Salgados'] // Categorias padrão atualizadas
         
         const defaultSettings = {
           user_id: userId,
           nome_loja: 'Minha Confeitaria',
           slug: `minha-confeitaria-${Date.now()}`,
           cor_borda: '#ec4899',
-          cor_background: '#ffffff', // CORRIGIDO: Branco em vez de #fef2f2
+          cor_background: '#ffffff',
           cor_nome: '#be185d',
           background_topo_color: '#fce7f3',
           texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
@@ -108,13 +101,6 @@ export class SupabaseService {
           background_image_url: '',
           use_background_image: false,
           ...settings // Add any custom configurations
-        }
-
-        // Garantir que não tenha Brigadeiros nas categorias
-        if (defaultSettings.categorias) {
-          defaultSettings.categorias = defaultSettings.categorias.map(cat => 
-            cat === 'Brigadeiros' ? 'Salgados' : cat
-          ).filter((cat, index, arr) => arr.indexOf(cat) === index)
         }
 
         const { error: insertError } = await supabase
@@ -194,12 +180,11 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoes: Querying for user:', userId)
       
-      // CORREÇÃO: Usar .single() para garantir apenas um resultado
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
         .eq('user_id', userId)
-        .maybeSingle() // Usar maybeSingle() em vez de single() para evitar erro 406
+        .maybeSingle()
       
       if (error) {
         if (error.code === 'PGRST116') {
@@ -267,7 +252,6 @@ export class SupabaseService {
     try {
       console.log('💾 updateConfiguracoes: Updating for user:', userId, config)
       
-      // CORREÇÃO: Usar upsert para evitar duplicatas
       const { error } = await supabase
         .from('configuracoes')
         .upsert({ ...config, user_id: userId }, {
@@ -304,14 +288,7 @@ export class SupabaseService {
       }
       
       console.log('✅ getProducts success:', data?.length || 0, 'products')
-      
-      // Substituir Brigadeiros por Salgados nos produtos retornados
-      const processedData = (data || []).map(product => ({
-        ...product,
-        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
-      }))
-      
-      return processedData
+      return data || []
     } catch (error) {
       console.error('❌ Error getting products:', error)
       return []
@@ -322,15 +299,9 @@ export class SupabaseService {
     try {
       console.log('➕ createProduct: Creating for user:', userId, product)
       
-      // Substituir Brigadeiros por Salgados se necessário
-      const processedProduct = {
-        ...product,
-        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
-      }
-      
       const { data, error } = await supabase
         .from('produtos')
-        .insert({ ...processedProduct, user_id: userId })
+        .insert({ ...product, user_id: userId })
         .select()
         .single()
       
@@ -351,15 +322,9 @@ export class SupabaseService {
     try {
       console.log('✏️ updateProduct: Updating:', id, product)
       
-      // Substituir Brigadeiros por Salgados se necessário
-      const processedProduct = {
-        ...product,
-        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
-      }
-      
       const { error } = await supabase
         .from('produtos')
-        .update(processedProduct)
+        .update(product)
         .eq('id', id)
       
       if (error) {
@@ -397,7 +362,7 @@ export class SupabaseService {
     }
   }
 
-  // Public methods (by slug) - CORRECTED: Use user_id join
+  // Public methods (by slug)
   async getDesignSettingsBySlug(slug: string): Promise<DesignSettings | null> {
     try {
       console.log('🔍 getDesignSettingsBySlug: Querying for slug:', slug)
@@ -406,7 +371,7 @@ export class SupabaseService {
         .from('design_settings')
         .select('*')
         .eq('slug', slug)
-        .maybeSingle() // Usar maybeSingle() para evitar erro 406
+        .maybeSingle()
       
       if (error) {
         console.error('❌ getDesignSettingsBySlug error:', error)
@@ -430,7 +395,7 @@ export class SupabaseService {
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
-        .maybeSingle() // Usar maybeSingle() para evitar erro 406
+        .maybeSingle()
       
       if (designError || !designData) {
         console.error('❌ getConfiguracoesBySlug: Could not find user for slug:', designError)
@@ -442,7 +407,7 @@ export class SupabaseService {
         .from('configuracoes')
         .select('*')
         .eq('user_id', designData.user_id)
-        .maybeSingle() // Usar maybeSingle() para evitar erro 406
+        .maybeSingle()
       
       if (error) {
         console.error('❌ getConfiguracoesBySlug error:', error)
@@ -466,7 +431,7 @@ export class SupabaseService {
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
-        .maybeSingle() // Usar maybeSingle() para evitar erro 406
+        .maybeSingle()
       
       if (designError || !designData) {
         console.error('❌ getProductsBySlug: Could not find user for slug:', designError)
@@ -486,14 +451,7 @@ export class SupabaseService {
       }
       
       console.log('✅ getProductsBySlug success:', data?.length || 0, 'products')
-      
-      // Substituir Brigadeiros por Salgados nos produtos retornados
-      const processedData = (data || []).map(product => ({
-        ...product,
-        categoria: product.categoria === 'Brigadeiros' ? 'Salgados' : product.categoria
-      }))
-      
-      return processedData
+      return data || []
     } catch (error) {
       console.error('❌ Error getting products by slug:', error)
       return []
@@ -523,99 +481,6 @@ export class SupabaseService {
     } catch (error) {
       console.error('❌ Error uploading image:', error)
       return null
-    }
-  }
-
-  // Método para migrar dados existentes
-  async migrateBrigadeirosToSalgados(): Promise<boolean> {
-    try {
-      console.log('🔄 Iniciando migração de Brigadeiros para Salgados...')
-      
-      // Atualizar produtos
-      const { error: productsError } = await supabase
-        .from('produtos')
-        .update({ categoria: 'Salgados' })
-        .eq('categoria', 'Brigadeiros')
-      
-      if (productsError) {
-        console.error('❌ Erro ao migrar produtos:', productsError)
-        return false
-      }
-      
-      // Atualizar design_settings
-      const { data: designSettings, error: fetchError } = await supabase
-        .from('design_settings')
-        .select('id, categorias, user_id')
-        .not('categorias', 'is', null)
-      
-      if (fetchError) {
-        console.error('❌ Erro ao buscar design_settings:', fetchError)
-        return false
-      }
-      
-      for (const setting of designSettings || []) {
-        if (setting.categorias && setting.categorias.includes('Brigadeiros')) {
-          const updatedCategories = setting.categorias.map((cat: string) => 
-            cat === 'Brigadeiros' ? 'Salgados' : cat
-          ).filter((cat: string, index: number, arr: string[]) => arr.indexOf(cat) === index) // Remove duplicatas
-          
-          const { error: updateError } = await supabase
-            .from('design_settings')
-            .update({ categorias: updatedCategories })
-            .eq('id', setting.id)
-          
-          if (updateError) {
-            console.error(`❌ Erro ao atualizar design_settings ${setting.id}:`, updateError)
-            return false
-          }
-        }
-      }
-      
-      console.log('✅ Migração concluída com sucesso!')
-      return true
-    } catch (error) {
-      console.error('❌ Erro durante migração:', error)
-      return false
-    }
-  }
-
-  // Método para corrigir cor de fundo existente
-  async fixBackgroundColor(): Promise<boolean> {
-    try {
-      console.log('🔄 Corrigindo cor de fundo para branco...')
-      
-      const { data: designSettings, error: fetchError } = await supabase
-        .from('design_settings')
-        .select('id, user_id, cor_background')
-        .eq('cor_background', '#fef2f2')
-      
-      if (fetchError) {
-        console.error('❌ Erro ao buscar configurações com cor #fef2f2:', fetchError)
-        return false
-      }
-      
-      if (!designSettings || designSettings.length === 0) {
-        console.log('✅ Nenhuma configuração encontrada com cor #fef2f2')
-        return true
-      }
-      
-      for (const setting of designSettings) {
-        const { error: updateError } = await supabase
-          .from('design_settings')
-          .update({ cor_background: '#ffffff' })
-          .eq('id', setting.id)
-        
-        if (updateError) {
-          console.error(`❌ Erro ao atualizar cor de fundo para usuário ${setting.user_id}:`, updateError)
-          return false
-        }
-      }
-      
-      console.log(`✅ Cor de fundo corrigida para ${designSettings.length} usuários`)
-      return true
-    } catch (error) {
-      console.error('❌ Erro ao corrigir cor de fundo:', error)
-      return false
     }
   }
 }

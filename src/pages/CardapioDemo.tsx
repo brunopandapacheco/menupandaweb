@@ -52,6 +52,20 @@ const mockProdutos: Produto[] = [
     preco_promocional: 2.99,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
+  },
+  {
+    id: '3',
+    user_id: 'demo',
+    nome: 'Coxinha',
+    descricao: 'Coxinha cremosa com frango desfiado',
+    preco_normal: 5.00,
+    imagem_url: '',
+    categoria: 'Salgados',
+    forma_venda: 'unidade',
+    disponivel: true,
+    promocao: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   }
 ]
 
@@ -80,10 +94,12 @@ export default function CardapioDemo() {
     window.open(whatsappUrl, '_blank')
   }
 
-  const categories = Array.from(new Set(mockProdutos.map(p => p.categoria))).map(cat => ({
-    name: cat,
-    icon: '🧁'
-  }))
+  // Categorias baseadas nas 4 categorias padrão
+  const categories = [
+    { name: 'Bolos', icon: '🎂' },
+    { name: 'Doces', icon: '🧁' },
+    { name: 'Salgados', icon: '🥐' }
+  ]
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: mockDesignSettings.cor_background }}>

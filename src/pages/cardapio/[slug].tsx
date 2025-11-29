@@ -75,10 +75,17 @@ export default function CardapioPublico() {
     window.open(whatsappUrl, '_blank')
   }
 
-  const categories = Array.from(new Set(produtos.map(p => p.categoria))).map(cat => ({
-    name: cat,
-    icon: '🧁'
-  }))
+  // Sempre usar as 4 categorias padrão, mas mostrar apenas as que têm produtos
+  const allCategories = [
+    { name: 'Bolos', icon: '🎂' },
+    { name: 'Doces', icon: '🧁' },
+    { name: 'Salgados', icon: '🥐' }
+  ]
+
+  // Filtrar categorias que têm produtos
+  const categories = allCategories.filter(cat => 
+    produtos.some(p => p.categoria === cat.name)
+  )
 
   if (loading) {
     return (

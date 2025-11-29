@@ -12,9 +12,14 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
-  // Limitar a 4 categorias visíveis: "Todos" + 3 primeiras categorias
-  const visibleCategories = categories.slice(0, 3)
-  
+  // Sempre mostrar as 4 categorias padrão na ordem correta
+  const defaultCategories = [
+    { name: 'Todos', icon: '/icons/iconetodos.png' },
+    { name: 'Bolos', icon: '/icons/iconebolo.png' },
+    { name: 'Doces', icon: '/icons/iconedoces.png' },
+    { name: 'Salgados', icon: '/icons/iconesalgados.png' }
+  ]
+
   return (
     <div style={{ marginBottom: '24px' }}>
       <div style={{ 
@@ -24,68 +29,15 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
         justifyContent: 'center',
         flexWrap: 'wrap' // Permite quebra de linha se necessário
       }}>
-        {/* Botão "Todos" */}
-        <button
-          onClick={() => onCategorySelect(null)}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            border: selectedCategory === null ? '2px solid #ec4899' : '2px solid #e5e7eb',
-            backgroundColor: selectedCategory === null ? '#fce7f3' : 'white',
-            cursor: 'pointer',
-            transition: 'all 0.2s',
-            padding: '8px',
-            flexShrink: 0
-          }}
-          onMouseOver={(e) => {
-            if (selectedCategory !== null) {
-              e.currentTarget.style.backgroundColor = '#fdf2f8'
-              e.currentTarget.style.borderColor = '#f9a8d4'
-            }
-          }}
-          onMouseOut={(e) => {
-            if (selectedCategory !== null) {
-              e.currentTarget.style.backgroundColor = 'white'
-              e.currentTarget.style.borderColor = '#e5e7eb'
-            }
-          }}
-        >
-          <img 
-            src="/icons/iconetodos.png" 
-            alt="Todos" 
-            style={{ width: '32px', height: '32px', marginBottom: '4px' }}
-          />
-          <span style={{ fontSize: '10px', fontWeight: '600', textAlign: 'center' }}>Todos</span>
-        </button>
-
-        {/* Apenas 3 categorias visíveis */}
-        {visibleCategories.map((category) => {
-          // Mapear categorias para ícones específicos
-          const getIconPath = (categoryName: string) => {
-            const iconMap: Record<string, string> = {
-              'Bolos': '/icons/iconebolo.png',
-              'Brigadeiros': '/icons/iconebrigadeiro.png',
-              'Cookies': '/icons/cookies.png',
-              'Trufas': '/icons/trufas.png',
-              'Pudim': '/icons/pudim.png',
-              'Coxinha': '/icons/coxinha.png',
-              // Fallback para emoji se não encontrar ícone específico
-            }
-            return iconMap[categoryName] || null
-          }
-
-          const iconPath = getIconPath(category.name)
-          const fallbackIcon = category.icon
+        {defaultCategories.map((category) => {
+          const isSelected = category.name === 'Todos' 
+            ? selectedCategory === null 
+            : selectedCategory === category.name
 
           return (
             <button
               key={category.name}
-              onClick={() => onCategorySelect(category.name)}
+              onClick={() => onCategorySelect(category.name === 'Todos' ? null : category.name)}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -94,35 +46,49 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                border: selectedCategory === category.name ? '2px solid #ec4899' : '2px solid #e5e7eb',
-                backgroundColor: selectedCategory === category.name ? '#fce7f3' : 'white',
+                border: isSelected ? '2px solid #ec4899' : '2px solid #e5e7eb',
+                backgroundColor: isSelected ? '#fce7f3' : 'white',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 padding: '8px',
                 flexShrink: 0
               }}
               onMouseOver={(e) => {
-                if (selectedCategory !== category.name) {
+                if (!isSelected) {
                   e.currentTarget.style.backgroundColor = '#fdf2f8'
                   e.currentTarget.style.borderColor = '#f9a8d4'
                 }
               }}
               onMouseOut={(e) => {
-                if (selectedCategory !== category.name) {
+                if (!isSelected) {
                   e.currentTarget.style.backgroundColor = 'white'
                   e.currentTarget.style.borderColor = '#e5e7eb'
                 }
               }}
             >
-              {iconPath ? (
-                <img 
-                  src={iconPath} 
-                  alt={category.name} 
-                  style={{ width: '32px', height: '32px', marginBottom: '4px' }}
-                />
-              ) : (
-                <span style={{ fontSize: '24px', marginBottom: '4px' }}>{fallbackIcon}</span>
-              )}
+              <img 
+                src={category.icon} 
+                alt={category.name} 
+                style={{ width: '32px', height: '32px', marginBottom: '4px' }}
+                onError={(e) => {
+                  // Fallback para emoji se a imagem não carregar
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                  const fallback = target.nextElementSibling as HTMLElement
+                  if (fallback) fallback.style.display = 'block'
+                }}
+              />
+              <span 
+                style={{ 
+                  fontSize: '24px', 
+                  marginBottom: '4px', 
+                  display: 'none' // Escondido por padrão
+                }}
+              >
+                {category.name === 'Todos' ? '📋' : 
+                 category.name === 'Bolos' ? '🎂' :
+                 category.name === 'Doces' ? '🧁' : '🥐'}
+              </span>
               <span style={{ fontSize: '10px', fontWeight: '600', textAlign: 'center' }}>{category.name}</span>
             </button>
           )
