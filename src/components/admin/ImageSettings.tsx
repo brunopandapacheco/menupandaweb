@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Upload, Image as ImageIcon } from 'lucide-react'
 import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
+import { supabaseService } from '@/services/supabase'
 
 interface ImageSettingsProps {
   logoUrl: string
@@ -83,19 +84,22 @@ export function ImageSettings({
       console.log('📤 Iniciando upload da logo cropada...')
       
       // Criar arquivo a partir do blob
-      const fileName = 'logo-' + Date.now() + '.jpg'
+      const fileName = `logo-${Date.now()}.jpg`
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
       
-      // Fazer upload (simulado - na prática usaria supabaseService)
-      const url = URL.createObjectURL(file)
+      // Fazer upload para o Supabase Storage
+      const url = await supabaseService.uploadImage(file, 'logos', fileName)
+      
+      if (!url) {
+        throw new Error('Falha no upload da imagem para o storage')
+      }
       
       console.log('✅ Upload realizado:', url)
       
-      // Salvar no banco - APENAS UMA VEZ
-      onSaveLogo(url)
+      // Salvar no banco
+      await onSaveLogo(url)
       onLogoUrlChange(url)
       
-      // Apenas uma mensagem de sucesso
       showSuccess('🖼️ Logo atualizada com sucesso!')
       
     } catch (error: any) {
@@ -117,16 +121,20 @@ export function ImageSettings({
       console.log('📤 Iniciando upload do background cropado...')
       
       // Criar arquivo a partir do blob
-      const fileName = 'background-' + Date.now() + '.jpg'
+      const fileName = `background-${Date.now()}.jpg`
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
       
-      // Fazer upload (simulado - na prática usaria supabaseService)
-      const url = URL.createObjectURL(file)
+      // Fazer upload para o Supabase Storage
+      const url = await supabaseService.uploadImage(file, 'backgrounds', fileName)
+      
+      if (!url) {
+        throw new Error('Falha no upload da imagem para o storage')
+      }
       
       console.log('✅ Upload realizado:', url)
       
       // Salvar no banco
-      onSaveBackgroundImage(url)
+      await onSaveBackgroundImage(url)
       onBackgroundImageUrlChange(url)
       
       showSuccess('🖼️ Background atualizado com sucesso!')

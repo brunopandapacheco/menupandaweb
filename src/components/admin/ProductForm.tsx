@@ -49,17 +49,29 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       return { success: false, message: 'Formato de imagem inválido. Use apenas PNG, JPEG ou WEBP.' }
     }
 
-    const fileName = `produto-${Date.now()}-${index}.${file.name.split('.').pop()}`
-    const url = await supabaseService.uploadImage(file, 'products', fileName)
-    
-    if (url && product) {
-      const currentImages = product.imagem_url ? product.imagem_url.split(',') : []
-      currentImages[index] = url
-      onSave({ ...product, imagem_url: currentImages.filter(Boolean).join(',') })
-      return { success: true, message: 'Imagem enviada!' }
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      return { success: false, message: 'Arquivo muito grande (máximo 5MB).' }
     }
-    
-    return { success: false, message: 'Falha no upload da imagem' }
+
+    try {
+      const fileName = `produto-${Date.now()}-${index}.${file.name.split('.').pop()}`
+      const url = await supabaseService.uploadImage(file, 'products', fileName)
+      
+      if (!url) {
+        return { success: false, message: 'Falha no upload da imagem' }
+      }
+      
+      if (product) {
+        const currentImages = product.imagem_url ? product.imagem_url.split(',') : []
+        currentImages[index] = url
+        onSave({ ...product, imagem_url: currentImages.filter(Boolean).join(',') })
+        return { success: true, message: 'Imagem enviada!' }
+      }
+      
+      return { success: false, message: 'Produto não encontrado' }
+    } catch (error: any) {
+      return { success: false, message: error.message || 'Falha no upload da imagem' }
+    }
   }
 
   const removeImage = (index: number) => {
@@ -184,7 +196,12 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                         const file = e.target.files?.[0]
                         if (file) {
                           const result = handleImageUpload(file, index)
-                          // Aqui você pode mostrar uma notificação com result.message
+                          result.then(res => {
+                            if (!res.success) {
+                              // Aqui você pode mostrar uma notificação com res.message
+                              console.error(res.message)
+                            }
+                          })
                         }
                       }}
                     />
