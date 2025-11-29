@@ -52,22 +52,34 @@ export function ProductCard({
   }
 
   const firstImage = getFirstImage(product.imagem_url)
+  console.log('ProductCard - Imagem do produto:', product.nome, 'URL:', firstImage) // Debug
 
   return (
     <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
       <div className="p-3 h-full flex flex-col">
         {/* Imagem em primeiro - quadrada */}
         <div 
-          className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden"
+          className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
           style={{ backgroundColor }}
         >
           {firstImage ? (
             <img 
               src={firstImage} 
               alt={product.nome} 
-              className="w-full h-full object-cover rounded-lg" 
+              className="w-full h-full object-cover rounded-lg"
+              onError={(e) => {
+                console.error('Erro ao carregar imagem:', firstImage)
+                e.currentTarget.style.display = 'none'
+                e.currentTarget.parentElement?.classList.add('fallback-icon')
+              }}
+              onLoad={() => {
+                console.log('Imagem carregada com sucesso:', firstImage)
+              }}
             />
-          ) : (
+          ) : null}
+          
+          {/* Fallback se não tiver imagem ou se der erro */}
+          {(!firstImage || firstImage === '') && (
             <span className="text-2xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
           )}
         </div>
