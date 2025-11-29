@@ -1,4 +1,5 @@
 import { Star } from 'lucide-react'
+import { useState } from 'react'
 
 interface LogoProps {
   logoUrl?: string
@@ -23,12 +24,16 @@ export function Logo({
   horarioFuncionamentoFim = '18:00',
   corNome = '#1A1A1A'
 }: LogoProps) {
+  const [imageError, setImageError] = useState(false)
+
   // Debug logs
   console.log('Logo component props:', {
+    logoUrl,
     storeName,
     storeDescription,
     corNome,
-    borderColor
+    borderColor,
+    imageError
   })
 
   // Limitar o tamanho do nome da loja
@@ -135,6 +140,10 @@ export function Logo({
   const displayName = getDisplayName(storeName)
   const displayDescription = getDisplayDescription(storeDescription)
 
+  // Determinar qual imagem usar
+  const shouldUseCustomLogo = logoUrl && !imageError
+  const imageSource = shouldUseCustomLogo ? logoUrl : "/logoteste.webp"
+
   return (
     <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '24px' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -154,21 +163,24 @@ export function Logo({
             backgroundColor: 'white'
           }}
         >
-          {logoUrl ? (
-            <img src={logoUrl} alt="Logo" style={{ 
+          <img 
+            src={imageSource} 
+            alt="Logo" 
+            style={{ 
               width: '144px', // 160 - 16px da borda
               height: '144px', // 160 - 16px da borda
               borderRadius: '50%', 
               objectFit: 'cover' 
-            }} />
-          ) : (
-            <img src="/logoteste.webp" alt="Logo" style={{ 
-              width: '144px', // 160 - 16px da borda
-              height: '144px', // 160 - 16px da borda
-              borderRadius: '50%', 
-              objectFit: 'cover' 
-            }} />
-          )}
+            }}
+            onError={() => {
+              console.log('Erro ao carregar imagem:', logoUrl)
+              setImageError(true)
+            }}
+            onLoad={() => {
+              console.log('Imagem carregada com sucesso:', imageSource)
+              setImageError(false)
+            }}
+          />
         </div>
       </div>
       
