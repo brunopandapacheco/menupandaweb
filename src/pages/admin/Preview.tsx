@@ -1,6 +1,5 @@
-// Encontrar e substituir as chamadas do Footer
-// Linha 245:
-<Footer settings={designSettings} />
-
-// Linha 368:
-<Footer settings={designSettings} />
+<Footer 
+                textoRodape={designSettings?.texto_rodape} 
+                em_ferias={configuracoes?.em_ferias} 
+                data_retorno_ferias={configuracoes?.data_retorno_ferias} 
+              />
