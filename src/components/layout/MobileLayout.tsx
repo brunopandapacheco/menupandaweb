@@ -37,12 +37,15 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
                 className={cn(
                   "flex items-center justify-center h-12 rounded-lg text-white",
                   activeTab === tab.id 
-                    ? "bg-white text-[#380019] hover:bg-white hover:text-[#380019]" 
-                    : "hover:bg-white hover:text-[#380019]"
+                    ? "bg-white text-[#E26783] hover:bg-white hover:text-[#E26783]" 
+                    : "hover:bg-white hover:text-[#E26783]"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
-                <span className="text-xs font-[650]">{tab.label}</span>
+                <span className={cn(
+                  "text-xs font-[650]",
+                  activeTab === tab.id ? "text-[#E26783]" : "text-white"
+                )}>{tab.label}</span>
               </Button>
             )
           })}
