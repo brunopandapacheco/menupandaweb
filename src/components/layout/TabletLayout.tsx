@@ -16,7 +16,6 @@ const tabs = [
 ]
 
 export function TabletLayout({ children, activeTab = 'preview', onTabChange }: TabletLayoutProps) {
-  const logoUrl = import.meta.env.VITE_SYSTEM_LOGO_URL
   const systemName = import.meta.env.VITE_SYSTEM_NAME || 'Menu Bolo'
   const systemSubtitle = import.meta.env.VITE_SYSTEM_SUBTITLE || 'Sistema de Gestão'
 
@@ -24,12 +23,9 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 bg-[#E26783] border-r border-pink-200 p-4 flex flex-col">
         <div className="p-4 pb-4">
-          <div className="flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-40 h-40 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
-                <img src="/imagemmenu.png" alt={`${systemName} Logo`} className="w-32 h-32 object-contain" />
-              </div>
-            </div>
+          <div className="text-center">
+            <h1 className="text-white text-2xl font-bold mb-2">{systemName}</h1>
+            <p className="text-white/80 text-sm">{systemSubtitle}</p>
           </div>
         </div>
         
