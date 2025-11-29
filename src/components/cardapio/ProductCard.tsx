@@ -52,29 +52,24 @@ export function ProductCard({
   }
 
   const firstImage = getFirstImage(product.imagem_url)
-  console.log('ProductCard - Produto:', product.nome, 'Imagem URL:', firstImage, 'Original:', product.imagem_url) // Debug detalhado
+  console.log('ProductCard - Produto:', product.nome, 'Imagem URL:', firstImage) // Debug
 
   return (
-    <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
-      <div className="p-3 h-full flex flex-col">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+      <div className="p-3">
         {/* Imagem em primeiro - quadrada */}
         <div 
           className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
           style={{ backgroundColor }}
         >
-          {firstImage && firstImage.trim() !== '' ? (
+          {firstImage ? (
             <img 
               src={firstImage} 
               alt={product.nome} 
               className="w-full h-full object-cover rounded-lg"
               onError={(e) => {
                 console.error('Erro ao carregar imagem:', firstImage)
-                // Esconder imagem e mostrar fallback
                 e.currentTarget.style.display = 'none'
-                const parent = e.currentTarget.parentElement
-                if (parent) {
-                  parent.innerHTML = `<span class="text-2xl">${categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>`
-                }
               }}
               onLoad={() => {
                 console.log('Imagem carregada com sucesso:', firstImage)
@@ -86,24 +81,22 @@ export function ProductCard({
         </div>
         
         {/* Conteúdo do produto */}
-        <div className="flex-1 flex flex-col justify-between">
-          <div>
-            <div className="flex justify-between items-start mb-1">
-              <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
-                {product.nome}
-              </h4>
-              <button
-                onClick={() => onToggleFavorite(product.id)}
-                className="p-1 bg-transparent border-none cursor-pointer text-gray-400 hover:text-red-500 ml-1 flex-shrink-0"
-              >
-                <Heart className="w-3 h-3" style={{ fill: isFavorite ? '#ef4444' : 'none' }} />
-              </button>
-            </div>
-            
-            <p className="text-gray-500 text-xs mb-2 line-clamp-2 leading-tight">
-              {product.descricao}
-            </p>
+        <div className="flex flex-col">
+          <div className="flex justify-between items-start mb-1">
+            <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
+              {product.nome}
+            </h4>
+            <button
+              onClick={() => onToggleFavorite(product.id)}
+              className="p-1 bg-transparent border-none cursor-pointer text-gray-400 hover:text-red-500 ml-1 flex-shrink-0"
+            >
+              <Heart className="w-3 h-3" style={{ fill: isFavorite ? '#ef4444' : 'none' }} />
+            </button>
           </div>
+          
+          <p className="text-gray-500 text-xs mb-2 line-clamp-2 leading-tight">
+            {product.descricao}
+          </p>
           
           <div>
             {product.promocao && product.preco_promocional ? (
