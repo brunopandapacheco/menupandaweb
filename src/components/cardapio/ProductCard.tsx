@@ -54,129 +54,75 @@ export function ProductCard({
   const firstImage = getFirstImage(product.imagem_url)
 
   return (
-    <div className="aspect-square" style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-      <div style={{ padding: '8px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+      <div className="p-3 h-full flex flex-col">
         {/* Imagem em primeiro - quadrada */}
         <div 
-          style={{ 
-            width: '100%', 
-            aspectRatio: '1/1', // Garante formato quadrado 1:1
-            borderRadius: '6px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            marginBottom: '8px',
-            backgroundColor: backgroundColor,
-            overflow: 'hidden'
-          }}
+          className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden"
+          style={{ backgroundColor }}
         >
           {firstImage ? (
             <img 
               src={firstImage} 
               alt={product.nome} 
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover', 
-                borderRadius: '6px' 
-              }} 
+              className="w-full h-full object-cover rounded-lg" 
             />
           ) : (
-            <span style={{ fontSize: '24px' }}>{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+            <span className="text-2xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
           )}
         </div>
         
         {/* Conteúdo do produto */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="flex-1 flex flex-col justify-between">
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
-              <h4 style={{ 
-                fontWeight: '600', 
-                fontSize: '11px', 
-                lineHeight: '1.2', 
-                flex: 1,
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical'
-              }}>{product.nome}</h4>
+            <div className="flex justify-between items-start mb-1">
+              <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
+                {product.nome}
+              </h4>
               <button
                 onClick={() => onToggleFavorite(product.id)}
-                style={{ 
-                  padding: '2px', 
-                  background: 'none', 
-                  border: 'none', 
-                  cursor: 'pointer',
-                  color: isFavorite ? '#ef4444' : '#9ca3af',
-                  marginLeft: '4px',
-                  flexShrink: 0
-                }}
+                className="p-1 bg-transparent border-none cursor-pointer text-gray-400 hover:text-red-500 ml-1 flex-shrink-0"
               >
-                <Heart style={{ width: '12px', height: '12px', fill: isFavorite ? '#ef4444' : 'none' }} />
+                <Heart className="w-3 h-3" style={{ fill: isFavorite ? '#ef4444' : 'none' }} />
               </button>
             </div>
             
-            <p style={{ 
-              fontSize: '9px', 
-              color: '#6b7280', 
-              marginBottom: '6px', 
-              lineHeight: '1.2',
-              height: '32px', // Aproximadamente 3 linhas
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: 'vertical',
-              textOverflow: 'ellipsis'
-            }}>
+            <p className="text-gray-500 text-xs mb-2 line-clamp-2 leading-tight">
               {product.descricao}
             </p>
           </div>
           
           <div>
             {product.promocao && product.preco_promocional ? (
-              <div style={{ marginBottom: '6px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '2px' }}>
-                  <span style={{ fontSize: '10px', color: '#6b7280', textDecoration: 'line-through' }}>
+              <div className="mb-2">
+                <div className="flex items-center gap-1 mb-1">
+                  <span className="text-xs text-gray-400 line-through">
                     R$ {product.preco_normal.toFixed(2)}
                   </span>
-                  <Badge variant="destructive" style={{ fontSize: '8px', padding: '1px 3px' }}>
+                  <Badge variant="destructive" className="text-xs px-1 py-0">
                     -{Math.round((1 - product.preco_promocional / product.preco_normal) * 100)}%
                   </Badge>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#10b981' }}>
+                <div className="flex items-center gap-1 mb-1">
+                  <span className="text-sm font-bold text-green-600">
                     R$ {product.preco_promocional.toFixed(2)}
                   </span>
                   <Badge 
                     variant="secondary" 
-                    className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-                    style={{ 
-                      fontSize: '8px', 
-                      padding: '1px 3px', 
-                      height: 'auto', 
-                      lineHeight: '1',
-                      pointerEvents: 'none'
-                    }}
+                    className="bg-pink-400 text-white text-xs px-1 py-0"
                   >
                     {product.forma_venda}
                   </Badge>
                 </div>
               </div>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', marginBottom: '6px' }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold' }}>
+              <div className="flex items-center gap-1 mb-2">
+                <span className="text-sm font-bold">
                   R$ {product.preco_normal.toFixed(2)}
                 </span>
                 <Badge 
                   variant="secondary" 
-                  className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-                  style={{ 
-                    fontSize: '8px', 
-                    padding: '1px 3px', 
-                    height: 'auto', 
-                    lineHeight: '1',
-                    pointerEvents: 'none'
-                  }}
+                  className="bg-pink-400 text-white text-xs px-1 py-0"
                 >
                   {product.forma_venda}
                 </Badge>
@@ -184,21 +130,9 @@ export function ProductCard({
             )}
             
             <button 
-              style={{ 
-                width: '100%', 
-                height: '24px', 
-                fontWeight: '600', 
-                backgroundColor: borderColor,
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                transition: 'transform 0.2s',
-                fontSize: '10px'
-              }}
+              className="w-full h-6 font-semibold text-white rounded-md cursor-pointer transition-transform hover:scale-105 text-xs"
+              style={{ backgroundColor: borderColor }}
               onClick={() => onOrder(product.nome)}
-              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
               Pedir
             </button>
