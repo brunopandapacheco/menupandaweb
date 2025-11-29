@@ -37,6 +37,17 @@ export default function CardapioPublico() {
       setDesignSettings(designData)
       setConfiguracoes(configData)
       setProdutos(productsData || [])
+      
+      // Debug detalhado dos produtos
+      console.log('📦 Produtos carregados:', productsData?.length || 0)
+      productsData?.forEach((produto, index) => {
+        console.log(`📦 Produto ${index + 1}:`, {
+          nome: produto.nome,
+          imagem_url: produto.imagem_url,
+          categoria: produto.categoria,
+          preco: produto.preco_normal
+        })
+      })
     } catch (error) {
       console.error('Error loading data:', error)
     } finally {

@@ -52,7 +52,7 @@ export function ProductCard({
   }
 
   const firstImage = getFirstImage(product.imagem_url)
-  console.log('ProductCard - Imagem do produto:', product.nome, 'URL:', firstImage) // Debug
+  console.log('ProductCard - Produto:', product.nome, 'Imagem URL:', firstImage, 'Original:', product.imagem_url) // Debug detalhado
 
   return (
     <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
@@ -62,24 +62,25 @@ export function ProductCard({
           className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
           style={{ backgroundColor }}
         >
-          {firstImage ? (
+          {firstImage && firstImage.trim() !== '' ? (
             <img 
               src={firstImage} 
               alt={product.nome} 
               className="w-full h-full object-cover rounded-lg"
               onError={(e) => {
                 console.error('Erro ao carregar imagem:', firstImage)
+                // Esconder imagem e mostrar fallback
                 e.currentTarget.style.display = 'none'
-                e.currentTarget.parentElement?.classList.add('fallback-icon')
+                const parent = e.currentTarget.parentElement
+                if (parent) {
+                  parent.innerHTML = `<span class="text-2xl">${categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>`
+                }
               }}
               onLoad={() => {
                 console.log('Imagem carregada com sucesso:', firstImage)
               }}
             />
-          ) : null}
-          
-          {/* Fallback se não tiver imagem ou se der erro */}
-          {(!firstImage || firstImage === '') && (
+          ) : (
             <span className="text-2xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
           )}
         </div>
