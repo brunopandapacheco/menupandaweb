@@ -23,7 +23,7 @@ export default function Preview() {
   // Se estiver carregando, mostrar loading
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fef2f2' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando prévia...</p>
@@ -60,7 +60,7 @@ export default function Preview() {
   // Em desktop, mostrar preview em tela cheia sem opções de dispositivo
   if (device === 'desktop') {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}>
+      <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
         <Banner 
           borderColor={designSettings?.cor_borda}
           bannerGradient={designSettings?.banner_gradient}
@@ -91,7 +91,7 @@ export default function Preview() {
               favorites={favorites}
               onToggleFavorite={toggleFavorite}
               onOrder={handleOrder}
-              backgroundColor={designSettings?.cor_background || '#fef2f2'}
+              backgroundColor={designSettings?.cor_background || '#ffffff'}
               borderColor={designSettings?.cor_borda || '#ec4899'}
               selectedCategory={selectedCategory}
             />
@@ -111,7 +111,7 @@ export default function Preview() {
 
   // Em mobile e tablet, mostrar preview em tela cheia sem opções de dispositivo
   return (
-    <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}>
+    <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
       <Banner 
         borderColor={designSettings?.cor_borda}
         bannerGradient={designSettings?.banner_gradient}
@@ -142,7 +142,7 @@ export default function Preview() {
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             onOrder={handleOrder}
-            backgroundColor={designSettings?.cor_background || '#fef2f2'}
+            backgroundColor={designSettings?.cor_background || '#ffffff'}
             borderColor={designSettings?.cor_borda || '#ec4899'}
             selectedCategory={selectedCategory}
           />
