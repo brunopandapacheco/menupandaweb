@@ -22,7 +22,7 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
 
   return (
     <div className="min-h-screen bg-pink-50 flex">
-      <div className="w-64 bg-[#380019] border-r border-pink-200 p-4 flex flex-col">
+      <div className="w-64 bg-[#E26783] border-r border-pink-200 p-4 flex flex-col">
         <div className="p-4 pb-4">
           <div className="flex items-center justify-center">
             <div className="text-center">
@@ -42,9 +42,9 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
                   key={tab.id}
                   variant={activeTab === tab.id ? 'default' : 'ghost'}
                   className={cn(
-                    "w-full justify-start gap-3 h-12 text-white hover:bg-white hover:text-[#380019]",
+                    "w-full justify-start gap-3 h-12 text-white hover:bg-white hover:text-[#E26783]",
                     activeTab === tab.id 
-                      ? "bg-white text-[#380019] hover:bg-white hover:text-[#380019]" 
+                      ? "bg-white text-[#E26783] hover:bg-white hover:text-[#E26783]" 
                       : ""
                   )}
                   onClick={() => onTabChange?.(tab.id)}
