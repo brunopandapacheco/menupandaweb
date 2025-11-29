@@ -14,11 +14,23 @@ import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 
 export default function Preview() {
-  const { designSettings, configuracoes, produtos } = useDatabase()
+  const { designSettings, configuracoes, produtos, loading } = useDatabase()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const device = useDeviceDetection()
+
+  // Se estiver carregando, mostrar loading
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fef2f2' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando prévia...</p>
+        </div>
+      </div>
+    )
+  }
 
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase())
