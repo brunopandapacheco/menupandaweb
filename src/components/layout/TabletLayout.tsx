@@ -42,7 +42,7 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
                   key={tab.id}
                   variant={activeTab === tab.id ? 'default' : 'ghost'}
                   className={cn(
-                    "w-full justify-start gap-3 h-12 text-white hover:bg-white hover:text-[#E26783]",
+                    "w-full justify-start gap-3 h-12 text-white hover:bg-white/20 hover:text-white",
                     activeTab === tab.id 
                       ? "bg-white text-[#E26783] hover:bg-white hover:text-[#E26783]" 
                       : ""
