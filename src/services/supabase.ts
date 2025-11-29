@@ -38,7 +38,7 @@ export class SupabaseService {
         nome_loja: 'Minha Confeitaria',
         slug: `minha-confeitaria-${Date.now()}`,
         cor_borda: '#ec4899',
-        cor_background: '#fef2f2',
+        cor_background: '#ffffff', // CORRIGIDO: Branco em vez de #fef2f2
         cor_nome: '#be185d',
         background_topo_color: '#fce7f3',
         texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
@@ -98,7 +98,7 @@ export class SupabaseService {
           nome_loja: 'Minha Confeitaria',
           slug: `minha-confeitaria-${Date.now()}`,
           cor_borda: '#ec4899',
-          cor_background: '#fef2f2',
+          cor_background: '#ffffff', // CORRIGIDO: Branco em vez de #fef2f2
           cor_nome: '#be185d',
           background_topo_color: '#fce7f3',
           texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
@@ -425,7 +425,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoesBySlug: Querying for slug:', slug)
       
-      // First get the design_settings to find user_id
+      // First get design_settings to find user_id
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -461,7 +461,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getProductsBySlug: Querying for slug:', slug)
       
-      // First get the design_settings to find user_id
+      // First get design_settings to find user_id
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -575,6 +575,46 @@ export class SupabaseService {
       return true
     } catch (error) {
       console.error('❌ Erro durante migração:', error)
+      return false
+    }
+  }
+
+  // Método para corrigir cor de fundo existente
+  async fixBackgroundColor(): Promise<boolean> {
+    try {
+      console.log('🔄 Corrigindo cor de fundo para branco...')
+      
+      const { data: designSettings, error: fetchError } = await supabase
+        .from('design_settings')
+        .select('id, user_id, cor_background')
+        .eq('cor_background', '#fef2f2')
+      
+      if (fetchError) {
+        console.error('❌ Erro ao buscar configurações com cor #fef2f2:', fetchError)
+        return false
+      }
+      
+      if (!designSettings || designSettings.length === 0) {
+        console.log('✅ Nenhuma configuração encontrada com cor #fef2f2')
+        return true
+      }
+      
+      for (const setting of designSettings) {
+        const { error: updateError } = await supabase
+          .from('design_settings')
+          .update({ cor_background: '#ffffff' })
+          .eq('id', setting.id)
+        
+        if (updateError) {
+          console.error(`❌ Erro ao atualizar cor de fundo para usuário ${setting.user_id}:`, updateError)
+          return false
+        }
+      }
+      
+      console.log(`✅ Cor de fundo corrigida para ${designSettings.length} usuários`)
+      return true
+    } catch (error) {
+      console.error('❌ Erro ao corrigir cor de fundo:', error)
       return false
     }
   }
