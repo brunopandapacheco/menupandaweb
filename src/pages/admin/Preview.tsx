@@ -184,6 +184,8 @@ export default function Preview() {
             logoUrl={designSettings.logo_url} 
             borderColor={designSettings.cor_borda} 
             bannerGradient={designSettings.banner_gradient}
+            backgroundImageUrl={designSettings.background_image_url}
+            useBackgroundImage={designSettings.use_background_image}
           />
           <Logo 
             logoUrl={designSettings.logo_url} 
@@ -305,6 +307,8 @@ export default function Preview() {
               logoUrl={designSettings?.logo_url} 
               borderColor={designSettings?.cor_borda} 
               bannerGradient={designSettings?.banner_gradient}
+              backgroundImageUrl={designSettings?.background_image_url}
+              useBackgroundImage={designSettings?.use_background_image}
             />
             <Logo 
               logoUrl={designSettings?.logo_url} 

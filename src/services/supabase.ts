@@ -44,7 +44,9 @@ export class SupabaseService {
         texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
         categorias: ['Bolos', 'Doces', 'Salgados'], // Categorias padrão corrigidas
         descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-        banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
+        banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+        background_image_url: '',
+        use_background_image: false
       }
 
       console.log('📝 Creating default design settings:', defaultSettings)
@@ -103,6 +105,8 @@ export class SupabaseService {
           categorias: defaultCategories,
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+          background_image_url: '',
+          use_background_image: false,
           ...settings // Add any custom configurations
         }
 
@@ -151,7 +155,9 @@ export class SupabaseService {
         'banner2_url',
         'categorias',
         'descricao_loja',
-        'banner_gradient'
+        'banner_gradient',
+        'background_image_url',
+        'use_background_image'
       ]
       
       // Add only valid fields

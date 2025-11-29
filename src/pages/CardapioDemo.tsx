@@ -16,6 +16,8 @@ const mockDesignSettings = {
   logo_url: '',
   banner1_url: '',
   banner2_url: '',
+  background_image_url: '',
+  use_background_image: false,
   categorias: ['Bolos', 'Doces', 'Salgados'], // CORRIGIDO: categorias padrão
   descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
   banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)'
@@ -150,6 +152,8 @@ export default function CardapioDemo() {
           logoUrl={mockDesignSettings.logo_url} 
           borderColor={mockDesignSettings.cor_borda} 
           bannerGradient={mockDesignSettings.banner_gradient}
+          backgroundImageUrl={mockDesignSettings.background_image_url}
+          useBackgroundImage={mockDesignSettings.use_background_image}
         />
         <Logo 
           logoUrl={mockDesignSettings.logo_url} 

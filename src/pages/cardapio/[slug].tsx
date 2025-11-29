@@ -74,7 +74,7 @@ export default function CardapioPublico() {
     window.open(whatsappUrl, '_blank')
   }
 
-  // Obter categorias únicas with ícones
+  // Obter categorias únicas com ícones
   const categoryIcons: Record<string, string> = {
     'Bolos': '🎂',
     'Cupcakes': '🧁',
@@ -103,7 +103,7 @@ export default function CardapioPublico() {
     icon: categoryIcons[cat] || '🧁'
   }))
 
-  // Filtrar produtos by busca and category
+  // Filtrar produtos por busca e categoria
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
@@ -134,6 +134,8 @@ export default function CardapioPublico() {
           logoUrl={designSettings.logo_url} 
           borderColor={designSettings.cor_borda} 
           bannerGradient={designSettings.banner_gradient}
+          backgroundImageUrl={designSettings.background_image_url}
+          useBackgroundImage={designSettings.use_background_image}
         />
         <Logo 
           logoUrl={designSettings.logo_url} 
@@ -159,7 +161,7 @@ export default function CardapioPublico() {
             </div>
           )}
 
-          {/* Filtro of categorias */}
+          {/* Filtro de categorias */}
           <CategoryFilter
             categories={categories}
             selectedCategory={selectedCategory}

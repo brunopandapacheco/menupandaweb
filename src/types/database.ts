@@ -4,6 +4,8 @@ export interface DesignSettings {
   user_id: string
   slug?: string
   logo_url?: string
+  background_image_url?: string
+  use_background_image?: boolean
   nome_loja: string
   cor_borda: string
   cor_background: string

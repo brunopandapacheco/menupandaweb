@@ -36,7 +36,6 @@ export function Footer({ textoRodape }: FooterProps) {
       WebkitBoxOrient: 'vertical',
       overflow: 'hidden'
     }}>
-      <p>{displayText}</p>
     </div>
   )
 }
