@@ -27,7 +27,7 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
           <div className="flex items-center justify-center">
             <div className="text-center">
               <div className="w-40 h-40 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">
-                <img src="/logointernaadmin.png" alt={`${systemName} Logo`} className="w-32 h-32 object-contain" />
+                <img src="/imagemmenu" alt={`${systemName} Logo`} className="w-32 h-32 object-contain" />
               </div>
             </div>
           </div>
