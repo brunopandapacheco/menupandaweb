@@ -140,9 +140,8 @@ export function Logo({
   const displayName = getDisplayName(storeName)
   const displayDescription = getDisplayDescription(storeDescription)
 
-  // Determinar qual imagem usar
-  const shouldUseCustomLogo = logoUrl && !imageError
-  const imageSource = shouldUseCustomLogo ? logoUrl : "/logoteste.webp"
+  // Só mostrar imagem se tiver logoUrl e não houver erro
+  const hasValidLogo = logoUrl && !imageError
 
   return (
     <div style={{ position: 'relative', marginTop: '-80px', marginBottom: '24px' }}>
@@ -163,24 +162,41 @@ export function Logo({
             backgroundColor: 'white'
           }}
         >
-          <img 
-            src={imageSource} 
-            alt="Logo" 
-            style={{ 
-              width: '144px', // 160 - 16px da borda
-              height: '144px', // 160 - 16px da borda
-              borderRadius: '50%', 
-              objectFit: 'cover' 
-            }}
-            onError={() => {
-              console.log('Erro ao carregar imagem:', logoUrl)
-              setImageError(true)
-            }}
-            onLoad={() => {
-              console.log('Imagem carregada com sucesso:', imageSource)
-              setImageError(false)
-            }}
-          />
+          {hasValidLogo ? (
+            <img 
+              src={logoUrl} 
+              alt="Logo" 
+              style={{ 
+                width: '144px', // 160 - 16px da borda
+                height: '144px', // 160 - 16px da borda
+                borderRadius: '50%', 
+                objectFit: 'cover' 
+              }}
+              onError={() => {
+                console.log('Erro ao carregar imagem:', logoUrl)
+                setImageError(true)
+              }}
+              onLoad={() => {
+                console.log('Imagem carregada com sucesso:', logoUrl)
+                setImageError(false)
+              }}
+            />
+          ) : (
+            // Placeholder quando não há logo
+            <div style={{
+              width: '144px',
+              height: '144px',
+              borderRadius: '50%',
+              backgroundColor: '#f3f4f6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '48px',
+              color: '#9ca3af'
+            }}>
+              🧁
+            </div>
+          )}
         </div>
       </div>
       
