@@ -105,8 +105,7 @@ export function StoreSettings({
               rows={4}
               className="w-full p-3 border border-gray-300 rounded-lg resize-none"
             />
-            <div className="flex justify-between items-center">
-              <p className="text-xs text-gray-500">Valor atual: "{descricaoLoja}"</p>
+            <div className="flex justify-end">
               <p className="text-xs text-gray-500">
                 {descricaoLoja.length}/300 caracteres
               </p>
