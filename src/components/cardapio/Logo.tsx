@@ -142,48 +142,65 @@ export function Logo({
             alignItems: 'center', 
             justifyContent: 'center', 
             boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
-            border: `8px solid ${borderColor}`, // Borda de 8px
+            // Borda externa colorida
+            border: `4px solid ${borderColor}`,
             position: 'relative',
             zIndex: 10,
             padding: '0',
             backgroundColor: 'white'
           }}
         >
-          {hasValidLogo ? (
-            <img 
-              src={logoUrl} 
-              alt="Logo" 
-              style={{ 
-                width: '144px', // 160 - 16px da borda
-                height: '144px', // 160 - 16px da borda
-                borderRadius: '50%', 
-                objectFit: 'cover' 
-              }}
-              onError={() => {
-                console.log('Erro ao carregar imagem:', logoUrl)
-                setImageError(true)
-              }}
-              onLoad={() => {
-                console.log('Imagem carregada com sucesso:', logoUrl)
-                setImageError(false)
-              }}
-            />
-          ) : (
-            // Placeholder quando não há logo
-            <div style={{
-              width: '144px',
-              height: '144px',
+          {/* Borda interna branca usando box-shadow */}
+          <div
+            style={{
+              width: '152px', // 160 - 8px (4px de cada lado da borda externa)
+              height: '152px', // 160 - 8px (4px de cada lado da borda externa)
               borderRadius: '50%',
-              backgroundColor: '#f3f4f6',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '48px',
-              color: '#9ca3af'
-            }}>
-              🧁
-            </div>
-          )}
+              // Borda interna branca usando box-shadow
+              boxShadow: `inset 0 0 0 4px white`,
+              overflow: 'hidden',
+              backgroundColor: 'white'
+            }}
+          >
+            {hasValidLogo ? (
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                style={{ 
+                  width: '144px', // 152 - 8px (4px de cada lado da borda interna)
+                  height: '144px', // 152 - 8px (4px de cada lado da borda interna)
+                  borderRadius: '50%', 
+                  objectFit: 'cover' 
+                }}
+                onError={() => {
+                  console.log('Erro ao carregar imagem:', logoUrl)
+                  setImageError(true)
+                }}
+                onLoad={() => {
+                  console.log('Imagem carregada com sucesso:', logoUrl)
+                  setImageError(false)
+                }}
+              />
+            ) : (
+              // Placeholder quando não há logo
+              <div style={{
+                width: '144px',
+                height: '144px',
+                borderRadius: '50%',
+                backgroundColor: '#f3f4f6',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '48px',
+                color: '#9ca3af'
+              }}>
+                🧁
+              </div>
+            )}
+          </div>
         </div>
       </div>
       
