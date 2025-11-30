@@ -141,7 +141,7 @@ export function Logo({
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
+            // SOMBRA REMOVIDA: boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
             // Borda externa colorida
             border: `4px solid ${borderColor}`,
             position: 'relative',
