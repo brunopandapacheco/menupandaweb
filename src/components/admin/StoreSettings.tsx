@@ -59,6 +59,12 @@ export function StoreSettings({
   onSaveConfig,
   onSaveHorarios
 }: StoreSettingsProps) {
+  const handleDescricaoChange = (value: string) => {
+    if (value.length <= 300) {
+      onDescricaoLojaChange(value)
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Card Principal - Configurações */}
@@ -94,12 +100,17 @@ export function StoreSettings({
             <textarea
               id="descricaoLoja"
               value={descricaoLoja}
-              onChange={(e) => onDescricaoLojaChange(e.target.value)}
+              onChange={(e) => handleDescricaoChange(e.target.value)}
               placeholder="Descreva sua confeitaria..."
-              rows={3}
+              rows={4}
               className="w-full p-3 border border-gray-300 rounded-lg resize-none"
             />
-            <p className="text-xs text-gray-500">Valor atual: "{descricaoLoja}"</p>
+            <div className="flex justify-between items-center">
+              <p className="text-xs text-gray-500">Valor atual: "{descricaoLoja}"</p>
+              <p className="text-xs text-gray-500">
+                {descricaoLoja.length}/300 caracteres
+              </p>
+            </div>
           </div>
 
           {/* Texto do Rodapé */}
