@@ -188,7 +188,7 @@ export function Logo({
       </div>
       
       {/* Título and description of store outside card */}
-      <div style={{ textAlign: 'center', marginTop: '20px', padding: '0 16px' }}>
+      <div style={{ textAlign: 'center', marginTop: '20px', padding: '0 20px' }}>
         <h2 style={{ 
           fontSize: '28px', // Reduzido de 32px para 28px
           fontWeight: 'bold', 
@@ -230,18 +230,19 @@ export function Logo({
           </div>
         </div>
         
-        {/* Store Description - Alinhado à esquerda */}
+        {/* Store Description - Melhor encaixe do texto */}
         <p style={{ 
           fontSize: '14px', 
           color: '#6b7280', 
-          lineHeight: '1.4',
-          maxWidth: '300px',
+          lineHeight: '1.5', // Aumentado para melhor espaçamento
+          maxWidth: '320px', // Aumentado para aproveitar melhor o espaço
           margin: '0 auto',
           wordWrap: 'break-word', // Garante quebra de palavra
           overflowWrap: 'break-word', // Alternativa para compatibilidade
-          minHeight: '40px', // Altura mínima para consistência
-          whiteSpace: 'pre-wrap', // Permite quebras de linha e espaços
-          textAlign: 'left' // Alinhado à esquerda
+          whiteSpace: 'normal', // Normal para permitir quebra natural
+          textAlign: 'center', // Centralizado
+          hyphens: 'auto', // Adiciona hífens automaticamente para melhor quebra
+          textJustify: 'inter-word' // Justificação entre palavras para melhor distribuição
         }}>
           {storeDescription || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'}
         </p>
