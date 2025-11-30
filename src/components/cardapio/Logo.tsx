@@ -230,7 +230,7 @@ export function Logo({
           </div>
         </div>
         
-        {/* Store Description - Mostrando integralmente sem limite */}
+        {/* Store Description - Alinhado à esquerda */}
         <p style={{ 
           fontSize: '14px', 
           color: '#6b7280', 
@@ -241,7 +241,7 @@ export function Logo({
           overflowWrap: 'break-word', // Alternativa para compatibilidade
           minHeight: '40px', // Altura mínima para consistência
           whiteSpace: 'pre-wrap', // Permite quebras de linha e espaços
-          textAlign: 'center' // Centralizado
+          textAlign: 'left' // Alinhado à esquerda
         }}>
           {storeDescription || 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.'}
         </p>
