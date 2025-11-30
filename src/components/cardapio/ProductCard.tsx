@@ -105,7 +105,11 @@ export function ProductCard({
                   <span className="text-xs text-gray-400 line-through">
                     R$ {product.preco_normal.toFixed(2)}
                   </span>
-                  <Badge variant="destructive" className="text-xs px-1 py-0">
+                  <Badge 
+                    variant="destructive" 
+                    className="text-xs px-1 py-0 rounded-sm"
+                    style={{ borderRadius: '2px' }}
+                  >
                     -{Math.round((1 - product.preco_promocional / product.preco_normal) * 100)}%
                   </Badge>
                 </div>
@@ -115,7 +119,8 @@ export function ProductCard({
                   </span>
                   <Badge 
                     variant="secondary" 
-                    className="bg-pink-400 text-white text-xs px-1 py-0"
+                    className="bg-pink-400 text-white text-xs px-1 py-0 rounded-sm"
+                    style={{ borderRadius: '2px' }}
                   >
                     {product.forma_venda}
                   </Badge>
@@ -128,7 +133,8 @@ export function ProductCard({
                 </span>
                 <Badge 
                   variant="secondary" 
-                  className="bg-pink-400 text-white text-xs px-1 py-0"
+                  className="bg-pink-400 text-white text-xs px-1 py-0 rounded-sm"
+                  style={{ borderRadius: '2px' }}
                 >
                   {product.forma_venda}
                 </Badge>
