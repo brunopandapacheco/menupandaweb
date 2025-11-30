@@ -12,7 +12,7 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
-  // Sempre mostrar as 4 categorias padrão na ordem correta
+  // Sempre mostrar as 4 categorias padrão na ordem correta com os ícones corretos
   const defaultCategories = [
     { name: 'Todos', icon: '/icons/iconetodos.png' },
     { name: 'Bolos', icon: '/icons/iconebolo.png' },
@@ -82,7 +82,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 style={{ 
                   fontSize: '24px', 
                   marginBottom: '4px', 
-                  display: 'none' // Escondido por padrão
+                  display: 'none' // Escondido por padrão, só mostra se a imagem falhar
                 }}
               >
                 {category.name === 'Todos' ? '📋' : 
