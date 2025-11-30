@@ -14,10 +14,10 @@ interface CategoryFilterProps {
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
   // Sempre mostrar as 4 categorias padrão na ordem correta com os ícones corretos
   const defaultCategories = [
-    { name: 'Todos', icon: '/icons/iconetodos.png' },
-    { name: 'Bolos', icon: '/icons/iconebolo.png' },
-    { name: 'Doces', icon: '/icons/iconedoces.png' },
-    { name: 'Salgados', icon: '/icons/iconesalgados.png' }
+    { name: 'Todos', icon: '/icons/Todos.png' },
+    { name: 'Bolos', icon: '/icons/Bolos.png' },
+    { name: 'Doces', icon: '/icons/Doces.png' },
+    { name: 'Salgados', icon: '/icons/Salgados.png' }
   ]
 
   return (
