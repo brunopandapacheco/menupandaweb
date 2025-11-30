@@ -96,7 +96,10 @@ export function ColorSettings({
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full border-4 shadow-sm" style={{ borderColor: corBorda }} />
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Cor da Borda</h3>
+              <h3 className="text-lg font-semibold px-3 py-1 rounded-lg" style={{ 
+                color: '#4A3531',
+                backgroundColor: '#fce7f3'
+              }}>Cor da Borda</h3>
             </div>
             
             <div className="grid grid-cols-5 gap-3">
@@ -142,7 +145,10 @@ export function ColorSettings({
               >
                 Aa
               </div>
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Cor do Nome</h3>
+              <h3 className="text-lg font-semibold px-3 py-1 rounded-lg" style={{ 
+                color: '#4A3531',
+                backgroundColor: '#fce7f3'
+              }}>Cor do Nome</h3>
             </div>
             
             <div className="grid grid-cols-5 gap-3">
