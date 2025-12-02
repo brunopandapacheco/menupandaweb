@@ -161,7 +161,7 @@ export function ProductCard({
               style={{ backgroundColor: borderColor }}
               onClick={() => onOrder(product.nome)}
             >
-              Pedir
+              Adicionar ao Carrinho
             </button>
           </div>
         </div>
