@@ -98,6 +98,16 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    height: 100%;
+  }
 }
 
 /* Animação de gradiente suave - mais rápida */
@@ -116,6 +126,16 @@
 .animate-gradient-x {
   background-size: 200% 200%;
   animation: gradient-x 3s ease infinite;
+}
+
+/* Animação de loading */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Animação de brilho (shine effect) */
