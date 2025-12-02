@@ -43,7 +43,7 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
                 onClick={() => onTabChange?.(tab.id)}
               >
                 <span className={cn(
-                  "text-xs font-[650]",
+                  "text-xs font-[700]",
                   activeTab === tab.id ? "text-[#E26783]" : "text-white"
                 )}>{tab.label}</span>
               </Button>
