@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import Cropper from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { ZoomIn, ZoomOut, RotateCw, Check, X } from 'lucide-react'
+import { Check, X } from 'lucide-react'
+import PinchZoom from 'pinchzoom'
 
 interface LogoCropperProps {
   imageFile: File
@@ -15,12 +16,43 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
   const [imageUrl, setImageUrl] = useState<string>('')
+  const cropperRef = useRef<HTMLDivElement>(null)
+  const pinchZoomRef = useRef<any>(null)
 
-  useState(() => {
+  useEffect(() => {
     const url = URL.createObjectURL(imageFile)
     setImageUrl(url)
     return () => URL.revokeObjectURL(url)
-  })
+  }, [imageFile])
+
+  useEffect(() => {
+    // Inicializar PinchZoom quando o componente montar
+    if (cropperRef.current && !pinchZoomRef.current) {
+      pinchZoomRef.current = new PinchZoom(cropperRef.current, {
+        tapZoomFactor: 2,
+        zoomOutFactor: 0.8,
+        animationDuration: 300,
+        maxZoom: 3,
+        minZoom: 0.5,
+        lockDragAxis: false,
+        use2d: true,
+        verticalPan: false,
+        horizontalPan: true
+      })
+
+      // Listener para atualizar o zoom do cropper baseado no pinch
+      pinchZoomRef.current.addZoomListener((zoomValue: number) => {
+        setZoom(zoomValue)
+      })
+    }
+
+    return () => {
+      if (pinchZoomRef.current) {
+        pinchZoomRef.current.cleanup()
+        pinchZoomRef.current = null
+      }
+    }
+  }, [])
 
   const createImage = (url: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
@@ -116,27 +148,20 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
     }
   }, [imageUrl, crop, zoom, rotation, getCroppedImg, onCropComplete])
 
-  const handleZoomIn = () => {
-    setZoom(prev => Math.min(prev + 0.1, 3))
-  }
-
-  const handleZoomOut = () => {
-    setZoom(prev => Math.max(prev - 0.1, 0.5))
-  }
-
-  const handleRotate = () => {
-    setRotation(prev => (prev + 90) % 360)
-  }
-
   const handleReset = () => {
     setZoom(1)
     setRotation(0)
     setCrop({ x: 0, y: 0 })
+    
+    // Resetar o PinchZoom também
+    if (pinchZoomRef.current) {
+      pinchZoomRef.current.zoomTo(1)
+    }
   }
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden">
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden">
         <CardContent className="p-6">
           <div className="space-y-4">
             {/* Header */}
@@ -147,71 +172,36 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
               </Button>
             </div>
 
-            {/* Área de Crop */}
+            {/* Área de Crop com PinchZoom */}
             <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ height: '400px' }}>
-              <Cropper
-                image={imageUrl}
-                crop={crop}
-                zoom={zoom}
-                rotation={rotation}
-                aspect={1}
-                onCropChange={setCrop}
-                onZoomChange={setZoom}
-                onRotationChange={setRotation}
-                cropShape="round"
-                showGrid={true}
-                style={{
-                  containerStyle: {
-                    width: '100%',
-                    height: '100%'
-                  },
-                  cropAreaStyle: {
-                    border: '2px solid #ec4899',
-                    boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
-                  }
-                }}
-              />
-            </div>
-
-            {/* Controles */}
-            <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleZoomOut}
-                  disabled={zoom <= 0.5}
-                >
-                  <ZoomOut className="w-4 h-4" />
-                </Button>
-                <div className="text-sm font-medium min-w-[60px] text-center">
-                  {Math.round(zoom * 100)}%
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleZoomIn}
-                  disabled={zoom >= 3}
-                >
-                  <ZoomIn className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleRotate}
-                >
-                  <RotateCw className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleReset}
-                >
-                  Reset
-                </Button>
+              <div 
+                ref={cropperRef}
+                className="w-full h-full"
+                style={{ touchAction: 'none' }}
+              >
+                <Cropper
+                  image={imageUrl}
+                  crop={crop}
+                  zoom={zoom}
+                  rotation={rotation}
+                  aspect={1}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onRotationChange={setRotation}
+                  cropShape="round"
+                  showGrid={true}
+                  style={{
+                    containerStyle: {
+                      width: '100%',
+                      height: '100%',
+                      touchAction: 'none'
+                    },
+                    cropAreaStyle: {
+                      border: '2px solid #ec4899',
+                      boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
+                    }
+                  }}
+                />
               </div>
             </div>
 
@@ -235,17 +225,31 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
             </div>
 
             {/* Botões de Ação */}
-            <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={onCancel}>
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleCropComplete}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-              >
-                <Check className="w-4 h-4 mr-2" />
-                Aplicar
-              </Button>
+            <div className="flex gap-3 justify-between">
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleReset}>
+                  Reset
+                </Button>
+              </div>
+              
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={onCancel}>
+                  Cancelar
+                </Button>
+                <Button 
+                  onClick={handleCropComplete}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                >
+                  <Check className="w-4 h-4 mr-2" />
+                  Aplicar
+                </Button>
+              </div>
+            </div>
+
+            {/* Instruções */}
+            <div className="text-center text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+              <p>📱 Use dois dedos para zoom e arraste para ajustar a posição</p>
+              <p>💻 No computador: use o scroll do mouse para zoom e arraste para mover</p>
             </div>
           </div>
         </CardContent>
