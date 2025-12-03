@@ -30,24 +30,39 @@ export function LogoCropper({
   const y = useMotionValue(0)
 
   // Spring animations
-  const scaleSpring = useSpring(scale, { 
+  const scaleSpring = useSpring(1, { 
     stiffness: 300, 
     damping: 30,
     min: 0.5,
     max: 3
   })
-  const rotateSpring = useSpring(rotate, { 
+  const rotateSpring = useSpring(0, { 
     stiffness: 200, 
     damping: 20
   })
-  const xSpring = useSpring(x, { 
+  const xSpring = useSpring(0, { 
     stiffness: 300, 
     damping: 30 
   })
-  const ySpring = useSpring(y, { 
+  const ySpring = useSpring(0, { 
     stiffness: 300, 
     damping: 30 
   })
+
+  // Sync springs with motion values
+  useEffect(() => {
+    const unsubscribeScale = scale.onChange(v => scaleSpring.set(v))
+    const unsubscribeRotate = rotate.onChange(v => rotateSpring.set(v))
+    const unsubscribeX = x.onChange(v => xSpring.set(v))
+    const unsubscribeY = y.onChange(v => ySpring.set(v))
+    
+    return () => {
+      unsubscribeScale()
+      unsubscribeRotate()
+      unsubscribeX()
+      unsubscribeY()
+    }
+  }, [scale, rotate, x, y, scaleSpring, rotateSpring, xSpring, ySpring])
 
   // Carregar imagem
   useEffect(() => {
