@@ -89,9 +89,10 @@ export function LogoCropper({
     // Pinch-to-zoom
     onPinch: ({ 
       offset: [d, a], 
+      origin: [ox, oy],
       memo 
     }) => {
-      const newScale = 1 + d / 200
+      const newScale = 1 + d / 100
       scale.set(Math.min(Math.max(0.5, newScale), 3))
       rotate.set(a)
       return memo
@@ -103,7 +104,7 @@ export function LogoCropper({
       memo 
     }) => {
       // Limites de arrasto baseados no zoom
-      const maxDrag = 100 * Math.max(0.5, scale.get())
+      const maxDrag = 50 * Math.max(0.5, scale.get())
       x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
       y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
       return memo
@@ -128,7 +129,7 @@ export function LogoCropper({
   }, {
     drag: {
       filterTaps: true,
-      bounds: { left: -200, right: 200, top: -200, bottom: 200 }
+      bounds: { left: -100, right: 100, top: -100, bottom: 100 }
     },
     pinch: {
       scaleBounds: { min: 0.5, max: 3 },
@@ -147,10 +148,10 @@ export function LogoCropper({
     const container = containerRef.current
     const containerRect = container.getBoundingClientRect()
     
-    // Tamanho do crop
-    const cropSize = circularCrop ? 400 : 600
+    // Tamanho do crop - reduzido para logo circular
+    const cropSize = circularCrop ? 300 : 600
     canvas.width = cropSize
-    canvas.height = circularCrop ? 400 : 300
+    canvas.height = circularCrop ? 300 : 300
 
     // Setup do canvas para circular crop
     if (circularCrop) {
@@ -171,8 +172,8 @@ export function LogoCropper({
     ctx.rotate((currentRotate * Math.PI) / 180)
     ctx.scale(currentScale, currentScale)
     
-    // Desenhar imagem centralizada
-    const imgSize = circularCrop ? 300 : 400
+    // Desenhar imagem centralizada - tamanho ajustado para preencher o círculo
+    const imgSize = circularCrop ? 250 : 400
     ctx.drawImage(
       imageRef.current, 
       -imgSize / 2 + currentX / currentScale, 
@@ -209,7 +210,7 @@ export function LogoCropper({
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
       >
-        <div className="relative max-w-4xl w-full">
+        <div className="relative w-full max-w-lg">
           {/* Botão de fechar */}
           <button
             onClick={onCancel}
@@ -236,8 +237,8 @@ export function LogoCropper({
                 ref={containerRef}
                 className="relative mx-auto"
                 style={{ 
-                  width: circularCrop ? '400px' : '600px',
-                  height: circularCrop ? '400px' : '300px'
+                  width: circularCrop ? '300px' : '600px',
+                  height: circularCrop ? '300px' : '300px'
                 }}
               >
                 {/* Máscara de crop */}
@@ -274,8 +275,8 @@ export function LogoCropper({
                       position: 'absolute',
                       top: '50%',
                       left: '50%',
-                      width: circularCrop ? '300px' : '400px',
-                      height: circularCrop ? '300px' : '300px',
+                      width: circularCrop ? '250px' : '400px',
+                      height: circularCrop ? '250px' : '300px',
                       x: xSpring,
                       y: ySpring,
                       scale: scaleSpring,
@@ -300,24 +301,24 @@ export function LogoCropper({
               <canvas
                 ref={canvasRef}
                 className="hidden"
-                width={circularCrop ? 400 : 600}
-                height={circularCrop ? 400 : 300}
+                width={circularCrop ? 300 : 600}
+                height={circularCrop ? 300 : 300}
               />
             </div>
 
             {/* Controles */}
             <div className="bg-white p-6 border-t">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={onCancel}
-                  className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
+                  className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
                 >
                   Cancelar
                 </button>
 
                 <button
                   onClick={handleReset}
-                  className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium flex items-center gap-2"
                 >
                   <RotateCw className="w-4 h-4" />
                   Resetar
@@ -325,7 +326,7 @@ export function LogoCropper({
 
                 <button
                   onClick={performCrop}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
                 >
                   <Check className="w-4 h-4" />
                   Confirmar
