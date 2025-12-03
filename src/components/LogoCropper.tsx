@@ -62,12 +62,18 @@ export function LogoCropper({
     }
   }, [scale, rotate, x, y, scaleSpring, rotateSpring, xSpring, ySpring])
 
-  // Carregar imagem
+  // Carregar imagem - RESETAR TRANSFORMAÇÕES ANTES DE SETAR URL
   useEffect(() => {
+    // Resetar transformações antes de carregar nova imagem
+    scale.set(1)
+    rotate.set(0)
+    x.set(0)
+    y.set(0)
+
     const url = URL.createObjectURL(imageFile)
     setImageUrl(url)
     return () => URL.revokeObjectURL(url)
-  }, [imageFile])
+  }, [imageFile, scale, rotate, x, y])
 
   // Quando imagem carregar
   const handleImageLoad = useCallback(() => {
@@ -75,26 +81,8 @@ export function LogoCropper({
       const { naturalWidth, naturalHeight } = imageRef.current
       setImageSize({ width: naturalWidth, height: naturalHeight })
       setImageLoaded(true)
-      
-      // Calcular scale inicial para preencher o círculo completamente
-      const circleSize = 240 // Tamanho do círculo de crop
-      const imageAspect = naturalWidth / naturalHeight
-      
-      // Calcular scale para preencher completamente o círculo
-      let initialScale = Math.max(
-        circleSize / naturalWidth,
-        circleSize / naturalHeight
-      ) * 1.1 // Adicionar 10% para garantir cobertura total
-      
-      // Limitar o scale inicial entre 1 e 3
-      initialScale = Math.min(Math.max(initialScale, 1), 3)
-      
-      scale.set(initialScale)
-      rotate.set(0)
-      x.set(0)
-      y.set(0)
     }
-  }, [scale, rotate, x, y])
+  }, [])
 
   // Configurar gestos
   const bind = useGesture({
@@ -135,18 +123,7 @@ export function LogoCropper({
     
     // Reset com duplo clique
     onDoubleClick: () => {
-      // Reset para o scale inicial que preenche o círculo
-      const circleSize = 240
-      if (imageSize.width && imageSize.height) {
-        let initialScale = Math.max(
-          circleSize / imageSize.width,
-          circleSize / imageSize.height
-        ) * 1.1
-        initialScale = Math.min(Math.max(initialScale, 1), 3)
-        scale.set(initialScale)
-      } else {
-        scale.set(1)
-      }
+      scale.set(1)
       x.set(0)
       y.set(0)
       rotate.set(0)
@@ -222,18 +199,7 @@ export function LogoCropper({
 
   // Função para resetar
   const handleReset = () => {
-    // Reset para o scale inicial que preenche o círculo
-    const circleSize = 240
-    if (imageSize.width && imageSize.height) {
-      let initialScale = Math.max(
-        circleSize / imageSize.width,
-        circleSize / imageSize.height
-      ) * 1.1
-      initialScale = Math.min(Math.max(initialScale, 1), 3)
-      scale.set(initialScale)
-    } else {
-      scale.set(1)
-    }
+    scale.set(1)
     x.set(0)
     y.set(0)
     rotate.set(0)
@@ -304,18 +270,21 @@ export function LogoCropper({
                   }}
                   {...bind()}
                 >
+                  {/* USAR FRAMER MOTION PARA CENTRAR - SEM CSS TRANSFORM */}
                   <motion.div
                     style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      width: circularCrop ? '200px' : '350px',
-                      height: circularCrop ? '200px' : '200px',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      margin: 'auto',
+                      width: circularCrop ? '300px' : '400px',
+                      height: '300px',
                       x: xSpring,
                       y: ySpring,
                       scale: scaleSpring,
                       rotate: rotateSpring,
-                      transform: 'translate(-50%, -50%)',
                     }}
                   >
                     <img
