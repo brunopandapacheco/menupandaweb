@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { X, RotateCw, Check } from 'lucide-react'
+import { X, Check } from 'lucide-react'
 import { useGesture } from '@use-gesture/react'
 import { motion, useSpring, useMotionValue, AnimatePresence } from 'framer-motion'
 
@@ -25,26 +25,23 @@ export function LogoCropper({
 
   // Motion values
   const scale = useMotionValue(1)
-  const rotate = useMotionValue(0)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
   const scaleSpring = useSpring(scale, { stiffness: 300, damping: 30 })
-  const rotateSpring = useSpring(rotate, { stiffness: 200, damping: 20 })
   const xSpring = useSpring(x, { stiffness: 300, damping: 30 })
   const ySpring = useSpring(y, { stiffness: 300, damping: 30 })
 
   // Resetar transformações ao trocar imagem
   useEffect(() => {
     scale.set(1)
-    rotate.set(0)
     x.set(0)
     y.set(0)
 
     const url = URL.createObjectURL(imageFile)
     setImageUrl(url)
     return () => URL.revokeObjectURL(url)
-  }, [imageFile, scale, rotate, x, y])
+  }, [imageFile, scale, x, y])
 
   // Quando imagem carregar, calcular scale inicial para caber no container
   const handleImageLoad = useCallback(() => {
@@ -54,6 +51,7 @@ export function LogoCropper({
     const container = containerRef.current
     const containerSize = circularCrop ? container.offsetWidth : container.offsetWidth
 
+    // Ajusta scale para que a imagem ocupe quase todo o crop
     const scaleX = containerSize / img.naturalWidth
     const scaleY = containerSize / img.naturalHeight
     const initialScale = Math.min(scaleX, scaleY)
@@ -61,26 +59,24 @@ export function LogoCropper({
     scale.set(initialScale)
     x.set(0)
     y.set(0)
-    rotate.set(0)
 
     setImageSize({
       width: img.naturalWidth,
       height: img.naturalHeight
     })
     setImageLoaded(true)
-  }, [scale, x, y, rotate, circularCrop])
+  }, [scale, x, y, circularCrop])
 
   // Gestos
   const bind = useGesture({
-    onPinch: ({ offset: [d, a] }) => {
+    onPinch: ({ offset: [d] }) => {
       const currentScale = scale.get()
       const newScale = currentScale + d / 200
       scale.set(Math.min(Math.max(0.5, newScale), 3))
-      rotate.set(a)
     },
     onDrag: ({ offset: [dx, dy] }) => {
       const currentScale = scale.get()
-      const maxDrag = 1000 // Sem limites rígidos para maior liberdade
+      const maxDrag = 1000
       x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
       y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
     },
@@ -95,9 +91,8 @@ export function LogoCropper({
       scale.set(1)
       x.set(0)
       y.set(0)
-      rotate.set(0)
     }
-  }, { drag: { filterTaps: true }, pinch: { scaleBounds: { min: 0.5, max: 3 }, angleBounds: { min: -180, max: 180 } } })
+  }, { drag: { filterTaps: true }, pinch: { scaleBounds: { min: 0.5, max: 3 } } })
 
   // Função de crop
   const performCrop = useCallback(() => {
@@ -119,16 +114,13 @@ export function LogoCropper({
     }
 
     const currentScale = scale.get()
-    const currentRotate = rotate.get()
     const currentX = x.get()
     const currentY = y.get()
 
     // Centraliza imagem e aplica transformações exatas
     ctx.translate(cropSize / 2, circularCrop ? cropSize / 2 : 150)
-    ctx.rotate((currentRotate * Math.PI) / 180)
     ctx.scale(currentScale, currentScale)
 
-    // Dimensões exatas do preview
     const imgSize = circularCrop ? 300 : 400
     ctx.drawImage(
       imageRef.current,
@@ -143,13 +135,12 @@ export function LogoCropper({
     canvas.toBlob(blob => {
       if (blob) onCropComplete(blob)
     }, 'image/jpeg', 0.9)
-  }, [scale, rotate, x, y, circularCrop, onCropComplete])
+  }, [scale, x, y, circularCrop, onCropComplete])
 
   const handleReset = () => {
     scale.set(1)
     x.set(0)
     y.set(0)
-    rotate.set(0)
   }
 
   return (
@@ -169,7 +160,7 @@ export function LogoCropper({
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
               <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
               <p className="text-center text-white/80 text-sm mt-1">
-                Zoom com 2 dedos • Mover com 1 dedo • Girar com pinça
+                Zoom com 2 dedos • Mover com 1 dedo
               </p>
             </div>
 
@@ -203,7 +194,6 @@ export function LogoCropper({
                       x: xSpring,
                       y: ySpring,
                       scale: scaleSpring,
-                      rotate: rotateSpring,
                       translateX: '-50%',
                       translateY: '-50%'
                     }}
@@ -232,8 +222,8 @@ export function LogoCropper({
                 <button onClick={onCancel} className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
                   Cancelar
                 </button>
-                <button onClick={handleReset} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg flex items-center gap-1 text-sm">
-                  <RotateCw className="w-3 h-3" /> Reset
+                <button onClick={handleReset} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+                  Reset
                 </button>
                 <button onClick={performCrop} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg flex items-center justify-center gap-1 text-sm">
                   <Check className="w-3 h-3" /> Salvar
@@ -245,9 +235,6 @@ export function LogoCropper({
                 </span>
                 <span className="flex items-center gap-1">
                   <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" /> Arrastar: mover
-                </span>
-                <span className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" /> Duplo: reset
                 </span>
               </div>
             </div>
