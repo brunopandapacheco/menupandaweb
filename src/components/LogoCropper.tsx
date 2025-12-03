@@ -76,8 +76,20 @@ export function LogoCropper({
       setImageSize({ width: naturalWidth, height: naturalHeight })
       setImageLoaded(true)
       
-      // Resetar transformações
-      scale.set(1)
+      // Calcular scale inicial para preencher o círculo completamente
+      const circleSize = 240 // Tamanho do círculo de crop
+      const imageAspect = naturalWidth / naturalHeight
+      
+      // Calcular scale para preencher completamente o círculo
+      let initialScale = Math.max(
+        circleSize / naturalWidth,
+        circleSize / naturalHeight
+      ) * 1.1 // Adicionar 10% para garantir cobertura total
+      
+      // Limitar o scale inicial entre 1 e 3
+      initialScale = Math.min(Math.max(initialScale, 1), 3)
+      
+      scale.set(initialScale)
       rotate.set(0)
       x.set(0)
       y.set(0)
@@ -92,7 +104,8 @@ export function LogoCropper({
       origin: [ox, oy],
       memo 
     }) => {
-      const newScale = 1 + d / 100
+      const currentScale = scale.get()
+      const newScale = currentScale + d / 200
       scale.set(Math.min(Math.max(0.5, newScale), 3))
       rotate.set(a)
       return memo
@@ -104,7 +117,8 @@ export function LogoCropper({
       memo 
     }) => {
       // Limites de arrasto baseados no zoom
-      const maxDrag = 50 * Math.max(0.5, scale.get())
+      const currentScale = scale.get()
+      const maxDrag = 100 * currentScale
       x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
       y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
       return memo
@@ -121,7 +135,18 @@ export function LogoCropper({
     
     // Reset com duplo clique
     onDoubleClick: () => {
-      scale.set(1)
+      // Reset para o scale inicial que preenche o círculo
+      const circleSize = 240
+      if (imageSize.width && imageSize.height) {
+        let initialScale = Math.max(
+          circleSize / imageSize.width,
+          circleSize / imageSize.height
+        ) * 1.1
+        initialScale = Math.min(Math.max(initialScale, 1), 3)
+        scale.set(initialScale)
+      } else {
+        scale.set(1)
+      }
       x.set(0)
       y.set(0)
       rotate.set(0)
@@ -129,7 +154,7 @@ export function LogoCropper({
   }, {
     drag: {
       filterTaps: true,
-      bounds: { left: -100, right: 100, top: -100, bottom: 100 }
+      bounds: { left: -200, right: 200, top: -200, bottom: 200 }
     },
     pinch: {
       scaleBounds: { min: 0.5, max: 3 },
@@ -148,10 +173,10 @@ export function LogoCropper({
     const container = containerRef.current
     const containerRect = container.getBoundingClientRect()
     
-    // Tamanho do crop - reduzido para logo circular
-    const cropSize = circularCrop ? 300 : 600
+    // Tamanho do crop - círculo menor e mais adequado
+    const cropSize = circularCrop ? 240 : 600
     canvas.width = cropSize
-    canvas.height = circularCrop ? 300 : 300
+    canvas.height = circularCrop ? 240 : 300
 
     // Setup do canvas para circular crop
     if (circularCrop) {
@@ -172,8 +197,9 @@ export function LogoCropper({
     ctx.rotate((currentRotate * Math.PI) / 180)
     ctx.scale(currentScale, currentScale)
     
-    // Desenhar imagem centralizada - tamanho ajustado para preencher o círculo
-    const imgSize = circularCrop ? 250 : 400
+    // Desenhar imagem centralizada - tamanho base para preenchimento
+    const baseSize = Math.max(imageSize.width, imageSize.height) || 200
+    const imgSize = circularCrop ? baseSize : 400
     ctx.drawImage(
       imageRef.current, 
       -imgSize / 2 + currentX / currentScale, 
@@ -192,11 +218,22 @@ export function LogoCropper({
         onCropComplete(blob)
       }
     }, 'image/jpeg', 0.9)
-  }, [scale, rotate, x, y, circularCrop, onCropComplete])
+  }, [scale, rotate, x, y, circularCrop, onCropComplete, imageSize])
 
   // Função para resetar
   const handleReset = () => {
-    scale.set(1)
+    // Reset para o scale inicial que preenche o círculo
+    const circleSize = 240
+    if (imageSize.width && imageSize.height) {
+      let initialScale = Math.max(
+        circleSize / imageSize.width,
+        circleSize / imageSize.height
+      ) * 1.1
+      initialScale = Math.min(Math.max(initialScale, 1), 3)
+      scale.set(initialScale)
+    } else {
+      scale.set(1)
+    }
     x.set(0)
     y.set(0)
     rotate.set(0)
@@ -210,41 +247,38 @@ export function LogoCropper({
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
       >
-        <div className="relative w-full max-w-lg">
+        <div className="relative w-full max-w-md">
           {/* Botão de fechar */}
           <button
             onClick={onCancel}
-            className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+            className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
 
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">
-              <h2 className="text-2xl font-bold text-center">Ajustar Logo</h2>
-              <p className="text-center text-white/80 mt-2">
-                {circularCrop 
-                  ? "Use dois dedos para zoom e girar, um dedo para mover" 
-                  : "Ajuste a posição da imagem de background"
-                }
+          <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+            {/* Header - menor */}
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
+              <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
+              <p className="text-center text-white/80 text-sm mt-1">
+                Zoom com 2 dedos • Mover com 1 dedo • Girar com pinça
               </p>
             </div>
 
-            {/* Área do editor */}
-            <div className="p-8 bg-gray-50">
+            {/* Área do editor - menor */}
+            <div className="p-4 bg-gray-50">
               <div 
                 ref={containerRef}
                 className="relative mx-auto"
                 style={{ 
-                  width: circularCrop ? '300px' : '600px',
-                  height: circularCrop ? '300px' : '300px'
+                  width: circularCrop ? '240px' : '400px',
+                  height: circularCrop ? '240px' : '200px'
                 }}
               >
-                {/* Máscara de crop */}
+                {/* Máscara de crop - menor */}
                 <div 
                   className={`
-                    absolute inset-0 border-4 border-purple-400 pointer-events-none
+                    absolute inset-0 border-3 border-purple-400 pointer-events-none
                     ${circularCrop ? 'rounded-full' : 'rounded-lg'}
                   `}
                   style={{
@@ -275,8 +309,8 @@ export function LogoCropper({
                       position: 'absolute',
                       top: '50%',
                       left: '50%',
-                      width: circularCrop ? '250px' : '400px',
-                      height: circularCrop ? '250px' : '300px',
+                      width: circularCrop ? '200px' : '350px',
+                      height: circularCrop ? '200px' : '200px',
                       x: xSpring,
                       y: ySpring,
                       scale: scaleSpring,
@@ -301,55 +335,51 @@ export function LogoCropper({
               <canvas
                 ref={canvasRef}
                 className="hidden"
-                width={circularCrop ? 300 : 600}
-                height={circularCrop ? 300 : 300}
+                width={circularCrop ? 240 : 400}
+                height={circularCrop ? 240 : 200}
               />
             </div>
 
-            {/* Controles */}
-            <div className="bg-white p-6 border-t">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            {/* Controles - layout mais compacto */}
+            <div className="bg-white p-4 border-t">
+              <div className="flex items-center justify-center gap-2">
                 <button
                   onClick={onCancel}
-                  className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
+                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium text-sm"
                 >
                   Cancelar
                 </button>
 
                 <button
                   onClick={handleReset}
-                  className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium flex items-center gap-2"
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium flex items-center gap-1 text-sm"
                 >
-                  <RotateCw className="w-4 h-4" />
-                  Resetar
+                  <RotateCw className="w-3 h-3" />
+                  Reset
                 </button>
 
                 <button
                   onClick={performCrop}
-                  className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-1 text-sm"
                 >
-                  <Check className="w-4 h-4" />
-                  Confirmar
+                  <Check className="w-3 h-3" />
+                  Salvar
                 </button>
               </div>
 
-              {/* Dicas */}
-              <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+              {/* Dicas - mais compactas */}
+              <div className="mt-3 flex justify-center gap-3 text-xs text-gray-500">
                 <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                  2 dedos: zoom
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Pinça: zoom
                 </span>
                 <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                  Girar: rotação
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Arrastar: mover
                 </span>
                 <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                  1 dedo: mover
-                </span>
-                <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                  Duplo clique: reset
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Duplo: reset
                 </span>
               </div>
             </div>
