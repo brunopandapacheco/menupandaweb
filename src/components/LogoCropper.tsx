@@ -3,7 +3,6 @@ import Cropper from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Check, X } from 'lucide-react'
-import PinchZoom from 'pinchzoom'
 
 interface LogoCropperProps {
   imageFile: File
@@ -17,6 +16,7 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
   const [rotation, setRotation] = useState(0)
   const [imageUrl, setImageUrl] = useState<string>('')
   const cropperRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
   const pinchZoomRef = useRef<any>(null)
 
   useEffect(() => {
@@ -26,23 +26,70 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
   }, [imageFile])
 
   useEffect(() => {
-    // Inicializar PinchZoom quando o componente montar
-    if (cropperRef.current && !pinchZoomRef.current) {
-      pinchZoomRef.current = new PinchZoom(cropperRef.current, {
-        tapZoomFactor: 2,
-        zoomOutFactor: 0.8,
-        animationDuration: 300,
-        maxZoom: 3,
-        minZoom: 0.5,
-        lockDragAxis: false,
-        use2d: true,
-        verticalPan: false,
-        horizontalPan: true
-      })
+    // Inicializar PinchZoom quando a imagem estiver carregada
+    if (imageRef.current && !pinchZoomRef.current) {
+      // Importar PinchZoom dinamicamente
+      import('pinchzoom').then((PinchZoomModule) => {
+        const PinchZoom = PinchZoomModule.default
+        
+        // Criar um container para a imagem
+        const container = document.createElement('div')
+        container.className = 'pinch-zoom-container'
+        container.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        `
+        
+        // Clonar a imagem para o PinchZoom
+        const clonedImage = imageRef.current.cloneNode(true) as HTMLImageElement
+        clonedImage.style.cssText = `
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+        `
+        
+        container.appendChild(clonedImage)
+        
+        // Inserir o container antes do cropper
+        if (cropperRef.current) {
+          cropperRef.current.appendChild(container)
+          
+          // Inicializar PinchZoom
+          pinchZoomRef.current = new PinchZoom(container, {
+            tapZoomFactor: 2,
+            zoomOutFactor: 0.8,
+            animationDuration: 300,
+            maxZoom: 3,
+            minZoom: 0.5,
+            lockDragAxis: false,
+            use2d: true,
+            verticalPan: true,
+            horizontalPan: true
+          })
 
-      // Listener para atualizar o zoom do cropper baseado no pinch
-      pinchZoomRef.current.addZoomListener((zoomValue: number) => {
-        setZoom(zoomValue)
+          // Listener para atualizar o zoom do cropper
+          pinchZoomRef.current.addZoomListener((zoomValue: number) => {
+            setZoom(zoomValue)
+          })
+
+          // Listener para atualizar a posição do crop
+          pinchZoomRef.current.addDragListener((offsetX: number, offsetY: number) => {
+            setCrop(prev => ({
+              x: prev.x + offsetX,
+              y: prev.y + offsetY
+            }))
+          })
+        }
+      }).catch(error => {
+        console.error('Erro ao carregar PinchZoom:', error)
       })
     }
 
@@ -52,7 +99,7 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
         pinchZoomRef.current = null
       }
     }
-  }, [])
+  }, [imageUrl])
 
   const createImage = (url: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
@@ -176,9 +223,25 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
             <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ height: '400px' }}>
               <div 
                 ref={cropperRef}
-                className="w-full h-full"
+                className="w-full h-full relative"
                 style={{ touchAction: 'none' }}
               >
+                {/* Imagem oculta para o Cropper */}
+                <img
+                  ref={imageRef}
+                  src={imageUrl}
+                  alt="Logo"
+                  style={{ 
+                    position: 'absolute',
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
+                
+                {/* Cropper visível */}
                 <Cropper
                   image={imageUrl}
                   crop={crop}
