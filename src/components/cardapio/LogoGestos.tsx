@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { Star } from 'lucide-react'
 import { useGesture } from '@use-gesture/react'
-import { motion, useSpring, useMotionValue } from 'framer-motion'
+import { motion, useSpring, useMotionValue, AnimatePresence } from 'framer-motion'
 
-interface LogoProps {
+interface LogoGestosProps {
   logoUrl?: string
   borderColor: string
   storeName?: string
@@ -15,7 +15,7 @@ interface LogoProps {
   corNome?: string
 }
 
-export function Logo({ 
+export function LogoGestos({ 
   logoUrl, 
   borderColor, 
   storeName, 
@@ -25,54 +25,77 @@ export function Logo({
   horarioFuncionamentoInicio = '08:00',
   horarioFuncionamentoFim = '18:00',
   corNome = '#1A1A1A'
-}: LogoProps) {
+}: LogoGestosProps) {
   const [imageError, setImageError] = useState(false)
+  const [isInteracting, setIsInteracting] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   
   // Motion values para gestos
   const scale = useMotionValue(1)
+  const rotate = useMotionValue(0)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   
-  // Spring animations para movimento suave
+  // Spring animations
   const scaleSpring = useSpring(scale, { 
-    stiffness: 300, 
-    damping: 30,
+    stiffness: 400, 
+    damping: 25,
     min: 0.5,
     max: 3
   })
-  const xSpring = useSpring(x, { 
+  const rotateSpring = useSpring(rotate, { 
     stiffness: 300, 
+    damping: 30 
+  })
+  const xSpring = useSpring(x, { 
+    stiffness: 400, 
     damping: 30 
   })
   const ySpring = useSpring(y, { 
-    stiffness: 300, 
+    stiffness: 400, 
     damping: 30 
   })
 
-  // Configurar gestos com @use-gesture/react
+  // Configurar gestos avançados
   const bind = useGesture({
-    // Pinch-to-zoom (zoom com dois dedos)
-    onPinch: ({ offset: [d] }) => {
+    // Pinch-to-zoom com rotação
+    onPinch: ({ 
+      offset: [d, a], 
+      origin: [ox, oy],
+      memo 
+    }) => {
       const newScale = 1 + d / 200
       scale.set(Math.min(Math.max(0.5, newScale), 3))
+      rotate.set(a)
+      return memo
     },
     
-    // Pan/Arrastar (com um dedo)
-    onDrag: ({ offset: [dx, dy], memo }) => {
-      // Limites de arrasto baseados no container
-      const maxDrag = 50
+    // Pan com inércia
+    onDrag: ({ 
+      offset: [dx, dy], 
+      velocity: [vx, vy],
+      direction: [dirX, dirY],
+      memo 
+    }) => {
+      // Limites de arrasto dinâmicos baseados no zoom
+      const maxDrag = 50 * scale.get()
       x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
       y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
       return memo
     },
     
-    // Wheel zoom (desktop)
-    onWheel: ({ event, delta: [dy] }) => {
+    // Wheel zoom com momentum
+    onWheel: ({ event, delta: [dy], direction: [dirY] }) => {
       event.preventDefault()
       const currentScale = scale.get()
-      const newScale = currentScale - dy * 0.001
+      const zoomSpeed = dirY > 0 ? 0.002 : 0.001
+      const newScale = currentScale - dy * zoomSpeed
       scale.set(Math.min(Math.max(0.5, newScale), 3))
+    },
+    
+    // Hover effects
+    onHover: ({ hovering }) => {
+      setIsInteracting(hovering)
     },
     
     // Reset com duplo clique
@@ -80,31 +103,60 @@ export function Logo({
       scale.set(1)
       x.set(0)
       y.set(0)
+      rotate.set(0)
+    },
+    
+    // Toque longo para reset
+    onPointerDown: ({ event }) => {
+      const timer = setTimeout(() => {
+        scale.set(1)
+        x.set(0)
+        y.set(0)
+        rotate.set(0)
+      }, 500)
+      
+      const cancel = () => clearTimeout(timer)
+      event.target.addEventListener('pointerup', cancel, { once: true })
+      event.target.addEventListener('pointerleave', cancel, { once: true })
     }
   }, {
-    // Configurações de drag
+    // Configurações avançadas
     drag: {
       filterTaps: true,
-      bounds: { left: -50, right: 50, top: -50, bottom: 50 }
+      bounds: { left: -100, right: 100, top: -100, bottom: 100 },
+      rubberband: true,
+      bounceStiffness: 300,
+      bounceDamping: 30
     },
-    // Configurações de pinch
     pinch: {
-      scaleBounds: { min: 0.5, max: 3 }
+      scaleBounds: { min: 0.5, max: 3 },
+      angleBounds: { min: -180, max: 180 }
     }
   })
 
-  // Limitar o tamanho do nome da loja
+  // Auto-reset quando não está interagindo
+  useEffect(() => {
+    if (!isInteracting) {
+      const timer = setTimeout(() => {
+        scale.set(1)
+        x.set(0)
+        y.set(0)
+        rotate.set(0)
+      }, 2000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [isInteracting, scale, x, y, rotate])
+
+  // Resto do código permanece o mesmo...
   const getDisplayName = (name?: string): string => {
     if (!name) return 'Doces da Vovó'
-    
     if (name.length > 30) {
       return name.substring(0, 30) + '...'
     }
-    
     return name
   }
 
-  // Renderiza estrelas based na avaliação
   const renderStars = (rating: number) => {
     const stars = []
     const fullStars = Math.floor(rating)
@@ -203,7 +255,7 @@ export function Logo({
             overflow: 'hidden'
           }}
         >
-          {/* Container da logo com gestos */}
+          {/* Container da logo com gestos avançados */}
           <div 
             ref={containerRef}
             style={{
@@ -215,7 +267,7 @@ export function Logo({
               justifyContent: 'center',
               overflow: 'hidden',
               backgroundColor: 'white',
-              cursor: 'grab',
+              cursor: isInteracting ? 'grabbing' : 'grab',
               touchAction: 'none'
             }}
             {...bind()}
@@ -230,11 +282,11 @@ export function Logo({
                 justifyContent: 'center',
                 overflow: 'hidden',
                 scale: scaleSpring,
+                rotate: rotateSpring,
                 x: xSpring,
                 y: ySpring,
-                cursor: 'grab'
+                cursor: 'inherit'
               }}
-              whileTap={{ cursor: 'grabbing' }}
             >
               {hasValidLogo ? (
                 <img 
@@ -248,20 +300,14 @@ export function Logo({
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
                     MozUserSelect: 'none',
-                    msUserSelect: 'none'
+                    msUserSelect: 'none',
+                    pointerEvents: 'none'
                   }}
-                  onError={() => {
-                    console.log('Erro ao carregar imagem:', logoUrl)
-                    setImageError(true)
-                  }}
-                  onLoad={() => {
-                    console.log('Imagem carregada com sucesso:', logoUrl)
-                    setImageError(false)
-                  }}
+                  onError={() => setImageError(true)}
+                  onLoad={() => setImageError(false)}
                   draggable={false}
                 />
               ) : (
-                // Placeholder quando não há logo
                 <div style={{
                   width: '144px',
                   height: '144px',
@@ -278,10 +324,25 @@ export function Logo({
               )}
             </motion.div>
           </div>
+          
+          {/* Indicadores visuais de interação */}
+          <AnimatePresence>
+            {isInteracting && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 rounded-full border-2 border-purple-400 pointer-events-none"
+                style={{
+                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)'
+                }}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
       
-      {/* Título and description of store outside card */}
+      {/* Resto do componente permanece igual */}
       <div style={{ textAlign: 'center', marginTop: '20px', padding: '0 20px' }}>
         <h2 style={{ 
           fontSize: '28px',
@@ -297,7 +358,6 @@ export function Logo({
           {displayName}
         </h2>
         
-        {/* Rating below name */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
             {renderStars(avaliacaoMedia)}
@@ -307,7 +367,6 @@ export function Logo({
           </span>
         </div>
         
-        {/* Store status below rating */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
           <div>
             <p style={{ 
@@ -324,7 +383,6 @@ export function Logo({
           </div>
         </div>
         
-        {/* Store Description */}
         <p style={{ 
           fontSize: '14px', 
           color: '#6b7280', 
