@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { X, Plus } from 'lucide-react'
+import { X, ChevronDown, Check } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 const allCategories = [
@@ -17,19 +17,6 @@ const allCategories = [
   'Tortas Salgadas'
 ]
 
-const categoryIcons: Record<string, string> = {
-  'Bolo Simples': '🎂',
-  'Bolo Decorado': '🎂',
-  'Bolos Caseiros': '🎂',
-  'Bolo no Pote': '🍮',
-  'Brigadeiro Gourmet': '🍫',
-  'Doces Finos': '🧁',
-  'Pipoca Gourmet': '🍿',
-  'Topos de Bolos': '🎂',
-  'Tortas Doces': '🥧',
-  'Tortas Salgadas': '🥐'
-}
-
 interface CategorySettingsProps {
   mainCategories: string[]
   onMainCategoriesChange: (categories: string[]) => void
@@ -37,6 +24,8 @@ interface CategorySettingsProps {
 }
 
 export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
+  const [isOpen, setIsOpen] = useState(false)
+
   const toggleMainCategory = (category: string) => {
     const newCategories = [...mainCategories]
     
@@ -52,6 +41,11 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return
     }
     
+    onMainCategoriesChange(newCategories)
+  }
+
+  const removeCategory = (category: string) => {
+    const newCategories = mainCategories.filter(c => c !== category)
     onMainCategoriesChange(newCategories)
   }
 
@@ -75,72 +69,87 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               </h3>
             </div>
             
-            {mainCategories.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+            {mainCategories.length > 0 ? (
+              <div className="space-y-2">
                 {mainCategories.map((category) => (
                   <div 
                     key={category}
-                    className="flex items-center gap-2 bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-medium"
+                    className="flex items-center justify-between bg-green-50 border border-green-200 px-4 py-3 rounded-lg"
                   >
-                    <span>{categoryIcons[category] || '🧁'}</span>
-                    <span>{category}</span>
+                    <span className="text-green-800 font-medium">{category}</span>
                     <button
-                      onClick={() => toggleMainCategory(category)}
-                      className="ml-1 text-green-600 hover:text-green-800"
+                      onClick={() => removeCategory(category)}
+                      className="text-green-600 hover:text-green-800 transition-colors"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
               </div>
+            ) : (
+              <div className="text-gray-500 text-center py-4 border-2 border-dashed border-gray-200 rounded-lg">
+                Nenhuma categoria selecionada
+              </div>
             )}
           </div>
 
-          {/* Todas as Categorias Disponíveis */}
+          {/* Lista Suspensa de Categorias */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
-              Todas as Categorias Disponíveis
+              Adicionar Categorias
             </h3>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {allCategories.map((category) => {
-                const isSelected = mainCategories.includes(category)
-                const canSelect = mainCategories.length < 3 || isSelected
-                
-                return (
-                  <button
-                    key={category}
-                    onClick={() => toggleMainCategory(category)}
-                    disabled={!canSelect}
-                    className={`p-4 rounded-xl border-2 transition-all ${
-                      isSelected 
-                        ? 'border-green-500 bg-green-50 shadow-md' 
-                        : canSelect
-                          ? 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
-                          : 'border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed'
-                    }`}
-                  >
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">
-                        {categoryIcons[category] || '🧁'}
-                      </div>
-                      <div className="text-sm font-medium text-gray-800">
-                        {category}
-                      </div>
-                      {isSelected && (
-                        <div className="mt-2 text-green-600 text-xs font-medium">
-                          ✓ Selecionado
-                        </div>
-                      )}
-                      {!canSelect && !isSelected && (
-                        <div className="mt-2 text-gray-400 text-xs">
-                          Máximo 3 categorias
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                )
-              })}
+            <div className="relative">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 border-2 border-gray-300 rounded-lg bg-white hover:border-gray-400 transition-colors"
+                disabled={mainCategories.length >= 3}
+              >
+                <span className="text-gray-700">
+                  {mainCategories.length >= 3 
+                    ? 'Máximo de categorias atingido' 
+                    : 'Clique para selecionar categorias'
+                  }
+                </span>
+                <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isOpen && mainCategories.length < 3 && (
+                <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {allCategories.map((category) => {
+                    const isSelected = mainCategories.includes(category)
+                    const canSelect = mainCategories.length < 3 || isSelected
+                    
+                    return (
+                      <button
+                        key={category}
+                        onClick={() => {
+                          toggleMainCategory(category)
+                          if (mainCategories.length < 2 || isSelected) {
+                            setIsOpen(false)
+                          }
+                        }}
+                        disabled={!canSelect}
+                        className={`w-full px-4 py-3 text-left flex items-center justify-between transition-colors ${
+                          isSelected 
+                            ? 'bg-green-50 text-green-800 border-b border-green-100' 
+                            : canSelect
+                              ? 'hover:bg-gray-50 text-gray-700 border-b border-gray-100'
+                              : 'bg-gray-50 text-gray-400 cursor-not-allowed border-b border-gray-100'
+                        }`}
+                      >
+                        <span>{category}</span>
+                        {isSelected && (
+                          <Check className="w-4 h-4 text-green-600" />
+                        )}
+                        {!canSelect && !isSelected && (
+                          <span className="text-xs text-gray-400">Máx. 3</span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
