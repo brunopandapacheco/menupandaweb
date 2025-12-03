@@ -37,9 +37,7 @@ export function Logo({
   // Spring animations para movimento suave
   const scaleSpring = useSpring(scale, { 
     stiffness: 300, 
-    damping: 30,
-    min: 0.5,
-    max: 3
+    damping: 30
   })
   const xSpring = useSpring(x, { 
     stiffness: 300, 

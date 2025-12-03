@@ -39,9 +39,7 @@ export function LogoGestos({
   // Spring animations
   const scaleSpring = useSpring(scale, { 
     stiffness: 400, 
-    damping: 25,
-    min: 0.5,
-    max: 3
+    damping: 25
   })
   const rotateSpring = useSpring(rotate, { 
     stiffness: 300, 
