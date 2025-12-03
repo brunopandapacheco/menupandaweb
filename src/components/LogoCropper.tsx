@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { X, Check } from 'lucide-react'
-import { useGesture } from '@use-gesture/react'
 import { motion, useSpring, useMotionValue, AnimatePresence } from 'framer-motion'
+import { useGesture } from '@use-gesture/react'
 
 interface LogoCropperProps {
   imageFile: File
@@ -17,111 +17,129 @@ export function LogoCropper({
   circularCrop = true
 }: LogoCropperProps) {
   const [imageUrl, setImageUrl] = useState<string>('')
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
-
+  const [imageLoaded, setImageLoaded] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  // Motion
-  const scale = useMotionValue(1)
+  // Motion values para apenas posicionamento básico
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  const scaleSpring = useSpring(1, { stiffness: 300, damping: 30 })
-  const xSpring = useSpring(0, { stiffness: 300, damping: 30 })
-  const ySpring = useSpring(0, { stiffness: 300, damping: 30 })
+  // Spring animations
+  const xSpring = useSpring(0, { 
+    stiffness: 300, 
+    damping: 30 
+  })
+  const ySpring = useSpring(0, { 
+    stiffness: 300, 
+    damping: 30 
+  })
 
+  // Sync motion values with springs
   useEffect(() => {
-    const unsubScale = scale.on('change', (v) => scaleSpring.set(v))
-    const unsubX = x.on('change', (v) => xSpring.set(v))
-    const unsubY = y.on('change', (v) => ySpring.set(v))
+    const unsubscribeX = x.on('change', (v) => xSpring.set(v))
+    const unsubscribeY = y.on('change', (v) => ySpring.set(v))
+
     return () => {
-      unsubScale()
-      unsubX()
-      unsubY()
+      unsubscribeX()
+      unsubscribeY()
     }
-  }, [scale, x, y])
+  }, [x, y, xSpring, ySpring])
 
-  // Load URL
+  // Carregar imagem
   useEffect(() => {
-    scale.set(1)
+    // Resetar posição antes de carregar nova imagem
     x.set(0)
     y.set(0)
+
     const url = URL.createObjectURL(imageFile)
     setImageUrl(url)
     return () => URL.revokeObjectURL(url)
-  }, [imageFile])
+  }, [imageFile, x, y])
 
-  // Ajuste inicial da imagem grande
+  // Quando imagem carregar
   const handleImageLoad = useCallback(() => {
-    if (!imageRef.current || !containerRef.current) return
-    const { naturalWidth, naturalHeight } = imageRef.current
+    if (imageRef.current) {
+      setImageLoaded(true)
+    }
+  }, [])
 
-    const containerSize = circularCrop ? 240 : 400
-
-    const scaleX = containerSize / naturalWidth
-    const scaleY = containerSize / naturalHeight
-    const initialScale = Math.max(scaleX, scaleY)
-
-    scale.set(initialScale)
-    x.set(0)
-    y.set(0)
-  }, [circularCrop])
-
-  // Gestos básicos
+  // Configurar gestos - apenas arrastar básico
   const bind = useGesture({
-    onPinch: ({ offset: [d] }) => {
-      const s = scale.get() + d / 200
-      scale.set(Math.min(Math.max(0.5, s), 3))
-    },
-    onDrag: ({ offset: [dx, dy] }) => {
-      const s = scale.get()
-      const maxDrag = 200 * s
+    // Pan/Arrastar - sem zoom
+    onDrag: ({ 
+      offset: [dx, dy], 
+      memo 
+    }) => {
+      // Limites de arrasto simples
+      const maxDrag = 50
       x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
       y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
+      return memo
+    }
+  }, {
+    drag: {
+      filterTaps: true,
+      bounds: { left: -50, right: 50, top: -50, bottom: 50 }
     }
   })
 
+  // Função para cortar a imagem
   const performCrop = useCallback(() => {
-    if (!canvasRef.current || !imageRef.current) return
+    if (!canvasRef.current || !imageRef.current || !containerRef.current) return
 
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const cropW = circularCrop ? 240 : 600
-    const cropH = circularCrop ? 240 : 300
+    // Tamanho do crop
+    const cropSize = circularCrop ? 240 : 600
+    canvas.width = cropSize
+    canvas.height = circularCrop ? 240 : 300
 
-    canvas.width = cropW
-    canvas.height = cropH
-
+    // Setup do canvas para circular crop
     if (circularCrop) {
       ctx.save()
       ctx.beginPath()
-      ctx.arc(cropW / 2, cropH / 2, cropW / 2, 0, Math.PI * 2)
+      ctx.arc(cropSize / 2, cropSize / 2, cropSize / 2, 0, Math.PI * 2)
       ctx.clip()
     }
 
-    const s = scale.get()
-    const dx = x.get()
-    const dy = y.get()
+    // Calcular posição
+    const currentX = x.get()
+    const currentY = y.get()
 
-    ctx.translate(cropW / 2, cropH / 2)
-    ctx.scale(s, s)
-
+    // Aplicar transformações no canvas
+    ctx.translate(cropSize / 2, circularCrop ? cropSize / 2 : 150)
+    
+    // Desenhar imagem com dimensões fixas
+    const imgSize = circularCrop ? 300 : 400
     ctx.drawImage(
-      imageRef.current,
-      -imageSize.width / 2 + dx / s,
-      -imageSize.height / 2 + dy / s,
-      imageSize.width,
-      imageSize.height
+      imageRef.current, 
+      -imgSize / 2 + currentX, 
+      -imgSize / 2 + currentY,
+      imgSize,
+      circularCrop ? imgSize : imgSize * 0.75
     )
 
-    if (circularCrop) ctx.restore()
+    if (circularCrop) {
+      ctx.restore()
+    }
 
-    canvas.toBlob((blob) => blob && onCropComplete(blob), 'image/jpeg', 0.9)
-  }, [scale, x, y, imageSize, circularCrop, onCropComplete])
+    // Converter para blob
+    canvas.toBlob((blob) => {
+      if (blob) {
+        onCropComplete(blob)
+      }
+    }, 'image/jpeg', 0.9)
+  }, [x, y, circularCrop, onCropComplete])
+
+  // Função para resetar
+  const handleReset = () => {
+    x.set(0)
+    y.set(0)
+  }
 
   return (
     <AnimatePresence>
@@ -129,41 +147,58 @@ export function LogoCropper({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
       >
         <div className="relative w-full max-w-md">
-          
-          {/* Fechar */}
+          {/* Botão de fechar */}
           <button
             onClick={onCancel}
-            className="absolute -top-10 right-0 text-white hover:text-gray-300"
+            className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10"
           >
             <X className="w-5 h-5" />
           </button>
 
-          {/* Container */}
           <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
-            <div className="p-4 bg-gradient-to-r from-purple-600 to-pink-600 text-center text-white">
-              <h2 className="font-bold text-lg">Ajustar Logo</h2>
+            {/* Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
+              <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
+              <p className="text-center text-white/80 text-sm mt-1">
+                Arraste para posicionar a imagem
+              </p>
             </div>
 
+            {/* Área do editor */}
             <div className="p-4 bg-gray-50">
-              <div
+              <div 
                 ref={containerRef}
                 className="relative mx-auto"
-                style={{
+                style={{ 
                   width: circularCrop ? '240px' : '400px',
                   height: circularCrop ? '240px' : '200px'
                 }}
               >
-                <div
-                  className={`absolute inset-0 border-3 border-purple-400 pointer-events-none ${
-                    circularCrop ? 'rounded-full' : 'rounded-lg'
-                  }`}
-                  style={{ boxShadow: '0 0 0 9999px rgba(0,0,0,0.4)', zIndex: 10 }}
+                {/* Máscara de crop */}
+                <div 
+                  className={`
+                    absolute inset-0 border-3 border-purple-400 pointer-events-none
+                    ${circularCrop ? 'rounded-full' : 'rounded-lg'}
+                  `}
+                  style={{
+                    boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.4)',
+                    zIndex: 10
+                  }}
                 />
 
-                <div
+                {/* Linhas guia */}
+                {circularCrop && (
+                  <>
+                    <div className="absolute top-1/2 left-0 right-0 h-px bg-white/30 pointer-events-none z-20" />
+                    <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/30 pointer-events-none z-20" />
+                  </>
+                )}
+
+                {/* Container da imagem com gestos - apenas arrastar */}
+                <div 
                   className="absolute inset-0 overflow-hidden"
                   style={{
                     ...(circularCrop ? { borderRadius: '50%' } : { borderRadius: '12px' }),
@@ -174,49 +209,78 @@ export function LogoCropper({
                   <motion.div
                     style={{
                       position: 'absolute',
-                      inset: 0,
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
                       margin: 'auto',
-                      width: imageSize.width + 'px',
-                      height: imageSize.height + 'px',
+                      width: circularCrop ? '300px' : '400px',
+                      height: '300px',
                       x: xSpring,
                       y: ySpring,
-                      scale: scaleSpring,
-                      transformOrigin: 'center'
                     }}
                   >
                     <img
                       ref={imageRef}
                       src={imageUrl}
+                      alt="Preview"
                       className="w-full h-full object-cover"
+                      style={{ userSelect: 'none' }}
+                      onLoad={handleImageLoad}
                       draggable={false}
-                      onLoad={(e) => {
-                        const img = e.currentTarget
-                        setImageSize({
-                          width: img.naturalWidth,
-                          height: img.naturalHeight
-                        })
-                        handleImageLoad()
-                      }}
                     />
                   </motion.div>
                 </div>
               </div>
 
-              <canvas ref={canvasRef} className="hidden" />
+              {/* Canvas oculto para crop */}
+              <canvas
+                ref={canvasRef}
+                className="hidden"
+                width={circularCrop ? 240 : 400}
+                height={circularCrop ? 240 : 200}
+              />
             </div>
 
-            {/* Rodapé */}
+            {/* Controles */}
             <div className="bg-white p-4 border-t">
-              <button
-                onClick={performCrop}
-                className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg flex items-center justify-center gap-1"
-              >
-                <Check className="w-4 h-4" />
-                Salvar
-              </button>
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  onClick={onCancel}
+                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium text-sm"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  onClick={handleReset}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium text-sm"
+                >
+                  Reset
+                </button>
+
+                <button
+                  onClick={performCrop}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-1 text-sm"
+                >
+                  <Check className="w-3 h-3" />
+                  Salvar
+                </button>
+              </div>
+
+              {/* Dicas simplificadas */}
+              <div className="mt-3 flex justify-center gap-3 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Arrastar: posicionar
+                </span>
+                <span className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Reset: centralizar
+                </span>
+              </div>
             </div>
           </div>
-
         </div>
       </motion.div>
     </AnimatePresence>
