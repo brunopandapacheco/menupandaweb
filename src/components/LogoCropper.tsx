@@ -32,9 +32,7 @@ export function LogoCropper({
   // Spring animations
   const scaleSpring = useSpring(1, { 
     stiffness: 300, 
-    damping: 30,
-    min: 0.5,
-    max: 3
+    damping: 30
   })
   const rotateSpring = useSpring(0, { 
     stiffness: 200, 
@@ -49,13 +47,13 @@ export function LogoCropper({
     damping: 30 
   })
 
-  // Sync springs with motion values
+  // Sync motion values with springs
   useEffect(() => {
-    const unsubscribeScale = scale.onChange(v => scaleSpring.set(v))
-    const unsubscribeRotate = rotate.onChange(v => rotateSpring.set(v))
-    const unsubscribeX = x.onChange(v => xSpring.set(v))
-    const unsubscribeY = y.onChange(v => ySpring.set(v))
-    
+    const unsubscribeScale = scale.on('change', (v) => scaleSpring.set(v))
+    const unsubscribeRotate = rotate.on('change', (v) => rotateSpring.set(v))
+    const unsubscribeX = x.on('change', (v) => xSpring.set(v))
+    const unsubscribeY = y.on('change', (v) => ySpring.set(v))
+
     return () => {
       unsubscribeScale()
       unsubscribeRotate()
