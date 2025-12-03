@@ -147,10 +147,7 @@ export function LogoCropper({
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const container = containerRef.current
-    const containerRect = container.getBoundingClientRect()
-    
-    // Tamanho do crop - círculo menor e mais adequado
+    // Usar exatamente o mesmo tamanho do container para garantir alinhamento
     const cropSize = circularCrop ? 240 : 600
     canvas.width = cropSize
     canvas.height = circularCrop ? 240 : 300
@@ -163,20 +160,19 @@ export function LogoCropper({
       ctx.clip()
     }
 
-    // Calcular transformações
+    // Calcular transformações EXATAMENTE como no preview
     const currentScale = scale.get()
     const currentRotate = rotate.get()
     const currentX = x.get()
     const currentY = y.get()
 
-    // Aplicar transformações no canvas
+    // Aplicar transformações no canvas - EXATAMENTE como no preview
     ctx.translate(cropSize / 2, circularCrop ? cropSize / 2 : 150)
     ctx.rotate((currentRotate * Math.PI) / 180)
     ctx.scale(currentScale, currentScale)
     
-    // Desenhar imagem centralizada - tamanho base para preenchimento
-    const baseSize = Math.max(imageSize.width, imageSize.height) || 200
-    const imgSize = circularCrop ? baseSize : 400
+    // Desenhar imagem com as MESMAS dimensões do preview
+    const imgSize = circularCrop ? 300 : 400
     ctx.drawImage(
       imageRef.current, 
       -imgSize / 2 + currentX / currentScale, 
@@ -195,7 +191,7 @@ export function LogoCropper({
         onCropComplete(blob)
       }
     }, 'image/jpeg', 0.9)
-  }, [scale, rotate, x, y, circularCrop, onCropComplete, imageSize])
+  }, [scale, rotate, x, y, circularCrop, onCropComplete])
 
   // Função para resetar
   const handleReset = () => {
