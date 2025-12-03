@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { X, Check } from 'lucide-react'
+import { X, RotateCw, Check } from 'lucide-react'
 import { useGesture } from '@use-gesture/react'
 import { motion, useSpring, useMotionValue, AnimatePresence } from 'framer-motion'
 
@@ -10,9 +10,9 @@ interface LogoCropperProps {
   circularCrop?: boolean
 }
 
-export function LogoCropper({
-  imageFile,
-  onCropComplete,
+export function LogoCropper({ 
+  imageFile, 
+  onCropComplete, 
   onCancel,
   circularCrop = true
 }: LogoCropperProps) {
@@ -23,49 +23,55 @@ export function LogoCropper({
   const imageRef = useRef<HTMLImageElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  // Motion values
+  // Motion values para gestos
   const scale = useMotionValue(1)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  const scaleSpring = useSpring(scale, { stiffness: 300, damping: 30 })
-  const xSpring = useSpring(x, { stiffness: 300, damping: 30 })
-  const ySpring = useSpring(y, { stiffness: 300, damping: 30 })
+  // Spring animations
+  const scaleSpring = useSpring(1, { stiffness: 300, damping: 30 })
+  const xSpring = useSpring(0, { stiffness: 300, damping: 30 })
+  const ySpring = useSpring(0, { stiffness: 300, damping: 30 })
 
-  // Resetar transformações ao trocar imagem
+  // Sincronizar motion values com springs
+  useEffect(() => {
+    const unsubScale = scale.on('change', (v) => scaleSpring.set(v))
+    const unsubX = x.on('change', (v) => xSpring.set(v))
+    const unsubY = y.on('change', (v) => ySpring.set(v))
+    return () => {
+      unsubScale()
+      unsubX()
+      unsubY()
+    }
+  }, [scale, x, y, scaleSpring, xSpring, ySpring])
+
+  // Carregar imagem
   useEffect(() => {
     scale.set(1)
     x.set(0)
     y.set(0)
-
     const url = URL.createObjectURL(imageFile)
     setImageUrl(url)
     return () => URL.revokeObjectURL(url)
   }, [imageFile, scale, x, y])
 
-  // Quando imagem carregar, calcular scale inicial para caber no container
+  // Quando imagem carregar
   const handleImageLoad = useCallback(() => {
     if (!imageRef.current || !containerRef.current) return
+    const { naturalWidth, naturalHeight } = imageRef.current
+    const containerSize = circularCrop ? 240 : 400
 
-    const img = imageRef.current
-    const container = containerRef.current
-    const containerSize = circularCrop ? container.offsetWidth : container.offsetWidth
-
-    // Ajusta scale para que a imagem ocupe quase todo o crop
-    const scaleX = containerSize / img.naturalWidth
-    const scaleY = containerSize / img.naturalHeight
-    const initialScale = Math.min(scaleX, scaleY)
-
+    // Preencher todo o crop (Math.max) e centralizar
+    const scaleX = containerSize / naturalWidth
+    const scaleY = containerSize / naturalHeight
+    const initialScale = Math.max(scaleX, scaleY)
     scale.set(initialScale)
     x.set(0)
     y.set(0)
 
-    setImageSize({
-      width: img.naturalWidth,
-      height: img.naturalHeight
-    })
+    setImageSize({ width: naturalWidth, height: naturalHeight })
     setImageLoaded(true)
-  }, [scale, x, y, circularCrop])
+  }, [circularCrop, scale, x, y])
 
   // Gestos
   const bind = useGesture({
@@ -76,7 +82,7 @@ export function LogoCropper({
     },
     onDrag: ({ offset: [dx, dy] }) => {
       const currentScale = scale.get()
-      const maxDrag = 1000
+      const maxDrag = 100 * currentScale
       x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
       y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
     },
@@ -92,7 +98,10 @@ export function LogoCropper({
       x.set(0)
       y.set(0)
     }
-  }, { drag: { filterTaps: true }, pinch: { scaleBounds: { min: 0.5, max: 3 } } })
+  }, {
+    drag: { filterTaps: true },
+    pinch: { scaleBounds: { min: 0.5, max: 3 } }
+  })
 
   // Função de crop
   const performCrop = useCallback(() => {
@@ -102,7 +111,7 @@ export function LogoCropper({
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const cropSize = circularCrop ? 240 : 400
+    const cropSize = circularCrop ? 240 : 600
     canvas.width = cropSize
     canvas.height = circularCrop ? 240 : 300
 
@@ -117,7 +126,6 @@ export function LogoCropper({
     const currentX = x.get()
     const currentY = y.get()
 
-    // Centraliza imagem e aplica transformações exatas
     ctx.translate(cropSize / 2, circularCrop ? cropSize / 2 : 150)
     ctx.scale(currentScale, currentScale)
 
@@ -132,7 +140,7 @@ export function LogoCropper({
 
     if (circularCrop) ctx.restore()
 
-    canvas.toBlob(blob => {
+    canvas.toBlob((blob) => {
       if (blob) onCropComplete(blob)
     }, 'image/jpeg', 0.9)
   }, [scale, x, y, circularCrop, onCropComplete])
@@ -152,7 +160,10 @@ export function LogoCropper({
         className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
       >
         <div className="relative w-full max-w-md">
-          <button onClick={onCancel} className="absolute -top-10 right-0 text-white hover:text-gray-300 z-10">
+          <button
+            onClick={onCancel}
+            className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10"
+          >
             <X className="w-5 h-5" />
           </button>
 
@@ -165,50 +176,63 @@ export function LogoCropper({
             </div>
 
             <div className="p-4 bg-gray-50">
-              <div
+              <div 
                 ref={containerRef}
                 className="relative mx-auto"
-                style={{ width: circularCrop ? '240px' : '400px', height: circularCrop ? '240px' : '200px' }}
+                style={{ 
+                  width: circularCrop ? '240px' : '400px',
+                  height: circularCrop ? '240px' : '200px'
+                }}
               >
-                <div
-                  className={`absolute inset-0 border-3 border-purple-400 pointer-events-none ${circularCrop ? 'rounded-full' : 'rounded-lg'}`}
-                  style={{ boxShadow: '0 0 0 9999px rgba(0,0,0,0.4)', zIndex: 10 }}
+                <div 
+                  className={`absolute inset-0 border-3 border-purple-400 pointer-events-none
+                    ${circularCrop ? 'rounded-full' : 'rounded-lg'}`}
+                  style={{ boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.4)', zIndex: 10 }}
                 />
+
                 {circularCrop && (
                   <>
-                    <div className="absolute top-1/2 left-0 right-0 h-px bg-white/30 z-20" />
-                    <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/30 z-20" />
+                    <div className="absolute top-1/2 left-0 right-0 h-px bg-white/30 pointer-events-none z-20" />
+                    <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/30 pointer-events-none z-20" />
                   </>
                 )}
 
-                <div
+                <div 
                   className="absolute inset-0 overflow-hidden"
-                  style={{ borderRadius: circularCrop ? '50%' : '12px', touchAction: 'none' }}
+                  style={{
+                    ...(circularCrop ? { borderRadius: '50%' } : { borderRadius: '12px' }),
+                    touchAction: 'none'
+                  }}
                   {...bind()}
                 >
                   <motion.div
                     style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      margin: 'auto',
+                      width: circularCrop ? '300px' : '400px',
+                      height: '300px',
                       x: xSpring,
                       y: ySpring,
                       scale: scaleSpring,
-                      translateX: '-50%',
-                      translateY: '-50%'
                     }}
                   >
                     <img
                       ref={imageRef}
                       src={imageUrl}
                       alt="Preview"
+                      className="w-full h-full object-cover"
+                      style={{ userSelect: 'none' }}
                       onLoad={handleImageLoad}
                       draggable={false}
-                      style={{ userSelect: 'none' }}
                     />
                   </motion.div>
                 </div>
               </div>
+
               <canvas
                 ref={canvasRef}
                 className="hidden"
@@ -219,22 +243,38 @@ export function LogoCropper({
 
             <div className="bg-white p-4 border-t">
               <div className="flex items-center justify-center gap-2">
-                <button onClick={onCancel} className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+                <button
+                  onClick={onCancel}
+                  className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium text-sm"
+                >
                   Cancelar
                 </button>
-                <button onClick={handleReset} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+
+                <button
+                  onClick={handleReset}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium flex items-center gap-1 text-sm"
+                >
+                  <RotateCw className="w-3 h-3" />
                   Reset
                 </button>
-                <button onClick={performCrop} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg flex items-center justify-center gap-1 text-sm">
-                  <Check className="w-3 h-3" /> Salvar
+
+                <button
+                  onClick={performCrop}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-1 text-sm"
+                >
+                  <Check className="w-3 h-3" />
+                  Salvar
                 </button>
               </div>
+
               <div className="mt-3 flex justify-center gap-3 text-xs text-gray-500">
                 <span className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" /> Pinça: zoom
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Pinça: zoom
                 </span>
                 <span className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" /> Arrastar: mover
+                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+                  Arrastar: mover
                 </span>
               </div>
             </div>
