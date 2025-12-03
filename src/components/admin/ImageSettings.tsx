@@ -81,6 +81,92 @@ export function ImageSettings({
     setShowCropper(false)
 
     try {
+      console.log('
+
+<dyad-write path="src/components/admin/ImageSettings.tsx" description="Simplify image upload interface with Instagram-style cropping">
+import { useState } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
+import { Upload, Image as ImageIcon } from 'lucide-react'
+import { LogoCropper } from '@/components/LogoCropper'
+import { showSuccess, showError } from '@/utils/toast'
+import { supabaseService } from '@/services/supabase'
+
+interface ImageSettingsProps {
+  logoUrl: string
+  backgroundImageUrl?: string
+  useBackgroundImage?: boolean
+  onLogoUrlChange: (url: string) => void
+  onBackgroundImageUrlChange: (url: string) => void
+  onUseBackgroundImageChange: (use: boolean) => void
+  onSaveLogo: (url: string) => void
+  onSaveBackgroundImage: (url: string) => void
+}
+
+export function ImageSettings({ 
+  logoUrl, 
+  backgroundImageUrl,
+  useBackgroundImage = false,
+  onLogoUrlChange, 
+  onBackgroundImageUrlChange,
+  onUseBackgroundImageChange,
+  onSaveLogo,
+  onSaveBackgroundImage
+}: ImageSettingsProps) {
+  const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [uploadingBackground, setUploadingBackground] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedBackgroundFile, setSelectedBackgroundFile] = useState<File | null>(null)
+  const [showCropper, setShowCropper] = useState(false)
+  const [showBackgroundCropper, setShowBackgroundCropper] = useState(false)
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validar arquivo
+    if (!file.type.startsWith('image/')) {
+      showError('Arquivo não é uma imagem')
+      return
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      showError('Arquivo muito grande (máximo 5MB)')
+      return
+    }
+
+    setSelectedFile(file)
+    setShowCropper(true)
+  }
+
+  const handleBackgroundFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validar arquivo
+    if (!file.type.startsWith('image/')) {
+      showError('Arquivo não é uma imagem')
+      return
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      showError('Arquivo muito grande (máximo 5MB)')
+      return
+    }
+
+    setSelectedBackgroundFile(file)
+    setShowBackgroundCropper(true)
+  }
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    if (!selectedFile) return
+
+    setUploadingLogo(true)
+    setShowCropper(false)
+
+    try {
       console.log('📤 Iniciando upload da logo cropada...')
       
       // Criar arquivo a partir do blob
@@ -216,19 +302,6 @@ export function ImageSettings({
                   </label>
                 </Button>
               </div>
-              
-              {/* Informações de Formato */}
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-lg">
-                  <div className="text-center leading-tight">
-                    <div>🔥 Novo sistema de ajuste</div>
-                    <div>• Pinch-to-zoom no mobile</div>
-                    <div>• Arrastar imagem</div>
-                    <div>• Corte 1:1 (Instagram)</div>
-                    <div>• Preview em tempo real</div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </CardContent>
@@ -334,6 +407,7 @@ export function ImageSettings({
           imageFile={selectedFile}
           onCropComplete={handleCropComplete}
           onCancel={handleCropCancel}
+          circularCrop={true}
         />
       )}
 
@@ -343,6 +417,7 @@ export function ImageSettings({
           imageFile={selectedBackgroundFile}
           onCropComplete={handleBackgroundCropComplete}
           onCancel={handleBackgroundCropCancel}
+          circularCrop={false}
         />
       )}
     </div>
