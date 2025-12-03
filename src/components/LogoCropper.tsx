@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import Cropper from 'react-easy-crop'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Check, X } from 'lucide-react'
@@ -11,83 +10,58 @@ interface LogoCropperProps {
 }
 
 export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropperProps) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
-  const [zoom, setZoom] = useState(1)
-  const [rotation, setRotation] = useState(0)
   const [imageUrl, setImageUrl] = useState<string>('')
-  const cropperRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+  const [translateX, setTranslateX] = useState(0)
+  const [translateY, setTranslateY] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const pinchZoomRef = useRef<any>(null)
 
   useEffect(() => {
     const url = URL.createObjectURL(imageFile)
     setImageUrl(url)
-    return () => URL.revokeObjectURL(url)
+    
+    // Prevenir scroll no body quando o modal abrir
+    document.body.style.overflow = 'hidden'
+    document.body.classList.add('modal-open')
+    
+    return () => {
+      URL.revokeObjectURL(url)
+      // Restaurar scroll quando o modal fechar
+      document.body.style.overflow = ''
+      document.body.classList.remove('modal-open')
+    }
   }, [imageFile])
 
   useEffect(() => {
-    // Inicializar PinchZoom quando a imagem estiver carregada
-    if (imageRef.current && !pinchZoomRef.current) {
+    if (containerRef.current && imageUrl && !pinchZoomRef.current) {
       // Importar PinchZoom dinamicamente
       import('pinchzoom').then((PinchZoomModule) => {
         const PinchZoom = PinchZoomModule.default
         
-        // Criar um container para a imagem
-        const container = document.createElement('div')
-        container.className = 'pinch-zoom-container'
-        container.style.cssText = `
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        `
-        
-        // Clonar a imagem para o PinchZoom
-        const clonedImage = imageRef.current.cloneNode(true) as HTMLImageElement
-        clonedImage.style.cssText = `
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          user-select: none;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-        `
-        
-        container.appendChild(clonedImage)
-        
-        // Inserir o container antes do cropper
-        if (cropperRef.current) {
-          cropperRef.current.appendChild(container)
-          
-          // Inicializar PinchZoom
-          pinchZoomRef.current = new PinchZoom(container, {
-            tapZoomFactor: 2,
-            zoomOutFactor: 0.8,
-            animationDuration: 300,
-            maxZoom: 3,
-            minZoom: 0.5,
-            lockDragAxis: false,
-            use2d: true,
-            verticalPan: true,
-            horizontalPan: true
-          })
+        // Inicializar PinchZoom no container
+        pinchZoomRef.current = new PinchZoom(containerRef.current, {
+          tapZoomFactor: 2,
+          zoomOutFactor: 0.8,
+          animationDuration: 300,
+          maxZoom: 3,
+          minZoom: 0.5,
+          lockDragAxis: false,
+          use2d: true,
+          verticalPan: true,
+          horizontalPan: true
+        })
 
-          // Listener para atualizar o zoom do cropper
-          pinchZoomRef.current.addZoomListener((zoomValue: number) => {
-            setZoom(zoomValue)
-          })
+        // Listener para atualizar o estado
+        pinchZoomRef.current.addZoomListener((zoomValue: number) => {
+          setScale(zoomValue)
+        })
 
-          // Listener para atualizar a posição do crop
-          pinchZoomRef.current.addDragListener((offsetX: number, offsetY: number) => {
-            setCrop(prev => ({
-              x: prev.x + offsetX,
-              y: prev.y + offsetY
-            }))
-          })
-        }
+        pinchZoomRef.current.addDragListener((offsetX: number, offsetY: number) => {
+          setTranslateX(prev => prev + offsetX)
+          setTranslateY(prev => prev + offsetY)
+        })
       }).catch(error => {
         console.error('Erro ao carregar PinchZoom:', error)
       })
@@ -110,95 +84,74 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
       image.src = url
     })
 
-  const getCroppedImg = useCallback(
-    async (
-      image: HTMLImageElement,
-      crop: { x: number; y: number },
-      fileName: string
-    ): Promise<Blob> => {
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
+  const getCroppedImg = useCallback(async (): Promise<Blob> => {
+    const image = await createImage(imageUrl)
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
 
-      if (!ctx) {
-        throw new Error('No 2d context')
-      }
+    if (!ctx) {
+      throw new Error('No 2d context')
+    }
 
-      const maxSize = 400 // Tamanho final da logo
-      const aspectRatio = 1 // Logo é sempre quadrada
+    const maxSize = 400 // Tamanho final da logo
+    
+    canvas.width = maxSize
+    canvas.height = maxSize
 
-      // Calcular dimensões do crop mantendo aspect ratio
-      let cropWidth = image.width
-      let cropHeight = image.height
+    // Limpar canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      if (image.width > image.height) {
-        cropHeight = image.width
-      } else {
-        cropWidth = image.height
-      }
+    // Salvar estado atual
+    ctx.save()
 
-      // Aplicar zoom e rotação
-      const scaledWidth = cropWidth * zoom
-      const scaledHeight = cropHeight * zoom
+    // Criar círculo de máscara
+    ctx.beginPath()
+    ctx.arc(maxSize / 2, maxSize / 2, maxSize / 2, 0, Math.PI * 2)
+    ctx.clip()
 
-      canvas.width = maxSize
-      canvas.height = maxSize
+    // Calcular dimensões da imagem com zoom
+    const scaledWidth = image.width * scale
+    const scaledHeight = image.height * scale
 
-      // Limpar canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // Calcular posição para centralizar a imagem
+    const centerX = (maxSize - scaledWidth) / 2 + translateX
+    const centerY = (maxSize - scaledHeight) / 2 + translateY
 
-      // Salvar estado atual
-      ctx.save()
+    // Desenhar imagem
+    ctx.drawImage(
+      image,
+      centerX,
+      centerY,
+      scaledWidth,
+      scaledHeight
+    )
 
-      // Mover para o centro do canvas
-      ctx.translate(maxSize / 2, maxSize / 2)
+    // Restaurar estado
+    ctx.restore()
 
-      // Aplicar rotação
-      ctx.rotate((rotation * Math.PI) / 180)
-
-      // Desenhar imagem centralizada e com zoom
-      ctx.drawImage(
-        image,
-        -scaledWidth / 2 + crop.x,
-        -scaledHeight / 2 + crop.y,
-        scaledWidth,
-        scaledHeight
-      )
-
-      // Restaurar estado
-      ctx.restore()
-
-      // Criar círculo de máscara
-      ctx.globalCompositeOperation = 'destination-in'
-      ctx.beginPath()
-      ctx.arc(maxSize / 2, maxSize / 2, maxSize / 2, 0, Math.PI * 2)
-      ctx.fill()
-
-      return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            throw new Error('Canvas is empty')
-          }
-          resolve(blob)
-        }, 'image/jpeg', 0.9)
-      })
-    },
-    [zoom, rotation]
-  )
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          throw new Error('Canvas is empty')
+        }
+        resolve(blob)
+      }, 'image/jpeg', 0.9)
+    })
+  }, [imageUrl, scale, translateX, translateY])
 
   const handleCropComplete = useCallback(async () => {
     try {
-      const image = await createImage(imageUrl)
-      const croppedBlob = await getCroppedImg(image, crop, 'cropped.jpg')
+      const croppedBlob = await getCroppedImg()
       onCropComplete(croppedBlob)
     } catch (error) {
       console.error('Error cropping image:', error)
     }
-  }, [imageUrl, crop, zoom, rotation, getCroppedImg, onCropComplete])
+  }, [getCroppedImg, onCropComplete])
 
   const handleReset = () => {
-    setZoom(1)
-    setRotation(0)
-    setCrop({ x: 0, y: 0 })
+    setScale(1)
+    setTranslateX(0)
+    setTranslateY(0)
     
     // Resetar o PinchZoom também
     if (pinchZoomRef.current) {
@@ -208,7 +161,15 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden">
+      {/* Overlay para fechar ao clicar fora */}
+      <div 
+        className="absolute inset-0" 
+        onClick={onCancel}
+        style={{ touchAction: 'none' }}
+      />
+      
+      {/* Conteúdo do modal */}
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden relative z-10">
         <CardContent className="p-6">
           <div className="space-y-4">
             {/* Header */}
@@ -219,50 +180,38 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
               </Button>
             </div>
 
-            {/* Área de Crop com PinchZoom */}
+            {/* Área de Crop com PinchZoom - SEM BOTÕES */}
             <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ height: '400px' }}>
               <div 
-                ref={cropperRef}
+                ref={containerRef}
                 className="w-full h-full relative"
                 style={{ touchAction: 'none' }}
               >
-                {/* Imagem oculta para o Cropper */}
                 <img
                   ref={imageRef}
                   src={imageUrl}
                   alt="Logo"
+                  className="w-full h-full object-contain"
                   style={{ 
-                    position: 'absolute',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain'
+                    transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
+                    transformOrigin: 'center',
+                    transition: 'transform 0.3s ease'
                   }}
                 />
                 
-                {/* Cropper visível */}
-                <Cropper
-                  image={imageUrl}
-                  crop={crop}
-                  zoom={zoom}
-                  rotation={rotation}
-                  aspect={1}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onRotationChange={setRotation}
-                  cropShape="round"
-                  showGrid={true}
+                {/* Máscara circular sobreposta */}
+                <div 
+                  className="absolute inset-0 pointer-events-none"
                   style={{
-                    containerStyle: {
-                      width: '100%',
-                      height: '100%',
-                      touchAction: 'none'
-                    },
-                    cropAreaStyle: {
-                      border: '2px solid #ec4899',
-                      boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
-                    }
+                    background: 'radial-gradient(circle at center, transparent 45%, rgba(0,0,0,0.5) 50%)',
+                    border: '2px solid #ec4899',
+                    borderRadius: '50%',
+                    margin: 'auto',
+                    width: 'min(90%, 360px)',
+                    height: 'min(90%, 360px)',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
                   }}
                 />
               </div>
@@ -274,15 +223,18 @@ export function LogoCropper({ imageFile, onCropComplete, onCancel }: LogoCropper
                 <p className="text-sm text-gray-600 mb-2">Preview</p>
                 <div className="w-24 h-24 rounded-full border-4 border-gray-200 overflow-hidden bg-white shadow-lg">
                   <div 
-                    className="w-full h-full rounded-full overflow-hidden"
-                    style={{
-                      backgroundImage: `url(${imageUrl})`,
-                      backgroundSize: `${200 * zoom}%`,
-                      backgroundPosition: `${50 - (crop.x / (200 * zoom)) * 100}% ${50 - (crop.y / (200 * zoom)) * 100}%`,
-                      transform: `rotate(${rotation}deg)`,
-                      transition: 'all 0.2s'
-                    }}
-                  />
+                    className="w-full h-full rounded-full overflow-hidden relative"
+                  >
+                    <img
+                      src={imageUrl}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      style={{ 
+                        transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
+                        transformOrigin: 'center'
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

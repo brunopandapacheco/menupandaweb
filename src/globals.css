@@ -167,11 +167,16 @@ input[type="password"] {
   text-fill-color: transparent;
 }
 
+/* Prevenir scroll no body quando modal está aberto */
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
 /* Estilos para PinchZoom */
 .pinch-zoom-container {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
+  position: relative !important;
   width: 100% !important;
   height: 100% !important;
   overflow: hidden !important;
@@ -180,8 +185,6 @@ input[type="password"] {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
   -ms-user-select: none !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
 }
 
 .pinch-zoom-container img {
