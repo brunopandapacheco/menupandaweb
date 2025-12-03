@@ -89,10 +89,19 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           required
           disabled={loading}
           placeholder="Digite seu email"
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-0 transition-all duration-200 text-gray-700"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-700"
           style={{ 
             color: '#374151',
-            WebkitTextFillColor: '#374151'
+            WebkitTextFillColor: '#374151',
+            border: '2px solid #d1d5db',
+            outline: 'none',
+            boxShadow: 'none',
+            transition: 'none'
+          }}
+          onFocus={(e) => {
+            e.target.style.outline = 'none'
+            e.target.style.boxShadow = 'none'
+            e.target.style.borderColor = '#d1d5db'
           }}
         />
       </div>
@@ -110,10 +119,19 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             required
             disabled={loading}
             placeholder="Digite sua senha"
-            className="w-full px-4 py-3 pr-12 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-0 transition-all duration-200 text-gray-700"
+            className="w-full px-4 py-3 pr-12 border-2 border-gray-300 rounded-lg text-gray-700"
             style={{ 
               color: '#374151',
-              WebkitTextFillColor: '#374151'
+              WebkitTextFillColor: '#374151',
+              border: '2px solid #d1d5db',
+              outline: 'none',
+              boxShadow: 'none',
+              transition: 'none'
+            }}
+            onFocus={(e) => {
+              e.target.style.outline = 'none'
+              e.target.style.boxShadow = 'none'
+              e.target.style.borderColor = '#d1d5db'
             }}
           />
           <button
