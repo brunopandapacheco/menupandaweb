@@ -86,22 +86,26 @@ export function Logo({
         className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
-          marginTop: '-60px',
+          marginTop: '-80px', // Aumentado de -60px para -80px para metade da logo ficar sobre o banner
           position: 'relative',
-          zIndex: 20
+          zIndex: 20,
+          paddingTop: '80px' // Adicionado espaço extra para compensar o movimento para cima
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        {/* Logo circular com movimento apenas no modo de edição */}
+        {/* Logo circular movida para cima */}
         <div 
-          className={`relative flex justify-center items-center ${isEditable ? 'cursor-move' : 'cursor-default'}`}
-          onMouseDown={handleMouseDown}
+          className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
           style={{
-            transform: isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : 'none',
-            transition: isDragging ? 'none' : 'transform 0.2s ease'
+            top: '-40px', // Posiciona metade da logo sobre o banner
+            left: '50%',
+            transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
+            transition: isDragging ? 'none' : 'transform 0.2s ease',
+            zIndex: 30
           }}
+          onMouseDown={handleMouseDown}
         >
           {logoUrl ? (
             <div 
@@ -138,8 +142,8 @@ export function Logo({
           </div>
         )}
 
-        {/* Nome e descrição */}
-        <div className="text-center mt-6">
+        {/* Nome e descrição - movidos para baixo para dar espaço à logo */}
+        <div className="text-center mt-8 mb-4">
           <h1 
             className="text-2xl font-bold mb-2"
             style={{ color: corNome }}
