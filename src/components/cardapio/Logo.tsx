@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 
 interface LogoProps {
   logoUrl?: string
+  borderColor?: string
   storeName?: string
   storeDescription?: string
   corNome?: string
@@ -15,7 +16,8 @@ interface LogoProps {
 }
 
 export function Logo({ 
-  logoUrl,  
+  logoUrl, 
+  borderColor, 
   storeName, 
   storeDescription,
   corNome,
@@ -27,8 +29,6 @@ export function Logo({
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [showUpload, setShowUpload] = useState(false)
-
-  const storyGradient = "linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5)"
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!isEditable || !onLogoPositionChange) return
@@ -46,6 +46,7 @@ export function Logo({
     const newX = e.clientX - dragStart.x
     const newY = e.clientY - dragStart.y
     
+    // Limitar movimento dentro do container
     const maxX = 100
     const maxY = 50
     const minX = -100
@@ -80,100 +81,58 @@ export function Logo({
 
   return (
     <div className="relative">
-      
-      {/* LOGO */}
+      {/* Logo circular posicionada fora do container para ficar sobre o banner */}
       <div 
         className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
         style={{
-          top: '-40px',
+          top: '-40px', // Posiciona metade da logo sobre o banner
           left: '50%',
-          transform: `translateX(-50%) ${isEditable ? 
-            `translate(${logoPosition.x}px, ${logoPosition.y}px)` 
-            : ''}`,
+          transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
           transition: isDragging ? 'none' : 'transform 0.2s ease',
-          zIndex: 50,
+          zIndex: 50, // Aumentado z-index para garantir que fique acima do banner
         }}
         onMouseDown={handleMouseDown}
       >
         {logoUrl ? (
           <div 
-            className="w-32 h-32 rounded-full overflow-hidden shadow-lg flex items-center justify-center"
-            style={{
-              border: "8px solid transparent",
-              borderRadius: "9999px",
-              background: storyGradient,
-              padding: "3px",
-              boxSizing: "border-box",
-              position: "relative"
-            }}
+            className="w-32 h-32 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white"
           >
-            {/* Borda interna */}
-            <div 
-              className="absolute inset-0 rounded-full"
-              style={{
-                border: "5px solid transparent",
-                borderRadius: "9999px",
-                background: storyGradient,
-                padding: "3px",
-                boxSizing: "border-box",
-                pointerEvents: "none"
-              }}
-            />
-
-            {/* Imagem */}
             <img 
               src={logoUrl} 
               alt="Logo" 
-              className="w-full h-full object-contain relative z-10 rounded-full bg-white"
+              className="w-full h-full object-contain"
               onClick={handleLogoClick}
             />
           </div>
         ) : (
           <div 
             className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold shadow-lg"
-            style={{
-              border: "8px solid transparent",
-              borderRadius: "9999px",
-              background: storyGradient,
-              padding: "3px",
-              boxSizing: "border-box",
-              position: "relative",
-              color: "white"
+            style={{ 
+              backgroundColor: borderColor || '#ec4899',
+              color: 'white'
             }}
             onClick={handleLogoClick}
           >
-            {/* Borda interna */}
-            <div 
-              className="absolute inset-0 rounded-full"
-              style={{
-                border: "5px solid transparent",
-                borderRadius: "9999px",
-                background: storyGradient,
-                padding: "3px",
-                boxSizing: "border-box",
-                pointerEvents: "none"
-              }}
-            />
-            <span className="relative z-10">
-              {storeName?.charAt(0) || 'L'}
-            </span>
+            {storeName?.charAt(0) || 'L'}
           </div>
         )}
       </div>
 
-      {/* CONTAINER PRINCIPAL */}
+      {/* Container principal - sem a logo dentro */}
       <div 
         className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
-          marginTop: '-80px',
+          borderColor,
+          marginTop: '-80px', // Mantido para o container ficar sobre o banner
           position: 'relative',
           zIndex: 20,
-          paddingTop: '80px'
+          paddingTop: '80px' // Espaço para a logo que está fora
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
+        {/* Indicador de movimento apenas no modo de edição */}
         {isEditable && (
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
             <Move className="w-3 h-3" />
@@ -181,6 +140,7 @@ export function Logo({
           </div>
         )}
 
+        {/* Nome e descrição */}
         <div className="text-center mt-8 mb-4">
           <h1 
             className="text-2xl font-bold mb-2"
@@ -194,7 +154,7 @@ export function Logo({
         </div>
       </div>
 
-      {/* MODAL DE UPLOAD */}
+      {/* Modal de upload */}
       {showUpload && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
