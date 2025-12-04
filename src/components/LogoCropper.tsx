@@ -21,11 +21,9 @@ export function LogoCropper({
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Motion values para arrastar
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Springs para animação suave
   const xSpring = useSpring(0, { stiffness: 300, damping: 30 });
   const ySpring = useSpring(0, { stiffness: 300, damping: 30 });
 
@@ -38,11 +36,10 @@ export function LogoCropper({
     };
   }, []);
 
-  // Zoom
+  // Zoom bidirecional
   const [scale, setScale] = useState(1);
   const lastScale = useRef(1);
 
-  // Carregar imagem
   useEffect(() => {
     x.set(0);
     y.set(0);
@@ -55,9 +52,9 @@ export function LogoCropper({
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
 
-  // Cortar exatamente o que está no preview
   const performCrop = useCallback(() => {
-    if (!canvasRef.current || !imageRef.current || !containerRef.current) return;
+    if (!canvasRef.current || !imageRef.current) return;
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -96,7 +93,6 @@ export function LogoCropper({
     }, "image/jpeg", 0.9);
   }, [circularCrop, onCropComplete, x, y, scale]);
 
-  // Gestos: arrastar + pinch zoom
   const bind = useGesture(
     {
       onDrag: ({ offset: [dx, dy] }) => {
@@ -104,12 +100,12 @@ export function LogoCropper({
         y.set(dy);
       },
       onPinch: ({ offset: [d] }) => {
-        const newScale = Math.min(Math.max(1, d), 3); // limite 1x–3x
+        const newScale = Math.min(Math.max(d, 0.5), 3); // agora bidirecional
         setScale(newScale);
         lastScale.current = newScale;
       },
     },
-    { drag: { filterTaps: true }, pinch: { scaleBounds: { min: 1, max: 3 } } }
+    { drag: { filterTaps: true }, pinch: { scaleBounds: { min: 0.5, max: 3 } } }
   );
 
   return (
@@ -118,91 +114,89 @@ export function LogoCropper({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black bg-opacity-20 z-50 flex items-center justify-center p-4"
       >
-        <div className="relative w-full max-w-md">
+        <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
           <button
             onClick={onCancel}
-            className="absolute -top-10 right-0 text-white hover:text-gray-300 transition-colors z-10"
+            className="absolute -top-10 right-0 text-black hover:text-gray-700 transition-colors z-10"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
-              <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
-              <p className="text-center text-white/70 text-sm">Arraste ou use pinça para ajustar</p>
-            </div>
+          <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
+            <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
+            <p className="text-center text-white/70 text-sm">Arraste ou use pinça para ajustar</p>
+          </div>
 
-            <div className="p-4 bg-gray-50">
+          <div className="p-4 bg-gray-50">
+            <div
+              ref={containerRef}
+              className="relative mx-auto"
+              style={{
+                width: circularCrop ? "240px" : "400px",
+                height: circularCrop ? "240px" : "200px",
+              }}
+            >
               <div
-                ref={containerRef}
-                className="relative mx-auto"
+                className={`absolute inset-0 pointer-events-none border-2 border-purple-400 ${
+                  circularCrop ? "rounded-full" : "rounded-lg"
+                }`}
+                style={{ zIndex: 10 }}
+              />
+
+              <div
+                className="absolute inset-0 overflow-hidden"
                 style={{
-                  width: circularCrop ? "240px" : "400px",
-                  height: circularCrop ? "240px" : "200px",
+                  ...(circularCrop ? { borderRadius: "50%" } : { borderRadius: "12px" }),
+                  touchAction: "none",
                 }}
+                {...bind()}
               >
-                <div
-                  className={`absolute inset-0 pointer-events-none border-2 border-purple-400 ${
-                    circularCrop ? "rounded-full" : "rounded-lg"
-                  }`}
-                  style={{ boxShadow: "0 0 0 9999px rgba(0,0,0,.45)", zIndex: 10 }}
-                />
-
-                <div
-                  className="absolute inset-0 overflow-hidden"
+                <motion.div
                   style={{
-                    ...(circularCrop ? { borderRadius: "50%" } : { borderRadius: "12px" }),
-                    touchAction: "none",
+                    width: circularCrop ? 300 : 400,
+                    height: 300,
+                    x: xSpring,
+                    y: ySpring,
+                    scale: scale,
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    translateX: "-50%",
+                    translateY: "-50%",
                   }}
-                  {...bind()}
                 >
-                  <motion.div
-                    style={{
-                      width: circularCrop ? 300 : 400,
-                      height: 300,
-                      x: xSpring,
-                      y: ySpring,
-                      scale: scale,
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      translateX: "-50%",
-                      translateY: "-50%",
-                    }}
-                  >
-                    <img
-                      ref={imageRef}
-                      src={imageUrl}
-                      alt="preview"
-                      draggable={false}
-                      className="w-full h-full object-cover"
-                      style={{ userSelect: "none" }}
-                    />
-                  </motion.div>
-                </div>
+                  <img
+                    ref={imageRef}
+                    src={imageUrl}
+                    alt="preview"
+                    draggable={false}
+                    className="w-full h-full object-cover"
+                    style={{ userSelect: "none" }}
+                  />
+                </motion.div>
               </div>
-
-              <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            <div className="bg-white p-4 border-t flex gap-2">
-              <button
-                onClick={onCancel}
-                className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium text-sm"
-              >
-                Cancelar
-              </button>
+            <canvas ref={canvasRef} className="hidden" />
+          </div>
 
-              <button
-                onClick={performCrop}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-1 text-sm"
-              >
-                <Check className="w-3 h-3" />
-                Salvar
-              </button>
-            </div>
+          <div className="bg-white p-4 border-t flex gap-2">
+            <button
+              onClick={onCancel}
+              className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium text-sm"
+            >
+              Cancelar
+            </button>
+
+            <button
+              onClick={performCrop}
+              className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-1 text-sm"
+            >
+              <Check className="w-3 h-3" />
+              Salvar
+            </button>
           </div>
         </div>
       </motion.div>
