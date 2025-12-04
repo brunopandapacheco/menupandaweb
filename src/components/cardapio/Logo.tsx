@@ -81,15 +81,20 @@ export function Logo({
 
   return (
     <div className="relative">
-      {/* Container principal */}
+      {/* Container principal - posicionado para metade sobre o banner */}
       <div 
-        className="relative bg-white rounded-lg shadow-sm p-6 mb-6 overflow-hidden"
-        style={{ borderColor }}
+        className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden"
+        style={{ 
+          borderColor,
+          marginTop: '-60px', // Move para cima para ficar metade sobre o banner
+          position: 'relative',
+          zIndex: 20
+        }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        {/* Logo com movimento apenas no modo de edição */}
+        {/* Logo circular com movimento apenas no modo de edição */}
         <div 
           className={`relative flex justify-center items-center ${isEditable ? 'cursor-move' : 'cursor-default'}`}
           onMouseDown={handleMouseDown}
@@ -99,18 +104,21 @@ export function Logo({
           }}
         >
           {logoUrl ? (
-            <img 
-              src={logoUrl} 
-              alt="Logo" 
-              className="w-24 h-24 object-contain"
-              onClick={handleLogoClick}
-            />
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg" style={{ borderColor }}>
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-full h-full object-cover"
+                onClick={handleLogoClick}
+              />
+            </div>
           ) : (
             <div 
-              className="w-24 h-24 rounded-full flex items-center justify-center text-4xl font-bold"
+              className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold border-4 shadow-lg"
               style={{ 
                 backgroundColor: borderColor,
-                color: 'white'
+                color: 'white',
+                borderColor
               }}
               onClick={handleLogoClick}
             >
@@ -128,7 +136,7 @@ export function Logo({
         )}
 
         {/* Nome e descrição */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-6">
           <h1 
             className="text-2xl font-bold mb-2"
             style={{ color: corNome }}
