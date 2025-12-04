@@ -12,24 +12,77 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
-  // Sempre mostrar as 4 categorias padrão na ordem correta com os ícones corretos
+  // Categorias padrão com emojis
   const defaultCategories = [
-    { name: 'Todos', icon: '/icons/Todos.png' },
-    { name: 'Bolos', icon: '/icons/Bolos.png' },
-    { name: 'Doces', icon: '/icons/Doces.png' },
-    { name: 'Salgados', icon: '/icons/Salgados.png' }
+    { name: 'Todos', icon: '📋' },
+    { name: 'Bolos', icon: '🎂' },
+    { name: 'Doces', icon: '🧁' },
+    { name: 'Salgados', icon: '🥐' }
   ]
+
+  // Mapear emojis para categorias conhecidas
+  const categoryEmojis: { [key: string]: string } = {
+    'Todos': '📋',
+    'Bolos': '🎂',
+    'Doces': '🧁',
+    'Salgados': '🥐',
+    'Brigadeiros': '🍫',
+    'Cookies': '🍪',
+    'Tortas': '🥧',
+    'Pipoca': '🍿',
+    'Salgadinhos': '🥨',
+    'Bebidas': '🥤',
+    'Sobremesas': '🍮',
+    'Lanches': '🍔',
+    'Pizzas': '🍕',
+    'Massas': '🍝',
+    'Saladas': '🥗',
+    'Frutas': '🍎',
+    'Sucos': '🧃',
+    'Cafés': '☕',
+    'Chás': '🍵',
+    'Tortas Doces': '🍰',
+    'Pães': '🍞',
+    'Sanduíches': '🥪',
+    'Confeitaria': '🧁',
+    'Doces Finos': '🍬',
+    'Salgados Fritos': '🍟',
+    'Salgados Assados': '🥖',
+    'Festas': '🎉',
+    'Aniversário': '🎂',
+    'Casamento': '💒',
+    'Formatura': '🎓'
+  }
+
+  // Combinar categorias padrão com categorias do usuário
+  // Manter ordem: primeiro as padrão, depois as do usuário
+  const allCategories = [...defaultCategories]
+  
+  // Adicionar categorias do usuário que não estão nas padrão
+  categories.forEach(category => {
+    if (!defaultCategories.find(cat => cat.name === category.name)) {
+      allCategories.push({
+        name: category.name,
+        icon: categoryEmojis[category.name] || '🍽️' // Emoji padrão se não encontrar
+      })
+    }
+  })
 
   return (
     <div style={{ marginBottom: '24px' }}>
-      <div style={{ 
-        display: 'flex', 
-        gap: '8px', 
-        padding: '4px 0',
-        justifyContent: 'center',
-        flexWrap: 'wrap' // Permite quebra de linha se necessário
-      }}>
-        {defaultCategories.map((category) => {
+      <div 
+        style={{ 
+          display: 'flex', 
+          gap: '8px', 
+          padding: '4px 0',
+          justifyContent: 'flex-start',
+          overflowX: 'auto', // Habilita scroll horizontal
+          scrollbarWidth: 'none', // Esconde scrollbar no Firefox
+          msOverflowStyle: 'none', // Esconde scrollbar no IE/Edge
+          WebkitScrollbar: { display: 'none' } // Esconde scrollbar no Chrome/Safari
+        } as React.CSSProperties}
+      >
+        {allCategories.map((category) => {
           const isSelected = category.name === 'Todos' 
             ? selectedCategory === null 
             : selectedCategory === category.name
@@ -51,7 +104,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 padding: '8px',
-                flexShrink: 0
+                flexShrink: 0, // Não encolher
+                minWidth: '80px' // Garante tamanho mínimo
               }}
               onMouseOver={(e) => {
                 if (!isSelected) {
@@ -66,34 +120,38 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 }
               }}
             >
-              <img 
-                src={category.icon} 
-                alt={category.name} 
-                style={{ width: '32px', height: '32px', marginBottom: '4px' }}
-                onError={(e) => {
-                  // Fallback para emoji se a imagem não carregar
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                  const fallback = target.nextElementSibling as HTMLElement
-                  if (fallback) fallback.style.display = 'block'
-                }}
-              />
-              <span 
-                style={{ 
-                  fontSize: '24px', 
-                  marginBottom: '4px', 
-                  display: 'none' // Escondido por padrão, só mostra se a imagem falhar
-                }}
-              >
-                {category.name === 'Todos' ? '📋' : 
-                 category.name === 'Bolos' ? '🎂' :
-                 category.name === 'Doces' ? '🧁' : '🥐'}
+              <span style={{ 
+                fontSize: '24px', 
+                marginBottom: '4px'
+              }}>
+                {category.icon}
               </span>
-              <span style={{ fontSize: '10px', fontWeight: '600', textAlign: 'center' }}>{category.name}</span>
+              <span style={{ 
+                fontSize: '10px', 
+                fontWeight: '600', 
+                textAlign: 'center',
+                lineHeight: '1.2',
+                maxWidth: '60px',
+                wordWrap: 'break-word'
+              }}>
+                {category.name}
+              </span>
             </button>
           )
         })}
       </div>
+      
+      {/* Indicador de scroll */}
+      {allCategories.length > 4 && (
+        <div style={{ 
+          textAlign: 'center', 
+          marginTop: '8px',
+          fontSize: '12px',
+          color: '#9ca3af'
+        }}>
+          ← Arraste para ver mais categorias →
+        </div>
+      )}
     </div>
   )
 }
