@@ -24,18 +24,11 @@ const saleTypes = [
   { value: 'outros', label: 'Outros' }
 ]
 
-// Categorias pré-definidas para confeiteiras
-const predefinedCategories = [
-  'Bolo Simples',
-  'Bolo Decorado', 
-  'Bolos Caseiros',
-  'Bolo no Pote',
-  'Brigadeiro Gourmet',
-  'Doces Finos',
-  'Pipoca Gourmet',
-  'Topos de Bolos',
-  'Tortas Doces',
-  'Tortas Salgadas'
+// Categorias padrão para confeiteiras (apenas as básicas)
+const defaultCategories = [
+  'Bolos',
+  'Doces', 
+  'Salgados'
 ]
 
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
@@ -253,7 +246,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
-                {predefinedCategories.map((category) => (
+                {defaultCategories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
                   </SelectItem>
