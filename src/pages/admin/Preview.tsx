@@ -147,20 +147,10 @@ export default function Preview() {
         <div className="fixed top-4 right-4 z-50">
           <Button
             onClick={copyLink}
-            className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-1 px-3 py-1 h-8 text-xs"
+            className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 px-3 py-1 h-8 text-xs"
             size="sm"
           >
-            {copied ? (
-              <>
-                <Check className="w-3 h-3" />
-                Copiado!
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3 h-3" />
-                Compartilhar
-              </>
-            )}
+            {copied ? 'Copiado!' : 'Compartilhar'}
           </Button>
         </div>
 
@@ -249,20 +239,10 @@ export default function Preview() {
       <div className="fixed top-4 right-4 z-50">
         <Button
           onClick={copyLink}
-          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-1 px-3 py-1 h-8 text-xs"
+          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 px-3 py-1 h-8 text-xs"
           size="sm"
         >
-          {copied ? (
-            <>
-              <Check className="w-3 h-3" />
-              Copiado!
-            </>
-          ) : (
-            <>
-              <Share2 className="w-3 h-3" />
-              Compartilhar
-            </>
-          )}
+          {copied ? 'Copiado!' : 'Compartilhar'}
         </Button>
       </div>
 
