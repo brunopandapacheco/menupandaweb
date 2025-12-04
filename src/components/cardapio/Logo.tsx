@@ -81,59 +81,59 @@ export function Logo({
 
   return (
     <div className="relative">
-      {/* Container principal - posicionado para metade sobre o banner */}
+      {/* Logo circular posicionada fora do container para ficar sobre o banner */}
+      <div 
+        className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
+        style={{
+          top: '-40px', // Posiciona metade da logo sobre o banner
+          left: '50%',
+          transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
+          transition: isDragging ? 'none' : 'transform 0.2s ease',
+          zIndex: 50, // Aumentado z-index para garantir que fique acima do banner
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        {logoUrl ? (
+          <div 
+            className="w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg bg-white flex items-center justify-center" 
+            style={{ borderColor }}
+          >
+            <img 
+              src={logoUrl} 
+              alt="Logo" 
+              className="w-full h-full object-contain"
+              onClick={handleLogoClick}
+            />
+          </div>
+        ) : (
+          <div 
+            className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold border-4 shadow-lg"
+            style={{ 
+              backgroundColor: borderColor,
+              color: 'white',
+              borderColor
+            }}
+            onClick={handleLogoClick}
+          >
+            {storeName?.charAt(0) || 'L'}
+          </div>
+        )}
+      </div>
+
+      {/* Container principal - sem a logo dentro */}
       <div 
         className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
-          marginTop: '-80px', // Aumentado de -60px para -80px para metade da logo ficar sobre o banner
+          marginTop: '-80px', // Mantido para o container ficar sobre o banner
           position: 'relative',
           zIndex: 20,
-          paddingTop: '80px' // Adicionado espaço extra para compensar o movimento para cima
+          paddingTop: '80px' // Espaço para a logo que está fora
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        {/* Logo circular movida para cima */}
-        <div 
-          className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
-          style={{
-            top: '-40px', // Posiciona metade da logo sobre o banner
-            left: '50%',
-            transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
-            transition: isDragging ? 'none' : 'transform 0.2s ease',
-            zIndex: 30
-          }}
-          onMouseDown={handleMouseDown}
-        >
-          {logoUrl ? (
-            <div 
-              className="w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg bg-white flex items-center justify-center" 
-              style={{ borderColor }}
-            >
-              <img 
-                src={logoUrl} 
-                alt="Logo" 
-                className="w-full h-full object-contain"
-                onClick={handleLogoClick}
-              />
-            </div>
-          ) : (
-            <div 
-              className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold border-4 shadow-lg"
-              style={{ 
-                backgroundColor: borderColor,
-                color: 'white',
-                borderColor
-              }}
-              onClick={handleLogoClick}
-            >
-              {storeName?.charAt(0) || 'L'}
-            </div>
-          )}
-        </div>
-
         {/* Indicador de movimento apenas no modo de edição */}
         {isEditable && (
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
@@ -142,7 +142,7 @@ export function Logo({
           </div>
         )}
 
-        {/* Nome e descrição - movidos para baixo para dar espaço à logo */}
+        {/* Nome e descrição */}
         <div className="text-center mt-8 mb-4">
           <h1 
             className="text-2xl font-bold mb-2"
