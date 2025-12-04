@@ -36,7 +36,7 @@ export function LogoCropper({
     };
   }, []);
 
-  // Zoom bidirecional
+  // Zoom bidirecional 0.5x–3x
   const [scale, setScale] = useState(1);
   const lastScale = useRef(1);
 
@@ -51,6 +51,16 @@ export function LogoCropper({
 
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
+
+  // Travar scroll enquanto o cropper está aberto
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   const performCrop = useCallback(() => {
     if (!canvasRef.current || !imageRef.current) return;
@@ -100,7 +110,7 @@ export function LogoCropper({
         y.set(dy);
       },
       onPinch: ({ offset: [d] }) => {
-        const newScale = Math.min(Math.max(d, 0.5), 3); // agora bidirecional
+        const newScale = Math.min(Math.max(d, 0.5), 3); // limite bidirecional
         setScale(newScale);
         lastScale.current = newScale;
       },
@@ -114,7 +124,7 @@ export function LogoCropper({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-20 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 backdrop-blur-md bg-black/40 z-50 flex items-center justify-center p-4"
       >
         <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
           <button
