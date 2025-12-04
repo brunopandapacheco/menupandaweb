@@ -24,7 +24,7 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
         {children}
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl" 
+      <div className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl z-50" 
            style={{
              backgroundColor: '#E26783'
            }}>
