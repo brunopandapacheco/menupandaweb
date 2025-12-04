@@ -46,7 +46,6 @@ export function Logo({
     const newX = e.clientX - dragStart.x
     const newY = e.clientY - dragStart.y
     
-    // Limitar movimento dentro do container
     const maxX = 100
     const maxY = 50
     const minX = -100
@@ -81,15 +80,15 @@ export function Logo({
 
   return (
     <div className="relative">
-      {/* Logo circular posicionada fora do container para ficar sobre o banner */}
+      {/* Logo circular */}
       <div 
         className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
         style={{
-          top: '-40px', // Posiciona metade da logo sobre o banner
+          top: '-40px',
           left: '50%',
           transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
           transition: isDragging ? 'none' : 'transform 0.2s ease',
-          zIndex: 50, // Aumentado z-index para garantir que fique acima do banner
+          zIndex: 50,
         }}
         onMouseDown={handleMouseDown}
       >
@@ -97,7 +96,7 @@ export function Logo({
           <div 
             className="w-32 h-32 rounded-full overflow-hidden shadow-lg flex items-center justify-center" 
             style={{ 
-              border: '4px solid white', // Borda externa branca
+              border: '8px solid white', // Borda externa mais grossa
               boxSizing: 'border-box',
               position: 'relative'
             }}
@@ -106,7 +105,7 @@ export function Logo({
             <div 
               className="absolute inset-0 rounded-full"
               style={{ 
-                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
+                border: '5px solid ' + (borderColor || '#ec4899'), // Borda interna mais grossa
                 pointerEvents: 'none'
               }}
             />
@@ -121,7 +120,7 @@ export function Logo({
           <div 
             className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold shadow-lg"
             style={{ 
-              border: '4px solid white', // Borda externa branca
+              border: '8px solid white', // externa
               boxSizing: 'border-box',
               position: 'relative',
               backgroundColor: borderColor || '#ec4899',
@@ -129,11 +128,11 @@ export function Logo({
             }}
             onClick={handleLogoClick}
           >
-            {/* Borda interna colorida */}
+            {/* Borda interna */}
             <div 
               className="absolute inset-0 rounded-full"
               style={{ 
-                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
+                border: '5px solid ' + (borderColor || '#ec4899'),
                 pointerEvents: 'none'
               }}
             />
@@ -144,21 +143,20 @@ export function Logo({
         )}
       </div>
 
-      {/* Container principal - sem a logo dentro */}
+      {/* Container principal */}
       <div 
         className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
-          marginTop: '-80px', // Mantido para o container ficar sobre o banner
+          marginTop: '-80px',
           position: 'relative',
           zIndex: 20,
-          paddingTop: '80px' // Espaço para a logo que está fora
+          paddingTop: '80px'
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        {/* Indicador de movimento apenas no modo de edição */}
         {isEditable && (
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
             <Move className="w-3 h-3" />
@@ -166,7 +164,6 @@ export function Logo({
           </div>
         )}
 
-        {/* Nome e descrição */}
         <div className="text-center mt-8 mb-4">
           <h1 
             className="text-2xl font-bold mb-2"
@@ -180,7 +177,7 @@ export function Logo({
         </div>
       </div>
 
-      {/* Modal de upload */}
+      {/* Modal upload */}
       {showUpload && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
