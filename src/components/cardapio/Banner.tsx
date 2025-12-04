@@ -30,7 +30,7 @@ export function Banner({
       className="w-full"
       style={{ 
         position: 'relative', 
-        height: '180px',
+        height: '220px', // Aumentado de 180px para 220px
         overflow: 'hidden',
         ...bannerStyle,
         animation: !useBackgroundImage ? 'gradient-x 3s ease infinite' : 'none'
