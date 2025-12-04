@@ -21,7 +21,7 @@ export function LogoCropper({
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Motion values real → os que vemos
+  // Motion values para arrastar
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -29,7 +29,6 @@ export function LogoCropper({
   const xSpring = useSpring(0, { stiffness: 300, damping: 30 });
   const ySpring = useSpring(0, { stiffness: 300, damping: 30 });
 
-  // Mantém spring sincronizado com motion value
   useEffect(() => {
     const unsubX = x.on("change", (v) => xSpring.set(v));
     const unsubY = y.on("change", (v) => ySpring.set(v));
@@ -39,10 +38,16 @@ export function LogoCropper({
     };
   }, []);
 
+  // Zoom
+  const [scale, setScale] = useState(1);
+  const lastScale = useRef(1);
+
   // Carregar imagem
   useEffect(() => {
     x.set(0);
     y.set(0);
+    setScale(1);
+    lastScale.current = 1;
 
     const url = URL.createObjectURL(imageFile);
     setImageUrl(url);
@@ -50,33 +55,22 @@ export function LogoCropper({
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
 
-  /** =====================================================================
-   *  💡 O PULO DO GATO:
-   *  Cortar exatamente o que está aparecendo no círculo (preview real)
-   *  =====================================================================
-   */
+  // Cortar exatamente o que está no preview
   const performCrop = useCallback(() => {
     if (!canvasRef.current || !imageRef.current || !containerRef.current) return;
-
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Medidas visuais EXATAS:
     const previewWidth = circularCrop ? 240 : 400;
     const previewHeight = circularCrop ? 240 : 200;
-
-    // Tamanho real da imagem exibida
     const imgDisplayWidth = circularCrop ? 300 : 400;
     const imgDisplayHeight = circularCrop ? 300 : 300;
 
-    // Configurar canvas com tamanho exato da máscara
     canvas.width = previewWidth;
     canvas.height = previewHeight;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Clip circular se necessário
     if (circularCrop) {
       ctx.save();
       ctx.beginPath();
@@ -84,40 +78,38 @@ export function LogoCropper({
       ctx.clip();
     }
 
-    // Pegamos exatamente a posição que vemos na tela
     const offsetX = x.get();
     const offsetY = y.get();
 
-    // A imagem é desenhada como o preview REAL
     ctx.drawImage(
       imageRef.current,
-      previewWidth / 2 - imgDisplayWidth / 2 + offsetX,
-      previewHeight / 2 - imgDisplayHeight / 2 + offsetY,
-      imgDisplayWidth,
-      imgDisplayHeight
+      previewWidth / 2 - (imgDisplayWidth * scale) / 2 + offsetX,
+      previewHeight / 2 - (imgDisplayHeight * scale) / 2 + offsetY,
+      imgDisplayWidth * scale,
+      imgDisplayHeight * scale
     );
 
     if (circularCrop) ctx.restore();
 
-    // Salvar
     canvas.toBlob((blob) => {
       if (blob) onCropComplete(blob);
     }, "image/jpeg", 0.9);
-  }, [circularCrop, onCropComplete, x, y]);
+  }, [circularCrop, onCropComplete, x, y, scale]);
 
-  /** Gestos — Somente arrastar */
+  // Gestos: arrastar + pinch zoom
   const bind = useGesture(
     {
       onDrag: ({ offset: [dx, dy] }) => {
         x.set(dx);
         y.set(dy);
       },
-    },
-    {
-      drag: {
-        filterTaps: true,
+      onPinch: ({ offset: [d] }) => {
+        const newScale = Math.min(Math.max(1, d), 3); // limite 1x–3x
+        setScale(newScale);
+        lastScale.current = newScale;
       },
-    }
+    },
+    { drag: { filterTaps: true }, pinch: { scaleBounds: { min: 1, max: 3 } } }
   );
 
   return (
@@ -139,7 +131,7 @@ export function LogoCropper({
           <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
               <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
-              <p className="text-center text-white/70 text-sm">Arraste para posicionar</p>
+              <p className="text-center text-white/70 text-sm">Arraste ou use pinça para ajustar</p>
             </div>
 
             <div className="p-4 bg-gray-50">
@@ -151,7 +143,6 @@ export function LogoCropper({
                   height: circularCrop ? "240px" : "200px",
                 }}
               >
-                {/* Máscara */}
                 <div
                   className={`absolute inset-0 pointer-events-none border-2 border-purple-400 ${
                     circularCrop ? "rounded-full" : "rounded-lg"
@@ -159,7 +150,6 @@ export function LogoCropper({
                   style={{ boxShadow: "0 0 0 9999px rgba(0,0,0,.45)", zIndex: 10 }}
                 />
 
-                {/* Área com gestos */}
                 <div
                   className="absolute inset-0 overflow-hidden"
                   style={{
@@ -174,6 +164,7 @@ export function LogoCropper({
                       height: 300,
                       x: xSpring,
                       y: ySpring,
+                      scale: scale,
                       position: "absolute",
                       top: "50%",
                       left: "50%",
@@ -185,8 +176,8 @@ export function LogoCropper({
                       ref={imageRef}
                       src={imageUrl}
                       alt="preview"
-                      className="w-full h-full object-cover"
                       draggable={false}
+                      className="w-full h-full object-cover"
                       style={{ userSelect: "none" }}
                     />
                   </motion.div>
@@ -196,7 +187,6 @@ export function LogoCropper({
               <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {/* Botões */}
             <div className="bg-white p-4 border-t flex gap-2">
               <button
                 onClick={onCancel}
