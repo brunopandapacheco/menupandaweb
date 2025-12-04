@@ -85,7 +85,7 @@ export function Logo({
       <div 
         className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
         style={{
-          top: '-40px', // Posiciona metade da logo sobre o banner
+          top: '-50px', // Ajustado para logo maior
           left: '50%',
           transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
           transition: isDragging ? 'none' : 'transform 0.2s ease',
@@ -95,7 +95,7 @@ export function Logo({
       >
         {logoUrl ? (
           <div 
-            className="w-32 h-32 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white"
+            className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white"
             style={{
               border: '4px solid white', // Borda externa branca
               boxSizing: 'border-box',
@@ -118,7 +118,7 @@ export function Logo({
           </div>
         ) : (
           <div 
-            className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold shadow-lg"
+            className="w-40 h-40 rounded-full flex items-center justify-center text-6xl font-bold shadow-lg"
             style={{ 
               border: '4px solid white', // Borda externa branca
               boxSizing: 'border-box',
@@ -145,10 +145,10 @@ export function Logo({
         className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
-          marginTop: '-80px', // Mantido para o container ficar sobre o banner
+          marginTop: '-100px', // Ajustado para logo maior
           position: 'relative',
           zIndex: 20,
-          paddingTop: '80px' // Espaço para a logo que está fora
+          paddingTop: '100px' // Ajustado para logo maior
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
