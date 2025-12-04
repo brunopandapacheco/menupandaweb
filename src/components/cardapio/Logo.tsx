@@ -95,27 +95,51 @@ export function Logo({
       >
         {logoUrl ? (
           <div 
-            className="w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg bg-white flex items-center justify-center" 
-            style={{ borderColor }}
+            className="w-32 h-32 rounded-full overflow-hidden shadow-lg flex items-center justify-center" 
+            style={{ 
+              border: '4px solid white', // Borda externa branca
+              boxSizing: 'border-box',
+              position: 'relative'
+            }}
           >
+            {/* Borda interna colorida */}
+            <div 
+              className="absolute inset-0 rounded-full"
+              style={{ 
+                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
+                pointerEvents: 'none'
+              }}
+            />
             <img 
               src={logoUrl} 
               alt="Logo" 
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain relative z-10"
               onClick={handleLogoClick}
             />
           </div>
         ) : (
           <div 
-            className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold border-4 shadow-lg"
+            className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold shadow-lg"
             style={{ 
-              backgroundColor: borderColor,
-              color: 'white',
-              borderColor
+              border: '4px solid white', // Borda externa branca
+              boxSizing: 'border-box',
+              position: 'relative',
+              backgroundColor: borderColor || '#ec4899',
+              color: 'white'
             }}
             onClick={handleLogoClick}
           >
-            {storeName?.charAt(0) || 'L'}
+            {/* Borda interna colorida */}
+            <div 
+              className="absolute inset-0 rounded-full"
+              style={{ 
+                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
+                pointerEvents: 'none'
+              }}
+            />
+            <span className="relative z-10">
+              {storeName?.charAt(0) || 'L'}
+            </span>
           </div>
         )}
       </div>
