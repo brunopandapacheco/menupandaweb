@@ -229,12 +229,12 @@ export default function DesignSettings() {
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
-      <div className="text-center sm:text-left pt-8 sm:pt-0">
+      <div className="text-center sm:text-left pt-8 sm:pt-0 relative z-10">
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
         <p className="text-lg font-semibold" style={{ color: '#4A3531' }}>Escolha as cores, imagens e configurações do seu cardápio</p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
