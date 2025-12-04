@@ -31,10 +31,6 @@ export default function DesignSettings() {
   const [textoRodape, setTextoRodape] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   
-  // Estados para background
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState('')
-  const [useBackgroundImage, setUseBackgroundImage] = useState(false)
-
   // Estados para principais categorias
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
@@ -73,12 +69,6 @@ export default function DesignSettings() {
       }
       if (designSettings.categorias) {
         setMainCategories(designSettings.categorias.slice(0, 3))
-      }
-      if (designSettings.background_image_url) {
-        setBackgroundImageUrl(designSettings.background_image_url)
-      }
-      if (designSettings.use_background_image !== undefined) {
-        setUseBackgroundImage(designSettings.use_background_image)
       }
     }
   }, [designSettings])
@@ -137,26 +127,6 @@ export default function DesignSettings() {
       showSuccess('🖼️ Logo atualizada com sucesso!')
     } else {
       showError('Erro ao salvar logo')
-    }
-  }
-
-  const saveBackgroundImageOnly = async (url: string) => {
-    const success = await saveDesignSettings({ background_image_url: url })
-    
-    if (success) {
-      showSuccess('🖼️ Background atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar background')
-    }
-  }
-
-  const saveUseBackgroundImage = async (use: boolean) => {
-    const success = await saveDesignSettings({ use_background_image: use })
-    
-    if (success) {
-      showSuccess(use ? '🖼️ Background de imagem ativado!' : '🌈 Background animado ativado!')
-    } else {
-      showError('Erro ao alterar tipo de background')
     }
   }
 
@@ -272,13 +242,8 @@ export default function DesignSettings() {
         <TabsContent value="imagens">
           <ImageSettings
             logoUrl={logoUrl}
-            backgroundImageUrl={backgroundImageUrl}
-            useBackgroundImage={useBackgroundImage}
             onLogoUrlChange={setLogoUrl}
-            onBackgroundImageUrlChange={setBackgroundImageUrl}
-            onUseBackgroundImageChange={setUseBackgroundImage}
             onSaveLogo={saveLogoOnly}
-            onSaveBackgroundImage={saveBackgroundImageOnly}
           />
         </TabsContent>
 
