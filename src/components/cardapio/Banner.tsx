@@ -27,9 +27,10 @@ export function Banner({
 
   return (
     <div 
+      className="w-full"
       style={{ 
         position: 'relative', 
-        height: '140px', // Reduzido de 180px para 140px
+        height: '180px',
         overflow: 'hidden',
         ...bannerStyle,
         animation: !useBackgroundImage ? 'gradient-x 3s ease infinite' : 'none'

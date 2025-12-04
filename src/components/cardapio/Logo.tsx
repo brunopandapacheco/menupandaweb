@@ -83,10 +83,10 @@ export function Logo({
     <div className="relative">
       {/* Container principal - posicionado para metade sobre o banner */}
       <div 
-        className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden"
+        className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
-          marginTop: '-60px', // Move para cima para ficar metade sobre o banner
+          marginTop: '-60px',
           position: 'relative',
           zIndex: 20
         }}
@@ -104,11 +104,14 @@ export function Logo({
           }}
         >
           {logoUrl ? (
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg" style={{ borderColor }}>
+            <div 
+              className="w-32 h-32 rounded-full overflow-hidden border-4 shadow-lg bg-white flex items-center justify-center" 
+              style={{ borderColor }}
+            >
               <img 
                 src={logoUrl} 
                 alt="Logo" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onClick={handleLogoClick}
               />
             </div>
