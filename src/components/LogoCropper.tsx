@@ -23,11 +23,9 @@ export function LogoCropper({
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-
   const xSpring = useSpring(0, { stiffness: 300, damping: 30 });
   const ySpring = useSpring(0, { stiffness: 300, damping: 30 });
 
-  // Zoom bidirecional 0.5x–3x
   const [scale, setScale] = useState(1);
   const lastScale = useRef(1);
 
@@ -40,15 +38,13 @@ export function LogoCropper({
 
     const url = URL.createObjectURL(imageFile);
     setImageUrl(url);
-
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
 
-  // Travar scroll enquanto o cropper está aberto
+  // Travar scroll enquanto aberto
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-
     return () => {
       document.body.style.overflow = originalOverflow;
     };
@@ -102,7 +98,7 @@ export function LogoCropper({
         y.set(dy);
       },
       onPinch: ({ offset: [d] }) => {
-        const newScale = Math.min(Math.max(d, 0.5), 3); // limite bidirecional
+        const newScale = Math.min(Math.max(d, 0.5), 3);
         setScale(newScale);
         lastScale.current = newScale;
       },
@@ -112,32 +108,31 @@ export function LogoCropper({
 
   return (
     <AnimatePresence>
-      {/* Overlay fullscreen com blur */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 backdrop-blur-md bg-black/40 z-40 flex items-center justify-center p-4"
+        className="fixed inset-0 backdrop-blur-md bg-black/40 z-[1000] flex items-center justify-center p-4"
       >
         {/* Card do cropper */}
-        <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden z-50">
-          {/* Botão de fechar */}
+        <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden z-[1010]">
+          {/* Botão fechar */}
           <button
             onClick={onCancel}
-            className="absolute -top-10 right-0 text-black hover:text-gray-700 transition-colors z-50"
+            className="absolute -top-10 right-0 text-black hover:text-gray-700 transition-colors z-[1020]"
           >
             <X className="w-5 h-5" />
           </button>
 
-          {/* Header clean, combinando com blur */}
+          {/* Header clean */}
           <div className="bg-white bg-opacity-80 p-4 rounded-t-lg border-b border-gray-300 text-center">
             <h2 className="text-lg font-bold text-gray-800">Ajustar Logo</h2>
             <p className="text-sm text-gray-600 mt-1">
-              Toque ou arraste para mover, use pinça para aumentar ou reduzir
+              Arraste para mover ou use a pinça para aumentar/diminuir
             </p>
           </div>
 
-          {/* Área do editor */}
+          {/* Editor */}
           <div className="p-4 bg-gray-50">
             <div
               ref={containerRef}
@@ -147,7 +142,6 @@ export function LogoCropper({
                 height: circularCrop ? "240px" : "200px",
               }}
             >
-              {/* Máscara do crop */}
               <div
                 className={`absolute inset-0 pointer-events-none border-2 border-purple-400 ${
                   circularCrop ? "rounded-full" : "rounded-lg"
@@ -155,7 +149,6 @@ export function LogoCropper({
                 style={{ zIndex: 10 }}
               />
 
-              {/* Container da imagem com gestos */}
               <div
                 className="absolute inset-0 overflow-hidden"
                 style={{
