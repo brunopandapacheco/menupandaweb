@@ -23,13 +23,12 @@ export function LogoCropper({
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const xSpring = useSpring(0, { stiffness: 300, damping: 30 });
-  const ySpring = useSpring(0, { stiffness: 300, damping: 30 });
+  const xSpring = useSpring(0, { stiffness: 200, damping: 20 }); // mais suave
+  const ySpring = useSpring(0, { stiffness: 200, damping: 20 });
 
   const [scale, setScale] = useState(1);
   const lastScale = useRef(1);
 
-  // Carregar imagem e resetar posições
   useEffect(() => {
     x.set(0);
     y.set(0);
@@ -41,7 +40,6 @@ export function LogoCropper({
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
 
-  // Travar scroll enquanto aberto
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -91,11 +89,14 @@ export function LogoCropper({
     }, "image/jpeg", 0.9);
   }, [circularCrop, onCropComplete, x, y, scale]);
 
+  // Ajuste fino com limites suaves
   const bind = useGesture(
     {
       onDrag: ({ offset: [dx, dy] }) => {
-        x.set(dx);
-        y.set(dy);
+        // Limite suave: ±50px por padrão, mas pode ajustar
+        const maxOffset = 50;
+        x.set(Math.max(Math.min(dx, maxOffset), -maxOffset));
+        y.set(Math.max(Math.min(dy, maxOffset), -maxOffset));
       },
       onPinch: ({ offset: [d] }) => {
         const newScale = Math.min(Math.max(d, 0.5), 3);
@@ -114,9 +115,7 @@ export function LogoCropper({
         exit={{ opacity: 0 }}
         className="fixed top-0 left-0 w-screen h-screen backdrop-blur-md bg-black/40 z-[1000] flex items-center justify-center p-0 m-0"
       >
-        {/* Card do cropper */}
         <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden z-[1010]">
-          {/* Botão fechar */}
           <button
             onClick={onCancel}
             className="absolute -top-10 right-0 text-black hover:text-gray-700 transition-colors z-[1020]"
@@ -124,15 +123,13 @@ export function LogoCropper({
             <X className="w-5 h-5" />
           </button>
 
-          {/* Header clean */}
           <div className="bg-white bg-opacity-80 p-4 rounded-t-lg border-b border-gray-300 text-center">
             <h2 className="text-lg font-bold text-gray-800">Ajustar Logo</h2>
             <p className="text-sm text-gray-600 mt-1">
-              Arraste para mover ou use a pinça para aumentar/diminuir
+              Arraste para mover suavemente ou use a pinça para aumentar/diminuir
             </p>
           </div>
 
-          {/* Editor */}
           <div className="p-4 bg-gray-50">
             <div
               ref={containerRef}
@@ -186,7 +183,6 @@ export function LogoCropper({
             <canvas ref={canvasRef} className="hidden" />
           </div>
 
-          {/* Botões */}
           <div className="bg-white p-4 border-t flex gap-2">
             <button
               onClick={onCancel}
