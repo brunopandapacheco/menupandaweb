@@ -103,15 +103,16 @@ export function Logo({
             }}
           >
             <div 
-              className="w-full h-full rounded-full overflow-hidden"
+              className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-white"
               style={{
-                border: '3px solid ' + (borderColor || '#ec4899') // Borda interna com a cor selecionada
+                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
+                padding: '2px' // Pequeno espaço entre a borda interna e a imagem
               }}
             >
               <img 
                 src={logoUrl} 
                 alt="Logo" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain rounded-full"
                 onClick={handleLogoClick}
               />
             </div>
@@ -131,7 +132,8 @@ export function Logo({
             <div 
               className="w-full h-full rounded-full flex items-center justify-center"
               style={{
-                border: '3px solid ' + (borderColor || '#ec4899') // Borda interna com a cor selecionada
+                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
+                padding: '2px' // Pequeno espaço entre a borda interna e o texto
               }}
             >
               {storeName?.charAt(0) || 'L'}
