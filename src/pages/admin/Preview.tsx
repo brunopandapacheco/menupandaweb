@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Eye, Smartphone, Tablet, Monitor, Copy, Check } from 'lucide-react'
+import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2 } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
@@ -143,22 +143,22 @@ export default function Preview() {
   if (device === 'desktop') {
     return (
       <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-        {/* Botão de copiar link */}
+        {/* Botão de compartilhar */}
         <div className="fixed top-4 right-4 z-50">
           <Button
             onClick={copyLink}
-            className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-2"
+            className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-1 px-3 py-1 h-8 text-xs"
             size="sm"
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4" />
+                <Check className="w-3 h-3" />
                 Copiado!
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4" />
-                Copiar Link
+                <Share2 className="w-3 h-3" />
+                Compartilhar
               </>
             )}
           </Button>
@@ -245,22 +245,22 @@ export default function Preview() {
   // Em mobile e tablet, mostrar preview em tela cheia sem opções de dispositivo
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-      {/* Botão de copiar link */}
+      {/* Botão de compartilhar */}
       <div className="fixed top-4 right-4 z-50">
         <Button
           onClick={copyLink}
-          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-2"
+          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-1 px-3 py-1 h-8 text-xs"
           size="sm"
         >
           {copied ? (
             <>
-              <Check className="w-4 h-4" />
+              <Check className="w-3 h-3" />
               Copiado!
             </>
           ) : (
             <>
-              <Copy className="w-4 h-4" />
-              Copiar Link
+              <Share2 className="w-3 h-3" />
+              Compartilhar
             </>
           )}
         </Button>
