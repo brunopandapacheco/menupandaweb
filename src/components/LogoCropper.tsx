@@ -112,7 +112,7 @@ export function LogoCropper({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 backdrop-blur-md bg-black/40 z-[1000] flex items-center justify-center p-4"
+        className="fixed top-0 left-0 w-screen h-screen backdrop-blur-md bg-black/40 z-[1000] flex items-center justify-center p-0 m-0"
       >
         {/* Card do cropper */}
         <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden z-[1010]">
