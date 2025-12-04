@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Eye, Smartphone, Tablet, Monitor } from 'lucide-react'
+import { Eye, Smartphone, Tablet, Monitor, Copy, Check } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
@@ -14,6 +14,7 @@ import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { Cart } from '@/components/cardapio/Cart'
 import { Produto } from '@/types/database'
+import { showSuccess } from '@/utils/toast'
 
 interface CartItem {
   id: string
@@ -30,6 +31,7 @@ export default function Preview() {
   const [favorites, setFavorites] = useState<string[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [copied, setCopied] = useState(false)
   const device = useDeviceDetection()
 
   // Se estiver carregando, mostrar loading
@@ -108,6 +110,30 @@ export default function Preview() {
     setCartItems([])
   }
 
+  const copyLink = async () => {
+    if (!designSettings?.slug) return
+    
+    const link = `${window.location.origin}/cardapio/${designSettings.slug}`
+    
+    try {
+      await navigator.clipboard.writeText(link)
+      setCopied(true)
+      showSuccess('Link copiado com sucesso!')
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      // Fallback para navegadores mais antigos
+      const textArea = document.createElement('textarea')
+      textArea.value = link
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      setCopied(true)
+      showSuccess('Link copiado com sucesso!')
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
   const categories = Array.from(new Set(produtos.map(p => p.categoria))).map(cat => ({
     name: cat,
     icon: '🧁'
@@ -117,6 +143,27 @@ export default function Preview() {
   if (device === 'desktop') {
     return (
       <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
+        {/* Botão de copiar link */}
+        <div className="fixed top-4 right-4 z-50">
+          <Button
+            onClick={copyLink}
+            className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-2"
+            size="sm"
+          >
+            {copied ? (
+              <>
+                <Check className="w-4 h-4" />
+                Copiado!
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" />
+                Copiar Link
+              </>
+            )}
+          </Button>
+        </div>
+
         <Banner 
           borderColor={designSettings?.cor_borda}
           bannerGradient={designSettings?.banner_gradient}
@@ -198,6 +245,27 @@ export default function Preview() {
   // Em mobile e tablet, mostrar preview em tela cheia sem opções de dispositivo
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
+      {/* Botão de copiar link */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button
+          onClick={copyLink}
+          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 flex items-center gap-2"
+          size="sm"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4" />
+              Copiado!
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4" />
+              Copiar Link
+            </>
+          )}
+        </Button>
+      </div>
+
       <Banner 
         borderColor={designSettings?.cor_borda}
         bannerGradient={designSettings?.banner_gradient}
