@@ -27,19 +27,11 @@ export function LogoCropper({
   const xSpring = useSpring(0, { stiffness: 300, damping: 30 });
   const ySpring = useSpring(0, { stiffness: 300, damping: 30 });
 
-  useEffect(() => {
-    const unsubX = x.on("change", (v) => xSpring.set(v));
-    const unsubY = y.on("change", (v) => ySpring.set(v));
-    return () => {
-      unsubX();
-      unsubY();
-    };
-  }, []);
-
   // Zoom bidirecional 0.5x–3x
   const [scale, setScale] = useState(1);
   const lastScale = useRef(1);
 
+  // Carregar imagem e resetar posições
   useEffect(() => {
     x.set(0);
     y.set(0);
@@ -120,25 +112,32 @@ export function LogoCropper({
 
   return (
     <AnimatePresence>
+      {/* Overlay fullscreen com blur */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 backdrop-blur-md bg-black/40 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 backdrop-blur-md bg-black/40 z-40 flex items-center justify-center p-4"
       >
-        <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
+        {/* Card do cropper */}
+        <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden z-50">
+          {/* Botão de fechar */}
           <button
             onClick={onCancel}
-            className="absolute -top-10 right-0 text-black hover:text-gray-700 transition-colors z-10"
+            className="absolute -top-10 right-0 text-black hover:text-gray-700 transition-colors z-50"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 text-white">
-            <h2 className="text-lg font-bold text-center">Ajustar Logo</h2>
-            <p className="text-center text-white/70 text-sm">Arraste ou use pinça para ajustar</p>
+          {/* Header clean, combinando com blur */}
+          <div className="bg-white bg-opacity-80 p-4 rounded-t-lg border-b border-gray-300 text-center">
+            <h2 className="text-lg font-bold text-gray-800">Ajustar Logo</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Toque ou arraste para mover, use pinça para aumentar ou reduzir
+            </p>
           </div>
 
+          {/* Área do editor */}
           <div className="p-4 bg-gray-50">
             <div
               ref={containerRef}
@@ -148,6 +147,7 @@ export function LogoCropper({
                 height: circularCrop ? "240px" : "200px",
               }}
             >
+              {/* Máscara do crop */}
               <div
                 className={`absolute inset-0 pointer-events-none border-2 border-purple-400 ${
                   circularCrop ? "rounded-full" : "rounded-lg"
@@ -155,6 +155,7 @@ export function LogoCropper({
                 style={{ zIndex: 10 }}
               />
 
+              {/* Container da imagem com gestos */}
               <div
                 className="absolute inset-0 overflow-hidden"
                 style={{
@@ -192,6 +193,7 @@ export function LogoCropper({
             <canvas ref={canvasRef} className="hidden" />
           </div>
 
+          {/* Botões */}
           <div className="bg-white p-4 border-t flex gap-2">
             <button
               onClick={onCancel}
