@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { Star } from 'lucide-react'
-import { useGesture } from '@use-gesture/react'
-import { motion, useSpring, useMotionValue } from 'framer-motion'
 
 interface LogoProps {
   logoUrl?: string
@@ -28,68 +26,6 @@ export function Logo({
 }: LogoProps) {
   const [imageError, setImageError] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  
-  // Motion values para gestos
-  const scale = useMotionValue(1)
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  
-  // Spring animations para movimento suave
-  const scaleSpring = useSpring(scale, { 
-    stiffness: 300, 
-    damping: 30
-  })
-  const xSpring = useSpring(x, { 
-    stiffness: 300, 
-    damping: 30 
-  })
-  const ySpring = useSpring(y, { 
-    stiffness: 300, 
-    damping: 30 
-  })
-
-  // Configurar gestos com @use-gesture/react
-  const bind = useGesture({
-    // Pinch-to-zoom (zoom com dois dedos)
-    onPinch: ({ offset: [d] }) => {
-      const newScale = 1 + d / 200
-      scale.set(Math.min(Math.max(0.5, newScale), 3))
-    },
-    
-    // Pan/Arrastar (com um dedo)
-    onDrag: ({ offset: [dx, dy], memo }) => {
-      // Limites de arrasto baseados no container
-      const maxDrag = 50
-      x.set(Math.min(Math.max(-maxDrag, dx), maxDrag))
-      y.set(Math.min(Math.max(-maxDrag, dy), maxDrag))
-      return memo
-    },
-    
-    // Wheel zoom (desktop)
-    onWheel: ({ event, delta: [dy] }) => {
-      event.preventDefault()
-      const currentScale = scale.get()
-      const newScale = currentScale - dy * 0.001
-      scale.set(Math.min(Math.max(0.5, newScale), 3))
-    },
-    
-    // Reset com duplo clique
-    onDoubleClick: () => {
-      scale.set(1)
-      x.set(0)
-      y.set(0)
-    }
-  }, {
-    // Configurações de drag
-    drag: {
-      filterTaps: true,
-      bounds: { left: -50, right: 50, top: -50, bottom: 50 }
-    },
-    // Configurações de pinch
-    pinch: {
-      scaleBounds: { min: 0.5, max: 3 }
-    }
-  })
 
   // Limitar o tamanho do nome da loja
   const getDisplayName = (name?: string): string => {
@@ -201,7 +137,7 @@ export function Logo({
             overflow: 'hidden'
           }}
         >
-          {/* Container da logo com gestos */}
+          {/* Container da logo - estático sem gestos */}
           <div 
             ref={containerRef}
             style={{
@@ -212,69 +148,50 @@ export function Logo({
               alignItems: 'center',
               justifyContent: 'center',
               overflow: 'hidden',
-              backgroundColor: 'white',
-              cursor: 'grab',
-              touchAction: 'none'
+              backgroundColor: 'white'
             }}
-            {...bind()}
           >
-            <motion.div
-              style={{
+            {/* Logo estática */}
+            {hasValidLogo ? (
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                style={{ 
+                  width: '144px',
+                  height: '144px',
+                  borderRadius: '50%', 
+                  objectFit: 'cover',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none'
+                }}
+                onError={() => {
+                  console.log('Erro ao carregar imagem:', logoUrl)
+                  setImageError(true)
+                }}
+                onLoad={() => {
+                  console.log('Imagem carregada com sucesso:', logoUrl)
+                  setImageError(false)
+                }}
+                draggable={false}
+              />
+            ) : (
+              // Placeholder quando não há logo
+              <div style={{
                 width: '144px',
                 height: '144px',
                 borderRadius: '50%',
+                backgroundColor: '#f3f4f6',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                overflow: 'hidden',
-                scale: scaleSpring,
-                x: xSpring,
-                y: ySpring,
-                cursor: 'grab'
-              }}
-              whileTap={{ cursor: 'grabbing' }}
-            >
-              {hasValidLogo ? (
-                <img 
-                  src={logoUrl} 
-                  alt="Logo" 
-                  style={{ 
-                    width: '144px',
-                    height: '144px',
-                    borderRadius: '50%', 
-                    objectFit: 'cover',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    MozUserSelect: 'none',
-                    msUserSelect: 'none'
-                  }}
-                  onError={() => {
-                    console.log('Erro ao carregar imagem:', logoUrl)
-                    setImageError(true)
-                  }}
-                  onLoad={() => {
-                    console.log('Imagem carregada com sucesso:', logoUrl)
-                    setImageError(false)
-                  }}
-                  draggable={false}
-                />
-              ) : (
-                // Placeholder quando não há logo
-                <div style={{
-                  width: '144px',
-                  height: '144px',
-                  borderRadius: '50%',
-                  backgroundColor: '#f3f4f6',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '48px',
-                  color: '#9ca3af'
-                }}>
-                  🧁
-                </div>
-              )}
-            </motion.div>
+                fontSize: '48px',
+                color: '#9ca3af'
+              }}>
+                🧁
+              </div>
+            )}
           </div>
         </div>
       </div>
