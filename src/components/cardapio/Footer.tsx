@@ -47,11 +47,6 @@ export function Footer({ textoRodape, em_ferias, data_retorno_ferias }: FooterPr
     )
   }
 
-  return (
-    <footer className="bg-white border-t border-gray-200 py-6 px-4">
-      <div className="container mx-auto text-center">
-        <p className="text-gray-600 font-medium">{displayText}</p>
-      </div>
-    </footer>
-  )
+  // Footer removido - retorna null para não renderizar nada
+  return null
 }
