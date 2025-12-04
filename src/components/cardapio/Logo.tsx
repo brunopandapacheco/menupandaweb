@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Upload, X, Move } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { Star } from 'lucide-react'
 
 interface LogoProps {
   logoUrl?: string
@@ -9,6 +10,10 @@ interface LogoProps {
   storeName?: string
   storeDescription?: string
   corNome?: string
+  avaliacaoMedia?: number
+  emFerias?: boolean
+  horarioFuncionamentoInicio?: string
+  horarioFuncionamentoFim?: string
   isEditable?: boolean
   onLogoChange?: (url: string) => void
   onLogoPositionChange?: (position: { x: number; y: number }) => void
@@ -21,6 +26,10 @@ export function Logo({
   storeName, 
   storeDescription,
   corNome,
+  avaliacaoMedia = 4.9,
+  emFerias,
+  horarioFuncionamentoInicio = '08:00',
+  horarioFuncionamentoFim = '18:00',
   isEditable = false,
   onLogoChange,
   onLogoPositionChange,
@@ -78,6 +87,224 @@ export function Logo({
       setShowUpload(true)
     }
   }
+
+  const renderStars = (rating: number) => {
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 !== 0
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <Star key={`full-${i}`} size={14} fill="#fbbf24" color="#fbbf24" />
+      )
+    }
+
+    if (hasHalfStar) {
+      stars.push(
+        <div key="half" style={{ position: 'relative', display: 'inline-block' }}>
+          <Star size={14} color="#d1d5db" />
+          <div style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '50%', 
+            overflow: 'hidden' 
+          }}>
+            <Star size={14} fill="#fbbf24" color="#fbbf24" />
+          </div>
+        </div>
+      )
+    }
+
+    const emptyStars = 5 - Math.ceil(rating)
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <Star key={`empty-${i}`} size={14} color="#d1d5db" />
+      )
+    }
+
+    return stars
+  }
+
+  const getStatusMessage = () => {
+    if (emFerias) {
+      return { 
+        status: 'Fechado', 
+        time: 'De férias', 
+        color: '#dc2626',
+        bgColor: '#fee2e2'
+<dyad-problem-report summary="2 problems">
+<problem file="src/components/cardapio/Logo.tsx" line="265" column="28" code="2552">Cannot find name 'avalicaoMedia'. Did you mean 'avaliacaoMedia'?</problem>
+<problem file="src/components/cardapio/Logo.tsx" line="268" column="16" code="2552">Cannot find name 'avalicaoMedia'. Did you mean 'avaliacaoMedia'?</problem>
+</dyad-problem-report><think>
+</think>
+<dyad-write path="src/components/cardapio/Logo.tsx" description="Fix typo in avaliacaoMedia variable name">
+import { useState } from 'react'
+import { Upload, X, Move } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Star } from 'lucide-react'
+
+interface LogoProps {
+  logoUrl?: string
+  borderColor?: string
+  storeName?: string
+  storeDescription?: string
+  corNome?: string
+  avaliacaoMedia?: number
+  emFerias?: boolean
+  horarioFuncionamentoInicio?: string
+  horarioFuncionamentoFim?: string
+  isEditable?: boolean
+  onLogoChange?: (url: string) => void
+  onLogoPositionChange?: (position: { x: number; y: number }) => void
+  logoPosition?: { x: number; y: number }
+}
+
+export function Logo({ 
+  logoUrl, 
+  borderColor, 
+  storeName, 
+  storeDescription,
+  corNome,
+  avaliacaoMedia = 4.9,
+  emFerias,
+  horarioFuncionamentoInicio = '08:00',
+  horarioFuncionamentoFim = '18:00',
+  isEditable = false,
+  onLogoChange,
+  onLogoPositionChange,
+  logoPosition = { x: 0, y: 0 }
+}: LogoProps) {
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [showUpload, setShowUpload] = useState(false)
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!isEditable || !onLogoPositionChange) return
+    
+    setIsDragging(true)
+    setDragStart({
+      x: e.clientX - logoPosition.x,
+      y: e.clientY - logoPosition.y
+    })
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !isEditable || !onLogoPositionChange) return
+    
+    const newX = e.clientX - dragStart.x
+    const newY = e.clientY - dragStart.y
+    
+    // Limitar movimento dentro do container
+    const maxX = 100
+    const maxY = 50
+    const minX = -100
+    const minY = -50
+    
+    onLogoPositionChange({
+      x: Math.max(minX, Math.min(maxX, newX)),
+      y: Math.max(minY, Math.min(maxY, newY))
+    })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && onLogoChange) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        onLogoChange(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleLogoClick = () => {
+    if (isEditable) {
+      setShowUpload(true)
+    }
+  }
+
+  const renderStars = (rating: number) => {
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 !== 0
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <Star key={`full-${i}`} size={14} fill="#fbbf24" color="#fbbf24" />
+      )
+    }
+
+    if (hasHalfStar) {
+      stars.push(
+        <div key="half" style={{ position: 'relative', display: 'inline-block' }}>
+          <Star size={14} color="#d1d5db" />
+          <div style={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            width: '50%', 
+            overflow: 'hidden' 
+          }}>
+            <Star size={14} fill="#fbbf24" color="#fbbf24" />
+          </div>
+        </div>
+      )
+    }
+
+    const emptyStars = 5 - Math.ceil(rating)
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <Star key={`empty-${i}`} size={14} color="#d1d5db" />
+      )
+    }
+
+    return stars
+  }
+
+  const getStatusMessage = () => {
+    if (emFerias) {
+      return { 
+        status: 'Fechado', 
+        time: 'De férias', 
+        color: '#dc2626',
+        bgColor: '#fee2e2'
+      }
+    }
+
+    const now = new Date()
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTime = currentHour * 60 + currentMinute
+    
+    const [startHour, startMinute] = horarioFuncionamentoInicio.split(':').map(Number)
+    const [endHour, endMinute] = horarioFuncionamentoFim.split(':').map(Number)
+    const startTime = startHour * 60 + startMinute
+    const endTime = endHour * 60 + endMinute
+    
+    if (currentTime >= startTime && currentTime <= endTime) {
+      return { 
+        status: 'Aberto', 
+        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
+        color: '#15803d',
+        bgColor: '#dcfce7'
+      }
+    } else {
+      return { 
+        status: 'Fechado', 
+        time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, 
+        color: '#dc2626',
+        bgColor: '#fee2e2'
+      }
+    }
+  }
+
+  const status = getStatusMessage()
 
   return (
     <div className="relative">
@@ -172,6 +399,34 @@ export function Logo({
           >
             {storeName}
           </h1>
+          
+          {/* Avaliação com estrelas */}
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="flex items-center gap-1">
+              {renderStars(avaliacaoMedia)}
+            </div>
+            <span className="text-sm font-semibold text-gray-700">
+              {avaliacaoMedia}/5.0
+            </span>
+          </div>
+          
+          {/* Status de funcionamento */}
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div>
+              <p style={{ 
+                fontWeight: 'bold', 
+                color: status.color,
+                backgroundColor: status.bgColor,
+                padding: '2px 8px',
+                borderRadius: '4px',
+                display: 'inline-block',
+                fontSize: '14px'
+              }}>
+                {status.status} • {status.time}
+              </p>
+            </div>
+          </div>
+          
           <p className="text-gray-600 text-sm">
             {storeDescription}
           </p>

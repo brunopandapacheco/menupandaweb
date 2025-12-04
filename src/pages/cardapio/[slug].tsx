@@ -130,6 +130,28 @@ export default function CardapioPublico() {
     setCartItems([])
   }
 
+  // Extrair horários das configurações
+  const getHorariosFromConfig = () => {
+    if (configuracoes?.horarios_semana && configuracoes.horarios_semana.length > 0) {
+      const hoje = new Date().getDay()
+      const diaSemana = configuracoes.horarios_semana[hoje === 0 ? 6 : hoje - 1] // Domingo = 0 -> index 6
+      if (diaSemana && diaSemana.open) {
+        return {
+          inicio: diaSemana.openTime,
+          fim: diaSemana.closeTime
+        }
+      }
+    }
+    
+    // Fallback para horários padrão
+    return {
+      inicio: configuracoes?.horario_funcionamento_inicio || '08:00',
+      fim: configuracoes?.horario_funcionamento_fim || '18:00'
+    }
+  }
+
+  const horarios = getHorariosFromConfig()
+
   // Sempre usar as 4 categorias padrão, mas mostrar apenas as que têm produtos
   const allCategories = [
     { name: 'Todos', icon: '/icons/Todos.png' },
@@ -177,6 +199,10 @@ export default function CardapioPublico() {
         storeName={designSettings.nome_loja}
         storeDescription={designSettings.descricao_loja}
         corNome={designSettings.cor_nome}
+        avaliacaoMedia={configuracoes?.avaliacao_media}
+        emFerias={configuracoes?.em_ferias}
+        horarioFuncionamentoInicio={horarios.inicio}
+        horarioFuncionamentoFim={horarios.fim}
       />
 
       <div className="container mx-auto px-4 py-4">
