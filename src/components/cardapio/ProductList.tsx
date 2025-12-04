@@ -17,7 +17,7 @@ interface ProductListProps {
   produtos: Produto[]
   favorites: string[]
   onToggleFavorite: (productId: string) => void
-  onOrder: (productName: string) => void
+  onOrder: (product: Produto) => void
   backgroundColor: string
   borderColor: string
   selectedCategory: string | null
@@ -43,7 +43,7 @@ export function ProductList({
         {/* Produtos em promoção */}
         {promotionalProducts.length > 0 && (
           <div style={{ marginBottom: '24px' }}>
-            <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
               <span style={{ fontSize: '20px' }}>🔥</span> Promoções
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -53,7 +53,7 @@ export function ProductList({
                   product={product}
                   isFavorite={favorites.includes(product.id)}
                   onToggleFavorite={onToggleFavorite}
-                  onOrder={onOrder}
+                  onAddToCart={onOrder}
                   backgroundColor={backgroundColor}
                   borderColor={borderColor}
                 />
@@ -75,7 +75,7 @@ export function ProductList({
                   product={product}
                   isFavorite={favorites.includes(product.id)}
                   onToggleFavorite={onToggleFavorite}
-                  onOrder={onOrder}
+                  onAddToCart={onOrder}
                   backgroundColor={backgroundColor}
                   borderColor={borderColor}
                 />
@@ -97,7 +97,7 @@ export function ProductList({
       {/* Promoções da categoria */}
       {promocoesCategoria.length > 0 && (
         <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
             <span style={{ fontSize: '20px' }}>🔥</span> Promoções - {selectedCategory}
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -107,7 +107,7 @@ export function ProductList({
                 product={product}
                 isFavorite={favorites.includes(product.id)}
                 onToggleFavorite={onToggleFavorite}
-                onOrder={onOrder}
+                onAddToCart={onOrder}
                 backgroundColor={backgroundColor}
                 borderColor={borderColor}
               />
@@ -129,7 +129,7 @@ export function ProductList({
                 product={product}
                 isFavorite={favorites.includes(product.id)}
                 onToggleFavorite={onToggleFavorite}
-                onOrder={onOrder}
+                onAddToCart={onOrder}
                 backgroundColor={backgroundColor}
                 borderColor={borderColor}
               />

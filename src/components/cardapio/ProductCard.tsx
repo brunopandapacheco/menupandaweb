@@ -18,7 +18,7 @@ interface ProductCardProps {
   product: Produto
   isFavorite: boolean
   onToggleFavorite: (productId: string) => void
-  onOrder: (productName: string) => void
+  onAddToCart: (product: Produto) => void
   backgroundColor: string
   borderColor: string
 }
@@ -36,7 +36,7 @@ export function ProductCard({
   product, 
   isFavorite, 
   onToggleFavorite, 
-  onOrder, 
+  onAddToCart,
   backgroundColor, 
   borderColor 
 }: ProductCardProps) {
@@ -159,7 +159,7 @@ export function ProductCard({
             <button 
               className="w-full h-6 font-semibold text-white rounded-md cursor-pointer transition-transform hover:scale-105 text-xs"
               style={{ backgroundColor: borderColor }}
-              onClick={() => onOrder(product.nome)}
+              onClick={() => onAddToCart(product)}
             >
               Adicionar ao Carrinho
             </button>

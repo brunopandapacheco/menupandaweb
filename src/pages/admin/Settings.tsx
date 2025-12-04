@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Clock, Calendar, Power, Sun, Moon, Plane, Type } from 'lucide-react'
+import { Clock, Calendar, Power, Sun, Moon, Plane, Type, Phone } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
@@ -30,7 +30,8 @@ export default function Settings() {
   const [settings, setSettings] = useState({
     em_ferias: false,
     data_retorno_ferias: '',
-    horarios_semana: weekDays
+    horarios_semana: weekDays,
+    telefone: '(11) 99999-9999'
   })
   const [designSettingsLocal, setDesignSettingsLocal] = useState({
     nome_loja: 'Doces da Vovó',
@@ -43,7 +44,8 @@ export default function Settings() {
       setSettings({
         em_ferias: configuracoes.em_ferias || false,
         data_retorno_ferias: configuracoes.data_retorno_ferias || '',
-        horarios_semana: configuracoes.horarios_semana || weekDays
+        horarios_semana: configuracoes.horarios_semana || weekDays,
+        telefone: configuracoes.telefone || '(11) 99999-9999'
       })
     }
   }, [configuracoes])
@@ -165,6 +167,34 @@ export default function Settings() {
               </div>
               <Button onClick={handleSaveDescricao} className="w-full font-[650]" size="lg">
                 Salvar
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* WhatsApp */}
+          <Card className="border-0 shadow-md">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
+                <Phone className="w-5 h-5" />
+                WhatsApp para Pedidos
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="telefone" className="text-sm font-medium">Telefone</Label>
+                <Input
+                  id="telefone"
+                  value={settings.telefone}
+                  onChange={(e) => setSettings(prev => ({ ...prev, telefone: e.target.value }))}
+                  placeholder="(11) 99999-9999"
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Este número será usado para receber os pedidos do carrinho
+                </p>
+              </div>
+              <Button onClick={handleSave} className="w-full font-[650]" size="lg">
+                Salvar WhatsApp
               </Button>
             </CardContent>
           </Card>
