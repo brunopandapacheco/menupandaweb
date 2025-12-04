@@ -96,24 +96,46 @@ export function Logo({
         {logoUrl ? (
           <div 
             className="w-32 h-32 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white"
+            style={{
+              border: '4px solid white', // Borda externa branca
+              boxSizing: 'border-box',
+              padding: '3px' // Espaço para a borda interna
+            }}
           >
-            <img 
-              src={logoUrl} 
-              alt="Logo" 
-              className="w-full h-full object-contain"
-              onClick={handleLogoClick}
-            />
+            <div 
+              className="w-full h-full rounded-full overflow-hidden"
+              style={{
+                border: '3px solid ' + (borderColor || '#ec4899') // Borda interna com a cor selecionada
+              }}
+            >
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-full h-full object-contain"
+                onClick={handleLogoClick}
+              />
+            </div>
           </div>
         ) : (
           <div 
             className="w-32 h-32 rounded-full flex items-center justify-center text-5xl font-bold shadow-lg"
             style={{ 
+              border: '4px solid white', // Borda externa branca
+              boxSizing: 'border-box',
+              padding: '3px', // Espaço para a borda interna
               backgroundColor: borderColor || '#ec4899',
               color: 'white'
             }}
             onClick={handleLogoClick}
           >
-            {storeName?.charAt(0) || 'L'}
+            <div 
+              className="w-full h-full rounded-full flex items-center justify-center"
+              style={{
+                border: '3px solid ' + (borderColor || '#ec4899') // Borda interna com a cor selecionada
+              }}
+            >
+              {storeName?.charAt(0) || 'L'}
+            </div>
           </div>
         )}
       </div>
