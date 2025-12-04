@@ -97,7 +97,7 @@ export function Logo({
           <div 
             className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white"
             style={{
-              border: '4px solid white', // Borda externa branca
+              border: '3px solid white', // Borda externa branca menor
               boxSizing: 'border-box',
               padding: '3px' // Espaço para a borda interna
             }}
@@ -121,7 +121,7 @@ export function Logo({
           <div 
             className="w-40 h-40 rounded-full flex items-center justify-center text-6xl font-bold shadow-lg"
             style={{ 
-              border: '4px solid white', // Borda externa branca
+              border: '3px solid white', // Borda externa branca menor
               boxSizing: 'border-box',
               padding: '3px', // Espaço para a borda interna
               backgroundColor: borderColor || '#ec4899',
