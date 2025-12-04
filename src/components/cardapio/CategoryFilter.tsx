@@ -12,20 +12,16 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
-  // Categorias padrão com emojis
+  // Categorias padrão com ícones personalizados da pasta public/icons
   const defaultCategories = [
-    { name: 'Todos', icon: '📋' },
-    { name: 'Bolos', icon: '🎂' },
-    { name: 'Doces', icon: '🧁' },
-    { name: 'Salgados', icon: '🥐' }
+    { name: 'Todos', icon: '/icons/Todos.png' },
+    { name: 'Bolos', icon: '/icons/Bolos.png' },
+    { name: 'Doces', icon: '/icons/Doces.png' },
+    { name: 'Salgados', icon: '/icons/Salgados.png' }
   ]
 
-  // Mapear emojis para categorias conhecidas
+  // Mapear emojis para categorias conhecidas (apenas para categorias personalizadas)
   const categoryEmojis: { [key: string]: string } = {
-    'Todos': '📋',
-    'Bolos': '🎂',
-    'Doces': '🧁',
-    'Salgados': '🥐',
     'Brigadeiros': '🍫',
     'Cookies': '🍪',
     'Tortas': '🥧',
@@ -120,12 +116,26 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 }
               }}
             >
-              <span style={{ 
-                fontSize: '24px', 
-                marginBottom: '4px'
-              }}>
-                {category.icon}
-              </span>
+              {/* Renderiza ícone personalizado ou emoji */}
+              {category.icon.startsWith('/') ? (
+                <img 
+                  src={category.icon} 
+                  alt={category.name}
+                  style={{ 
+                    width: '24px', 
+                    height: '24px',
+                    marginBottom: '4px',
+                    objectFit: 'contain'
+                  }}
+                />
+              ) : (
+                <span style={{ 
+                  fontSize: '24px', 
+                  marginBottom: '4px'
+                }}>
+                  {category.icon}
+                </span>
+              )}
               <span style={{ 
                 fontSize: '10px', 
                 fontWeight: '600', 
