@@ -132,7 +132,7 @@ export default function DesignSettings() {
   if (loading) return <div>Carregando...</div>
 
   return (
-    <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
+    <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#2b0033' }}>
       <div className="text-center sm:text-left pt-8 sm:pt-0 relative z-10">
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
         <p className="text-lg font-normal mt-3" style={{ color: '#4A3531', fontFamily: 'Dancing Script, cursive' }}>Escolha as cores, imagens e configurações do seu cardápio</p>
