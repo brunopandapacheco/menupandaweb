@@ -153,18 +153,50 @@ export default function CardapioPublico() {
 
   const horarios = getHorariosFromConfig()
 
-  // Sempre usar as 4 categorias padrão, mas mostrar apenas as que têm produtos
-  const allCategories = [
-    { name: 'Todos', icon: '/icons/Todos.png' },
-    { name: 'Bolos', icon: '/icons/Bolos.png' },
-    { name: 'Doces', icon: '/icons/Doces.png' },
-    { name: 'Salgados', icon: '/icons/Salgados.png' }
-  ]
+  // Usar categorias do designSettings em vez de categorias fixas
+  const getCategories = () => {
+    // Sempre incluir "Todos" primeiro
+    const categories = [{ name: 'Todos', icon: '/icons/Todos.png' }]
+    
+    // Adicionar categorias configuradas pelo usuário na ordem correta
+    if (designSettings?.categorias && designSettings.categorias.length > 0) {
+      designSettings.categorias.forEach(category => {
+        // Verificar se a categoria tem produtos
+        const hasProducts = produtos.some(p => p.categoria === category)
+        if (hasProducts) {
+          // Mapear para ícones conhecidos ou usar emoji padrão
+          const iconMap: { [key: string]: string } = {
+            'Bolos': '/icons/Bolos.png',
+            'Doces': '/icons/Doces.png',
+            'Salgados': '/icons/Salgados.png'
+          }
+          
+          categories.push({
+            name: category,
+            icon: iconMap[category] || '🧁'
+          })
+        }
+      })
+    } else {
+      // Fallback para categorias padrão se não houver configuração
+      const defaultCategories = [
+        { name: 'Bolos', icon: '/icons/Bolos.png' },
+        { name: 'Doces', icon: '/icons/Doces.png' },
+        { name: 'Salgados', icon: '/icons/Salgados.png' }
+      ]
+      
+      defaultCategories.forEach(cat => {
+        const hasProducts = produtos.some(p => p.categoria === cat.name)
+        if (hasProducts) {
+          categories.push(cat)
+        }
+      })
+    }
+    
+    return categories
+  }
 
-  // Filtrar categorias que têm produtos
-  const categories = allCategories.filter(cat => 
-    cat.name === 'Todos' || produtos.some(p => p.categoria === cat.name)
-  )
+  const categories = getCategories()
 
   if (loading) {
     return (
