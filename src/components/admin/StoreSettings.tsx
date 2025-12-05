@@ -9,7 +9,6 @@ import { showSuccess, showError } from '@/utils/toast'
 interface StoreSettingsProps {
   nomeLoja: string
   descricaoLoja: string
-  textoRodape: string
   horarioSemanaAbre: string
   horarioSemanaFecha: string
   horarioSabadoAbre: string
@@ -20,7 +19,6 @@ interface StoreSettingsProps {
   domingoAberto: boolean
   onNomeLojaChange: (value: string) => void
   onDescricaoLojaChange: (value: string) => void
-  onTextoRodapeChange: (value: string) => void
   onHorarioSemanaAbreChange: (value: string) => void
   onHorarioSemanaFechaChange: (value: string) => void
   onHorarioSabadoAbreChange: (value: string) => void
@@ -36,7 +34,6 @@ interface StoreSettingsProps {
 export function StoreSettings({
   nomeLoja,
   descricaoLoja,
-  textoRodape,
   horarioSemanaAbre,
   horarioSemanaFecha,
   horarioSabadoAbre,
@@ -47,7 +44,6 @@ export function StoreSettings({
   domingoAberto,
   onNomeLojaChange,
   onDescricaoLojaChange,
-  onTextoRodapeChange,
   onHorarioSemanaAbreChange,
   onHorarioSemanaFechaChange,
   onHorarioSabadoAbreChange,
@@ -110,21 +106,6 @@ export function StoreSettings({
                 {descricaoLoja.length}/300 caracteres
               </p>
             </div>
-          </div>
-
-          {/* Texto do Rodapé */}
-          <div className="space-y-2">
-            <Label htmlFor="textoRodape" className="text-sm font-medium" style={{ color: '#4A3531' }}>
-              Texto do Rodapé
-            </Label>
-            <Input
-              id="textoRodape"
-              value={textoRodape}
-              onChange={(e) => onTextoRodapeChange(e.target.value)}
-              placeholder="Faça seu pedido! 📞 (11) 99999-9999"
-              className="w-full"
-            />
-            <p className="text-xs text-gray-500">Valor atual: "{textoRodape}"</p>
           </div>
 
           {/* Botão Salvar - Design Moderno */}
