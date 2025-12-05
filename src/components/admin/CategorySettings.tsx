@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { X, GripVertical } from 'lucide-react'
+import { X, GripVertical, AlertTriangle } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
+import { useDatabase } from '@/hooks/useDatabase'
 
 const defaultCategories = [
   'Bolos',
@@ -18,6 +19,36 @@ interface CategorySettingsProps {
 
 export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const { produtos } = useDatabase()
+
+  // Obter categorias que realmente existem nos produtos
+  const getProductCategories = () => {
+    const categories = Array.from(new Set(produtos.map(p => p.categoria)))
+    return categories.filter(cat => cat && cat.trim() !== '')
+  }
+
+  const productCategories = getProductCategories()
+
+  // Sincronizar categorias: manter apenas as que existem nos produtos
+  const syncCategories = () => {
+    const validCategories = mainCategories.filter(cat => 
+      defaultCategories.includes(cat) || productCategories.includes(cat)
+    )
+    
+    // Adicionar categorias de produtos que não estão na lista
+    const missingCategories = productCategories.filter(cat => 
+      !validCategories.includes(cat)
+    )
+    
+    const syncedCategories = [...validCategories, ...missingCategories]
+    onMainCategoriesChange(syncedCategories)
+    showSuccess('Categorias sincronizadas com sucesso!')
+  }
+
+  // Verificar se há categorias órfãs (que não existem mais nos produtos)
+  const hasOrphanedCategories = mainCategories.some(cat => 
+    !defaultCategories.includes(cat) && !productCategories.includes(cat)
+  )
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index)
@@ -61,6 +92,31 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   return (
     <div className="space-y-6">
+      {/* Alerta de sincronização se houver categorias órfãs */}
+      {hasOrphanedCategories && (
+        <Card className="border-2 border-orange-200 bg-orange-50">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-orange-800 mb-1">Categorias desatualizadas</h4>
+                <p className="text-sm text-orange-700 mb-3">
+                  Detectamos categorias que não existem mais nos seus produtos. 
+                  Clique no botão abaixo para sincronizar automaticamente.
+                </p>
+                <Button 
+                  onClick={syncCategories}
+                  className="bg-orange-600 hover:bg-orange-700 text-white"
+                  size="sm"
+                >
+                  Sincronizar Categorias
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Card de Organização de Categorias */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
@@ -91,6 +147,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               {defaultCategories.map((category, index) => {
                 const isInMainCategories = mainCategories.includes(category)
                 const actualIndex = mainCategories.indexOf(category)
+                const hasProducts = productCategories.includes(category)
                 
                 return (
                   <div
@@ -103,17 +160,30 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                     className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
                       isInMainCategories 
                         ? 'bg-blue-50 border border-blue-200 cursor-move hover:bg-blue-100' 
+                        : hasProducts
+                        ? 'bg-green-50 border border-green-200'
                         : 'bg-gray-50 border border-gray-200'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <GripVertical className={`w-4 h-4 ${isInMainCategories ? 'text-blue-600' : 'text-gray-400'}`} />
-                      <span className={`${isInMainCategories ? 'text-blue-800' : 'text-gray-600'} font-medium`}>
+                      <GripVertical className={`w-4 h-4 ${
+                        isInMainCategories ? 'text-blue-600' : 
+                        hasProducts ? 'text-green-600' : 'text-gray-400'
+                      }`} />
+                      <span className={`font-medium ${
+                        isInMainCategories ? 'text-blue-800' : 
+                        hasProducts ? 'text-green-800' : 'text-gray-600'
+                      }`}>
                         {category}
+                        {hasProducts && !isInMainCategories && (
+                          <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                            {produtos.filter(p => p.categoria === category).length} produtos
+                          </span>
+                        )}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {!isInMainCategories && (
+                      {!isInMainCategories && hasProducts && (
                         <button
                           onClick={() => addCategory(category)}
                           className="text-green-600 hover:text-green-800 transition-colors"
@@ -139,6 +209,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 .filter(category => !defaultCategories.includes(category))
                 .map((category, index) => {
                   const actualIndex = mainCategories.indexOf(category)
+                  const hasProducts = productCategories.includes(category)
+                  
                   return (
                     <div
                       key={category}
@@ -147,17 +219,28 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       onDragOver={handleDragOver}
                       onDrop={(e) => handleDrop(e, actualIndex)}
                       onDragEnd={handleDragEnd}
-                      className={`flex items-center justify-between bg-purple-50 border border-purple-200 px-4 py-3 rounded-lg cursor-move transition-all ${
-                        draggedIndex === actualIndex ? 'opacity-50' : 'hover:bg-purple-100'
-                      }`}
+                      className={`flex items-center justify-between px-4 py-3 rounded-lg cursor-move transition-all ${
+                        hasProducts
+                          ? 'bg-purple-50 border border-purple-200 hover:bg-purple-100'
+                          : 'bg-red-50 border border-red-200 hover:bg-red-100'
+                      } ${draggedIndex === actualIndex ? 'opacity-50' : ''}`}
                     >
                       <div className="flex items-center gap-3">
-                        <GripVertical className="w-4 h-4 text-purple-600" />
-                        <span className="text-purple-800 font-medium">{category}</span>
+                        <GripVertical className={`w-4 h-4 ${
+                          hasProducts ? 'text-purple-600' : 'text-red-600'
+                        }`} />
+                        <span className={`font-medium ${
+                          hasProducts ? 'text-purple-800' : 'text-red-800'
+                        }`}>
+                          {category}
+                          <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                            {produtos.filter(p => p.categoria === category).length} produtos
+                          </span>
+                        </span>
                       </div>
                       <button
                         onClick={() => removeCategory(category)}
-                        className="text-purple-600 hover:text-purple-800 transition-colors"
+                        className={`${hasProducts ? 'text-purple-600 hover:text-purple-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -174,7 +257,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <li>• Arraste as categorias para reorganizar a ordem de exibição</li>
               <li>• "Todos" sempre ficará fixo na primeira posição</li>
               <li>• Para criar novas categorias, faça isso na criação de produtos</li>
-              <li>• Categorias personalizadas aparecem em roxo</li>
+              <li>• Categorias em verde têm produtos mas não estão na lista</li>
+              <li>• Categorias em vermelho não têm produtos cadastrados</li>
             </ul>
           </div>
 
