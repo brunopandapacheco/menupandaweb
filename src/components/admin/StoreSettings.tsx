@@ -108,11 +108,11 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Design Moderno */}
+          {/* Botão Salvar Configurações - Glassmorphism */}
           <div className="pt-6">
             <Button 
               onClick={onSaveConfig}
-              className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full py-3 text-lg font-medium rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 shadow-md"
             >
               Salvar Configurações
             </Button>
@@ -225,11 +225,11 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Design Moderno */}
+          {/* Botão Salvar Horários - Glassmorphism */}
           <div className="pt-6">
             <Button 
               onClick={onSaveHorarios}
-              className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full py-3 text-lg font-medium rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 shadow-md"
             >
               Salvar Horários
             </Button>
