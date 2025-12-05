@@ -149,7 +149,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Fixo</span>
               </div>
               
-              {/* Todas as categorias (padrão + personalizadas) */}
+              {/* Todas as categorias (padrão + personalizadas) - TODAS ARRÁSTAVEIS */}
               {allDisplayCategories.map((category, index) => {
                 const isInMainCategories = mainCategories.includes(category)
                 const actualIndex = mainCategories.indexOf(category)
@@ -158,7 +158,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 return (
                   <div
                     key={category}
-                    draggable={isInMainCategories}
+                    draggable={true} // SEMPRE ARRÁSTAVEL
                     onDragStart={(e) => isInMainCategories ? handleDragStart(e, actualIndex) : undefined}
                     onDragOver={handleDragOver}
                     onDrop={(e) => isInMainCategories ? handleDrop(e, actualIndex) : undefined}
@@ -167,18 +167,18 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       isInMainCategories 
                         ? 'bg-blue-50 border border-blue-200 cursor-move hover:bg-blue-100' 
                         : hasProducts
-                        ? 'bg-green-50 border border-green-200'
-                        : 'bg-gray-50 border border-gray-200'
+                        ? 'bg-green-50 border border-green-200 cursor-move hover:bg-green-100'
+                        : 'bg-gray-50 border border-gray-200 cursor-move hover:bg-gray-100'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <GripVertical className={`w-4 h-4 ${
                         isInMainCategories ? 'text-blue-600' : 
-                        hasProducts ? 'text-green-600' : 'text-gray-400'
+                        hasProducts ? 'text-green-600' : 'text-gray-600'
                       }`} />
                       <span className={`font-medium ${
                         isInMainCategories ? 'text-blue-800' : 
-                        hasProducts ? 'text-green-800' : 'text-gray-600'
+                        hasProducts ? 'text-green-800' : 'text-gray-700'
                       }`}>
                         {category}
                         {hasProducts && !isInMainCategories && (
@@ -221,6 +221,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <li>• Para criar novas categorias, faça isso na criação de produtos</li>
               <li>• Categorias em verde têm produtos mas não estão na lista</li>
               <li>• Categorias em azul estão na lista e podem ser movidas</li>
+              <li>• Todas as categorias podem ser movimentadas para personalizar a ordem</li>
             </ul>
           </div>
 
