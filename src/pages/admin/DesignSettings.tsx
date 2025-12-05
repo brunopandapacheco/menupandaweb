@@ -8,7 +8,7 @@ import { StoreSettings } from '@/components/admin/StoreSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
 
 const gradientBackgrounds = [
-  { name: 'Dourado Quente', gradient: 'linear-gradient(135deg, #F5C542 0%, #FFD770 50%, #E0A100 100%)' }
+  { name: 'Dourado Quente', gradient: '#F5C542' } // AGORA COR FIXA
 ]
 
 export default function DesignSettings() {
@@ -18,7 +18,7 @@ export default function DesignSettings() {
   // Estados
   const [bannerGradient, setBannerGradient] = useState(gradientBackgrounds[0].gradient)
   const [corBorda, setCorBorda] = useState('#F5C542')
-  const [corNome, setCorNome] = useState('#FFD770')
+  const [corNome, setCorNome] = useState('#FCEBB3')
   
   const [nomeLoja, setNomeLoja] = useState('')
   const [descricaoLoja, setDescricaoLoja] = useState('')
@@ -72,7 +72,7 @@ export default function DesignSettings() {
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
     setBannerGradient(gradient.gradient)
     const success = await saveDesignSettings({ banner_gradient: gradient.gradient })
-    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao aplicar degrade')
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao aplicar cor')
   }
 
   const saveColors = async () => {
@@ -129,37 +129,26 @@ export default function DesignSettings() {
   return (
     <div
       className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen"
-      style={{ backgroundColor: '#1A0022' }} // roxo escuro bonito
+      style={{ backgroundColor: '#1A0022' }} 
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
 
-        {/* NAV BAR COM DEGRADE DOURADO */}
+        {/* NAV BAR AGORA 100% FIXA - SEM DEGRADE */}
         <TabsList
-          className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md animate-gradient-x"
+          className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
           style={{
-            background: 'linear-gradient(135deg, #F5C542 0%, #FFD770 50%, #E0A100 100%)',
-            backgroundSize: '200% 200%',
-            animation: 'gradientSlide 4s ease infinite'
+            background: '#F5C542'
           }}
         >
-          <style>
-            {`
-              @keyframes gradientSlide {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-              }
-            `}
-          </style>
 
           {/* TEXTOS + HOVER + ATIVO */}
           <TabsTrigger
             value="cores"
             className="
               rounded-lg font-[650] py-3 transition-all duration-200
-              text-[#FCEBB3]
-              hover:bg-white hover:text-[#1A1A1A]
-              data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md
+              text-black
+              hover:bg-[#1A1A1A] hover:text-white
+              data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md
             "
           >
             Cores
@@ -169,9 +158,9 @@ export default function DesignSettings() {
             value="imagens"
             className="
               rounded-lg font-[650] py-3 transition-all duration-200
-              text-[#FCEBB3]
-              hover:bg-white hover:text-[#1A1A1A]
-              data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md
+              text-black
+              hover:bg-[#1A1A1A] hover:text-white
+              data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md
             "
           >
             Imagens
@@ -181,9 +170,9 @@ export default function DesignSettings() {
             value="configuracao"
             className="
               rounded-lg font-[650] py-3 transition-all duration-200
-              text-[#FCEBB3]
-              hover:bg-white hover:text-[#1A1A1A]
-              data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md
+              text-black
+              hover:bg-[#1A1A1A] hover:text-white
+              data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md
             "
           >
             Configuração
