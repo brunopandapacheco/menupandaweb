@@ -29,6 +29,20 @@ const availableIcons = [
   { name: 'Ícone Todos', path: '/icons/iconetodos.png' }
 ]
 
+// Mapeamento de categorias para ícones padrão
+const categoryIconMap: { [key: string]: string } = {
+  'Bolos': '/icons/bolo.png',
+  'Brigadeiros': '/icons/brigadeiro.png',
+  'Cookies': '/icons/cookies.png',
+  'Coxinha': '/icons/coxinha.png',
+  'Pipoca': '/icons/pipoca.png',
+  'Pudim': '/icons/pudim.png',
+  'Trufas': '/icons/trufas.png',
+  'Doces': '/icons/Doces.png',
+  'Salgados': '/icons/Salgados.png',
+  'Todos': '/icons/Todos.png'
+}
+
 interface CategorySettingsProps {
   mainCategories: string[]
   onMainCategoriesChange: (categories: string[]) => void
@@ -41,6 +55,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const [editingName, setEditingName] = useState('')
   const [editingIcon, setEditingIcon] = useState('')
   const [showIconSelector, setShowIconSelector] = useState<string | null>(null)
+  const [categoryIcons, setCategoryIcons] = useState<{ [key: string]: string }>({})
 
   // Obter categorias que realmente existem nos produtos
   const getProductCategories = () => {
@@ -103,21 +118,29 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const handleIconChange = (category: string, iconPath: string) => {
-    // Aqui você precisaria salvar o ícone da categoria no banco
-    // Por enquanto, apenas mostramos uma mensagem
+    // Salvar o ícone da categoria no estado local
+    setCategoryIcons(prev => ({
+      ...prev,
+      [category]: iconPath
+    }))
+    
     showSuccess(`Ícone da categoria "${category}" atualizado!`)
     setShowIconSelector(null)
   }
 
   const getCategoryIcon = (category: string) => {
-    // Aqui você buscaria o ícone salvo no banco
-    // Por enquanto, usamos um mapeamento padrão
-    const iconMap: { [key: string]: string } = {
-      'Bolos': '/icons/bolo.png',
-      'Doces': '/icons/Doces.png',
-      'Salgados': '/icons/Salgados.png'
+    // Primeiro verificar se há um ícone personalizado salvo
+    if (categoryIcons[category]) {
+      return categoryIcons[category]
     }
-    return iconMap[category] || '🧁'
+    
+    // Depois verificar o mapeamento padrão
+    if (categoryIconMap[category]) {
+      return categoryIconMap[category]
+    }
+    
+    // Por último, usar um emoji padrão
+    return '🧁'
   }
 
   const hasProducts = (category: string) => {
@@ -166,6 +189,14 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                             src={currentIcon} 
                             alt={category}
                             className="w-8 h-8 object-contain"
+                            onError={(e) => {
+                              // Se a imagem não carregar, mostrar emoji
+                              e.currentTarget.style.display = 'none'
+                              const emojiSpan = document.createElement('span')
+                              emojiSpan.textContent = '🧁'
+                              emojiSpan.className = 'text-2xl'
+                              e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
+                            }}
                           />
                         ) : (
                           <span className="text-2xl">{currentIcon}</span>
