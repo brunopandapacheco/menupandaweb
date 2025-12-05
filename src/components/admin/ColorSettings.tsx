@@ -114,10 +114,6 @@ export function ColorSettings({
       {/* Card Principal - Paleta de Cores */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Paleta de Cores</CardTitle>
-          <CardDescription className="text-base">
-            Personalize as cores do seu cardápio
-          </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-8">
