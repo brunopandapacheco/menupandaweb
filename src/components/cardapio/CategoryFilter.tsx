@@ -12,14 +12,6 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
-  // Categorias padrão com ícones personalizados da pasta public/icons
-  const defaultCategories = [
-    { name: 'Todos', icon: '/icons/Todos.png' },
-    { name: 'Bolos', icon: '/icons/Bolos.png' },
-    { name: 'Doces', icon: '/icons/Doces.png' },
-    { name: 'Salgados', icon: '/icons/Salgados.png' }
-  ]
-
   // Mapear emojis para categorias conhecidas (apenas para categorias personalizadas)
   const categoryEmojis: { [key: string]: string } = {
     'Brigadeiros': '🍫',
@@ -50,19 +42,9 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
     'Formatura': '🎓'
   }
 
-  // Combinar categorias padrão com categorias do usuário
-  // Manter ordem: primeiro as padrão, depois as do usuário
-  const allCategories = [...defaultCategories]
-  
-  // Adicionar categorias do usuário que não estão nas padrão
-  categories.forEach(category => {
-    if (!defaultCategories.find(cat => cat.name === category.name)) {
-      allCategories.push({
-        name: category.name,
-        icon: categoryEmojis[category.name] || '🍽️' // Emoji padrão se não encontrar
-      })
-    }
-  })
+  // A lista de categorias já vem na ordem correta do componente pai
+  // Não precisamos reordenar aqui, apenas renderizar na ordem recebida
+  const allCategories = categories
 
   return (
     <div style={{ marginBottom: '24px' }}>
