@@ -139,7 +139,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
@@ -151,12 +151,6 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Imagens
-          </TabsTrigger>
-          <TabsTrigger 
-            value="categorias" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
-          >
-            Categorias
           </TabsTrigger>
           <TabsTrigger 
             value="configuracao" 
@@ -192,18 +186,15 @@ export default function DesignSettings() {
           </div>
         </TabsContent>
 
-        <TabsContent value="categorias">
-          <div className="space-y-6">
+        <TabsContent value="configuracao">
+          <div className="space-y-8">
+            {/* Categorias */}
             <CategorySettings
               mainCategories={mainCategories}
               onMainCategoriesChange={setMainCategories}
               onSaveCategories={saveCategories}
             />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="configuracao">
-          <div className="space-y-8">
+            
             {/* Configurações da Loja */}
             <StoreSettings
               nomeLoja={nomeLoja}
