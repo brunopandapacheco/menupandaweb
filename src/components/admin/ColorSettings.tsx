@@ -18,22 +18,10 @@ const predefinedColors = [
 ]
 
 const gradientBackgrounds = [
-  { 
-    name: 'Rosa Suave', 
-    gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' 
-  },
-  { 
-    name: 'Rosa Vibrante', 
-    gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' 
-  },
-  { 
-    name: 'Rosa Delicado', 
-    gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' 
-  },
-  { 
-    name: 'Brownies', 
-    gradient: 'linear-gradient(135deg, #4B2E2E 0%, #7B4F4F 50%, #C69C6D 100%)' 
-  }
+  { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+  { gradient: 'linear-gradient(135deg, #4B2E2E 0%, #7B4F4F 50%, #C69C6D 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -79,23 +67,18 @@ export function ColorSettings({
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
           <CardDescription className="text-base">
-            Escolha o degrade animado que<br />fica atrás da logo
+            Escolha o degrade animado que fica atrás da logo
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            {gradientBackgrounds.map((gradient) => (
-              <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
+            {gradientBackgrounds.map((gradient, index) => (
+              <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
                 <CardContent className="p-4">
-                  <div className="text-center mb-3">
-                    <h3 className="font-black text-lg" style={{ color: '#4A3531' }}>{gradient.name}</h3>
-                  </div>
-                  
                   <div 
                     className="w-full h-24 rounded-lg mb-4 shadow-sm"
                     style={{ background: gradient.gradient }}
                   />
-                  
                   <Button 
                     size="sm" 
                     className="w-full font-[650] text-xs"
@@ -125,10 +108,7 @@ export function ColorSettings({
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full border-4 shadow-sm" style={{ borderColor: corBorda }} />
-              <h3 className="text-lg font-semibold" style={{ 
-                color: '#4A3531',
-                fontWeight: 600
-              }}>Cor da Borda</h3>
+              <h3 className="text-lg font-semibold" style={{ color: '#4A3531', fontWeight: 600 }}>Cor da Borda</h3>
             </div>
             
             <div className="grid grid-cols-5 gap-3">
@@ -174,7 +154,6 @@ export function ColorSettings({
               </button>
             </div>
 
-            {/* Custom Color Picker for Border */}
             {showCustomBorderPicker && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
@@ -224,10 +203,7 @@ export function ColorSettings({
               >
                 Aa
               </div>
-              <h3 className="text-lg font-semibold" style={{ 
-                color: '#4A3531',
-                fontWeight: 600
-              }}>Cor do Nome</h3>
+              <h3 className="text-lg font-semibold" style={{ color: '#4A3531', fontWeight: 600 }}>Cor do Nome</h3>
             </div>
             
             <div className="grid grid-cols-5 gap-3">
@@ -273,7 +249,6 @@ export function ColorSettings({
               </button>
             </div>
 
-            {/* Custom Color Picker for Name */}
             {showCustomNamePicker && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
