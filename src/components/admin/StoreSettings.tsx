@@ -117,7 +117,7 @@ export function StoreSettings({
         </CardContent>
       </Card>
 
-      {/* Card de Horários */}
+      {/* Card de Horários - Minimalista */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <div className="flex justify-center mb-2">
@@ -126,100 +126,99 @@ export function StoreSettings({
             </div>
           </div>
           <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Horários de Funcionamento</CardTitle>
-          <CardDescription className="text-base">
-            Configure os horários de atendimento da sua loja
-          </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Dia de Semana (Segunda a Sexta) */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-orange-500" />
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Dia de Semana (Segunda a Sexta)</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="semanaAbre" className="text-sm font-medium">Horário de Abertura</Label>
-                <Input
-                  id="semanaAbre"
-                  type="time"
-                  value={horarioSemanaAbre}
-                  onChange={(e) => onHorarioSemanaAbreChange(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="semanaFecha" className="text-sm font-medium">Horário de Fechamento</Label>
-                <Input
-                  id="semanaFecha"
-                  type="time"
-                  value={horarioSemanaFecha}
-                  onChange={(e) => onHorarioSemanaFechaChange(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Sábado */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-purple-500" />
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Sábado</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="sabadoAbre" className="text-sm font-medium">Horário de Abertura</Label>
-                <Input
-                  id="sabadoAbre"
-                  type="time"
-                  value={horarioSabadoAbre}
-                  onChange={(e) => onHorarioSabadoAbreChange(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sabadoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
-                <Input
-                  id="sabadoFecha"
-                  type="time"
-                  value={horarioSabadoFecha}
-                  onChange={(e) => onHorarioSabadoFechaChange(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Domingo */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-blue-500" />
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Domingo</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="domingoAbre" className="text-sm font-medium">Horário de Abertura</Label>
-                <Input
-                  id="domingoAbre"
-                  type="time"
-                  value={horarioDomingoAbre}
-                  onChange={(e) => onHorarioDomingoAbreChange(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="domingoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
-                <Input
-                  id="domingoFecha"
-                  type="time"
-                  value={horarioDomingoFecha}
-                  onChange={(e) => onHorarioDomingoFechaChange(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-            </div>
+          {/* Tabela de Horários - Design Minimalista */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Dia</th>
+                  <th className="text-center py-3 px-4 text-sm font-semibold text-gray-700">Abre</th>
+                  <th className="text-center py-3 px-4 text-sm font-semibold text-gray-700">Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Segunda a Sexta */}
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-orange-500" />
+                      <span className="text-sm font-medium text-gray-800">Segunda a Sexta</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <Input
+                      type="time"
+                      value={horarioSemanaAbre}
+                      onChange={(e) => onHorarioSemanaAbreChange(e.target.value)}
+                      className="w-24 h-8 text-center text-sm"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <Input
+                      type="time"
+                      value={horarioSemanaFecha}
+                      onChange={(e) => onHorarioSemanaFechaChange(e.target.value)}
+                      className="w-24 h-8 text-center text-sm"
+                    />
+                  </td>
+                </tr>
+                
+                {/* Sábado */}
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-purple-500" />
+                      <span className="text-sm font-medium text-gray-800">Sábado</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <Input
+                      type="time"
+                      value={horarioSabadoAbre}
+                      onChange={(e) => onHorarioSabadoAbreChange(e.target.value)}
+                      className="w-24 h-8 text-center text-sm"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <Input
+                      type="time"
+                      value={horarioSabadoFecha}
+                      onChange={(e) => onHorarioSabadoFechaChange(e.target.value)}
+                      className="w-24 h-8 text-center text-sm"
+                    />
+                  </td>
+                </tr>
+                
+                {/* Domingo */}
+                <tr>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm font-medium text-gray-800">Domingo</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <Input
+                      type="time"
+                      value={horarioDomingoAbre}
+                      onChange={(e) => onHorarioDomingoAbreChange(e.target.value)}
+                      className="w-24 h-8 text-center text-sm"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <Input
+                      type="time"
+                      value={horarioDomingoFecha}
+                      onChange={(e) => onHorarioDomingoFechaChange(e.target.value)}
+                      className="w-24 h-8 text-center text-sm"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* Botão Salvar - Gradient + Shadow (Botão Vibrante) */}
