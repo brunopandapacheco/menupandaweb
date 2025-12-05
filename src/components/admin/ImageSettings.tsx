@@ -70,7 +70,8 @@ export function ImageSettings({
       
       // Criar arquivo a partir do blob
       const fileName = `banner-${Date.now()}.${file.name.split('.').pop()}`
-      const url = await supabaseService.uploadImage(file, 'banners', fileName)
+      // Usar o bucket 'images' que já existe em vez de 'banners'
+      const url = await supabaseService.uploadImage(file, 'images', fileName)
       
       if (!url) {
         throw new Error('Falha no upload da imagem para o storage')
