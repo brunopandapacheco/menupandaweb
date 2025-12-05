@@ -116,10 +116,6 @@ export function ColorSettings({
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor da Borda</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-12 h-12 rounded-full border-4 shadow-sm" style={{ borderColor: corBorda }} />
-          </div>
-          
           <div className="grid grid-cols-5 gap-3">
             {predefinedColors.map((color) => (
               <button
@@ -211,15 +207,6 @@ export function ColorSettings({
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor do Nome</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <div 
-              className="w-12 h-12 rounded-lg shadow-sm flex items-center justify-center font-bold text-white text-base"
-              style={{ backgroundColor: corNome }}
-            >
-              Aa
-            </div>
-          </div>
-          
           <div className="grid grid-cols-5 gap-3">
             {predefinedColors.map((color) => (
               <button
