@@ -21,7 +21,11 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
 
   return (
     <div className="min-h-screen bg-pink-50 flex">
-      <div className="w-64 bg-[#E26783] border-r border-pink-200 p-4 flex flex-col">
+      <div className="w-64 border-r border-pink-200 p-4 flex flex-col" style={{
+        background: 'linear-gradient(135deg, #ff967f 0%, #ffc8b4 50%, #ffffff 100%)',
+        animation: 'gradient-x 3s ease infinite',
+        backgroundSize: '200% 200%'
+      }}>
         <div className="p-4 pb-4">
           <div className="text-center">
             <h1 className="text-white text-2xl font-bold mb-2">{systemName}</h1>
@@ -40,7 +44,7 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
                   className={cn(
                     "w-full justify-start gap-3 h-12 text-white hover:bg-white/20 hover:text-white",
                     activeTab === tab.id 
-                      ? "bg-white text-[#E26783] hover:bg-white hover:text-[#E26783]" 
+                      ? "bg-white text-[#ff967f] hover:bg-white hover:text-[#ff967f]" 
                       : ""
                   )}
                   onClick={() => onTabChange?.(tab.id)}

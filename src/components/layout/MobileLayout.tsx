@@ -26,7 +26,9 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
       
       <div className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl z-50" 
            style={{
-             backgroundColor: '#E26783'
+             background: 'linear-gradient(135deg, #ff967f 0%, #ffc8b4 50%, #ffffff 100%)',
+             animation: 'gradient-x 3s ease infinite',
+             backgroundSize: '200% 200%'
            }}>
         <div className="grid grid-cols-3 gap-1 p-2">
           {tabs.map((tab) => {
@@ -37,14 +39,14 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
                 className={cn(
                   "flex items-center justify-center h-12 rounded-lg text-white hover:bg-white/20 hover:text-white",
                   activeTab === tab.id 
-                    ? "bg-white text-[#E26783] hover:bg-white hover:text-[#E26783]" 
+                    ? "bg-white text-[#ff967f] hover:bg-white hover:text-[#ff967f]" 
                     : ""
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
                 <span className={cn(
                   "text-xs font-[700]",
-                  activeTab === tab.id ? "text-[#E26783]" : "text-white"
+                  activeTab === tab.id ? "text-[#ff967f]" : "text-white"
                 )}>{tab.label}</span>
               </Button>
             )
