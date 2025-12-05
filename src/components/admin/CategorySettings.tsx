@@ -37,7 +37,7 @@ const categoryIconMap: { [key: string]: string } = {
   'Pipoca': '/icons/7.png',
   'Pudim': '/icons/8.png',
   'Trufas': '/icons/9.png',
-  'Todos': '/icons/TODOS.png' // Icone fixo para "Todos"
+  'Todos': '/icons/TODOS.png' // Ícone fixo para "Todos"
 }
 
 interface CategorySettingsProps {
@@ -141,8 +141,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return categoryIconMap[category]
     }
     
-    // Por último, usar um emoji padrão
-    return '🧁'
+    // Por último, usar um ícone padrão
+    return '/icons/1.png'
   }
 
   const hasProducts = (category: string) => {
@@ -151,10 +151,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const isDefaultCategory = (category: string) => {
     return defaultCategories.includes(category)
-  }
-
-  const isTodosCategory = (category: string) => {
-    return category === 'Todos'
   }
 
   return (
@@ -180,8 +176,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 const isEditing = editingCategory === category
                 const hasProductsInCategory = hasProducts(category)
                 const isDefault = isDefaultCategory(category)
-                const isTodos = isTodosCategory(category)
                 const currentIcon = getCategoryIcon(category)
+                const isTodosCategory = category === 'Todos'
                 
                 return (
                   <div
@@ -191,30 +187,22 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                     <div className="flex items-center gap-3">
                       {/* Ícone da categoria */}
                       <div className="relative">
-                        {currentIcon.startsWith('/') ? (
-                          <img 
-                            src={currentIcon} 
-                            alt={category}
-                            className="w-8 h-8 object-contain"
-                            onError={(e) => {
-                              // Se a imagem não carregar, mostrar emoji
-                              console.error(`Failed to load icon: ${currentIcon}`)
-                              e.currentTarget.style.display = 'none'
-                              const emojiSpan = document.createElement('span')
-                              emojiSpan.textContent = '🧁'
-                              emojiSpan.className = 'text-2xl'
-                              e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
-                            }}
-                            onLoad={() => {
-                              console.log(`Successfully loaded icon: ${currentIcon}`)
-                            }}
-                          />
-                        ) : (
-                          <span className="text-2xl">{currentIcon}</span>
-                        )}
+                        <img 
+                          src={currentIcon} 
+                          alt={category}
+                          className="w-8 h-8 object-contain"
+                          onError={(e) => {
+                            // Se a imagem não carregar, mostrar ícone padrão
+                            console.error(`Failed to load icon: ${currentIcon}`)
+                            e.currentTarget.src = '/icons/1.png'
+                          }}
+                          onLoad={() => {
+                            console.log(`Successfully loaded icon: ${currentIcon}`)
+                          }}
+                        />
                         
-                        {/* Botão para alterar ícone - NÃO mostrar para "Todos" */}
-                        {!isTodos && (
+                        {/* Botão para alterar ícone - não mostrar para "Todos" */}
+                        {!isTodosCategory && (
                           <button
                             onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
                             className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hover:bg-purple-700"
@@ -255,11 +243,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       ) : (
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-800">{category}</span>
-                          {isTodos && (
-                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                              Fixo
-                            </span>
-                          )}
                         </div>
                       )}
                     </div>
@@ -268,38 +251,32 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                     <div className="flex items-center gap-2">
                       {!isEditing && (
                         <>
-                          {/* Botão editar - NÃO mostrar para "Todos" */}
-                          {!isTodos && (
-                            <button
-                              onClick={() => handleEditCategory(category)}
-                              className="text-blue-600 hover:text-blue-800 transition-colors"
-                              title="Renomear categoria"
-                            >
-                              <Edit2 className="w-4 h-4" />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => handleEditCategory(category)}
+                            className="text-blue-600 hover:text-blue-800 transition-colors"
+                            title="Renomear categoria"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
                           
-                          {/* Botão excluir - NÃO mostrar para "Todos" */}
-                          {!isTodos && (
-                            <button
-                              onClick={() => handleDeleteCategory(category)}
-                              className={`transition-colors ${
-                                isDefault || hasProductsInCategory
-                                  ? 'text-gray-300 cursor-not-allowed'
-                                  : 'text-red-600 hover:text-red-800'
-                              }`}
-                              title={
-                                isDefault 
-                                  ? 'Categoria padrão não pode ser excluída'
-                                  : hasProductsInCategory
-                                  ? 'Categoria com produtos não pode ser excluída'
-                                  : 'Excluir categoria'
-                              }
-                              disabled={isDefault || hasProductsInCategory}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => handleDeleteCategory(category)}
+                            className={`transition-colors ${
+                              isDefault || hasProductsInCategory
+                                ? 'text-gray-300 cursor-not-allowed'
+                                : 'text-red-600 hover:text-red-800'
+                            }`}
+                            title={
+                              isDefault 
+                                ? 'Categoria padrão não pode ser excluída'
+                                : hasProductsInCategory
+                                ? 'Categoria com produtos não pode ser excluída'
+                                : 'Excluir categoria'
+                            }
+                            disabled={isDefault || hasProductsInCategory}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </>
                       )}
                     </div>
@@ -329,11 +306,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       className="w-8 h-8 object-contain mx-auto"
                       onError={(e) => {
                         console.error(`Failed to load selector icon: ${icon.path}`)
-                        e.currentTarget.style.display = 'none'
-                        const emojiSpan = document.createElement('span')
-                        emojiSpan.textContent = '🧁'
-                        emojiSpan.className = 'text-2xl'
-                        e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
+                        e.currentTarget.src = '/icons/1.png'
                       }}
                     />
                   </button>
@@ -357,7 +330,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             <ul className="text-sm text-blue-700 space-y-1">
               <li>• Clique no ícone de editar para renomear uma categoria</li>
               <li>• Clique no ícone de lápis para alterar o ícone da categoria</li>
-              <li>• A categoria "Todos" é fixa e não pode ser alterada</li>
+              <li>• O ícone da categoria "Todos" é fixo e não pode ser alterado</li>
               <li>• Categorias padrão (Bolos, Doces, Salgados) não podem ser excluídas</li>
               <li>• Categorias com produtos não podem ser excluídas</li>
               <li>• As categorias aparecem no cardápio na ordem de criação dos produtos</li>

@@ -23,41 +23,10 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
     'Pipoca': '/icons/7.png',
     'Pudim': '/icons/8.png',
     'Trufas': '/icons/9.png',
-    'Todos': '/icons/TODOS.png' // Icone fixo para "Todos"
-  }
-
-  // Mapear emojis para categorias conhecidas (apenas para categorias personalizadas)
-  const categoryEmojis: { [key: string]: string } = {
-    'Brigadeiros': '🍫',
-    'Cookies': '🍪',
-    'Tortas': '🥧',
-    'Pipoca': '🍿',
-    'Salgadinhos': '🥨',
-    'Bebidas': '🥤',
-    'Sobremesas': '🍮',
-    'Lanches': '🍔',
-    'Pizzas': '🍕',
-    'Massas': '🍝',
-    'Saladas': '🥗',
-    'Frutas': '🍎',
-    'Sucos': '🧃',
-    'Cafés': '☕',
-    'Chás': '🍵',
-    'Tortas Doces': '🍰',
-    'Pães': '🍞',
-    'Sanduíches': '🥪',
-    'Confeitaria': '🧁',
-    'Doces Finos': '🍬',
-    'Salgados Fritos': '🍟',
-    'Salgados Assados': '🥖',
-    'Festas': '🎉',
-    'Aniversário': '🎂',
-    'Casamento': '💒',
-    'Formatura': '🎓'
+    'Todos': '/icons/TODOS.png' // Ícone fixo para "Todos"
   }
 
   // A lista de categorias já vem na ordem correta do componente pai
-  // Não precisamos reordenar aqui, apenas renderizar na ordem recebida
   const allCategories = categories
 
   return (
@@ -79,18 +48,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
             ? selectedCategory === null 
             : selectedCategory === category.name
 
-          // Determinar qual ícone usar
-          let iconToUse = category.icon
-          if (category.icon.startsWith('/')) {
-            // Se já for um caminho de imagem, usar como está
-            iconToUse = category.icon
-          } else if (categoryIconMap[category.name]) {
-            // Se tiver mapeamento para imagem, usar a imagem
-            iconToUse = categoryIconMap[category.name]
-          } else {
-            // Senão, usar emoji
-            iconToUse = categoryEmojis[category.name] || '🧁'
-          }
+          // Determinar qual ícone usar - sempre usar imagem do mapeamento
+          const iconToUse = categoryIconMap[category.name] || '/icons/1.png' // Usa ícone padrão se não encontrar
 
           return (
             <button
@@ -125,35 +84,22 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                 }
               }}
             >
-              {/* Renderiza ícone personalizado ou emoji */}
-              {iconToUse.startsWith('/') ? (
-                <img 
-                  src={iconToUse} 
-                  alt={category.name}
-                  style={{ 
-                    width: '24px', 
-                    height: '24px',
-                    marginBottom: '4px',
-                    objectFit: 'contain'
-                  }}
-                  onError={(e) => {
-                    // Se a imagem não carregar, mostrar emoji
-                    e.currentTarget.style.display = 'none'
-                    const emojiSpan = document.createElement('span')
-                    emojiSpan.textContent = categoryEmojis[category.name] || '🧁'
-                    emojiSpan.style.fontSize = '24px'
-                    emojiSpan.style.marginBottom = '4px'
-                    e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
-                  }}
-                />
-              ) : (
-                <span style={{ 
-                  fontSize: '24px', 
-                  marginBottom: '4px'
-                }}>
-                  {iconToUse}
-                </span>
-              )}
+              {/* Renderiza apenas ícone de imagem */}
+              <img 
+                src={iconToUse} 
+                alt={category.name}
+                style={{ 
+                  width: '24px', 
+                  height: '24px',
+                  marginBottom: '4px',
+                  objectFit: 'contain'
+                }}
+                onError={(e) => {
+                  // Se a imagem não carregar, mostrar ícone padrão
+                  console.error(`Failed to load icon: ${iconToUse}`)
+                  e.currentTarget.src = '/icons/1.png' // Usa ícone padrão
+                }}
+              />
               <span style={{ 
                 fontSize: '10px', 
                 fontWeight: '600', 
