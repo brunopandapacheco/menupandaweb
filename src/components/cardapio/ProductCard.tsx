@@ -20,7 +20,7 @@ interface ProductCardProps {
   onToggleFavorite: (productId: string) => void
   onAddToCart: (product: Produto) => void
   backgroundColor: string
-  borderColor: string
+  borderColor?: string // agora opcional, define padrão se não passar
 }
 
 const categoryIcons = {
@@ -38,21 +38,16 @@ export function ProductCard({
   onToggleFavorite, 
   onAddToCart,
   backgroundColor, 
-  borderColor 
+  borderColor = '#ec4899' // cor padrão do botão
 }: ProductCardProps) {
-  // Função para obter a primeira imagem válida
+
   const getFirstImage = (imagemUrl?: string): string | null => {
     if (!imagemUrl) return null
-    
-    // Divide por vírgula e remove espaços em branco
     const images = imagemUrl.split(',').map(img => img.trim()).filter(Boolean)
-    
-    // Retorna a primeira imagem válida
     return images.length > 0 ? images[0] : null
   }
 
   const firstImage = getFirstImage(product.imagem_url)
-  console.log('ProductCard - Produto:', product.nome, 'Imagem URL:', firstImage) // Debug
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
@@ -68,15 +63,13 @@ export function ProductCard({
               alt={product.nome} 
               className="w-full h-full object-cover rounded-lg"
               onError={(e) => {
-                console.error('Erro ao carregar imagem:', firstImage)
                 e.currentTarget.style.display = 'none'
-              }}
-              onLoad={() => {
-                console.log('Imagem carregada com sucesso:', firstImage)
               }}
             />
           ) : (
-            <span className="text-2xl">{categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}</span>
+            <span className="text-2xl">
+              {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
+            </span>
           )}
         </div>
         
@@ -156,12 +149,13 @@ export function ProductCard({
               </div>
             )}
             
+            {/* Botão atualizado */}
             <button 
               className="w-full h-6 font-semibold text-white rounded-md cursor-pointer transition-transform hover:scale-105 text-xs"
               style={{ backgroundColor: borderColor }}
               onClick={() => onAddToCart(product)}
             >
-              Adicionar ao Carrinho
+              Comprar
             </button>
           </div>
         </div>
