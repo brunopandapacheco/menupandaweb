@@ -72,9 +72,6 @@ export function StoreSettings({
         <CardContent className="space-y-6">
           {/* Nome da Loja */}
           <div className="space-y-2">
-            <Label htmlFor="nomeLoja" className="text-sm font-medium" style={{ color: '#4A3531' }}>
-              Nome da Loja
-            </Label>
             <Input
               id="nomeLoja"
               value={nomeLoja}
