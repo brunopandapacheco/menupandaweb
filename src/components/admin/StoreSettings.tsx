@@ -66,12 +66,7 @@ export function StoreSettings({
       {/* Card Principal - Configurações da Loja */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
-              <Store className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Informações da Loja</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Nome da Loja</CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6">
