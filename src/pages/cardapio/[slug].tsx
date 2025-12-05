@@ -60,6 +60,13 @@ export default function CardapioPublico() {
           preco: produto.preco_normal
         })
       })
+
+      // Debug dos ícones personalizados
+      if (designData?.category_icons) {
+        console.log('🎨 Category icons loaded from database:', designData.category_icons)
+      } else {
+        console.log('📁 No custom category icons found, using defaults')
+      }
     } catch (error) {
       console.error('Error loading data:', error)
     } finally {
@@ -237,6 +244,7 @@ export default function CardapioPublico() {
           categories={categories}
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
+          categoryIcons={designSettings.category_icons || {}} // Passar os ícones personalizados
         />
 
         {filteredProducts.length > 0 ? (

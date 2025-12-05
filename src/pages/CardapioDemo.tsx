@@ -31,7 +31,8 @@ const mockDesignSettings = {
   use_background_image: false,
   em_ferias: false,
   data_retorno_ferias: '',
-  banner1_url: ''
+  banner1_url: '',
+  category_icons: {} // Ícones personalizados vazios para demo
 }
 
 const mockConfiguracoes = {
@@ -213,6 +214,7 @@ export default function CardapioDemo() {
           categories={categories}
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
+          categoryIcons={mockDesignSettings.category_icons} // Passar os ícones personalizados
         />
 
         {filteredProducts.length > 0 ? (

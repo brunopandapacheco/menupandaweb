@@ -56,10 +56,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   // Carregar ícones personalizados do design_settings quando o componente montar
   useEffect(() => {
-    if (designSettings?.categorias) {
-      // Se já tiver categorias salvas, usa o mapeamento padrão
-      // Os ícones personalizados seriam salvos em um campo separado se necessário
-      console.log('Design settings loaded:', designSettings)
+    if (designSettings?.category_icons) {
+      console.log('Loading category icons from database:', designSettings.category_icons)
+      setCategoryIcons(designSettings.category_icons)
     }
   }, [designSettings])
 
@@ -125,26 +124,42 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const handleIconChange = async (category: string, iconPath: string) => {
     try {
-      // Salvar o ícone da categoria no design_settings
-      // Criar um objeto com os mapeamentos de ícones
-      const currentIcons = { ...categoryIcons, [category]: iconPath }
+      console.log('🔄 Changing icon for category:', category, 'to:', iconPath)
       
-      // Salvar no banco de dados (você precisaria adicionar um campo para isso)
-      // Por enquanto, vamos apenas atualizar o estado local
-      setCategoryIcons(currentIcons)
+      // Atualizar o estado local primeiro
+      const updatedIcons = { ...categoryIcons, [category]: iconPath }
+      setCategoryIcons(updatedIcons)
       
-      // Tentar salvar nas configurações de design (se tiver um campo para isso)
-      if (saveDesignSettings) {
-        // Aqui você precisaria de um campo como 'category_icons' no design_settings
-        // Por enquanto, vamos apenas mostrar sucesso
-        console.log('Icon saved locally:', category, iconPath)
+      // Salvar no banco de dados usando o campo category_icons
+      console.log('💾 Saving to database with category_icons:', updatedIcons)
+      
+      const success = await saveDesignSettings({
+        category_icons: updatedIcons
+      })
+      
+      if (success) {
+        console.log('✅ Icon saved successfully to database')
+        showSuccess(`Ícone da categoria "${category}" atualizado e salvo!`)
+        setShowIconSelector(null)
+      } else {
+        console.error('❌ Failed to save icon to database')
+        showError('Erro ao salvar ícone da categoria no banco')
+        // Reverter para o estado anterior se falhou
+        setCategoryIcons(prev => {
+          const newIcons = { ...prev }
+          delete newIcons[category]
+          return newIcons
+        })
       }
-      
-      showSuccess(`Ícone da categoria "${category}" atualizado!`)
-      setShowIconSelector(null)
     } catch (error) {
-      console.error('Error saving icon:', error)
+      console.error('❌ Error saving icon:', error)
       showError('Erro ao salvar ícone da categoria')
+      // Reverter para o estado anterior se falhou
+      setCategoryIcons(prev => {
+        const newIcons = { ...prev }
+        delete newIcons[category]
+        return newIcons
+      })
     }
   }
 
@@ -156,15 +171,18 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     
     // Primeiro verificar se há um ícone personalizado salvo no estado local
     if (categoryIcons[category]) {
+      console.log(`📁 Using custom icon for ${category}:`, categoryIcons[category])
       return categoryIcons[category]
     }
     
     // Depois verificar o mapeamento padrão
     if (categoryIconMap[category]) {
+      console.log(`📁 Using default icon for ${category}:`, categoryIconMap[category])
       return categoryIconMap[category]
     }
     
     // Por último, usar um ícone padrão
+    console.log(`📁 Using fallback icon for ${category}: /icons/1.png`)
     return '/icons/1.png'
   }
 

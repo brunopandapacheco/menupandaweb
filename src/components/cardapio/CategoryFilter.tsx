@@ -9,9 +9,10 @@ interface CategoryFilterProps {
   categories: Category[]
   selectedCategory: string | null
   onCategorySelect: (category: string | null) => void
+  categoryIcons?: { [key: string]: string } // Adicionado para receber os ícones personalizados
 }
 
-export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
+export function CategoryFilter({ categories, selectedCategory, onCategorySelect, categoryIcons = {} }: CategoryFilterProps) {
   // Mapeamento de categorias para ícones (baseado nos seus arquivos)
   const categoryIconMap: { [key: string]: string } = {
     'Bolos': '/icons/1.png',
@@ -48,8 +49,24 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
             ? selectedCategory === null 
             : selectedCategory === category.name
 
-          // Determinar qual ícone usar - sempre usar imagem do mapeamento
-          const iconToUse = categoryIconMap[category.name] || '/icons/1.png' // Usa ícone padrão se não encontrar
+          // Determinar qual ícone usar - prioridade para ícones personalizados
+          let iconToUse: string
+          
+          // 1. Primeiro verificar se há um ícone personalizado salvo
+          if (categoryIcons[category.name]) {
+            iconToUse = categoryIcons[category.name]
+            console.log(`🎨 Using custom icon for ${category.name}:`, iconToUse)
+          }
+          // 2. Depois verificar o mapeamento padrão
+          else if (categoryIconMap[category.name]) {
+            iconToUse = categoryIconMap[category.name]
+            console.log(`📁 Using default icon for ${category.name}:`, iconToUse)
+          }
+          // 3. Por último, usar ícone padrão
+          else {
+            iconToUse = '/icons/1.png'
+            console.log(`📁 Using fallback icon for ${category.name}:`, iconToUse)
+          }
 
           return (
             <button

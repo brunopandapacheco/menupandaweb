@@ -235,6 +235,7 @@ export default function Preview() {
             categories={categories}
             selectedCategory={selectedCategory}
             onCategorySelect={setSelectedCategory}
+            categoryIcons={designSettings?.category_icons || {}} // Passar os ícones personalizados
           />
 
           {filteredProducts.length > 0 ? (
@@ -336,6 +337,7 @@ export default function Preview() {
           categories={categories}
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
+          categoryIcons={designSettings?.category_icons || {}} // Passar os ícones personalizados
         />
 
         {filteredProducts.length > 0 ? (

@@ -17,6 +17,7 @@ export interface DesignSettings {
   banner_gradient?: string
   banner1_url?: string
   banner2_url?: string
+  category_icons?: { [key: string]: string } // Added this field
 }
 
 export interface Configuracoes {
