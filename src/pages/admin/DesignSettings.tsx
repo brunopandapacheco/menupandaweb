@@ -134,7 +134,7 @@ export default function DesignSettings() {
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#2b0033' }}>
       <div className="text-center sm:text-left pt-8 sm:pt-0 relative z-10">
-        <h1 className="text-3xl font-bold" style={{ color: '#ff2e5e' }}>Personalize o Design</h1>
+        <h1 className="text-3xl font-bold" style={{ color: '#ffe0e7' }}>Personalize o Design</h1>
         <p className="text-lg font-normal mt-3" style={{ color: '#ffffff', fontFamily: 'Dancing Script, cursive' }}>Escolha as cores, imagens e configurações do seu cardápio</p>
       </div>
 
