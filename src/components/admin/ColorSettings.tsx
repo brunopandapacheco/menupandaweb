@@ -83,7 +83,7 @@ export function ColorSettings({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             {gradientBackgrounds.map((gradient) => (
               <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
                 <CardContent className="p-4">
