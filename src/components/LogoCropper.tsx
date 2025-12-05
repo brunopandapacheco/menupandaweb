@@ -56,12 +56,16 @@ export function LogoCropper({
         ctx.clip()
       }
       
-      // Desenhar imagem centralizada e ajustada
+      // Calcular o scale para preencher o círculo completamente
       const scale = Math.max(size / img.width, size / img.height)
-      const x = (size - img.width * scale) / 2
-      const y = (size - img.height * scale) / 2
       
-      ctx.drawImage(img, x, y, img.width * scale, img.height * scale)
+      // Calcular posição para centralizar a imagem
+      const scaledWidth = img.width * scale
+      const scaledHeight = img.height * scale
+      const x = (size - scaledWidth) / 2
+      const y = (size - scaledHeight) / 2
+      
+      ctx.drawImage(img, x, y, scaledWidth, scaledHeight)
       
       if (circularCrop) ctx.restore()
       
@@ -114,7 +118,7 @@ export function LogoCropper({
               style={{ zIndex: 10 }}
             />
             <div
-              className="absolute inset-0 overflow-hidden"
+              className="absolute inset-0 overflow-hidden flex items-center justify-center"
               style={{
                 ...(circularCrop ? { borderRadius: "50%" } : { borderRadius: "12px" }),
               }}
@@ -122,7 +126,7 @@ export function LogoCropper({
               <img
                 src={imageUrl}
                 alt="preview"
-                className="w-full h-full object-cover"
+                className="max-w-full max-h-full object-contain"
                 style={{ userSelect: "none" }}
               />
             </div>
