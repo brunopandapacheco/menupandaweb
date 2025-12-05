@@ -101,12 +101,12 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Gradient + Shadow (Botão Vibrante) */}
-          <div className="pt-6">
+          {/* Botão Salvar - Estilo Amarelo */}
+          <div className="pt-6 flex justify-center">
             <Button 
               onClick={onSaveConfig}
-              className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
-                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
             >
               Salvar Informações
             </Button>
@@ -186,12 +186,12 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Gradient + Shadow (Botão Vibrante) */}
-          <div className="pt-6">
+          {/* Botão Salvar - Estilo Amarelo */}
+          <div className="pt-6 flex justify-center">
             <Button 
               onClick={onSaveHorarios}
-              className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
-                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
             >
               Salvar Horários
             </Button>
