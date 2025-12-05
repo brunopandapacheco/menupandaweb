@@ -35,7 +35,10 @@ export class SupabaseService {
       .eq('user_id', userId)
       .single()
     
-    if (error) throw error
+    if (error && error.code !== 'PGRST116') {
+      throw error
+    }
+    
     return data
   }
 
@@ -46,7 +49,10 @@ export class SupabaseService {
       .eq('slug', slug)
       .single()
     
-    if (error) throw error
+    if (error && error.code !== 'PGRST116') {
+      throw error
+    }
+    
     return data
   }
 
@@ -130,7 +136,13 @@ export class SupabaseService {
       .eq('slug', slug)
       .single()
     
-    if (error) throw error
+    if (error && error.code !== 'PGRST116') {
+      throw error
+    }
+    
+    if (!data) {
+      throw new Error('Design settings not found')
+    }
     
     return this.getConfiguracoes(data.user_id)
   }
@@ -194,7 +206,13 @@ export class SupabaseService {
       .eq('slug', slug)
       .single()
     
-    if (error) throw error
+    if (error && error.code !== 'PGRST116') {
+      throw error
+    }
+    
+    if (!data) {
+      throw new Error('Design settings not found')
+    }
     
     return this.getProducts(data.user_id)
   }
