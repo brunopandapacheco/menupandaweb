@@ -86,9 +86,6 @@ export function ColorSettings({
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
-          <CardDescription className="text-base">
-            Escolha o degrade animado que fica atrás da logo
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
