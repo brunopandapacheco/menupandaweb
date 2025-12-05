@@ -8,12 +8,9 @@ import { CategorySettings } from '@/components/admin/CategorySettings'
 import { StoreSettings } from '@/components/admin/StoreSettings'
 
 const gradientBackgrounds = [
-  { name: 'Rosa Neon', gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' },
-  { name: 'Aurora', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-  { name: 'Pôr do Sol', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-  { name: 'Oceano', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
-  { name: 'Floresta', gradient: 'linear-gradient(135deg, #38ef7d 0%, #11998e 100%)' },
-  { name: 'Fogo', gradient: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)' }
+  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' }
 ]
 
 export default function DesignSettings() {
@@ -21,7 +18,7 @@ export default function DesignSettings() {
   const [activeTab, setActiveTab] = useState('cores')
   
   // Estados para cores
-  const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)')
+  const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
   const [corBorda, setCorBorda] = useState('#ec4899')
   const [corNome, setCorNome] = useState('#be185d')
   
@@ -100,7 +97,7 @@ export default function DesignSettings() {
     const success = await saveDesignSettings({ banner_gradient: gradient.gradient })
     
     if (success) {
-      showSuccess('🌈 Degrade "' + gradient.name + '" aplicado com sucesso!')
+      showSuccess('Atualizado com sucesso!')
     } else {
       showError('Erro ao aplicar degrade')
     }
@@ -113,7 +110,7 @@ export default function DesignSettings() {
     })
     
     if (success) {
-      showSuccess('🎨 Cores atualizadas com sucesso!')
+      showSuccess('Atualizado com sucesso!')
     } else {
       showError('Erro ao salvar cores')
     }
@@ -124,7 +121,7 @@ export default function DesignSettings() {
     const success = await saveDesignSettings({ logo_url: url })
     
     if (success) {
-      showSuccess('🖼️ Logo atualizada com sucesso!')
+      showSuccess('Atualizado com sucesso!')
     } else {
       showError('Erro ao salvar logo')
     }
@@ -154,7 +151,7 @@ export default function DesignSettings() {
     const success = await saveDesignSettings(settingsToUpdate)
     
     if (success) {
-      showSuccess('⚙️ Configurações atualizadas com sucesso!')
+      showSuccess('Atualizado com sucesso!')
     } else {
       showError('Erro ao salvar configurações')
     }
@@ -169,7 +166,7 @@ export default function DesignSettings() {
     const success = await saveDesignSettings({ categorias: mainCategories })
     
     if (success) {
-      showSuccess('📂 Categorias principais atualizadas com sucesso!')
+      showSuccess('Atualizado com sucesso!')
     } else {
       showError('Erro ao salvar categorias principais')
     }
@@ -189,7 +186,7 @@ export default function DesignSettings() {
     const success = await saveConfiguracoes({ horarios_semana })
     
     if (success) {
-      showSuccess('🕐 Horários atualizados com sucesso!')
+      showSuccess('Atualizado com sucesso!')
     } else {
       showError('Erro ao salvar horários')
     }
