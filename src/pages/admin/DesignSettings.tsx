@@ -204,36 +204,40 @@ export default function DesignSettings() {
         </TabsContent>
 
         <TabsContent value="configuracao">
-          <CategorySettings
-            mainCategories={mainCategories}
-            onMainCategoriesChange={setMainCategories}
-            onSaveCategories={saveCategories}
-          />
+          <div className="space-y-8">
+            {/* Card 1: Nome da Loja + Descrição da Loja */}
+            <StoreSettings
+              nomeLoja={nomeLoja}
+              descricaoLoja={descricaoLoja}
+              horarioSemanaAbre={horarioSemanaAbre}
+              horarioSemanaFecha={horarioSemanaFecha}
+              horarioSabadoAbre={horarioSabadoAbre}
+              horarioSabadoFecha={horarioSabadoFecha}
+              horarioDomingoAbre={horarioDomingoAbre}
+              horarioDomingoFecha={horarioDomingoFecha}
+              sabadoAberto={sabadoAberto}
+              domingoAberto={domingoAberto}
+              onNomeLojaChange={setNomeLoja}
+              onDescricaoLojaChange={setDescricaoLoja}
+              onHorarioSemanaAbreChange={setHorarioSemanaAbre}
+              onHorarioSemanaFechaChange={setHorarioSemanaFecha}
+              onHorarioSabadoAbreChange={setHorarioSabadoAbre}
+              onHorarioSabadoFechaChange={setHorarioSabadoFecha}
+              onHorarioDomingoAbreChange={setHorarioDomingoAbre}
+              onHorarioDomingoFechaChange={setHorarioDomingoFecha}
+              onSabadoAbertoChange={setSabadoAberto}
+              onDomingoAbertoChange={setDomingoAberto}
+              onSaveConfig={saveConfig}
+              onSaveHorarios={saveHorarios}
+            />
 
-          <StoreSettings
-            nomeLoja={nomeLoja}
-            descricaoLoja={descricaoLoja}
-            horarioSemanaAbre={horarioSemanaAbre}
-            horarioSemanaFecha={horarioSemanaFecha}
-            horarioSabadoAbre={horarioSabadoAbre}
-            horarioSabadoFecha={horarioSabadoFecha}
-            horarioDomingoAbre={horarioDomingoAbre}
-            horarioDomingoFecha={horarioDomingoFecha}
-            sabadoAberto={sabadoAberto}
-            domingoAberto={domingoAberto}
-            onNomeLojaChange={setNomeLoja}
-            onDescricaoLojaChange={setDescricaoLoja}
-            onHorarioSemanaAbreChange={setHorarioSemanaAbre}
-            onHorarioSemanaFechaChange={setHorarioSemanaFecha}
-            onHorarioSabadoAbreChange={setHorarioSabadoAbre}
-            onHorarioSabadoFechaChange={setHorarioSabadoFecha}
-            onHorarioDomingoAbreChange={setHorarioDomingoAbre}
-            onHorarioDomingoFechaChange={setHorarioDomingoFecha}
-            onSabadoAbertoChange={setSabadoAberto}
-            onDomingoAbertoChange={setDomingoAberto}
-            onSaveConfig={saveConfig}
-            onSaveHorarios={saveHorarios}
-          />
+            {/* Card 2: Gerenciar Categorias */}
+            <CategorySettings
+              mainCategories={mainCategories}
+              onMainCategoriesChange={setMainCategories}
+              onSaveCategories={saveCategories}
+            />
+          </div>
         </TabsContent>
 
       </Tabs>

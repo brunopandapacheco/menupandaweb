@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Clock } from 'lucide-react'
+import { Clock, Store } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 interface StoreSettingsProps {
@@ -62,11 +62,16 @@ export function StoreSettings({
   }
 
   return (
-    <div className="space-y-6">
-      {/* Card Principal - Configurações */}
+    <div className="space-y-8">
+      {/* Card Principal - Configurações da Loja */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Configurações</CardTitle>
+          <div className="flex justify-center mb-2">
+            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+              <Store className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Informações da Loja</CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6">
@@ -111,7 +116,7 @@ export function StoreSettings({
               className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
                          shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
             >
-              Salvar Configurações
+              Salvar Informações
             </Button>
           </div>
         </CardContent>
