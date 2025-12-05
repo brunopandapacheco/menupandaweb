@@ -13,8 +13,7 @@ const predefinedColors = [
   { name: 'Verde', value: '#10b981' },
   { name: 'Azul', value: '#3b82f6' },
   { name: 'Roxo', value: '#8b5cf6' },
-  { name: 'Preto', value: '#000000' },
-  { name: 'Cinza', value: '#6b7280' }
+  { name: 'Preto', value: '#000000' }
 ]
 
 const gradientBackgrounds = [
