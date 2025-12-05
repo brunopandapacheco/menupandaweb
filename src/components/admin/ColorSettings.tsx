@@ -192,6 +192,17 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
+
+          {/* Botão Aplicar Cor da Borda */}
+          <div className="pt-4 flex justify-center">
+            <Button 
+              onClick={onSaveColors}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
+            >
+              Aplicar Cor da Borda
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -281,19 +292,19 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
+
+          {/* Botão Aplicar Cor do Nome */}
+          <div className="pt-4 flex justify-center">
+            <Button 
+              onClick={onSaveColors}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
+            >
+              Aplicar Cor do Nome
+            </Button>
+          </div>
         </CardContent>
       </Card>
-
-      {/* Botão Salvar Global */}
-      <div className="flex justify-center">
-        <Button 
-          onClick={onSaveColors}
-          className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-          style={{ backgroundColor: '#F5C542', color: 'white' }}
-        >
-          Aplicar Cores
-        </Button>
-      </div>
     </div>
   )
 }
