@@ -117,11 +117,6 @@ export function StoreSettings({
       {/* Card de Horários - Minimalista */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex justify-center mb-2">
-            <div className="p-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
-              <Clock className="w-6 h-6 text-white" />
-            </div>
-          </div>
           <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Horários de Funcionamento</CardTitle>
         </CardHeader>
         
