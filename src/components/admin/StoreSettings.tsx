@@ -104,13 +104,12 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Estilo Glassmorphism */}
+          {/* Botão Salvar - Gradient + Shadow (Botão Vibrante) */}
           <div className="pt-6">
             <Button 
               onClick={onSaveConfig}
-              className="w-full py-3 px-8 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
-                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
-              style={{ color: '#4A3531' }}
+              className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
+                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
             >
               Salvar Configurações
             </Button>
@@ -223,13 +222,12 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Estilo Glassmorphism */}
+          {/* Botão Salvar - Gradient + Shadow (Botão Vibrante) */}
           <div className="pt-6">
             <Button 
               onClick={onSaveHorarios}
-              className="w-full py-3 px-8 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
-                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
-              style={{ color: '#4A3531' }}
+              className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
+                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
             >
               Salvar Horários
             </Button>
