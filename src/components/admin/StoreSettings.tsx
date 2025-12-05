@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Clock, Calendar } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 interface StoreSettingsProps {
@@ -131,10 +131,7 @@ export function StoreSettings({
         <CardContent className="space-y-4">
           {/* Segunda a Sexta */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-orange-500" />
-              <span className="text-sm font-medium text-gray-800">Seg a Sex</span>
-            </div>
+            <span className="text-sm font-medium text-gray-800">Seg a Sex</span>
             <div className="flex items-center gap-2">
               <Input
                 type="time"
@@ -154,10 +151,7 @@ export function StoreSettings({
           
           {/* Sábado */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-purple-500" />
-              <span className="text-sm font-medium text-gray-800">Sábado</span>
-            </div>
+            <span className="text-sm font-medium text-gray-800">Sábado</span>
             <div className="flex items-center gap-2">
               <Input
                 type="time"
@@ -177,10 +171,7 @@ export function StoreSettings({
           
           {/* Domingo */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-blue-500" />
-              <span className="text-sm font-medium text-gray-800">Domingo</span>
-            </div>
+            <span className="text-sm font-medium text-gray-800">Domingo</span>
             <div className="flex items-center gap-2">
               <Input
                 type="time"
