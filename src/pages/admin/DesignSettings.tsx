@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { showSuccess, showError } from '@/utils/toast'
-import { getDesignSettings, saveDesignSettings } from '@/services/designService'
-import ColorPicker from '@/components/ColorPicker'
+import { useDatabase } from '@/hooks/useDatabase'
 
 export default function DesignSettings() {
-  const [loading, setLoading] = useState(true)
+  const { designSettings, saveDesignSettings, loading } = useDatabase()
   const [saving, setSaving] = useState(false)
   const [data, setData] = useState({
     corPrimaria: '#000000',
@@ -16,18 +15,15 @@ export default function DesignSettings() {
   })
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const result = await getDesignSettings()
-        if (result) setData(result)
-      } catch {
-        showError('Erro ao carregar configurações')
-      } finally {
-        setLoading(false)
-      }
+    if (designSettings) {
+      setData({
+        corPrimaria: designSettings.cor_borda || '#000000',
+        corSecundaria: designSettings.cor_background || '#000000',
+        corFundo: designSettings.background_topo_color || '#000000',
+        corTexto: designSettings.cor_nome || '#000000',
+      })
     }
-    fetchData()
-  }, [])
+  }, [designSettings])
 
   const handleChange = (field: string, value: string) => {
     setData((prev) => ({ ...prev, [field]: value }))
@@ -36,8 +32,18 @@ export default function DesignSettings() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      await saveDesignSettings(data)
-      showSuccess('Configurações salvas com sucesso!')
+      const success = await saveDesignSettings({
+        cor_borda: data.corPrimaria,
+        cor_background: data.corSecundaria,
+        background_topo_color: data.corFundo,
+        cor_nome: data.corTexto,
+      })
+      
+      if (success) {
+        showSuccess('Configurações salvas com sucesso!')
+      } else {
+        showError('Erro ao salvar configurações')
+      }
     } catch {
       showError('Erro ao salvar configurações')
     } finally {
@@ -61,31 +67,45 @@ export default function DesignSettings() {
 
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Cor Primária</label>
+              <input
+                type="color"
+                value={data.corPrimaria}
+                onChange={(e) => handleChange('corPrimaria', e.target.value)}
+                className="w-full h-10 rounded cursor-pointer"
+              />
+            </div>
 
-            <ColorPicker
-              label="Cor Primária"
-              value={data.corPrimaria}
-              onChange={(v) => handleChange('corPrimaria', v)}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Cor Secundária</label>
+              <input
+                type="color"
+                value={data.corSecundaria}
+                onChange={(e) => handleChange('corSecundaria', e.target.value)}
+                className="w-full h-10 rounded cursor-pointer"
+              />
+            </div>
 
-            <ColorPicker
-              label="Cor Secundária"
-              value={data.corSecundaria}
-              onChange={(v) => handleChange('corSecundaria', v)}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Cor de Fundo</label>
+              <input
+                type="color"
+                value={data.corFundo}
+                onChange={(e) => handleChange('corFundo', e.target.value)}
+                className="w-full h-10 rounded cursor-pointer"
+              />
+            </div>
 
-            <ColorPicker
-              label="Cor de Fundo"
-              value={data.corFundo}
-              onChange={(v) => handleChange('corFundo', v)}
-            />
-
-            <ColorPicker
-              label="Cor do Texto"
-              value={data.corTexto}
-              onChange={(v) => handleChange('corTexto', v)}
-            />
-
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Cor do Texto</label>
+              <input
+                type="color"
+                value={data.corTexto}
+                onChange={(e) => handleChange('corTexto', e.target.value)}
+                className="w-full h-10 rounded cursor-pointer"
+              />
+            </div>
           </div>
 
           <Button
