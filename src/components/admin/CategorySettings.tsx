@@ -93,6 +93,22 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     onMainCategoriesChange(newCategories)
   }
 
+  // Combinar todas as categorias para exibição
+  const allDisplayCategories = () => {
+    const categories = [...mainCategories]
+    
+    // Adicionar categorias que não estão na lista principal
+    productCategories.forEach(cat => {
+      if (!categories.includes(cat)) {
+        categories.push(cat)
+      }
+    })
+    
+    return categories
+  }
+
+  const displayCategories = allDisplayCategories()
+
   return (
     <div className="space-y-6">
       {/* Alerta de sincronização se houver categorias órfãs */}
@@ -147,9 +163,10 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Fixo</span>
               </div>
               
-              {/* Apenas categorias que estão em mainCategories */}
-              {mainCategories.map((category, index) => {
+              {/* Todas as categorias que podem ser movidas */}
+              {displayCategories.map((category, index) => {
                 const hasProducts = productCategories.includes(category)
+                const isInMainList = mainCategories.includes(category)
                 
                 return (
                   <div
@@ -159,11 +176,15 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, index)}
                     onDragEnd={handleDragEnd}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all cursor-move hover:bg-blue-100 bg-blue-50 border border-blue-200`}
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all cursor-move hover:bg-blue-100 ${
+                      isInMainList 
+                        ? 'bg-blue-50 border border-blue-200' 
+                        : 'bg-green-50 border border-green-200'
+                    }`}
                   >
                     <div className="flex items-center gap-3">
-                      <GripVertical className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium text-blue-800">
+                      <GripVertical className={`w-4 h-4 ${isInMainList ? 'text-blue-600' : 'text-green-600'}`} />
+                      <span className={`font-medium ${isInMainList ? 'text-blue-800' : 'text-green-800'}`}>
                         {category}
                         {hasProducts && (
                           <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
@@ -173,42 +194,25 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => removeCategory(category)}
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                      {isInMainList ? (
+                        <button
+                          onClick={() => removeCategory(category)}
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => addCategory(category)}
+                          className="text-green-600 hover:text-green-800 transition-colors"
+                        >
+                          <X className="w-4 h-4 rotate-45" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 )
               })}
-              
-              {/* Categorias que não estão em mainCategories mas têm produtos */}
-              {productCategories.filter(cat => !mainCategories.includes(cat)).map((category) => (
-                <div
-                  key={category}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg transition-all bg-green-50 border border-green-200"
-                >
-                  <div className="flex items-center gap-3">
-                    <GripVertical className="w-4 h-4 text-green-600" />
-                    <span className="font-medium text-green-800">
-                      {category}
-                      <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                        {produtos.filter(p => p.categoria === category).length} produtos
-                      </span>
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => addCategory(category)}
-                      className="text-green-600 hover:text-green-800 transition-colors"
-                    >
-                      <X className="w-4 h-4 rotate-45" />
-                    </button>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -219,8 +223,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <li>• Arraste as categorias para reorganizar a ordem de exibição</li>
               <li>• "Todos" sempre ficará fixo na primeira posição</li>
               <li>• Para criar novas categorias, faça isso na criação de produtos</li>
-              <li>• Categorias em verde têm produtos mas não estão na lista</li>
+              <li>• Categorias em verde têm produtos mas não estão na lista principal</li>
               <li>• Categorias em azul estão na lista e podem ser movidas</li>
+              <li>• Clique no X para remover da lista ou + para adicionar</li>
             </ul>
           </div>
 

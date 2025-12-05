@@ -153,18 +153,40 @@ export default function CardapioPublico() {
 
   const horarios = getHorariosFromConfig()
 
-  // Usar categorias do designSettings em vez de categorias fixas
+  // Obter categorias na ordem correta
   const getCategories = () => {
     // Sempre incluir "Todos" primeiro
     const categories = [{ name: 'Todos', icon: '/icons/Todos.png' }]
     
-    // Adicionar categorias configuradas pelo usuário na ordem correta
+    // Obter todas as categorias que têm produtos
+    const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
+      .filter(cat => cat && cat.trim() !== '')
+    
+    console.log('📋 Categorias com produtos:', productCategories)
+    
+    // Se houver categorias configuradas, usar essa ordem
     if (designSettings?.categorias && designSettings.categorias.length > 0) {
+      console.log('📋 Categorias configuradas:', designSettings.categorias)
+      
+      // Adicionar categorias configuradas na ordem correta
       designSettings.categorias.forEach(category => {
-        // Verificar se a categoria tem produtos
-        const hasProducts = produtos.some(p => p.categoria === category)
-        if (hasProducts) {
-          // Mapear para ícones conhecidos ou usar emoji padrão
+        if (productCategories.includes(category)) {
+          const iconMap: { [key: string]: string } = {
+            'Bolos': '/icons/Bolos.png',
+            'Doces': '/icons/Doces.png',
+            'Salgados': '/icons/Salgados.png'
+          }
+          
+          categories.push({
+            name: category,
+            icon: iconMap[category] || '🧁'
+          })
+        }
+      })
+      
+      // Adicionar categorias que têm produtos mas não estão na configuração
+      productCategories.forEach(category => {
+        if (!designSettings.categorias.includes(category)) {
           const iconMap: { [key: string]: string } = {
             'Bolos': '/icons/Bolos.png',
             'Doces': '/icons/Doces.png',
@@ -179,20 +201,35 @@ export default function CardapioPublico() {
       })
     } else {
       // Fallback para categorias padrão se não houver configuração
-      const defaultCategories = [
-        { name: 'Bolos', icon: '/icons/Bolos.png' },
-        { name: 'Doces', icon: '/icons/Doces.png' },
-        { name: 'Salgados', icon: '/icons/Salgados.png' }
-      ]
+      const defaultCategories = ['Bolos', 'Doces', 'Salgados']
       
       defaultCategories.forEach(cat => {
-        const hasProducts = produtos.some(p => p.categoria === cat.name)
-        if (hasProducts) {
-          categories.push(cat)
+        if (productCategories.includes(cat)) {
+          const iconMap: { [key: string]: string } = {
+            'Bolos': '/icons/Bolos.png',
+            'Doces': '/icons/Doces.png',
+            'Salgados': '/icons/Salgados.png'
+          }
+          
+          categories.push({
+            name: cat,
+            icon: iconMap[cat] || '🧁'
+          })
+        }
+      })
+      
+      // Adicionar outras categorias que não são padrão
+      productCategories.forEach(category => {
+        if (!defaultCategories.includes(category)) {
+          categories.push({
+            name: category,
+            icon: '🧁'
+          })
         }
       })
     }
     
+    console.log('📋 Categorias finais:', categories)
     return categories
   }
 
