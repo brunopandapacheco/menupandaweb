@@ -4,7 +4,6 @@ import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
 import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
-import { CategorySettings } from '@/components/admin/CategorySettings'
 import { StoreSettings } from '@/components/admin/StoreSettings'
 
 const gradientBackgrounds = [
@@ -29,9 +28,6 @@ export default function DesignSettings() {
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
   
-  // Estados para principais categorias
-  const [mainCategories, setMainCategories] = useState<string[]>([])
-
   // Estados para horários
   const [horarioSemanaAbre, setHorarioSemanaAbre] = useState('08:00')
   const [horarioSemanaFecha, setHorarioSemanaFecha] = useState('18:00')
@@ -67,9 +63,6 @@ export default function DesignSettings() {
       }
       if (designSettings.banner1_url) {
         setBannerUrl(designSettings.banner1_url)
-      }
-      if (designSettings.categorias) {
-        setMainCategories(designSettings.categorias.slice(0, 3))
       }
     }
   }, [designSettings])
@@ -171,21 +164,6 @@ export default function DesignSettings() {
     }
   }
 
-  const saveMainCategories = async () => {
-    if (mainCategories.length === 0) {
-      showError('Selecione pelo menos uma categoria principal')
-      return
-    }
-    
-    const success = await saveDesignSettings({ categorias: mainCategories })
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar categorias principais')
-    }
-  }
-
   const saveHorarios = async () => {
     const horarios_semana = [
       { day: 'Segunda', open: true, openTime: horarioSemanaAbre, closeTime: horarioSemanaFecha },
@@ -265,13 +243,6 @@ export default function DesignSettings() {
 
         <TabsContent value="configuracao">
           <div className="space-y-8">
-            {/* Categorias */}
-            <CategorySettings
-              mainCategories={mainCategories}
-              onMainCategoriesChange={setMainCategories}
-              onSaveCategories={saveMainCategories}
-            />
-            
             {/* Configurações da Loja */}
             <StoreSettings
               nomeLoja={nomeLoja}

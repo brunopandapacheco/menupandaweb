@@ -155,13 +155,34 @@ export default function CardapioDemo() {
     setCartItems([])
   }
 
-  // Categorias baseadas nas 4 categorias padrão
-  const categories = [
-    { name: 'Todos', icon: '/icons/Todos.png' },
-    { name: 'Bolos', icon: '/icons/Bolos.png' },
-    { name: 'Doces', icon: '/icons/Doces.png' },
-    { name: 'Salgados', icon: '/icons/Salgados.png' }
-  ]
+  // Obter categorias na ordem que foram cadastradas nos produtos
+  const getCategories = () => {
+    // Sempre incluir "Todos" primeiro
+    const categories = [{ name: 'Todos', icon: '/icons/Todos.png' }]
+    
+    // Obter categorias únicas dos produtos na ordem de criação
+    const productCategories = Array.from(new Set(mockProdutos.map(p => p.categoria)))
+      .filter(cat => cat && cat.trim() !== '')
+    
+    // Adicionar categorias na ordem que aparecem nos produtos
+    productCategories.forEach(category => {
+      // Mapear para ícones conhecidos ou usar emoji padrão
+      const iconMap: { [key: string]: string } = {
+        'Bolos': '/icons/Bolos.png',
+        'Doces': '/icons/Doces.png',
+        'Salgados': '/icons/Salgados.png'
+      }
+      
+      categories.push({
+        name: category,
+        icon: iconMap[category] || '🧁'
+      })
+    })
+    
+    return categories
+  }
+
+  const categories = getCategories()
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: mockDesignSettings.cor_background }}>
@@ -176,7 +197,7 @@ export default function CardapioDemo() {
         logoUrl={mockDesignSettings.logo_url}
         borderColor={mockDesignSettings.cor_borda}
         storeName={mockDesignSettings.nome_loja}
-        storeDescription="Há mais de 20 anos transformando momentos especiais em doces inesquecíveis."
+        storeDescription="Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes."
         corNome={mockDesignSettings.cor_nome}
       />
 

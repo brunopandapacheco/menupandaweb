@@ -153,81 +153,31 @@ export default function CardapioPublico() {
 
   const horarios = getHorariosFromConfig()
 
-  // Obter categorias na ordem correta
+  // Obter categorias na ordem que foram cadastradas nos produtos
   const getCategories = () => {
     // Sempre incluir "Todos" primeiro
     const categories = [{ name: 'Todos', icon: '/icons/Todos.png' }]
     
-    // Obter todas as categorias que têm produtos
+    // Obter categorias únicas dos produtos na ordem de criação
     const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
       .filter(cat => cat && cat.trim() !== '')
     
-    console.log('📋 Categorias com produtos:', productCategories)
+    console.log('📋 Categorias dos produtos (ordem de criação):', productCategories)
     
-    // Se houver categorias configuradas, usar essa ordem
-    if (designSettings?.categorias && designSettings.categorias.length > 0) {
-      console.log('📋 Categorias configuradas:', designSettings.categorias)
+    // Adicionar categorias na ordem que aparecem nos produtos
+    productCategories.forEach(category => {
+      // Mapear para ícones conhecidos ou usar emoji padrão
+      const iconMap: { [key: string]: string } = {
+        'Bolos': '/icons/Bolos.png',
+        'Doces': '/icons/Doces.png',
+        'Salgados': '/icons/Salgados.png'
+      }
       
-      // Adicionar categorias configuradas na ordem correta
-      designSettings.categorias.forEach(category => {
-        if (productCategories.includes(category)) {
-          const iconMap: { [key: string]: string } = {
-            'Bolos': '/icons/Bolos.png',
-            'Doces': '/icons/Doces.png',
-            'Salgados': '/icons/Salgados.png'
-          }
-          
-          categories.push({
-            name: category,
-            icon: iconMap[category] || '🧁'
-          })
-        }
+      categories.push({
+        name: category,
+        icon: iconMap[category] || '🧁'
       })
-      
-      // Adicionar categorias que têm produtos mas não estão na configuração
-      productCategories.forEach(category => {
-        if (!designSettings.categorias.includes(category)) {
-          const iconMap: { [key: string]: string } = {
-            'Bolos': '/icons/Bolos.png',
-            'Doces': '/icons/Doces.png',
-            'Salgados': '/icons/Salgados.png'
-          }
-          
-          categories.push({
-            name: category,
-            icon: iconMap[category] || '🧁'
-          })
-        }
-      })
-    } else {
-      // Fallback para categorias padrão se não houver configuração
-      const defaultCategories = ['Bolos', 'Doces', 'Salgados']
-      
-      defaultCategories.forEach(cat => {
-        if (productCategories.includes(cat)) {
-          const iconMap: { [key: string]: string } = {
-            'Bolos': '/icons/Bolos.png',
-            'Doces': '/icons/Doces.png',
-            'Salgados': '/icons/Salgados.png'
-          }
-          
-          categories.push({
-            name: cat,
-            icon: iconMap[cat] || '🧁'
-          })
-        }
-      })
-      
-      // Adicionar outras categorias que não são padrão
-      productCategories.forEach(category => {
-        if (!defaultCategories.includes(category)) {
-          categories.push({
-            name: category,
-            icon: '🧁'
-          })
-        }
-      })
-    }
+    })
     
     console.log('📋 Categorias finais:', categories)
     return categories
@@ -294,7 +244,7 @@ export default function CardapioPublico() {
             produtos={filteredProducts}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
-            onOrder={addToCart} // Mudado para addToCart
+            onOrder={addToCart}
             backgroundColor={designSettings.cor_background}
             borderColor={designSettings.cor_borda}
             selectedCategory={selectedCategory}

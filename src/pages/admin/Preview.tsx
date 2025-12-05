@@ -135,46 +135,33 @@ export default function Preview() {
     }
   }
 
-  // Usar categorias do designSettings em vez de categorias fixas
+  // Obter categorias na ordem que foram cadastradas nos produtos
   const getCategories = () => {
     // Sempre incluir "Todos" primeiro
     const categories = [{ name: 'Todos', icon: '/icons/Todos.png' }]
     
-    // Adicionar categorias configuradas pelo usuário na ordem correta
-    if (designSettings?.categorias && designSettings.categorias.length > 0) {
-      designSettings.categorias.forEach(category => {
-        // Verificar se a categoria tem produtos
-        const hasProducts = produtos.some(p => p.categoria === category)
-        if (hasProducts) {
-          // Mapear para ícones conhecidos ou usar emoji padrão
-          const iconMap: { [key: string]: string } = {
-            'Bolos': '/icons/Bolos.png',
-            'Doces': '/icons/Doces.png',
-            'Salgados': '/icons/Salgados.png'
-          }
-          
-          categories.push({
-            name: category,
-            icon: iconMap[category] || '🧁'
-          })
-        }
-      })
-    } else {
-      // Fallback para categorias padrão se não houver configuração
-      const defaultCategories = [
-        { name: 'Bolos', icon: '/icons/Bolos.png' },
-        { name: 'Doces', icon: '/icons/Doces.png' },
-        { name: 'Salgados', icon: '/icons/Salgados.png' }
-      ]
-      
-      defaultCategories.forEach(cat => {
-        const hasProducts = produtos.some(p => p.categoria === cat.name)
-        if (hasProducts) {
-          categories.push(cat)
-        }
-      })
-    }
+    // Obter categorias únicas dos produtos na ordem de criação
+    const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
+      .filter(cat => cat && cat.trim() !== '')
     
+    console.log('📋 Categorias dos produtos (ordem de criação):', productCategories)
+    
+    // Adicionar categorias na ordem que aparecem nos produtos
+    productCategories.forEach(category => {
+      // Mapear para ícones conhecidos ou usar emoji padrão
+      const iconMap: { [key: string]: string } = {
+        'Bolos': '/icons/Bolos.png',
+        'Doces': '/icons/Doces.png',
+        'Salgados': '/icons/Salgados.png'
+      }
+      
+      categories.push({
+        name: category,
+        icon: iconMap[category] || '🧁'
+      })
+    })
+    
+    console.log('📋 Categorias finais:', categories)
     return categories
   }
 
