@@ -134,7 +134,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Glassmorphism (Logo) */}
+          {/* Botão Gradient + Shadow (Logo) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -148,16 +148,15 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
-                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
+              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
+                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
               disabled={uploadingLogo}
             >
               <label 
                 htmlFor="logo-upload" 
                 className="cursor-pointer flex items-center gap-2"
-                style={{ color: '#4A3531' }}
               >
-                <Upload className="w-5 h-5" style={{ color: '#4A3531' }} />
+                <Upload className="w-5 h-5" />
                 {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
               </label>
             </Button>
@@ -190,7 +189,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Glassmorphism (Banner) */}
+          {/* Botão Gradient + Shadow (Banner) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -204,16 +203,15 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
-                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
+              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
+                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
               disabled={uploadingBanner}
             >
               <label 
                 htmlFor="banner-upload" 
                 className="cursor-pointer flex items-center gap-2"
-                style={{ color: '#4A3531' }}
               >
-                <Upload className="w-5 h-5" style={{ color: '#4A3531' }} />
+                <Upload className="w-5 h-5" />
                 {uploadingBanner ? 'Processando...' : 'Selecionar Banner'}
               </label>
             </Button>
