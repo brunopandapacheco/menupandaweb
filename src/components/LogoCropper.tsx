@@ -69,9 +69,10 @@ export function LogoCropper({
       
       if (circularCrop) ctx.restore()
       
+      // Usar PNG com qualidade máxima (1.0) para melhor qualidade
       canvas.toBlob((blob) => {
         if (blob) onCropComplete(blob)
-      }, "image/jpeg", 0.9)
+      }, "image/png", 1.0)
     }
     
     img.src = imageUrl
