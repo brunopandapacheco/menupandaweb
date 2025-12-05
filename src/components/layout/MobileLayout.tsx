@@ -24,12 +24,14 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
         {children}
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl z-50" 
-           style={{
-             background: 'linear-gradient(135deg, #ff967f 0%, #ffc8b4 50%, #ffffff 100%)',
-             animation: 'gradient-x 3s ease infinite',
-             backgroundSize: '200% 200%'
-           }}>
+      <div
+        className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl z-50"
+        style={{
+          background: 'linear-gradient(135deg, #3a0050 0%, #7a00a8 50%, #c070ff 100%)',
+          animation: 'gradient-x 3s ease infinite',
+          backgroundSize: '200% 200%'
+        }}
+      >
         <div className="grid grid-cols-3 gap-1 p-2">
           {tabs.map((tab) => {
             return (
@@ -44,10 +46,14 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
-                <span className={cn(
-                  "text-xs font-[700]",
-                  activeTab === tab.id ? "text-[#2b0033]" : "text-white"
-                )}>{tab.label}</span>
+                <span
+                  className={cn(
+                    "text-xs font-[700]",
+                    activeTab === tab.id ? "text-[#2b0033]" : "text-white"
+                  )}
+                >
+                  {tab.label}
+                </span>
               </Button>
             )
           })}
