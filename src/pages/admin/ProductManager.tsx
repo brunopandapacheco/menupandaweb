@@ -48,19 +48,6 @@ export default function ProductManager() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-2">Gerenciar Produtos</h1>
-            <p className="text-pink-100 text-lg">
-              <span className="hidden sm:inline">Adicione e organize seus produtos facilmente</span>
-              <span className="sm:hidden">Adicione e organize seus<br />produtos facilmente</span>
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Filtros e Ações */}
         <ProductFilters
