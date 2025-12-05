@@ -6,6 +6,7 @@ import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2 } from 'lucide-re
 import { useDatabase } from '@/hooks/useDatabase'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
+import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
@@ -196,6 +197,11 @@ export default function Preview() {
         />
 
         <div className="container mx-auto px-4 py-4">
+          {/* Banner Publicitário */}
+          {designSettings?.banner1_url && (
+            <BannerAd bannerUrl={designSettings.banner1_url} />
+          )}
+          
           <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
           
           <CategoryFilter 
@@ -292,6 +298,11 @@ export default function Preview() {
       />
 
       <div className="container mx-auto px-4 py-4">
+        {/* Banner Publicitário */}
+        {designSettings?.banner1_url && (
+          <BannerAd bannerUrl={designSettings.banner1_url} />
+        )}
+        
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         
         <CategoryFilter 

@@ -27,6 +27,7 @@ export default function DesignSettings() {
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [textoRodape, setTextoRodape] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
+  const [bannerUrl, setBannerUrl] = useState('')
   
   // Estados para principais categorias
   const [mainCategories, setMainCategories] = useState<string[]>([])
@@ -63,6 +64,9 @@ export default function DesignSettings() {
       }
       if (designSettings.logo_url) {
         setLogoUrl(designSettings.logo_url)
+      }
+      if (designSettings.banner1_url) {
+        setBannerUrl(designSettings.banner1_url)
       }
       if (designSettings.categorias) {
         setMainCategories(designSettings.categorias.slice(0, 3))
@@ -127,6 +131,16 @@ export default function DesignSettings() {
     }
   }
 
+  const saveBannerOnly = async (url: string) => {
+    const success = await saveDesignSettings({ banner1_url: url })
+    
+    if (success) {
+      showSuccess('Atualizado com sucesso!')
+    } else {
+      showError('Erro ao salvar banner')
+    }
+  }
+
   const saveConfig = async () => {
     const settingsToUpdate: any = {}
     
@@ -142,7 +156,7 @@ export default function DesignSettings() {
       settingsToUpdate.texto_rodape = textoRodape.trim()
     }
     
-    // NÃO incluir logo_url aqui - é salvo separadamente
+    // NÃO incluir logo_url ou banner1_url aqui - são salvos separadamente
     if (Object.keys(settingsToUpdate).length === 0) {
       showError('Por favor, preencha pelo menos um campo')
       return
@@ -237,11 +251,16 @@ export default function DesignSettings() {
         </TabsContent>
 
         <TabsContent value="imagens">
-          <ImageSettings
-            logoUrl={logoUrl}
-            onLogoUrlChange={setLogoUrl}
-            onSaveLogo={saveLogoOnly}
-          />
+          <div className="space-y-6">
+            <ImageSettings
+              logoUrl={logoUrl}
+              onLogoUrlChange={setLogoUrl}
+              onSaveLogo={saveLogoOnly}
+              bannerUrl={bannerUrl}
+              onBannerUrlChange={setBannerUrl}
+              onSaveBanner={saveBannerOnly}
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="configuracao">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Banner } from '@/components/cardapio/Banner'
+import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
 import { SearchBar } from '@/components/cardapio/SearchBar'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
@@ -29,7 +30,8 @@ const mockDesignSettings = {
   background_image_url: '',
   use_background_image: false,
   em_ferias: false,
-  data_retorno_ferias: ''
+  data_retorno_ferias: '',
+  banner1_url: ''
 }
 
 const mockConfiguracoes = {
@@ -179,6 +181,11 @@ export default function CardapioDemo() {
       />
 
       <div className="container mx-auto px-4 py-4">
+        {/* Banner Publicitário */}
+        {mockDesignSettings.banner1_url && (
+          <BannerAd bannerUrl={mockDesignSettings.banner1_url} />
+        )}
+        
         <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         
         <CategoryFilter 
@@ -192,7 +199,7 @@ export default function CardapioDemo() {
             produtos={filteredProducts}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
-            onOrder={addToCart} // Mudado para addToCart
+            onOrder={addToCart}
             backgroundColor={mockDesignSettings.cor_background}
             borderColor={mockDesignSettings.cor_borda}
             selectedCategory={selectedCategory}

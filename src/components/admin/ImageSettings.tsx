@@ -10,18 +10,26 @@ interface ImageSettingsProps {
   logoUrl: string
   onLogoUrlChange: (url: string) => void
   onSaveLogo: (url: string) => void
+  bannerUrl?: string
+  onBannerUrlChange: (url: string) => void
+  onSaveBanner: (url: string) => void
 }
 
 export function ImageSettings({ 
   logoUrl, 
   onLogoUrlChange, 
-  onSaveLogo
+  onSaveLogo,
+  bannerUrl = '',
+  onBannerUrlChange,
+  onSaveBanner
 }: ImageSettingsProps) {
   const [uploadingLogo, setUploadingLogo] = useState(false)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [showCropper, setShowCropper] = useState(false)
+  const [uploadingBanner, setUploadingBanner] = useState(false)
+  const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null)
+  const [selectedBannerFile, setSelectedBannerFile] = useState<File | null>(null)
+  const [showLogoCropper, setShowLogoCropper] = useState(false)
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
@@ -36,15 +44,59 @@ export function ImageSettings({
       return
     }
 
-    setSelectedFile(file)
-    setShowCropper(true)
+    setSelectedLogoFile(file)
+    setShowLogoCropper(true)
   }
 
-  const handleCropComplete = async (croppedBlob: Blob) => {
-    if (!selectedFile) return
+  const handleBannerFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validar arquivo
+    if (!file.type.startsWith('image/')) {
+      showError('Arquivo não é uma imagem')
+      return
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      showError('Arquivo muito grande (máximo 5MB)')
+      return
+    }
+
+    setUploadingBanner(true)
+
+    try {
+      console.log('📤 Iniciando upload do banner...')
+      
+      // Criar arquivo a partir do blob
+      const fileName = `banner-${Date.now()}.${file.name.split('.').pop()}`
+      const url = await supabaseService.uploadImage(file, 'banners', fileName)
+      
+      if (!url) {
+        throw new Error('Falha no upload da imagem para o storage')
+      }
+      
+      console.log('✅ Upload do banner realizado:', url)
+      
+      // Salvar no banco
+      await onSaveBanner(url)
+      onBannerUrlChange(url)
+      
+      showSuccess('🖼️ Banner atualizado com sucesso!')
+      
+    } catch (error: any) {
+      console.error('❌ Erro no upload do banner:', error)
+      showError(error.message || 'Erro ao fazer upload do banner')
+    } finally {
+      setUploadingBanner(false)
+    }
+  }
+
+  const handleLogoCropComplete = async (croppedBlob: Blob) => {
+    if (!selectedLogoFile) return
 
     setUploadingLogo(true)
-    setShowCropper(false)
+    setShowLogoCropper(false)
 
     try {
       console.log('📤 Iniciando upload da logo cropada...')
@@ -73,13 +125,13 @@ export function ImageSettings({
       showError(error.message || 'Erro ao fazer upload da logo')
     } finally {
       setUploadingLogo(false)
-      setSelectedFile(null)
+      setSelectedLogoFile(null)
     }
   }
 
-  const handleCropCancel = () => {
-    setShowCropper(false)
-    setSelectedFile(null)
+  const handleLogoCropCancel = () => {
+    setShowLogoCropper(false)
+    setSelectedLogoFile(null)
   }
 
   return (
@@ -123,7 +175,7 @@ export function ImageSettings({
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleFileSelect}
+                  onChange={handleLogoFileSelect}
                   className="hidden"
                   id="logo-upload"
                   disabled={uploadingLogo}
@@ -145,12 +197,69 @@ export function ImageSettings({
         </CardContent>
       </Card>
 
+      {/* Card do Banner */}
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Banner do Cardápio</CardTitle>
+          <CardDescription className="text-base">
+            Adicione um banner promocional abaixo da descrição da loja
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
+          {/* Preview do Banner */}
+          <div className="flex justify-center">
+            <div className="relative w-full max-w-md">
+              {bannerUrl ? (
+                <div className="w-full h-32 border-2 border-gray-200 rounded-lg overflow-hidden shadow-md">
+                  <img 
+                    src={bannerUrl} 
+                    alt="Banner do cardápio" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+                  <div className="text-center">
+                    <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-500">Nenhum banner</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Botão de Upload do Banner */}
+          <div className="flex justify-center">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleBannerFileSelect}
+              className="hidden"
+              id="banner-upload"
+              disabled={uploadingBanner}
+            />
+            <Button 
+              asChild 
+              size="lg"
+              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              disabled={uploadingBanner}
+            >
+              <label htmlFor="banner-upload" className="cursor-pointer flex items-center gap-2">
+                <Upload className="w-5 h-5" />
+                {uploadingBanner ? 'Processando...' : 'Selecionar Banner'}
+              </label>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Modal de Crop da Logo */}
-      {showCropper && selectedFile && (
+      {showLogoCropper && selectedLogoFile && (
         <LogoCropper
-          imageFile={selectedFile}
-          onCropComplete={handleCropComplete}
-          onCancel={handleCropCancel}
+          imageFile={selectedLogoFile}
+          onCropComplete={handleLogoCropComplete}
+          onCancel={handleLogoCropCancel}
           circularCrop={true}
         />
       )}
