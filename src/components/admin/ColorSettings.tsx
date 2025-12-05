@@ -18,12 +18,18 @@ const predefinedColors = [
 ]
 
 const gradientBackgrounds = [
-  { name: 'Rosa Neon', gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' },
-  { name: 'Aurora', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-  { name: 'Pôr do Sol', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-  { name: 'Oceano', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
-  { name: 'Floresta', gradient: 'linear-gradient(135deg, #38ef7d 0%, #11998e 100%)' },
-  { name: 'Fogo', gradient: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)' }
+  { 
+    name: 'Rosa Suave', 
+    gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' 
+  },
+  { 
+    name: 'Rosa Vibrante', 
+    gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' 
+  },
+  { 
+    name: 'Rosa Delicado', 
+    gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' 
+  }
 ]
 
 interface ColorSettingsProps {
@@ -73,7 +79,7 @@ export function ColorSettings({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {gradientBackgrounds.map((gradient) => (
               <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
                 <CardContent className="p-4">
