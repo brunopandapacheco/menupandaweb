@@ -5,6 +5,7 @@ import { showSuccess, showError } from '@/utils/toast'
 import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { StoreSettings } from '@/components/admin/StoreSettings'
+import { CategorySettings } from '@/components/admin/CategorySettings'
 
 const gradientBackgrounds = [
   { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
@@ -38,6 +39,9 @@ export default function DesignSettings() {
   const [sabadoAberto, setSabadoAberto] = useState(true)
   const [domingoAberto, setDomingoAberto] = useState(false)
 
+  // Estados para categorias
+  const [mainCategories, setMainCategories] = useState<string[]>([])
+
   useEffect(() => {
     if (designSettings) {
       if (designSettings.banner_gradient) {
@@ -63,6 +67,9 @@ export default function DesignSettings() {
       }
       if (designSettings.banner1_url) {
         setBannerUrl(designSettings.banner1_url)
+      }
+      if (designSettings.categorias) {
+        setMainCategories(designSettings.categorias)
       }
     }
   }, [designSettings])
@@ -184,6 +191,16 @@ export default function DesignSettings() {
     }
   }
 
+  const saveCategories = async () => {
+    const success = await saveDesignSettings({ categorias: mainCategories })
+    
+    if (success) {
+      showSuccess('Categorias salvas com sucesso!')
+    } else {
+      showError('Erro ao salvar categorias')
+    }
+  }
+
   if (loading) return <div>Carregando...</div>
 
   return (
@@ -194,7 +211,7 @@ export default function DesignSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
-        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
           <TabsTrigger 
             value="cores" 
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
@@ -206,6 +223,12 @@ export default function DesignSettings() {
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Imagens
+          </TabsTrigger>
+          <TabsTrigger 
+            value="categorias" 
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
+          >
+            Categorias
           </TabsTrigger>
           <TabsTrigger 
             value="configuracao" 
@@ -237,6 +260,16 @@ export default function DesignSettings() {
               bannerUrl={bannerUrl}
               onBannerUrlChange={setBannerUrl}
               onSaveBanner={saveBannerOnly}
+            />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="categorias">
+          <div className="space-y-6">
+            <CategorySettings
+              mainCategories={mainCategories}
+              onMainCategoriesChange={setMainCategories}
+              onSaveCategories={saveCategories}
             />
           </div>
         </TabsContent>

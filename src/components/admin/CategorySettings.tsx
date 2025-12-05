@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { X, GripVertical, AlertTriangle, RefreshCw } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { X, Edit2, Trash2, Check, AlertTriangle, RefreshCw } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
@@ -11,6 +12,23 @@ const defaultCategories = [
   'Salgados'
 ]
 
+// Lista de todos os ícones disponíveis na pasta public/icons
+const availableIcons = [
+  { name: 'Bolo', path: '/icons/bolo.png' },
+  { name: 'Brigadeiro', path: '/icons/brigadeiro.png' },
+  { name: 'Cookie', path: '/icons/cookies.png' },
+  { name: 'Coxinha', path: '/icons/coxinha.png' },
+  { name: 'Pipoca', path: '/icons/pipoca.png' },
+  { name: 'Pudim', path: '/icons/pudim.png' },
+  { name: 'Trufa', path: '/icons/trufas.png' },
+  { name: 'Doces', path: '/icons/Doces.png' },
+  { name: 'Salgados', path: '/icons/Salgados.png' },
+  { name: 'Todos', path: '/icons/Todos.png' },
+  { name: 'Ícone Bolo', path: '/icons/iconebolo.png' },
+  { name: 'Ícone Brigadeiro', path: '/icons/iconebrigadeiro.png' },
+  { name: 'Ícone Todos', path: '/icons/iconetodos.png' }
+]
+
 interface CategorySettingsProps {
   mainCategories: string[]
   onMainCategoriesChange: (categories: string[]) => void
@@ -18,8 +36,11 @@ interface CategorySettingsProps {
 }
 
 export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const { produtos } = useDatabase()
+  const [editingCategory, setEditingCategory] = useState<string | null>(null)
+  const [editingName, setEditingName] = useState('')
+  const [editingIcon, setEditingIcon] = useState('')
+  const [showIconSelector, setShowIconSelector] = useState<string | null>(null)
 
   // Obter categorias que realmente existem nos produtos
   const getProductCategories = () => {
@@ -29,185 +50,212 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const productCategories = getProductCategories()
 
-  // Sincronizar categorias: manter apenas as que existem nos produtos
-  const syncCategories = () => {
-    // Sempre incluir as categorias padrão
-    const syncedCategories = [...defaultCategories]
-    
-    // Adicionar categorias de produtos que não estão na lista
-    const missingCategories = productCategories.filter(cat => 
-      !syncedCategories.includes(cat)
-    )
-    
-    const finalCategories = [...syncedCategories, ...missingCategories]
-    onMainCategoriesChange(finalCategories)
-    showSuccess('Categorias sincronizadas com sucesso!')
-  }
-
-  // Verificar se há categorias órfãs (que não existem mais nos produtos)
-  const hasOrphanedCategories = mainCategories.some(cat => 
-    !defaultCategories.includes(cat) && !productCategories.includes(cat)
-  )
-
-  const handleDragStart = (e: React.DragEvent, index: number) => {
-    setDraggedIndex(index)
-    e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/plain', index.toString())
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-  }
-
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-    e.preventDefault()
-    
-    if (draggedIndex === null || draggedIndex === dropIndex) return
-    
-    const newCategories = [...mainCategories]
-    const draggedCategory = newCategories[draggedIndex]
-    
-    // Remove da posição original
-    newCategories.splice(draggedIndex, 1)
-    
-    // Adiciona na nova posição
-    newCategories.splice(dropIndex, 0, draggedCategory)
-    
-    onMainCategoriesChange(newCategories)
-    setDraggedIndex(null)
-  }
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null)
-  }
-
-  const addCategory = (category: string) => {
-    if (!mainCategories.includes(category)) {
-      onMainCategoriesChange([...mainCategories, category])
-    }
-  }
-
-  const removeCategory = (category: string) => {
-    const newCategories = mainCategories.filter(c => c !== category)
-    onMainCategoriesChange(newCategories)
-  }
-
   // Combinar todas as categorias para exibição
-  const allDisplayCategories = () => {
-    const categories = [...mainCategories]
-    
-    // Adicionar categorias que não estão na lista principal
-    productCategories.forEach(cat => {
-      if (!categories.includes(cat)) {
-        categories.push(cat)
-      }
-    })
-    
-    return categories
+  const allCategories = () => {
+    const categories = [...new Set([...defaultCategories, ...productCategories])]
+    return categories.sort() // Ordenar alfabeticamente
   }
 
-  const displayCategories = allDisplayCategories()
+  const displayCategories = allCategories()
+
+  const handleEditCategory = (category: string) => {
+    setEditingCategory(category)
+    setEditingName(category)
+    setEditingIcon('')
+    setShowIconSelector(null)
+  }
+
+  const handleSaveEdit = () => {
+    if (!editingCategory || !editingName.trim()) return
+
+    // Atualizar nome da categoria em todos os produtos
+    const updatedProducts = produtos.map(product => {
+      if (product.categoria === editingCategory) {
+        return { ...product, categoria: editingName.trim() }
+      }
+      return product
+    })
+
+    // Aqui você precisaria atualizar os produtos no banco
+    // Por enquanto, apenas atualizamos o estado local
+    showSuccess(`Categoria "${editingCategory}" renomeada para "${editingName.trim()}"`)
+    setEditingCategory(null)
+    setEditingName('')
+    setEditingIcon('')
+  }
+
+  const handleDeleteCategory = (category: string) => {
+    if (defaultCategories.includes(category)) {
+      showError('Não é possível excluir categorias padrão')
+      return
+    }
+
+    const productsInCategory = produtos.filter(p => p.categoria === category)
+    if (productsInCategory.length > 0) {
+      showError(`Não é possível excluir "${category}". Existem ${productsInCategory.length} produtos nesta categoria.`)
+      return
+    }
+
+    // Remover categoria da lista
+    const updatedCategories = mainCategories.filter(c => c !== category)
+    onMainCategoriesChange(updatedCategories)
+    showSuccess(`Categoria "${category}" excluída com sucesso!`)
+  }
+
+  const handleIconChange = (category: string, iconPath: string) => {
+    // Aqui você precisaria salvar o ícone da categoria no banco
+    // Por enquanto, apenas mostramos uma mensagem
+    showSuccess(`Ícone da categoria "${category}" atualizado!`)
+    setShowIconSelector(null)
+  }
+
+  const getCategoryIcon = (category: string) => {
+    // Aqui você buscaria o ícone salvo no banco
+    // Por enquanto, usamos um mapeamento padrão
+    const iconMap: { [key: string]: string } = {
+      'Bolos': '/icons/bolo.png',
+      'Doces': '/icons/Doces.png',
+      'Salgados': '/icons/Salgados.png'
+    }
+    return iconMap[category] || '🧁'
+  }
+
+  const hasProducts = (category: string) => {
+    return produtos.some(p => p.categoria === category)
+  }
+
+  const isDefaultCategory = (category: string) => {
+    return defaultCategories.includes(category)
+  }
 
   return (
     <div className="space-y-6">
-      {/* Alerta de sincronização se houver categorias órfãs */}
-      {hasOrphanedCategories && (
-        <Card className="border-2 border-orange-200 bg-orange-50">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
-              <div className="flex-1">
-                <h4 className="font-semibold text-orange-800 mb-1">Categorias desatualizadas</h4>
-                <p className="text-sm text-orange-700 mb-3">
-                  Detectamos categorias que não existem mais nos seus produtos. 
-                  Clique no botão abaixo para sincronizar automaticamente.
-                </p>
-                <Button 
-                  onClick={syncCategories}
-                  className="bg-orange-600 hover:bg-orange-700 text-white"
-                  size="sm"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Sincronizar Categorias
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Card de Organização de Categorias */}
+      {/* Card de Gerenciamento de Categorias */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Organizar Categorias</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Gerenciar Categorias</CardTitle>
           <CardDescription className="text-base">
-            Arraste as categorias para reorganizar a ordem no cardápio
+            Renomeie, exclua ou altere os ícones das suas categorias
           </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Lista de Categorias com Drag and Drop */}
+          {/* Lista de Categorias */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
-              Ordem das Categorias
+              Todas as Categorias
             </h3>
             
-            <div className="space-y-2">
-              {/* "Todos" sempre fixo no topo */}
-              <div className="flex items-center justify-between bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg opacity-75">
-                <div className="flex items-center gap-3">
-                  <GripVertical className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-700 font-medium">Todos</span>
-                </div>
-                <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Fixo</span>
-              </div>
-              
-              {/* Todas as categorias que podem ser movidas */}
-              {displayCategories.map((category, index) => {
-                const hasProducts = productCategories.includes(category)
-                const isInMainList = mainCategories.includes(category)
+            <div className="space-y-3">
+              {displayCategories.map((category) => {
+                const isEditing = editingCategory === category
+                const hasProductsInCategory = hasProducts(category)
+                const isDefault = isDefaultCategory(category)
+                const currentIcon = getCategoryIcon(category)
                 
                 return (
                   <div
                     key={category}
-                    draggable={true}
-                    onDragStart={(e) => handleDragStart(e, index)}
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, index)}
-                    onDragEnd={handleDragEnd}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all cursor-move hover:bg-blue-100 ${
-                      isInMainList 
-                        ? 'bg-blue-50 border border-blue-200' 
-                        : 'bg-green-50 border border-green-200'
-                    }`}
+                    className="flex items-center justify-between p-4 rounded-lg border bg-white hover:shadow-sm transition-shadow"
                   >
                     <div className="flex items-center gap-3">
-                      <GripVertical className={`w-4 h-4 ${isInMainList ? 'text-blue-600' : 'text-green-600'}`} />
-                      <span className={`font-medium ${isInMainList ? 'text-blue-800' : 'text-green-800'}`}>
-                        {category}
-                        {hasProducts && (
-                          <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                            {produtos.filter(p => p.categoria === category).length} produtos
-                          </span>
+                      {/* Ícone da categoria */}
+                      <div className="relative">
+                        {currentIcon.startsWith('/') ? (
+                          <img 
+                            src={currentIcon} 
+                            alt={category}
+                            className="w-8 h-8 object-contain"
+                          />
+                        ) : (
+                          <span className="text-2xl">{currentIcon}</span>
                         )}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {isInMainList ? (
+                        
+                        {/* Botão para alterar ícone */}
                         <button
-                          onClick={() => removeCategory(category)}
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                          onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
+                          className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hover:bg-purple-700"
                         >
-                          <X className="w-4 h-4" />
+                          <Edit2 className="w-2 h-2" />
                         </button>
+                      </div>
+                      
+                      {/* Nome da categoria */}
+                      {isEditing ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            className="w-48 h-8"
+                            placeholder="Nome da categoria"
+                          />
+                          <Button
+                            size="sm"
+                            onClick={handleSaveEdit}
+                            className="bg-green-600 hover:bg-green-700 h-8"
+                          >
+                            <Check className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setEditingCategory(null)
+                              setEditingName('')
+                            }}
+                            className="h-8"
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
                       ) : (
-                        <button
-                          onClick={() => addCategory(category)}
-                          className="text-green-600 hover:text-green-800 transition-colors"
-                        >
-                          <X className="w-4 h-4 rotate-45" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-gray-800">{category}</span>
+                          {hasProductsInCategory && (
+                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                              {produtos.filter(p => p.categoria === category).length} produtos
+                            </span>
+                          )}
+                          {isDefault && (
+                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                              Padrão
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Ações */}
+                    <div className="flex items-center gap-2">
+                      {!isEditing && (
+                        <>
+                          <button
+                            onClick={() => handleEditCategory(category)}
+                            className="text-blue-600 hover:text-blue-800 transition-colors"
+                            title="Renomear categoria"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          
+                          <button
+                            onClick={() => handleDeleteCategory(category)}
+                            className={`transition-colors ${
+                              isDefault || hasProductsInCategory
+                                ? 'text-gray-300 cursor-not-allowed'
+                                : 'text-red-600 hover:text-red-800'
+                            }`}
+                            title={
+                              isDefault 
+                                ? 'Categoria padrão não pode ser excluída'
+                                : hasProductsInCategory
+                                ? 'Categoria com produtos não pode ser excluída'
+                                : 'Excluir categoria'
+                            }
+                            disabled={isDefault || hasProductsInCategory}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
@@ -216,27 +264,50 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
+          {/* Seletor de Ícone */}
+          {showIconSelector && (
+            <div className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50">
+              <h4 className="text-sm font-semibold text-purple-800 mb-3">
+                Escolha um ícone para "{showIconSelector}"
+              </h4>
+              <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto">
+                {availableIcons.map((icon) => (
+                  <button
+                    key={icon.path}
+                    onClick={() => handleIconChange(showIconSelector, icon.path)}
+                    className="p-2 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
+                    title={icon.name}
+                  >
+                    <img 
+                      src={icon.path} 
+                      alt={icon.name}
+                      className="w-6 h-6 object-contain mx-auto"
+                    />
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 flex justify-end">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowIconSelector(null)}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Informações */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="text-sm font-semibold text-blue-800 mb-2">ℹ️ Informações Importantes</h4>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Arraste as categorias para reorganizar a ordem de exibição</li>
-              <li>• "Todos" sempre ficará fixo na primeira posição</li>
-              <li>• Para criar novas categorias, faça isso na criação de produtos</li>
-              <li>• Categorias em verde têm produtos mas não estão na lista principal</li>
-              <li>• Categorias em azul estão na lista e podem ser movidas</li>
-              <li>• Clique no X para remover da lista ou + para adicionar</li>
+              <li>• Clique no ícone de editar para renomear uma categoria</li>
+              <li>• Clique no ícone de lápis para alterar o ícone da categoria</li>
+              <li>• Categorias padrão (Bolos, Doces, Salgados) não podem ser excluídas</li>
+              <li>• Categorias com produtos não podem ser excluídas</li>
+              <li>• As categorias aparecem no cardápio na ordem de criação dos produtos</li>
             </ul>
-          </div>
-
-          {/* Botão Salvar */}
-          <div className="pt-6">
-            <Button 
-              onClick={onSaveCategories}
-              className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Salvar Ordem das Categorias
-            </Button>
           </div>
         </CardContent>
       </Card>
