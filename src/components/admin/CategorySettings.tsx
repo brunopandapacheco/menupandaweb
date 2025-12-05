@@ -49,9 +49,11 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     !defaultCategories.includes(cat) && !productCategories.includes(cat)
   )
 
-  const handleDragStart = (e: React.DragEvent, index: number) => {
+  const handleDragStart = (e: React.DragEvent, category: string) => {
+    const index = mainCategories.indexOf(category)
     setDraggedIndex(index)
     e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', category)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -59,16 +61,25 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+  const handleDrop = (e: React.DragEvent, targetCategory: string) => {
     e.preventDefault()
     
-    if (draggedIndex === null || draggedIndex === dropIndex) return
+    if (draggedIndex === null) return
+    
+    const draggedCategory = e.dataTransfer.getData('text/plain')
+    const targetIndex = mainCategories.indexOf(targetCategory)
+    
+    if (draggedCategory === targetCategory) return
     
     const newCategories = [...mainCategories]
-    const draggedCategory = newCategories[draggedIndex]
+    const draggedIndexInArray = newCategories.indexOf(draggedCategory)
     
-    newCategories.splice(draggedIndex, 1)
-    newCategories.splice(dropIndex, 0, draggedCategory)
+    // Remove da posição original
+    newCategories.splice(draggedIndexInArray, 1)
+    
+    // Adiciona na nova posição
+    const newTargetIndex = newCategories.indexOf(targetCategory)
+    newCategories.splice(newTargetIndex, 0, draggedCategory)
     
     onMainCategoriesChange(newCategories)
     setDraggedIndex(null)
@@ -149,39 +160,25 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Fixo</span>
               </div>
               
-              {/* Todas as categorias (padrão + personalizadas) - TODAS ARRÁSTAVEIS */}
-              {allDisplayCategories.map((category, index) => {
-                const isInMainCategories = mainCategories.includes(category)
-                const actualIndex = mainCategories.indexOf(category)
+              {/* Apenas categorias que estão em mainCategories */}
+              {mainCategories.map((category, index) => {
                 const hasProducts = productCategories.includes(category)
                 
                 return (
                   <div
                     key={category}
-                    draggable={true} // SEMPRE ARRÁSTAVEL
-                    onDragStart={(e) => isInMainCategories ? handleDragStart(e, actualIndex) : undefined}
+                    draggable={true}
+                    onDragStart={(e) => handleDragStart(e, category)}
                     onDragOver={handleDragOver}
-                    onDrop={(e) => isInMainCategories ? handleDrop(e, actualIndex) : undefined}
+                    onDrop={(e) => handleDrop(e, category)}
                     onDragEnd={handleDragEnd}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
-                      isInMainCategories 
-                        ? 'bg-blue-50 border border-blue-200 cursor-move hover:bg-blue-100' 
-                        : hasProducts
-                        ? 'bg-green-50 border border-green-200 cursor-move hover:bg-green-100'
-                        : 'bg-gray-50 border border-gray-200 cursor-move hover:bg-gray-100'
-                    }`}
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all cursor-move hover:bg-blue-100 bg-blue-50 border border-blue-200`}
                   >
                     <div className="flex items-center gap-3">
-                      <GripVertical className={`w-4 h-4 ${
-                        isInMainCategories ? 'text-blue-600' : 
-                        hasProducts ? 'text-green-600' : 'text-gray-600'
-                      }`} />
-                      <span className={`font-medium ${
-                        isInMainCategories ? 'text-blue-800' : 
-                        hasProducts ? 'text-green-800' : 'text-gray-700'
-                      }`}>
+                      <GripVertical className="w-4 h-4 text-blue-600" />
+                      <span className="font-medium text-blue-800">
                         {category}
-                        {hasProducts && !isInMainCategories && (
+                        {hasProducts && (
                           <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
                             {produtos.filter(p => p.categoria === category).length} produtos
                           </span>
@@ -189,26 +186,42 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {!isInMainCategories && hasProducts && (
-                        <button
-                          onClick={() => addCategory(category)}
-                          className="text-green-600 hover:text-green-800 transition-colors"
-                        >
-                          <X className="w-4 h-4 rotate-45" />
-                        </button>
-                      )}
-                      {isInMainCategories && (
-                        <button
-                          onClick={() => removeCategory(category)}
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => removeCategory(category)}
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 )
               })}
+              
+              {/* Categorias que não estão em mainCategories mas têm produtos */}
+              {productCategories.filter(cat => !mainCategories.includes(cat)).map((category) => (
+                <div
+                  key={category}
+                  className="flex items-center justify-between px-4 py-3 rounded-lg transition-all bg-green-50 border border-green-200"
+                >
+                  <div className="flex items-center gap-3">
+                    <GripVertical className="w-4 h-4 text-green-600" />
+                    <span className="font-medium text-green-800">
+                      {category}
+                      <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                        {produtos.filter(p => p.categoria === category).length} produtos
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => addCategory(category)}
+                      className="text-green-600 hover:text-green-800 transition-colors"
+                    >
+                      <X className="w-4 h-4 rotate-45" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -221,7 +234,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <li>• Para criar novas categorias, faça isso na criação de produtos</li>
               <li>• Categorias em verde têm produtos mas não estão na lista</li>
               <li>• Categorias em azul estão na lista e podem ser movidas</li>
-              <li>• Todas as categorias podem ser movimentadas para personalizar a ordem</li>
             </ul>
           </div>
 
