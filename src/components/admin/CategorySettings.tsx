@@ -49,11 +49,10 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     !defaultCategories.includes(cat) && !productCategories.includes(cat)
   )
 
-  const handleDragStart = (e: React.DragEvent, category: string) => {
-    const index = mainCategories.indexOf(category)
+  const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index)
     e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/plain', category)
+    e.dataTransfer.setData('text/plain', index.toString())
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -61,25 +60,19 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = (e: React.DragEvent, targetCategory: string) => {
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault()
     
-    if (draggedIndex === null) return
-    
-    const draggedCategory = e.dataTransfer.getData('text/plain')
-    const targetIndex = mainCategories.indexOf(targetCategory)
-    
-    if (draggedCategory === targetCategory) return
+    if (draggedIndex === null || draggedIndex === dropIndex) return
     
     const newCategories = [...mainCategories]
-    const draggedIndexInArray = newCategories.indexOf(draggedCategory)
+    const draggedCategory = newCategories[draggedIndex]
     
     // Remove da posição original
-    newCategories.splice(draggedIndexInArray, 1)
+    newCategories.splice(draggedIndex, 1)
     
     // Adiciona na nova posição
-    const newTargetIndex = newCategories.indexOf(targetCategory)
-    newCategories.splice(newTargetIndex, 0, draggedCategory)
+    newCategories.splice(dropIndex, 0, draggedCategory)
     
     onMainCategoriesChange(newCategories)
     setDraggedIndex(null)
@@ -99,12 +92,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     const newCategories = mainCategories.filter(c => c !== category)
     onMainCategoriesChange(newCategories)
   }
-
-  // Criar lista completa de categorias para exibição
-  const allDisplayCategories = [
-    ...defaultCategories,
-    ...productCategories.filter(cat => !defaultCategories.includes(cat))
-  ]
 
   return (
     <div className="space-y-6">
@@ -168,9 +155,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                   <div
                     key={category}
                     draggable={true}
-                    onDragStart={(e) => handleDragStart(e, category)}
+                    onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, category)}
+                    onDrop={(e) => handleDrop(e, index)}
                     onDragEnd={handleDragEnd}
                     className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all cursor-move hover:bg-blue-100 bg-blue-50 border border-blue-200`}
                   >
