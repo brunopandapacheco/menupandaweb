@@ -149,10 +149,10 @@ export function ProductCard({
               </div>
             )}
             
-            {/* Botão atualizado */}
+            {/* Botão atualizado - cor fixa rosa */}
             <button 
               className="w-full h-6 font-semibold text-white rounded-md cursor-pointer transition-transform hover:scale-105 text-xs"
-              style={{ backgroundColor: borderColor }}
+              style={{ backgroundColor: '#ec4899' }}
               onClick={() => onAddToCart(product)}
             >
               Comprar
