@@ -152,8 +152,12 @@ export function ImageSettings({
                          shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
               disabled={uploadingLogo}
             >
-              <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
-                <Upload className="w-5 h-5" />
+              <label 
+                htmlFor="logo-upload" 
+                className="cursor-pointer flex items-center gap-2"
+                style={{ color: '#4A3531' }}
+              >
+                <Upload className="w-5 h-5" style={{ color: '#4A3531' }} />
                 {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
               </label>
             </Button>
@@ -186,7 +190,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Gradiente Luminoso (Banner) */}
+          {/* Botão Glassmorphism (Banner) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -200,12 +204,16 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 
-                         hover:brightness-110 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
+                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
               disabled={uploadingBanner}
             >
-              <label htmlFor="banner-upload" className="cursor-pointer flex items-center gap-2">
-                <Upload className="w-5 h-5" />
+              <label 
+                htmlFor="banner-upload" 
+                className="cursor-pointer flex items-center gap-2"
+                style={{ color: '#4A3531' }}
+              >
+                <Upload className="w-5 h-5" style={{ color: '#4A3531' }} />
                 {uploadingBanner ? 'Processando...' : 'Selecionar Banner'}
               </label>
             </Button>
