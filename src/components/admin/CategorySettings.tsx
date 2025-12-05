@@ -243,16 +243,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       ) : (
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-800">{category}</span>
-                          {hasProductsInCategory && (
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                              {produtos.filter(p => p.categoria === category).length} produtos
-                            </span>
-                          )}
-                          {isDefault && (
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                              Padrão
-                            </span>
-                          )}
                         </div>
                       )}
                     </div>
