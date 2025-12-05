@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { showSuccess } from '@/utils/toast'
+import { Clock, Calendar } from 'lucide-react'
+import { showSuccess, showError } from '@/utils/toast'
 
 interface StoreSettingsProps {
   nomeLoja: string
@@ -54,7 +55,6 @@ export function StoreSettings({
   onSaveConfig,
   onSaveHorarios
 }: StoreSettingsProps) {
-
   const handleDescricaoChange = (value: string) => {
     if (value.length <= 300) {
       onDescricaoLojaChange(value)
@@ -63,7 +63,7 @@ export function StoreSettings({
 
   return (
     <div className="space-y-6">
-      {/* Card Principal - Configurações da Loja */}
+      {/* Card Principal - Configurações */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Configurações</CardTitle>
@@ -71,7 +71,7 @@ export function StoreSettings({
             Informações básicas da sua loja
           </CardDescription>
         </CardHeader>
-
+        
         <CardContent className="space-y-6">
           {/* Nome da Loja */}
           <div className="space-y-2">
@@ -85,6 +85,7 @@ export function StoreSettings({
               placeholder="Nome da sua confeitaria"
               className="w-full"
             />
+            <p className="text-xs text-gray-500">Valor atual: "{nomeLoja}"</p>
           </div>
 
           {/* Descrição da Loja */}
@@ -107,7 +108,7 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Configurações */}
+          {/* Botão Salvar - Design Moderno */}
           <div className="pt-6">
             <Button 
               onClick={onSaveConfig}
@@ -119,101 +120,112 @@ export function StoreSettings({
         </CardContent>
       </Card>
 
-      {/* Card de Horários de Funcionamento */}
+      {/* Card de Horários */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
+          <div className="flex justify-center mb-2">
+            <div className="p-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+          </div>
           <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Horários de Funcionamento</CardTitle>
           <CardDescription className="text-base">
             Configure os horários de atendimento da sua loja
           </CardDescription>
         </CardHeader>
-
-        <CardContent className="space-y-4">
-          {/* Linha de Horário de Segunda a Sexta */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="font-medium text-gray-800">Segunda a Sexta</span>
-            <div className="flex gap-2">
-              <Input
-                type="time"
-                value={horarioSemanaAbre}
-                onChange={(e) => onHorarioSemanaAbreChange(e.target.value)}
-                className="w-24 h-10 text-center border-gray-300 rounded-lg"
-              />
-              <span className="self-center text-gray-500">–</span>
-              <Input
-                type="time"
-                value={horarioSemanaFecha}
-                onChange={(e) => onHorarioSemanaFechaChange(e.target.value)}
-                className="w-24 h-10 text-center border-gray-300 rounded-lg"
-              />
-            </div>
-          </div>
-
-          {/* Linha de Horário de Sábado */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="font-medium text-gray-800">Sábado</span>
+        
+        <CardContent className="space-y-6">
+          {/* Dia de Semana (Segunda a Sexta) */}
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={sabadoAberto}
-                onChange={(e) => onSabadoAbertoChange(e.target.checked)}
-                className="h-5 w-5 accent-green-500"
-              />
-              {sabadoAberto ? (
-                <>
-                  <Input
-                    type="time"
-                    value={horarioSabadoAbre}
-                    onChange={(e) => onHorarioSabadoAbreChange(e.target.value)}
-                    className="w-24 h-10 text-center border-gray-300 rounded-lg"
-                  />
-                  <span className="text-gray-500">–</span>
-                  <Input
-                    type="time"
-                    value={horarioSabadoFecha}
-                    onChange={(e) => onHorarioSabadoFechaChange(e.target.value)}
-                    className="w-24 h-10 text-center border-gray-300 rounded-lg"
-                  />
-                </>
-              ) : (
-                <span className="text-gray-500 ml-2">Fechado</span>
-              )}
+              <Calendar className="w-5 h-5 text-orange-500" />
+              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Dia de Semana (Segunda a Sexta)</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="semanaAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                <Input
+                  id="semanaAbre"
+                  type="time"
+                  value={horarioSemanaAbre}
+                  onChange={(e) => onHorarioSemanaAbreChange(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="semanaFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                <Input
+                  id="semanaFecha"
+                  type="time"
+                  value={horarioSemanaFecha}
+                  onChange={(e) => onHorarioSemanaFechaChange(e.target.value)}
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Linha de Horário de Domingo */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="font-medium text-gray-800">Domingo</span>
+          {/* Sábado */}
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={domingoAberto}
-                onChange={(e) => onDomingoAbertoChange(e.target.checked)}
-                className="h-5 w-5 accent-green-500"
-              />
-              {domingoAberto ? (
-                <>
-                  <Input
-                    type="time"
-                    value={horarioDomingoAbre}
-                    onChange={(e) => onHorarioDomingoAbreChange(e.target.value)}
-                    className="w-24 h-10 text-center border-gray-300 rounded-lg"
-                  />
-                  <span className="text-gray-500">–</span>
-                  <Input
-                    type="time"
-                    value={horarioDomingoFecha}
-                    onChange={(e) => onHorarioDomingoFechaChange(e.target.value)}
-                    className="w-24 h-10 text-center border-gray-300 rounded-lg"
-                  />
-                </>
-              ) : (
-                <span className="text-gray-500 ml-2">Fechado</span>
-              )}
+              <Calendar className="w-5 h-5 text-purple-500" />
+              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Sábado</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="sabadoAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                <Input
+                  id="sabadoAbre"
+                  type="time"
+                  value={horarioSabadoAbre}
+                  onChange={(e) => onHorarioSabadoAbreChange(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sabadoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                <Input
+                  id="sabadoFecha"
+                  type="time"
+                  value={horarioSabadoFecha}
+                  onChange={(e) => onHorarioSabadoFechaChange(e.target.value)}
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Botão Salvar Horários */}
+          {/* Domingo */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-blue-500" />
+              <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>Domingo</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="domingoAbre" className="text-sm font-medium">Horário de Abertura</Label>
+                <Input
+                  id="domingoAbre"
+                  type="time"
+                  value={horarioDomingoAbre}
+                  onChange={(e) => onHorarioDomingoAbreChange(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="domingoFecha" className="text-sm font-medium">Horário de Fechamento</Label>
+                <Input
+                  id="domingoFecha"
+                  type="time"
+                  value={horarioDomingoFecha}
+                  onChange={(e) => onHorarioDomingoFechaChange(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Botão Salvar - Design Moderno */}
           <div className="pt-6">
             <Button 
               onClick={onSaveHorarios}
