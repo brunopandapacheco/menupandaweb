@@ -51,14 +51,35 @@ export class SupabaseService {
   }
 
   async updateDesignSettings(userId: string, settings: any) {
-    const { data, error } = await supabase
+    // Primeiro, verificar se já existe um registro
+    const { data: existingRecord } = await supabase
       .from('design_settings')
-      .upsert({ user_id: userId, ...settings })
-      .select()
+      .select('*')
+      .eq('user_id', userId)
       .single()
     
-    if (error) throw error
-    return data
+    if (existingRecord) {
+      // Se existe, fazer update
+      const { data, error } = await supabase
+        .from('design_settings')
+        .update(settings)
+        .eq('user_id', userId)
+        .select()
+        .single()
+      
+      if (error) throw error
+      return data
+    } else {
+      // Se não existe, fazer insert
+      const { data, error } = await supabase
+        .from('design_settings')
+        .insert({ user_id: userId, ...settings })
+        .select()
+        .single()
+      
+      if (error) throw error
+      return data
+    }
   }
 
   async createDefaultDesignSettings(userId: string) {
