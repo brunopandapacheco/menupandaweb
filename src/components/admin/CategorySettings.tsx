@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { X, GripVertical, AlertTriangle } from 'lucide-react'
+import { X, GripVertical, AlertTriangle, RefreshCw } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
@@ -31,17 +31,16 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   // Sincronizar categorias: manter apenas as que existem nos produtos
   const syncCategories = () => {
-    const validCategories = mainCategories.filter(cat => 
-      defaultCategories.includes(cat) || productCategories.includes(cat)
-    )
+    // Sempre incluir as categorias padrão
+    const syncedCategories = [...defaultCategories]
     
     // Adicionar categorias de produtos que não estão na lista
     const missingCategories = productCategories.filter(cat => 
-      !validCategories.includes(cat)
+      !syncedCategories.includes(cat)
     )
     
-    const syncedCategories = [...validCategories, ...missingCategories]
-    onMainCategoriesChange(syncedCategories)
+    const finalCategories = [...syncedCategories, ...missingCategories]
+    onMainCategoriesChange(finalCategories)
     showSuccess('Categorias sincronizadas com sucesso!')
   }
 
@@ -90,6 +89,12 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     onMainCategoriesChange(newCategories)
   }
 
+  // Criar lista completa de categorias para exibição
+  const allDisplayCategories = [
+    ...defaultCategories,
+    ...productCategories.filter(cat => !defaultCategories.includes(cat))
+  ]
+
   return (
     <div className="space-y-6">
       {/* Alerta de sincronização se houver categorias órfãs */}
@@ -109,6 +114,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                   className="bg-orange-600 hover:bg-orange-700 text-white"
                   size="sm"
                 >
+                  <RefreshCw className="w-4 h-4 mr-2" />
                   Sincronizar Categorias
                 </Button>
               </div>
@@ -143,8 +149,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Fixo</span>
               </div>
               
-              {/* Categorias padrão (Bolos, Doces, Salgados) */}
-              {defaultCategories.map((category, index) => {
+              {/* Todas as categorias (padrão + personalizadas) */}
+              {allDisplayCategories.map((category, index) => {
                 const isInMainCategories = mainCategories.includes(category)
                 const actualIndex = mainCategories.indexOf(category)
                 const hasProducts = productCategories.includes(category)
@@ -203,50 +209,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                   </div>
                 )
               })}
-              
-              {/* Categorias personalizadas arrastáveis */}
-              {mainCategories
-                .filter(category => !defaultCategories.includes(category))
-                .map((category, index) => {
-                  const actualIndex = mainCategories.indexOf(category)
-                  const hasProducts = productCategories.includes(category)
-                  
-                  return (
-                    <div
-                      key={category}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, actualIndex)}
-                      onDragOver={handleDragOver}
-                      onDrop={(e) => handleDrop(e, actualIndex)}
-                      onDragEnd={handleDragEnd}
-                      className={`flex items-center justify-between px-4 py-3 rounded-lg cursor-move transition-all ${
-                        hasProducts
-                          ? 'bg-purple-50 border border-purple-200 hover:bg-purple-100'
-                          : 'bg-red-50 border border-red-200 hover:bg-red-100'
-                      } ${draggedIndex === actualIndex ? 'opacity-50' : ''}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <GripVertical className={`w-4 h-4 ${
-                          hasProducts ? 'text-purple-600' : 'text-red-600'
-                        }`} />
-                        <span className={`font-medium ${
-                          hasProducts ? 'text-purple-800' : 'text-red-800'
-                        }`}>
-                          {category}
-                          <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                            {produtos.filter(p => p.categoria === category).length} produtos
-                          </span>
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => removeCategory(category)}
-                        className={`${hasProducts ? 'text-purple-600 hover:text-purple-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )
-                })}
             </div>
           </div>
 
@@ -258,7 +220,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <li>• "Todos" sempre ficará fixo na primeira posição</li>
               <li>• Para criar novas categorias, faça isso na criação de produtos</li>
               <li>• Categorias em verde têm produtos mas não estão na lista</li>
-              <li>• Categorias em vermelho não têm produtos cadastrados</li>
+              <li>• Categorias em azul estão na lista e podem ser movidas</li>
             </ul>
           </div>
 
