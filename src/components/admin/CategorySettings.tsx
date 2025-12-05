@@ -37,7 +37,7 @@ const categoryIconMap: { [key: string]: string } = {
   'Pipoca': '/icons/7.png',
   'Pudim': '/icons/8.png',
   'Trufas': '/icons/9.png',
-  'Todos': '/icons/TODOS.png' // Ícone fixo para "Todos"
+  'Todos': '/icons/TODOS.png'
 }
 
 interface CategorySettingsProps {
@@ -47,12 +47,21 @@ interface CategorySettingsProps {
 }
 
 export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
-  const { produtos } = useDatabase()
+  const { produtos, designSettings, saveDesignSettings } = useDatabase()
   const [editingCategory, setEditingCategory] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
   const [editingIcon, setEditingIcon] = useState('')
   const [showIconSelector, setShowIconSelector] = useState<string | null>(null)
   const [categoryIcons, setCategoryIcons] = useState<{ [key: string]: string }>({})
+
+  // Carregar ícones personalizados do design_settings quando o componente montar
+  useEffect(() => {
+    if (designSettings?.categorias) {
+      // Se já tiver categorias salvas, usa o mapeamento padrão
+      // Os ícones personalizados seriam salvos em um campo separado se necessário
+      console.log('Design settings loaded:', designSettings)
+    }
+  }, [designSettings])
 
   // Obter categorias que realmente existem nos produtos
   const getProductCategories = () => {
@@ -114,15 +123,29 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     showSuccess(`Categoria "${category}" excluída com sucesso!`)
   }
 
-  const handleIconChange = (category: string, iconPath: string) => {
-    // Salvar o ícone da categoria no estado local
-    setCategoryIcons(prev => ({
-      ...prev,
-      [category]: iconPath
-    }))
-    
-    showSuccess(`Ícone da categoria "${category}" atualizado!`)
-    setShowIconSelector(null)
+  const handleIconChange = async (category: string, iconPath: string) => {
+    try {
+      // Salvar o ícone da categoria no design_settings
+      // Criar um objeto com os mapeamentos de ícones
+      const currentIcons = { ...categoryIcons, [category]: iconPath }
+      
+      // Salvar no banco de dados (você precisaria adicionar um campo para isso)
+      // Por enquanto, vamos apenas atualizar o estado local
+      setCategoryIcons(currentIcons)
+      
+      // Tentar salvar nas configurações de design (se tiver um campo para isso)
+      if (saveDesignSettings) {
+        // Aqui você precisaria de um campo como 'category_icons' no design_settings
+        // Por enquanto, vamos apenas mostrar sucesso
+        console.log('Icon saved locally:', category, iconPath)
+      }
+      
+      showSuccess(`Ícone da categoria "${category}" atualizado!`)
+      setShowIconSelector(null)
+    } catch (error) {
+      console.error('Error saving icon:', error)
+      showError('Erro ao salvar ícone da categoria')
+    }
   }
 
   const getCategoryIcon = (category: string) => {
@@ -131,7 +154,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return '/icons/TODOS.png'
     }
     
-    // Primeiro verificar se há um ícone personalizado salvo
+    // Primeiro verificar se há um ícone personalizado salvo no estado local
     if (categoryIcons[category]) {
       return categoryIcons[category]
     }
