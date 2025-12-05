@@ -204,18 +204,11 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Gerenciar Categorias</CardTitle>
-          <CardDescription className="text-base">
-            Altere os ícones das suas categorias. As categorias são criadas automaticamente quando você adiciona produtos.
-          </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
           {/* Lista de Categorias */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
-              Categorias do Cardápio
-            </h3>
-            
             <div className="space-y-3">
               {displayCategories.map((category) => {
                 const isEditing = editingCategory === category
