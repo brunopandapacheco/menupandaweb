@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Plus, Package } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 interface EmptyStateProps {
   selectedCategory: string
@@ -9,9 +9,6 @@ interface EmptyStateProps {
 export function EmptyState({ selectedCategory, onNewProduct }: EmptyStateProps) {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-      <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <Package className="w-12 h-12 text-purple-400" />
-      </div>
       <h3 className="text-2xl font-bold text-gray-800 mb-3">
         {selectedCategory === 'todas' ? 'Nenhum produto cadastrado' : `Nenhum produto em "${selectedCategory}"`}
       </h3>
