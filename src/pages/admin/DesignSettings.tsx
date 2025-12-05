@@ -25,7 +25,6 @@ export default function DesignSettings() {
   // Estados para configurações
   const [nomeLoja, setNomeLoja] = useState('')
   const [descricaoLoja, setDescricaoLoja] = useState('')
-  const [textoRodape, setTextoRodape] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
   
@@ -44,54 +43,33 @@ export default function DesignSettings() {
 
   useEffect(() => {
     if (designSettings) {
-      if (designSettings.banner_gradient) {
-        setBannerGradient(designSettings.banner_gradient)
-      }
-      if (designSettings.cor_borda) {
-        setCorBorda(designSettings.cor_borda)
-      }
-      if (designSettings.cor_nome) {
-        setCorNome(designSettings.cor_nome)
-      }
-      if (designSettings.nome_loja) {
-        setNomeLoja(designSettings.nome_loja)
-      }
-      if (designSettings.descricao_loja) {
-        setDescricaoLoja(designSettings.descricao_loja)
-      }
-      if (designSettings.texto_rodape) {
-        setTextoRodape(designSettings.texto_rodape)
-      }
-      if (designSettings.logo_url) {
-        setLogoUrl(designSettings.logo_url)
-      }
-      if (designSettings.banner1_url) {
-        setBannerUrl(designSettings.banner1_url)
-      }
-      if (designSettings.categorias) {
-        setMainCategories(designSettings.categorias)
-      }
+      if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient)
+      if (designSettings.cor_borda) setCorBorda(designSettings.cor_borda)
+      if (designSettings.cor_nome) setCorNome(designSettings.cor_nome)
+      if (designSettings.nome_loja) setNomeLoja(designSettings.nome_loja)
+      if (designSettings.descricao_loja) setDescricaoLoja(designSettings.descricao_loja)
+      if (designSettings.logo_url) setLogoUrl(designSettings.logo_url)
+      if (designSettings.banner1_url) setBannerUrl(designSettings.banner1_url)
+      if (designSettings.categorias) setMainCategories(designSettings.categorias)
     }
   }, [designSettings])
 
   useEffect(() => {
-    if (configuracoes) {
-      if (configuracoes.horarios_semana) {
-        const horarios = configuracoes.horarios_semana
-        if (horarios[0]) {
-          setHorarioSemanaAbre(horarios[0].openTime)
-          setHorarioSemanaFecha(horarios[0].closeTime)
-        }
-        if (horarios[5]) {
-          setHorarioSabadoAbre(horarios[5].openTime)
-          setHorarioSabadoFecha(horarios[5].closeTime)
-          setSabadoAberto(horarios[5].open)
-        }
-        if (horarios[6]) {
-          setHorarioDomingoAbre(horarios[6].openTime)
-          setHorarioDomingoFecha(horarios[6].closeTime)
-          setDomingoAberto(horarios[6].open)
-        }
+    if (configuracoes && configuracoes.horarios_semana) {
+      const horarios = configuracoes.horarios_semana
+      if (horarios[0]) {
+        setHorarioSemanaAbre(horarios[0].openTime)
+        setHorarioSemanaFecha(horarios[0].closeTime)
+      }
+      if (horarios[5]) {
+        setHorarioSabadoAbre(horarios[5].openTime)
+        setHorarioSabadoFecha(horarios[5].closeTime)
+        setSabadoAberto(horarios[5].open)
+      }
+      if (horarios[6]) {
+        setHorarioDomingoAbre(horarios[6].openTime)
+        setHorarioDomingoFecha(horarios[6].closeTime)
+        setDomingoAberto(horarios[6].open)
       }
     }
   }, [configuracoes])
@@ -99,76 +77,36 @@ export default function DesignSettings() {
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
     setBannerGradient(gradient.gradient)
     const success = await saveDesignSettings({ banner_gradient: gradient.gradient })
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao aplicar degrade')
-    }
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao aplicar degrade')
   }
 
   const saveColors = async () => {
-    const success = await saveDesignSettings({ 
-      cor_borda: corBorda,
-      cor_nome: corNome
-    })
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar cores')
-    }
+    const success = await saveDesignSettings({ cor_borda: corBorda, cor_nome: corNome })
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar cores')
   }
 
-  // CORREÇÃO: Separar salvamento da logo das configurações gerais
   const saveLogoOnly = async (url: string) => {
     const success = await saveDesignSettings({ logo_url: url })
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar logo')
-    }
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar logo')
   }
 
   const saveBannerOnly = async (url: string) => {
     const success = await saveDesignSettings({ banner1_url: url })
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar banner')
-    }
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar banner')
   }
 
   const saveConfig = async () => {
     const settingsToUpdate: any = {}
-    
-    if (nomeLoja && nomeLoja.trim()) {
-      settingsToUpdate.nome_loja = nomeLoja.trim()
-    }
-    
-    if (descricaoLoja && descricaoLoja.trim()) {
-      settingsToUpdate.descricao_loja = descricaoLoja.trim()
-    }
-    
-    if (textoRodape && textoRodape.trim()) {
-      settingsToUpdate.texto_rodape = textoRodape.trim()
-    }
-    
-    // NÃO incluir logo_url ou banner1_url aqui - são salvos separadamente
+    if (nomeLoja?.trim()) settingsToUpdate.nome_loja = nomeLoja.trim()
+    if (descricaoLoja?.trim()) settingsToUpdate.descricao_loja = descricaoLoja.trim()
+
     if (Object.keys(settingsToUpdate).length === 0) {
       showError('Por favor, preencha pelo menos um campo')
       return
     }
-    
+
     const success = await saveDesignSettings(settingsToUpdate)
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar configurações')
-    }
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar configurações')
   }
 
   const saveHorarios = async () => {
@@ -183,22 +121,12 @@ export default function DesignSettings() {
     ]
 
     const success = await saveConfiguracoes({ horarios_semana })
-    
-    if (success) {
-      showSuccess('Atualizado com sucesso!')
-    } else {
-      showError('Erro ao salvar horários')
-    }
+    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar horários')
   }
 
   const saveCategories = async () => {
     const success = await saveDesignSettings({ categorias: mainCategories })
-    
-    if (success) {
-      showSuccess('Categorias salvas com sucesso!')
-    } else {
-      showError('Erro ao salvar categorias')
-    }
+    success ? showSuccess('Categorias salvas com sucesso!') : showError('Erro ao salvar categorias')
   }
 
   if (loading) return <div>Carregando...</div>
@@ -280,7 +208,6 @@ export default function DesignSettings() {
             <StoreSettings
               nomeLoja={nomeLoja}
               descricaoLoja={descricaoLoja}
-              textoRodape={textoRodape}
               horarioSemanaAbre={horarioSemanaAbre}
               horarioSemanaFecha={horarioSemanaFecha}
               horarioSabadoAbre={horarioSabadoAbre}
@@ -291,7 +218,6 @@ export default function DesignSettings() {
               domingoAberto={domingoAberto}
               onNomeLojaChange={setNomeLoja}
               onDescricaoLojaChange={setDescricaoLoja}
-              onTextoRodapeChange={setTextoRodape}
               onHorarioSemanaAbreChange={setHorarioSemanaAbre}
               onHorarioSemanaFechaChange={setHorarioSemanaFecha}
               onHorarioSabadoAbreChange={setHorarioSabadoAbre}
