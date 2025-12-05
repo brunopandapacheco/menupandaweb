@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Sparkles, CheckCircle } from 'lucide-react'
+import { Sparkles, CheckCircle, Palette } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 const predefinedColors = [
@@ -19,7 +19,11 @@ const predefinedColors = [
 
 const gradientBackgrounds = [
   { name: 'Rosa Neon', gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' },
-  { name: 'Pôr do Sol', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }
+  { name: 'Aurora', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+  { name: 'Pôr do Sol', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+  { name: 'Oceano', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+  { name: 'Floresta', gradient: 'linear-gradient(135deg, #38ef7d 0%, #11998e 100%)' },
+  { name: 'Fogo', gradient: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -43,6 +47,21 @@ export function ColorSettings({
   onSaveColors,
   onApplyGradient
 }: ColorSettingsProps) {
+  const [showCustomBorderPicker, setShowCustomBorderPicker] = useState(false)
+  const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
+  const [customBorderColor, setCustomBorderColor] = useState(corBorda)
+  const [customNameColor, setCustomNameColor] = useState(corNome)
+
+  const handleCustomBorderColor = (color: string) => {
+    setCustomBorderColor(color)
+    onCorBordaChange(color)
+  }
+
+  const handleCustomNameColor = (color: string) => {
+    setCustomNameColor(color)
+    onCorNomeChange(color)
+  }
+
   return (
     <div className="space-y-6">
       {/* Card de Background */}
@@ -123,7 +142,57 @@ export function ColorSettings({
                   )}
                 </button>
               ))}
+              
+              {/* Botão Personalizar */}
+              <button
+                onClick={() => setShowCustomBorderPicker(!showCustomBorderPicker)}
+                className={
+                  'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                  (showCustomBorderPicker 
+                    ? 'border-gray-800 shadow-lg scale-105' 
+                    : 'border-gray-200 hover:border-gray-400')
+                }
+                style={{ 
+                  background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
+                  position: 'relative'
+                }}
+                title="Personalizar cor"
+              >
+                <div className="w-full h-full flex items-center justify-center">
+                  <Palette className="w-4 h-4 text-white drop-shadow-lg" />
+                </div>
+              </button>
             </div>
+
+            {/* Custom Color Picker for Border */}
+            {showCustomBorderPicker && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customBorderColor}
+                      onChange={(e) => handleCustomBorderColor(e.target.value)}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+                    />
+                    <input
+                      type="text"
+                      value={customBorderColor}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                          handleCustomBorderColor(value)
+                        }
+                      }}
+                      placeholder="#000000"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
+              </div>
+            )}
           </div>
 
           {/* Divisor Elegante */}
@@ -172,7 +241,57 @@ export function ColorSettings({
                   )}
                 </button>
               ))}
+              
+              {/* Botão Personalizar */}
+              <button
+                onClick={() => setShowCustomNamePicker(!showCustomNamePicker)}
+                className={
+                  'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                  (showCustomNamePicker 
+                    ? 'border-gray-800 shadow-lg scale-105' 
+                    : 'border-gray-200 hover:border-gray-400')
+                }
+                style={{ 
+                  background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
+                  position: 'relative'
+                }}
+                title="Personalizar cor"
+              >
+                <div className="w-full h-full flex items-center justify-center">
+                  <Palette className="w-4 h-4 text-white drop-shadow-lg" />
+                </div>
+              </button>
             </div>
+
+            {/* Custom Color Picker for Name */}
+            {showCustomNamePicker && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customNameColor}
+                      onChange={(e) => handleCustomNameColor(e.target.value)}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+                    />
+                    <input
+                      type="text"
+                      value={customNameColor}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                          handleCustomNameColor(value)
+                        }
+                      }}
+                      placeholder="#000000"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
+              </div>
+            )}
           </div>
 
           {/* Botão Salvar */}
