@@ -33,13 +33,11 @@ export function ImageSettings({
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Validar arquivo
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
       return
     }
-    
-    if (file.size > 5 * 1024 * 1024) { // 5MB
+    if (file.size > 5 * 1024 * 1024) {
       showError('Arquivo muito grande (máximo 5MB)')
       return
     }
@@ -52,13 +50,11 @@ export function ImageSettings({
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Validar arquivo
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
       return
     }
-    
-    if (file.size > 5 * 1024 * 1024) { // 5MB
+    if (file.size > 5 * 1024 * 1024) {
       showError('Arquivo muito grande (máximo 5MB)')
       return
     }
@@ -66,27 +62,15 @@ export function ImageSettings({
     setUploadingBanner(true)
 
     try {
-      console.log('📤 Iniciando upload do banner...')
-      
-      // Criar arquivo a partir do blob
       const fileName = `banner-${Date.now()}.${file.name.split('.').pop()}`
-      // Usar o bucket 'images' que já existe em vez de 'banners'
       const url = await supabaseService.uploadImage(file, 'images', fileName)
       
-      if (!url) {
-        throw new Error('Falha no upload da imagem para o storage')
-      }
-      
-      console.log('✅ Upload do banner realizado:', url)
-      
-      // Salvar no banco
+      if (!url) throw new Error('Falha no upload da imagem para o storage')
+
       await onSaveBanner(url)
       onBannerUrlChange(url)
-      
       showSuccess('🖼️ Banner atualizado com sucesso!')
-      
     } catch (error: any) {
-      console.error('❌ Erro no upload do banner:', error)
       showError(error.message || 'Erro ao fazer upload do banner')
     } finally {
       setUploadingBanner(false)
@@ -100,29 +84,16 @@ export function ImageSettings({
     setShowLogoCropper(false)
 
     try {
-      console.log('📤 Iniciando upload da logo cropada...')
-      
-      // Criar arquivo a partir do blob
       const fileName = `logo-${Date.now()}.jpg`
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
-      
-      // Fazer upload para o Supabase Storage
       const url = await supabaseService.uploadImage(file, 'logos', fileName)
-      
-      if (!url) {
-        throw new Error('Falha no upload da imagem para o storage')
-      }
-      
-      console.log('✅ Upload realizado:', url)
-      
-      // Salvar no banco
+
+      if (!url) throw new Error('Falha no upload da imagem')
+
       await onSaveLogo(url)
       onLogoUrlChange(url)
-      
       showSuccess('🖼️ Logo atualizada com sucesso!')
-      
     } catch (error: any) {
-      console.error('❌ Erro no upload da logo:', error)
       showError(error.message || 'Erro ao fazer upload da logo')
     } finally {
       setUploadingLogo(false)
@@ -137,26 +108,20 @@ export function ImageSettings({
 
   return (
     <div className="space-y-6">
-      {/* Card Principal - Logo da Loja */}
+      
+      {/* Card da Logo */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
-          <CardDescription className="text-base">
-            Personalize a logo que aparecerá no topo do seu cardápio
-          </CardDescription>
+          <CardDescription className="text-base">Personalize a logo que aparecerá no topo do seu cardápio</CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
-          {/* Preview da Logo - Centralizado e Grande */}
           <div className="flex justify-center">
             <div className="relative">
               {logoUrl ? (
                 <div className="w-48 h-48 rounded-full border-4 border-gray-200 overflow-hidden shadow-xl">
-                  <img 
-                    src={logoUrl} 
-                    alt="Logo da loja" 
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={logoUrl} alt="Logo da loja" className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
@@ -168,32 +133,30 @@ export function ImageSettings({
               )}
             </div>
           </div>
-          
-          {/* Botão de Upload - Centralizado */}
+
+          {/* Botão Glassmorphism (Logo) */}
           <div className="flex justify-center">
-            <div className="space-y-4">
-              <div className="flex justify-center">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoFileSelect}
-                  className="hidden"
-                  id="logo-upload"
-                  disabled={uploadingLogo}
-                />
-                <Button 
-                  asChild 
-                  size="lg"
-                  className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-                  disabled={uploadingLogo}
-                >
-                  <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
-                    <Upload className="w-5 h-5" />
-                    {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
-                  </label>
-                </Button>
-              </div>
-            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleLogoFileSelect}
+              className="hidden"
+              id="logo-upload"
+              disabled={uploadingLogo}
+            />
+
+            <Button
+              asChild
+              size="lg"
+              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
+                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
+              disabled={uploadingLogo}
+            >
+              <label htmlFor="logo-upload" className="cursor-pointer flex items-center gap-2">
+                <Upload className="w-5 h-5" />
+                {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
+              </label>
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -202,22 +165,15 @@ export function ImageSettings({
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Banner do Cardápio</CardTitle>
-          <CardDescription className="text-base">
-            Adicione um banner promocional abaixo da descrição da loja
-          </CardDescription>
+          <CardDescription className="text-base">Adicione um banner promocional abaixo da descrição da loja</CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
-          {/* Preview do Banner */}
           <div className="flex justify-center">
             <div className="relative w-full max-w-md">
               {bannerUrl ? (
                 <div className="w-full h-32 border-2 border-gray-200 rounded-lg overflow-hidden shadow-md">
-                  <img 
-                    src={bannerUrl} 
-                    alt="Banner do cardápio" 
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={bannerUrl} alt="Banner do cardápio" className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
@@ -229,8 +185,8 @@ export function ImageSettings({
               )}
             </div>
           </div>
-          
-          {/* Botão de Upload do Banner */}
+
+          {/* Botão Gradiente Luminoso (Banner) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -240,10 +196,12 @@ export function ImageSettings({
               id="banner-upload"
               disabled={uploadingBanner}
             />
-            <Button 
-              asChild 
+
+            <Button
+              asChild
               size="lg"
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="px-8 py-3 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 
+                         hover:brightness-110 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
               disabled={uploadingBanner}
             >
               <label htmlFor="banner-upload" className="cursor-pointer flex items-center gap-2">
@@ -255,7 +213,7 @@ export function ImageSettings({
         </CardContent>
       </Card>
 
-      {/* Modal de Crop da Logo */}
+      {/* Modal de Crop */}
       {showLogoCropper && selectedLogoFile && (
         <LogoCropper
           imageFile={selectedLogoFile}
