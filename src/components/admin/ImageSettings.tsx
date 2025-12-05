@@ -133,7 +133,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Gradient + Shadow (Logo) */}
+          {/* Botão Amarelo (Logo) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -147,8 +147,8 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
-                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
               disabled={uploadingLogo}
             >
               <label 
@@ -187,7 +187,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Gradient + Shadow (Banner) */}
+          {/* Botão Amarelo (Banner) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -201,8 +201,8 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] 
-                         shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
               disabled={uploadingBanner}
             >
               <label 
