@@ -29,6 +29,10 @@ const gradientBackgrounds = [
   { 
     name: 'Rosa Delicado', 
     gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' 
+  },
+  { 
+    name: 'Brownies', 
+    gradient: 'linear-gradient(135deg, #4B2E2E 0%, #7B4F4F 50%, #C69C6D 100%)' 
   }
 ]
 
@@ -79,7 +83,7 @@ export function ColorSettings({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {gradientBackgrounds.map((gradient) => (
               <Card key={gradient.name} className="cursor-pointer hover:shadow-lg transition-all">
                 <CardContent className="p-4">
