@@ -46,59 +46,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     if (draggedIndex === null || draggedIndex === dropIndex) return
     
     const newCategories = [...mainCategories]
-    const dragged<dyad-problem-report summary="1 problems">
-<problem file="src/components/admin/CategorySettings.tsx" line="204" column="20" code="2552">Cannot find name 'Input'. Did you mean 'oninput'?</problem>
-</dyad-problem-report><think>
-</think>
-<dyad-write path="src/components/admin/CategorySettings.tsx" description="Fixed TypeScript error by adding missing Input import">
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { X, ChevronDown, Check, GripVertical, Plus } from 'lucide-react'
-import { showSuccess, showError } from '@/utils/toast'
-
-const allCategories = [
-  'Bolo Simples',
-  'Bolo Decorado', 
-  'Bolos Caseiros',
-  'Bolo no Pote',
-  'Brigadeiro Gourmet',
-  'Doces Finos',
-  'Pipoca Gourmet',
-  'Topos de Bolos',
-  'Tortas Doces',
-  'Tortas Salgadas'
-]
-
-interface CategorySettingsProps {
-  mainCategories: string[]
-  onMainCategoriesChange: (categories: string[]) => void
-  onSaveCategories: () => void
-}
-
-export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
-  const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
-  const [newCategoryName, setNewCategoryName] = useState('')
-
-  const handleDragStart = (e: React.DragEvent, index: number) => {
-    setDraggedIndex(index)
-    e.dataTransfer.effectAllowed = 'move'
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-  }
-
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-    e.preventDefault()
-    
-    if (draggedIndex === null || draggedIndex === dropIndex) return
-    
-    const newCategories = [...mainCategories]
     const draggedCategory = newCategories[draggedIndex]
     
     newCategories.splice(draggedIndex, 1)
