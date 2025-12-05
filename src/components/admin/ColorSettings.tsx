@@ -18,9 +18,50 @@ const predefinedColors = [
 ]
 
 const gradientBackgrounds = [
-  { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' }
+  // Existentes
+  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+  
+  // Novos - Marrom
+  { name: 'Marrom Clássico', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2B48C 100%)' },
+  { name: 'Marrom Chocolate', gradient: 'linear-gradient(135deg, #5C4033 0%, #8B4513 50%, #C19A6B 100%)' },
+  { name: 'Marrom Caramelo', gradient: 'linear-gradient(135deg, #6F4E37 0%, #A0522D 50%, #DEB887 100%)' },
+  { name: 'Marrom Dourado', gradient: 'linear-gradient(135deg, #D2B48C 0%, #DEB887 50%, #F5DEB3 100%)' },
+  { name: 'Marrom Café', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 30%, #D2B48C 70%, #F5DEB3 100%)' },
+  { name: 'Marrom Tijolo', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%)' },
+  
+  // Novos - Roxo
+  { name: 'Roxo Suave', gradient: 'linear-gradient(135deg, #8A2BE2 0%, #9370DB 50%, #D8BFD8 100%)' },
+  { name: 'Roxo Média', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #DDA0DD 100%)' },
+  { name: 'Roxo Intenso', gradient: 'linear-gradient(135deg, #4B0082 0%, #7B68EE 50%, #DDA0DD 100%)' },
+  { name: 'Roxo Magenta', gradient: 'linear-gradient(135deg, #800080 0%, #9932CC 50%, #BA55D3 100%)' },
+  { name: 'Roxo Lavanda', gradient: 'linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 50%, #DDA0DD 100%)' },
+  { name: 'Roxo Orquídea', gradient: 'linear-gradient(135deg, #4B0082 0%, #8A2BE2 30%, #DDA0DD 70%, #E6E6FA 100%)' },
+  
+  // Novos - Amarelo
+  { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
+  { name: 'Amarelo Sol', gradient: 'linear-gradient(135deg, #FFC300 0%, #FFD700 50%, #FFEF99 100%)' },
+  { name: 'Amarelo Limão', gradient: 'linear-gradient(135deg, #F0E68C 0%, #FAFAD2 50%, #FFFFE0 100%)' },
+  { name: 'Amarelo Mel', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 30%, #FFFACD 70%, #FFFFF0 100%)' },
+  { name: 'Amarelo Creme', gradient: 'linear-gradient(135deg, #FAFAD2 0%, #FFFACD 50%, #FFFFE0 100%)' },
+  { name: 'Amarelo Brilhante', gradient: 'linear-gradient(135deg, #FFEA00 0%, #FFD700 50%, #FFEF99 100%)' },
+  
+  // Novos - Preto/Cinza
+  { name: 'Cinza Elegante', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' },
+  { name: 'Cinza Moderno', gradient: 'linear-gradient(135deg, #0A0A0A 0%, #1C1C1C 50%, #444444 100%)' },
+  { name: 'Cinza Profissional', gradient: 'linear-gradient(135deg, #111111 0%, #222222 50%, #555555 100%)' },
+  { name: 'Cinza Sutil', gradient: 'linear-gradient(135deg, #333333 0%, #666666 50%, #999999 100%)' },
+  { name: 'Preto Sofisticado', gradient: 'linear-gradient(135deg, #000000 0%, #1C1C1C 30%, #444444 70%, #666666 100%)' },
+  { name: 'Cinza Minimalista', gradient: 'linear-gradient(135deg, #222222 0%, #444444 50%, #666666 100%)' },
+  
+  // Combinações Especiais
+  { name: 'Marrom Rosa', gradient: 'linear-gradient(135deg, #8B4513 0%, #D2B48C 50%, #FFB6C1 100%)' },
+  { name: 'Roxo Rosa', gradient: 'linear-gradient(135deg, #8A2BE2 0%, #DDA0DD 50%, #FFB6C1 100%)' },
+  { name: 'Amarelo Laranja', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)' },
+  { name: 'Cinza Azul', gradient: 'linear-gradient(135deg, #333333 0%, #4A5568 50%, #2B6CB0 100%)' },
+  { name: 'Marrom Verde', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #228B22 100%)' },
+  { name: 'Roxo Preto', gradient: 'linear-gradient(135deg, #4B0082 0%, #2C003E 50%, #000000 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -70,7 +111,7 @@ export function ColorSettings({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
             {gradientBackgrounds.map((gradient, index) => (
               <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
                 <CardContent className="p-4">
@@ -78,6 +119,7 @@ export function ColorSettings({
                     className="w-full h-24 rounded-lg mb-4 shadow-sm"
                     style={{ background: gradient.gradient }}
                   />
+                  <p className="text-xs text-center font-medium text-gray-700 mb-2">{gradient.name}</p>
                   <Button 
                     size="sm" 
                     className="w-full font-[650] text-xs"
