@@ -8,27 +8,23 @@ import { StoreSettings } from '@/components/admin/StoreSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
 
 const gradientBackgrounds = [
-  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' }
+  { name: 'Dourado Quente', gradient: 'linear-gradient(135deg, #F5C542 0%, #FFD770 50%, #E0A100 100%)' }
 ]
 
 export default function DesignSettings() {
   const { designSettings, configuracoes, saveDesignSettings, saveConfiguracoes, loading } = useDatabase()
   const [activeTab, setActiveTab] = useState('cores')
   
-  // Estados para cores
-  const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
-  const [corBorda, setCorBorda] = useState('#ec4899')
-  const [corNome, setCorNome] = useState('#be185d')
+  // Estados
+  const [bannerGradient, setBannerGradient] = useState(gradientBackgrounds[0].gradient)
+  const [corBorda, setCorBorda] = useState('#F5C542')
+  const [corNome, setCorNome] = useState('#FFD770')
   
-  // Estados para configurações
   const [nomeLoja, setNomeLoja] = useState('')
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
   
-  // Estados para horários
   const [horarioSemanaAbre, setHorarioSemanaAbre] = useState('08:00')
   const [horarioSemanaFecha, setHorarioSemanaFecha] = useState('18:00')
   const [horarioSabadoAbre, setHorarioSabadoAbre] = useState('08:00')
@@ -38,7 +34,6 @@ export default function DesignSettings() {
   const [sabadoAberto, setSabadoAberto] = useState(true)
   const [domingoAberto, setDomingoAberto] = useState(false)
 
-  // Estados para categorias
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
   useEffect(() => {
@@ -132,24 +127,64 @@ export default function DesignSettings() {
   if (loading) return <div>Carregando...</div>
 
   return (
-    <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#2b0033' }}>
+    <div
+      className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen"
+      style={{ backgroundColor: '#1A0022' }} // roxo escuro bonito
+    >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
-        <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
-          <TabsTrigger 
-            value="cores" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
+
+        {/* NAV BAR COM DEGRADE DOURADO */}
+        <TabsList
+          className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md animate-gradient-x"
+          style={{
+            background: 'linear-gradient(135deg, #F5C542 0%, #FFD770 50%, #E0A100 100%)',
+            backgroundSize: '200% 200%',
+            animation: 'gradientSlide 4s ease infinite'
+          }}
+        >
+          <style>
+            {`
+              @keyframes gradientSlide {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+              }
+            `}
+          </style>
+
+          {/* TEXTOS + HOVER + ATIVO */}
+          <TabsTrigger
+            value="cores"
+            className="
+              rounded-lg font-[650] py-3 transition-all duration-200
+              text-[#FCEBB3]
+              hover:bg-white hover:text-[#1A1A1A]
+              data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md
+            "
           >
             Cores
           </TabsTrigger>
-          <TabsTrigger 
-            value="imagens" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
+
+          <TabsTrigger
+            value="imagens"
+            className="
+              rounded-lg font-[650] py-3 transition-all duration-200
+              text-[#FCEBB3]
+              hover:bg-white hover:text-[#1A1A1A]
+              data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md
+            "
           >
             Imagens
           </TabsTrigger>
-          <TabsTrigger 
-            value="configuracao" 
-            className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
+
+          <TabsTrigger
+            value="configuracao"
+            className="
+              rounded-lg font-[650] py-3 transition-all duration-200
+              text-[#FCEBB3]
+              hover:bg-white hover:text-[#1A1A1A]
+              data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md
+            "
           >
             Configuração
           </TabsTrigger>
@@ -169,54 +204,49 @@ export default function DesignSettings() {
         </TabsContent>
 
         <TabsContent value="imagens">
-          <div className="space-y-6">
-            <ImageSettings
-              logoUrl={logoUrl}
-              onLogoUrlChange={setLogoUrl}
-              onSaveLogo={saveLogoOnly}
-              bannerUrl={bannerUrl}
-              onBannerUrlChange={setBannerUrl}
-              onSaveBanner={saveBannerOnly}
-            />
-          </div>
+          <ImageSettings
+            logoUrl={logoUrl}
+            onLogoUrlChange={setLogoUrl}
+            onSaveLogo={saveLogoOnly}
+            bannerUrl={bannerUrl}
+            onBannerUrlChange={setBannerUrl}
+            onSaveBanner={saveBannerOnly}
+          />
         </TabsContent>
 
         <TabsContent value="configuracao">
-          <div className="space-y-8">
-            {/* Categorias */}
-            <CategorySettings
-              mainCategories={mainCategories}
-              onMainCategoriesChange={setMainCategories}
-              onSaveCategories={saveCategories}
-            />
-            
-            {/* Configurações da Loja */}
-            <StoreSettings
-              nomeLoja={nomeLoja}
-              descricaoLoja={descricaoLoja}
-              horarioSemanaAbre={horarioSemanaAbre}
-              horarioSemanaFecha={horarioSemanaFecha}
-              horarioSabadoAbre={horarioSabadoAbre}
-              horarioSabadoFecha={horarioSabadoFecha}
-              horarioDomingoAbre={horarioDomingoAbre}
-              horarioDomingoFecha={horarioDomingoFecha}
-              sabadoAberto={sabadoAberto}
-              domingoAberto={domingoAberto}
-              onNomeLojaChange={setNomeLoja}
-              onDescricaoLojaChange={setDescricaoLoja}
-              onHorarioSemanaAbreChange={setHorarioSemanaAbre}
-              onHorarioSemanaFechaChange={setHorarioSemanaFecha}
-              onHorarioSabadoAbreChange={setHorarioSabadoAbre}
-              onHorarioSabadoFechaChange={setHorarioSabadoFecha}
-              onHorarioDomingoAbreChange={setHorarioDomingoAbre}
-              onHorarioDomingoFechaChange={setHorarioDomingoFecha}
-              onSabadoAbertoChange={setSabadoAberto}
-              onDomingoAbertoChange={setDomingoAberto}
-              onSaveConfig={saveConfig}
-              onSaveHorarios={saveHorarios}
-            />
-          </div>
+          <CategorySettings
+            mainCategories={mainCategories}
+            onMainCategoriesChange={setMainCategories}
+            onSaveCategories={saveCategories}
+          />
+
+          <StoreSettings
+            nomeLoja={nomeLoja}
+            descricaoLoja={descricaoLoja}
+            horarioSemanaAbre={horarioSemanaAbre}
+            horarioSemanaFecha={horarioSemanaFecha}
+            horarioSabadoAbre={horarioSabadoAbre}
+            horarioSabadoFecha={horarioSabadoFecha}
+            horarioDomingoAbre={horarioDomingoAbre}
+            horarioDomingoFecha={horarioDomingoFecha}
+            sabadoAberto={sabadoAberto}
+            domingoAberto={domingoAberto}
+            onNomeLojaChange={setNomeLoja}
+            onDescricaoLojaChange={setDescricaoLoja}
+            onHorarioSemanaAbreChange={setHorarioSemanaAbre}
+            onHorarioSemanaFechaChange={setHorarioSemanaFecha}
+            onHorarioSabadoAbreChange={setHorarioSabadoAbre}
+            onHorarioSabadoFechaChange={setHorarioSabadoFecha}
+            onHorarioDomingoAbreChange={setHorarioDomingoAbre}
+            onHorarioDomingoFechaChange={setHorarioDomingoFecha}
+            onSabadoAbertoChange={setSabadoAberto}
+            onDomingoAbertoChange={setDomingoAberto}
+            onSaveConfig={saveConfig}
+            onSaveHorarios={saveHorarios}
+          />
         </TabsContent>
+
       </Tabs>
     </div>
   )
