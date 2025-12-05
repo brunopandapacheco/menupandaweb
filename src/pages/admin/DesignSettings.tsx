@@ -130,7 +130,7 @@ export default function DesignSettings() {
   return (
     <div
       className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen"
-      style={{ backgroundColor: '#FFB5C0' }}   {/* ALTERADO AQUI */}
+      style={{ backgroundColor: '#FFB5C0' }}
     >
       <div className="text-center sm:text-left pt-8 sm:pt-0 relative z-10">
         <h1 className="text-3xl font-bold" style={{ color: '#e03e8f' }}>Personalize o Design</h1>
@@ -141,24 +141,28 @@ export default function DesignSettings() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
         <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] rounded-xl shadow-md">
+          
           <TabsTrigger 
             value="cores"
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Cores
           </TabsTrigger>
+
           <TabsTrigger 
             value="imagens"
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Imagens
           </TabsTrigger>
+
           <TabsTrigger 
             value="configuracao"
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1A1A] data-[state=active]:shadow-md transition-all duration-200 text-white font-medium py-3 font-[650] hover:bg-white hover:text-[#1A1A1A] hover:shadow-md"
           >
             Configuração
           </TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="cores">
@@ -221,6 +225,7 @@ export default function DesignSettings() {
             />
           </div>
         </TabsContent>
+
       </Tabs>
     </div>
   )
