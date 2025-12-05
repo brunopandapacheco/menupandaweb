@@ -108,14 +108,14 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Configurações - estilo copiado */}
+          {/* Botão Salvar Configurações */}
           <div className="pt-6 flex justify-center">
             <Button
               onClick={onSaveConfig}
               className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
                          shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
             >
-              <span style={{ color: '#4A3531', fontWeight: 'bold' }}>Salvar Configurações</span>
+              <span style={{ color: '#4A3531' }}>Salvar Configurações</span>
             </Button>
           </div>
         </CardContent>
@@ -226,14 +226,14 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Horários - estilo copiado */}
+          {/* Botão Salvar Horários */}
           <div className="pt-6 flex justify-center">
             <Button
               onClick={onSaveHorarios}
               className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
                          shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
             >
-              <span style={{ color: '#4A3531', fontWeight: 'bold' }}>Salvar Horários</span>
+              <span style={{ color: '#4A3531' }}>Salvar Horários</span>
             </Button>
           </div>
         </CardContent>
