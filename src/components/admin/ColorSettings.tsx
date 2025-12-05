@@ -20,8 +20,7 @@ const predefinedColors = [
 const gradientBackgrounds = [
   { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
-  { gradient: 'linear-gradient(135deg, #4B2E2E 0%, #7B4F4F 50%, #C69C6D 100%)' }
+  { gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -65,7 +64,7 @@ export function ColorSettings({
       {/* Card de Background */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Background do Cardápio</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
           <CardDescription className="text-base">
             Escolha o degrade animado que fica atrás da logo
           </CardDescription>
@@ -97,7 +96,7 @@ export function ColorSettings({
       {/* Card Principal - Paleta de Cores */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Paleta de Cores</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Paleta de Cores</CardTitle>
           <CardDescription className="text-base">
             Personalize as cores do seu cardápio
           </CardDescription>
@@ -108,7 +107,7 @@ export function ColorSettings({
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full border-4 shadow-sm" style={{ borderColor: corBorda }} />
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531', fontWeight: 600 }}>Cor da Borda</h3>
+              <h3 className="text-lg font-semibold" style={{ color: '#333333', fontWeight: 600 }}>Cor da Borda</h3>
             </div>
             
             <div className="grid grid-cols-5 gap-3">
@@ -203,7 +202,7 @@ export function ColorSettings({
               >
                 Aa
               </div>
-              <h3 className="text-lg font-semibold" style={{ color: '#4A3531', fontWeight: 600 }}>Cor do Nome</h3>
+              <h3 className="text-lg font-semibold" style={{ color: '#333333', fontWeight: 600 }}>Cor do Nome</h3>
             </div>
             
             <div className="grid grid-cols-5 gap-3">

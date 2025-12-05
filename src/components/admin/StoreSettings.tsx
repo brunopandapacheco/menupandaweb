@@ -66,7 +66,7 @@ export function StoreSettings({
       {/* Card Principal - Configurações */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Configurações</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Configurações</CardTitle>
           <CardDescription className="text-base">
             Informações básicas da sua loja
           </CardDescription>
@@ -128,7 +128,7 @@ export function StoreSettings({
               <Clock className="w-6 h-6 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl" style={{ color: '#4A3531' }}>Horários de Funcionamento</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Horários de Funcionamento</CardTitle>
           <CardDescription className="text-base">
             Configure os horários de atendimento da sua loja
           </CardDescription>

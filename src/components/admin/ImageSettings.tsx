@@ -112,7 +112,7 @@ export function ImageSettings({
       {/* Card da Logo */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Logo da Loja</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Logo da Loja</CardTitle>
           <CardDescription className="text-base">Personalize a logo que aparecerá no topo do seu cardápio</CardDescription>
         </CardHeader>
 
@@ -168,7 +168,7 @@ export function ImageSettings({
       {/* Card do Banner */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Banner do Cardápio</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</CardTitle>
           <CardDescription className="text-base">Adicione um banner promocional abaixo da descrição da loja</CardDescription>
         </CardHeader>
 

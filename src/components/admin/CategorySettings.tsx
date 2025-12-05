@@ -203,7 +203,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       {/* Card de Gerenciamento de Categorias */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Gerenciar Categorias</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Gerenciar Categorias</CardTitle>
           <CardDescription className="text-base">
             Altere os ícones das suas categorias. As categorias são criadas automaticamente quando você adiciona produtos.
           </CardDescription>
