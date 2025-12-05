@@ -42,10 +42,7 @@ const categoryIcons: { [key: string]: string } = {
   'Trufas': '/icons/trufas.png',
   'Doces': '/icons/Doces.png',
   'Salgados': '/icons/Salgados.png',
-  'Todos': '/icons/Todos.png',
-  'iconebolo': '/icons/iconebolo.png',
-  'iconebrigadeiro': '/icons/iconebrigadeiro.png',
-  'iconetodos': '/icons/iconetodos.png'
+  'Todos': '/icons/TODOS.png'
 }
 
 // Lista de todos os ícones disponíveis na pasta public/icons
@@ -59,10 +56,7 @@ const availableIcons = [
   { name: 'Trufa', path: '/icons/trufas.png' },
   { name: 'Doces', path: '/icons/Doces.png' },
   { name: 'Salgados', path: '/icons/Salgados.png' },
-  { name: 'Todos', path: '/icons/Todos.png' },
-  { name: 'Ícone Bolo', path: '/icons/iconebolo.png' },
-  { name: 'Ícone Brigadeiro', path: '/icons/iconebrigadeiro.png' },
-  { name: 'Ícone Todos', path: '/icons/iconetodos.png' }
+  { name: 'Todos', path: '/icons/TODOS.png' }
 ]
 
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
@@ -308,34 +302,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
                   autoFocus
                 />
-              </div>
-              
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Ícone da Categoria</Label>
-                <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto p-2 border border-purple-200 rounded-lg bg-white">
-                  {availableIcons.map((icon) => (
-                    <button
-                      key={icon.path}
-                      type="button"
-                      onClick={() => setSelectedIcon(icon.path)}
-                      className={`p-2 rounded-lg border-2 transition-all ${
-                        selectedIcon === icon.path
-                          ? 'border-purple-500 bg-purple-50'
-                          : 'border-gray-200 hover:border-purple-300'
-                      }`}
-                      title={icon.name}
-                    >
-                      <img 
-                        src={icon.path} 
-                        alt={icon.name}
-                        className="w-6 h-6 object-contain mx-auto"
-                      />
-                    </button>
-                  ))}
-                </div>
-                <p className="text-xs text-gray-500">
-                  Escolha um ícone para representar sua categoria
-                </p>
               </div>
               
               <div className="flex gap-2">
