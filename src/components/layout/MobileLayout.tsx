@@ -39,17 +39,23 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
                 key={tab.id}
                 variant={activeTab === tab.id ? 'default' : 'ghost'}
                 className={cn(
-                  "flex items-center justify-center h-12 rounded-lg text-white hover:bg-white/20 hover:text-white",
+                  "flex items-center justify-center h-12 rounded-lg font-[700] text-xs",
+
+                  // ABA ATIVA
                   activeTab === tab.id 
-                    ? "bg-white text-[#2b0033] hover:bg-white hover:text-[#2b0033]" 
-                    : ""
+                    ? "bg-white text-[#3a0050] hover:bg-white hover:text-[#3a0050]"
+
+                    // ABA INATIVA
+                    : "text-[#e9ccff] hover:bg-[#c070ff]/20 hover:text-white"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
                 <span
                   className={cn(
                     "text-xs font-[700]",
-                    activeTab === tab.id ? "text-[#2b0033]" : "text-white"
+                    activeTab === tab.id
+                      ? "text-[#3a0050]"
+                      : "text-[#e9ccff]"
                   )}
                 >
                   {tab.label}
