@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { X, ChevronDown, Check, GripVertical, Plus } from 'lucide-react'
+import { X, GripVertical } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 const defaultCategories = [
@@ -18,10 +17,7 @@ interface CategorySettingsProps {
 }
 
 export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
-  const [isOpen, setIsOpen] = useState(false)
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
-  const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
-  const [newCategoryName, setNewCategoryName] = useState('')
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index)
@@ -61,24 +57,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const removeCategory = (category: string) => {
     const newCategories = mainCategories.filter(c => c !== category)
     onMainCategoriesChange(newCategories)
-  }
-
-  const handleCreateNewCategory = () => {
-    if (!newCategoryName.trim()) return
-    
-    addCategory(newCategoryName.trim())
-    setNewCategoryName('')
-    setIsCreatingNewCategory(false)
-  }
-
-  const handleCategorySelect = (value: string) => {
-    if (value === 'create-new') {
-      setIsCreatingNewCategory(true)
-    } else {
-      addCategory(value)
-      setIsCreatingNewCategory(false)
-      setNewCategoryName('')
-    }
   }
 
   return (
@@ -140,7 +118,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                           onClick={() => addCategory(category)}
                           className="text-green-600 hover:text-green-800 transition-colors"
                         >
-                          <Plus className="w-4 h-4" />
+                          <X className="w-4 h-4 rotate-45" />
                         </button>
                       )}
                       {isInMainCategories && (
@@ -189,52 +167,15 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
-          {/* Adicionar Nova Categoria */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
-              Criar Nova Categoria
-            </h3>
-            
-            {!isCreatingNewCategory ? (
-              <button
-                onClick={() => setIsCreatingNewCategory(true)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-purple-300 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors text-purple-700 font-medium"
-              >
-                <Plus className="w-4 h-4" />
-                Criar nova categoria personalizada
-              </button>
-            ) : (
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <Input
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    placeholder="Digite o nome da nova categoria"
-                    className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
-                    autoFocus
-                  />
-                  <Button
-                    onClick={handleCreateNewCategory}
-                    disabled={!newCategoryName.trim()}
-                    className="bg-purple-600 hover:bg-purple-700"
-                  >
-                    <Check className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setIsCreatingNewCategory(false)
-                      setNewCategoryName('')
-                    }}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-xs text-gray-500">
-                  Digite o nome e clique em ✓ para adicionar
-                </p>
-              </div>
-            )}
+          {/* Informações */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-blue-800 mb-2">ℹ️ Informações Importantes</h4>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>• Arraste as categorias para reorganizar a ordem de exibição</li>
+              <li>• "Todos" sempre ficará fixo na primeira posição</li>
+              <li>• Para criar novas categorias, faça isso na criação de produtos</li>
+              <li>• Categorias personalizadas aparecem em roxo</li>
+            </ul>
           </div>
 
           {/* Botão Salvar */}
