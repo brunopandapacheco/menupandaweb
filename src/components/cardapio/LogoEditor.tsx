@@ -27,10 +27,36 @@ export function LogoEditor({ isOpen, onClose, onSave, borderColor = '#ec4899', i
 
   const handleSave = () => {
     if (editorRef.current) {
+      // Get the canvas with the edited image
       const canvas = editorRef.current.getImageScaledToCanvas()
-      const croppedImage = canvas.toDataURL('image/jpeg', 0.9)
-      onSave(croppedImage)
-      onClose()
+      
+      // Create a new canvas with white background
+      const finalCanvas = document.createElement('canvas')
+      finalCanvas.width = 200
+      finalCanvas.height = 200
+      const ctx = finalCanvas.getContext('2d')
+      
+      if (ctx) {
+        // Fill with white background first
+        ctx.fillStyle = 'white'
+        ctx.fillRect(0, 0, 200, 200)
+        
+        // Create circular clipping path
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(100, 100, 100, 0, Math.PI * 2)
+        ctx.closePath()
+        ctx.clip()
+        
+        // Draw the edited image
+        ctx.drawImage(canvas, 0, 0, 200, 200)
+        ctx.restore()
+        
+        // Convert to data URL with high quality
+        const croppedImage = finalCanvas.toDataURL('image/png', 1.0)
+        onSave(croppedImage)
+        onClose()
+      }
     }
   }
 
@@ -104,6 +130,7 @@ export function LogoEditor({ isOpen, onClose, onSave, borderColor = '#ec4899', i
                     onPositionChange={setPosition}
                     onScaleChange={setScale}
                     onRotationChange={setRotation}
+                    backgroundColor="white" // Ensure white background
                   />
                   {/* Borda decorativa */}
                   <div 
