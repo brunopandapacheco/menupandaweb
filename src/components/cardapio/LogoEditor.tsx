@@ -22,22 +22,26 @@ export function LogoEditor({ isOpen, onClose, onSave, borderColor = '#ec4899', i
     const file = e.target.files?.[0]
     if (file) {
       setImage(file)
+      // Reset position and scale when new image is loaded
+      setScale(1)
+      setPosition({ x: 0.5, y: 0.5 })
+      setRotation(0)
     }
   }
 
   const handleSave = () => {
     if (editorRef.current) {
-      // Get the canvas with the edited image
+      // Get the canvas with the edited image at the exact same size and position
       const canvas = editorRef.current.getImageScaledToCanvas()
       
-      // Create a new canvas with white background
+      // Create a new canvas with the same dimensions as the editor
       const finalCanvas = document.createElement('canvas')
       finalCanvas.width = 200
       finalCanvas.height = 200
       const ctx = finalCanvas.getContext('2d')
       
       if (ctx) {
-        // Fill with white background first
+        // Fill with white background
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, 200, 200)
         
@@ -48,7 +52,7 @@ export function LogoEditor({ isOpen, onClose, onSave, borderColor = '#ec4899', i
         ctx.closePath()
         ctx.clip()
         
-        // Draw the edited image
+        // Draw the edited image exactly as shown in the editor
         ctx.drawImage(canvas, 0, 0, 200, 200)
         ctx.restore()
         
@@ -131,6 +135,12 @@ export function LogoEditor({ isOpen, onClose, onSave, borderColor = '#ec4899', i
                     onScaleChange={setScale}
                     onRotationChange={setRotation}
                     backgroundColor="white" // Ensure white background
+                    // Enable mouse and touch interactions
+                    mouseZoom={true}
+                    touchZoom={true}
+                    mouseWheelZoom={true}
+                    // Center the image initially
+                    disableHiDPIScaling={true}
                   />
                   {/* Borda decorativa */}
                   <div 
