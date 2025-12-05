@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { Upload, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Star } from 'lucide-react'
+import { Star, Edit3 } from 'lucide-react'
+import { LogoEditor } from './LogoEditor'
 
 interface LogoProps {
   logoUrl?: string
@@ -16,8 +14,6 @@ interface LogoProps {
   horarioFuncionamentoFim?: string
   isEditable?: boolean
   onLogoChange?: (url: string) => void
-  onLogoPositionChange?: (position: { x: number; y: number }) => void
-  logoPosition?: { x: number; y: number }
 }
 
 export function Logo({ 
@@ -31,26 +27,13 @@ export function Logo({
   horarioFuncionamentoInicio = '08:00',
   horarioFuncionamentoFim = '18:00',
   isEditable = false,
-  onLogoChange,
-  onLogoPositionChange,
-  logoPosition = { x: 0, y: 0 }
+  onLogoChange
 }: LogoProps) {
-  const [showUpload, setShowUpload] = useState(false)
+  const [showEditor, setShowEditor] = useState(false)
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file && onLogoChange) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        onLogoChange(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleLogoClick = () => {
-    if (isEditable) {
-      setShowUpload(true)
+  const handleLogoSave = (croppedImage: string) => {
+    if (onLogoChange) {
+      onLogoChange(croppedImage)
     }
   }
 
@@ -137,70 +120,86 @@ export function Logo({
       <div 
         className="absolute"
         style={{
-          top: '-50px', // Ajustado para logo maior
+          top: '-50px',
           left: '50%',
-          transform: 'translateX(-50%)', // Mantém sempre centralizado
-          zIndex: 50, // Aumentado z-index para garantir que fique acima do banner
+          transform: 'translateX(-50%)',
+          zIndex: 50,
         }}
       >
-        {logoUrl ? (
-          <div 
-            className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white"
-            style={{
-              border: '3px solid white', // Borda externa branca menor
-              boxSizing: 'border-box',
-              padding: '3px' // Espaço para a borda interna
-            }}
-          >
+        <div className="relative group">
+          {logoUrl ? (
             <div 
-              className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-white"
+              className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white cursor-pointer transition-transform hover:scale-105"
               style={{
-                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
-                padding: '2px' // Pequeno espaço entre a borda interna e a imagem
+                border: '3px solid white',
+                boxSizing: 'border-box',
+                padding: '3px'
               }}
+              onClick={() => isEditable && setShowEditor(true)}
             >
-              <img 
-                src={logoUrl} 
-                alt="Logo" 
-                className="w-full h-full object-contain rounded-full"
-                onClick={handleLogoClick}
-              />
+              <div 
+                className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-white"
+                style={{
+                  border: '3px solid ' + (borderColor || '#ec4899'),
+                  padding: '2px'
+                }}
+              >
+                <img 
+                  src={logoUrl} 
+                  alt="Logo" 
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
+              
+              {/* Edit button overlay */}
+              {isEditable && (
+                <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Edit3 className="w-6 h-6 text-white" />
+                </div>
+              )}
             </div>
-          </div>
-        ) : (
-          <div 
-            className="w-40 h-40 rounded-full flex items-center justify-center text-6xl font-bold shadow-lg"
-            style={{ 
-              border: '3px solid white', // Borda externa branca menor
-              boxSizing: 'border-box',
-              padding: '3px', // Espaço para a borda interna
-              backgroundColor: borderColor || '#ec4899',
-              color: 'white'
-            }}
-            onClick={handleLogoClick}
-          >
+          ) : (
             <div 
-              className="w-full h-full rounded-full flex items-center justify-center"
-              style={{
-                border: '3px solid ' + (borderColor || '#ec4899'), // Borda interna com a cor selecionada
-                padding: '2px' // Pequeno espaço entre a borda interna e o texto
+              className="w-40 h-40 rounded-full flex items-center justify-center text-6xl font-bold shadow-lg cursor-pointer transition-transform hover:scale-105"
+              style={{ 
+                border: '3px solid white',
+                boxSizing: 'border-box',
+                padding: '3px',
+                backgroundColor: borderColor || '#ec4899',
+                color: 'white'
               }}
+              onClick={() => isEditable && setShowEditor(true)}
             >
-              {storeName?.charAt(0) || 'L'}
+              <div 
+                className="w-full h-full rounded-full flex items-center justify-center"
+                style={{
+                  border: '3px solid ' + (borderColor || '#ec4899'),
+                  padding: '2px'
+                }}
+              >
+                {storeName?.charAt(0) || 'L'}
+              </div>
+              
+              {/* Edit button overlay */}
+              {isEditable && (
+                <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Edit3 className="w-6 h-6 text-white" />
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Container principal - sem a logo dentro */}
+      {/* Container principal */}
       <div 
         className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
-          marginTop: '-100px', // Ajustado para logo maior
+          marginTop: '-100px',
           position: 'relative',
           zIndex: 20,
-          paddingTop: '100px' // Ajustado para logo maior
+          paddingTop: '100px'
         }}
       >
         {/* Nome e descrição */}
@@ -245,63 +244,14 @@ export function Logo({
         </div>
       </div>
 
-      {/* Modal de upload */}
-      {showUpload && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Alterar Logo</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowUpload(false)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="logo-upload" className="block text-sm font-medium mb-2">
-                  Escolha uma imagem
-                </Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">
-                    Clique para selecionar ou arraste uma imagem
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG até 2MB
-                  </p>
-                </div>
-                <input
-                  id="logo-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-              </div>
-              
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setShowUpload(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  className="flex-1"
-                  onClick={() => document.getElementById('logo-upload')?.click()}
-                >
-                  Escolher Imagem
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Logo Editor Modal */}
+      <LogoEditor
+        isOpen={showEditor}
+        onClose={() => setShowEditor(false)}
+        onSave={handleLogoSave}
+        borderColor={borderColor}
+        initialImage={logoUrl}
+      />
     </div>
   )
 }
