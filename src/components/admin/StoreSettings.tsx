@@ -67,9 +67,6 @@ export function StoreSettings({
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Configurações</CardTitle>
-          <CardDescription className="text-base">
-            Informações básicas da sua loja
-          </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
@@ -85,7 +82,6 @@ export function StoreSettings({
               placeholder="Nome da sua confeitaria"
               className="w-full"
             />
-            <p className="text-xs text-gray-500">Valor atual: "{nomeLoja}"</p>
           </div>
 
           {/* Descrição da Loja */}
@@ -108,14 +104,13 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Configurações */}
-          <div className="pt-6 flex justify-center">
-            <Button
+          {/* Botão Salvar - Design Moderno */}
+          <div className="pt-6">
+            <Button 
               onClick={onSaveConfig}
-              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
-                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
+              className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              <span style={{ color: '#4A3531' }}>Salvar Configurações</span>
+              Salvar Configurações
             </Button>
           </div>
         </CardContent>
@@ -226,14 +221,13 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Horários */}
-          <div className="pt-6 flex justify-center">
-            <Button
+          {/* Botão Salvar - Design Moderno */}
+          <div className="pt-6">
+            <Button 
               onClick={onSaveHorarios}
-              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
-                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
+              className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              <span style={{ color: '#4A3531' }}>Salvar Horários</span>
+              Salvar Horários
             </Button>
           </div>
         </CardContent>
