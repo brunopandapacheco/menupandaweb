@@ -12,35 +12,32 @@ const defaultCategories = [
   'Salgados'
 ]
 
-// Lista de todos os ícones disponíveis na pasta public/icons
+// Lista de ícones disponíveis (baseado nos arquivos que você tem)
 const availableIcons = [
-  { name: 'Bolo', path: '/icons/bolo.png' },
-  { name: 'Brigadeiro', path: '/icons/brigadeiro.png' },
-  { name: 'Cookie', path: '/icons/cookies.png' },
-  { name: 'Coxinha', path: '/icons/coxinha.png' },
-  { name: 'Pipoca', path: '/icons/pipoca.png' },
-  { name: 'Pudim', path: '/icons/pudim.png' },
-  { name: 'Trufa', path: '/icons/trufas.png' },
-  { name: 'Doces', path: '/icons/Doces.png' },
-  { name: 'Salgados', path: '/icons/Salgados.png' },
-  { name: 'Todos', path: '/icons/Todos.png' },
-  { name: 'Ícone Bolo', path: '/icons/iconebolo.png' },
-  { name: 'Ícone Brigadeiro', path: '/icons/iconebrigadeiro.png' },
-  { name: 'Ícone Todos', path: '/icons/iconetodos.png' }
+  { name: '1', path: '/icons/1.png' },
+  { name: '2', path: '/icons/2.png' },
+  { name: '3', path: '/icons/3.png' },
+  { name: '4', path: '/icons/4.png' },
+  { name: '5', path: '/icons/5.png' },
+  { name: '6', path: '/icons/6.png' },
+  { name: '7', path: '/icons/7.png' },
+  { name: '8', path: '/icons/8.png' },
+  { name: '9', path: '/icons/9.png' },
+  { name: '10', path: '/icons/10.png' }
 ]
 
-// Mapeamento de categorias para ícones padrão
+// Mapeamento de categorias para ícones (baseado nos seus arquivos)
 const categoryIconMap: { [key: string]: string } = {
-  'Bolos': '/icons/bolo.png',
-  'Brigadeiros': '/icons/brigadeiro.png',
-  'Cookies': '/icons/cookies.png',
-  'Coxinha': '/icons/coxinha.png',
-  'Pipoca': '/icons/pipoca.png',
-  'Pudim': '/icons/pudim.png',
-  'Trufas': '/icons/trufas.png',
-  'Doces': '/icons/Doces.png',
-  'Salgados': '/icons/Salgados.png',
-  'Todos': '/icons/Todos.png'
+  'Bolos': '/icons/1.png',
+  'Doces': '/icons/2.png',
+  'Salgados': '/icons/3.png',
+  'Brigadeiros': '/icons/4.png',
+  'Cookies': '/icons/5.png',
+  'Coxinha': '/icons/6.png',
+  'Pipoca': '/icons/7.png',
+  'Pudim': '/icons/8.png',
+  'Trufas': '/icons/9.png',
+  'Todos': '/icons/10.png'
 }
 
 interface CategorySettingsProps {
@@ -191,11 +188,15 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                             className="w-8 h-8 object-contain"
                             onError={(e) => {
                               // Se a imagem não carregar, mostrar emoji
+                              console.error(`Failed to load icon: ${currentIcon}`)
                               e.currentTarget.style.display = 'none'
                               const emojiSpan = document.createElement('span')
                               emojiSpan.textContent = '🧁'
                               emojiSpan.className = 'text-2xl'
                               e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
+                            }}
+                            onLoad={() => {
+                              console.log(`Successfully loaded icon: ${currentIcon}`)
                             }}
                           />
                         ) : (
@@ -301,18 +302,26 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <h4 className="text-sm font-semibold text-purple-800 mb-3">
                 Escolha um ícone para "{showIconSelector}"
               </h4>
-              <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto">
+              <div className="grid grid-cols-5 gap-3 max-h-48 overflow-y-auto">
                 {availableIcons.map((icon) => (
                   <button
                     key={icon.path}
                     onClick={() => handleIconChange(showIconSelector, icon.path)}
-                    className="p-2 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
-                    title={icon.name}
+                    className="p-3 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
+                    title={`Ícone ${icon.name}`}
                   >
                     <img 
                       src={icon.path} 
-                      alt={icon.name}
-                      className="w-6 h-6 object-contain mx-auto"
+                      alt={`Ícone ${icon.name}`}
+                      className="w-8 h-8 object-contain mx-auto"
+                      onError={(e) => {
+                        console.error(`Failed to load selector icon: ${icon.path}`)
+                        e.currentTarget.style.display = 'none'
+                        const emojiSpan = document.createElement('span')
+                        emojiSpan.textContent = '🧁'
+                        emojiSpan.className = 'text-2xl'
+                        e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
+                      }}
                     />
                   </button>
                 ))}

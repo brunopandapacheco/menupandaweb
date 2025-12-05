@@ -12,6 +12,20 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: CategoryFilterProps) {
+  // Mapeamento de categorias para ícones (baseado nos seus arquivos)
+  const categoryIconMap: { [key: string]: string } = {
+    'Bolos': '/icons/1.png',
+    'Doces': '/icons/2.png',
+    'Salgados': '/icons/3.png',
+    'Brigadeiros': '/icons/4.png',
+    'Cookies': '/icons/5.png',
+    'Coxinha': '/icons/6.png',
+    'Pipoca': '/icons/7.png',
+    'Pudim': '/icons/8.png',
+    'Trufas': '/icons/9.png',
+    'Todos': '/icons/10.png'
+  }
+
   // Mapear emojis para categorias conhecidas (apenas para categorias personalizadas)
   const categoryEmojis: { [key: string]: string } = {
     'Brigadeiros': '🍫',
@@ -65,6 +79,19 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
             ? selectedCategory === null 
             : selectedCategory === category.name
 
+          // Determinar qual ícone usar
+          let iconToUse = category.icon
+          if (category.icon.startsWith('/')) {
+            // Se já for um caminho de imagem, usar como está
+            iconToUse = category.icon
+          } else if (categoryIconMap[category.name]) {
+            // Se tiver mapeamento para imagem, usar a imagem
+            iconToUse = categoryIconMap[category.name]
+          } else {
+            // Senão, usar emoji
+            iconToUse = categoryEmojis[category.name] || '🧁'
+          }
+
           return (
             <button
               key={category.name}
@@ -99,9 +126,9 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
               }}
             >
               {/* Renderiza ícone personalizado ou emoji */}
-              {category.icon.startsWith('/') ? (
+              {iconToUse.startsWith('/') ? (
                 <img 
-                  src={category.icon} 
+                  src={iconToUse} 
                   alt={category.name}
                   style={{ 
                     width: '24px', 
@@ -109,13 +136,22 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
                     marginBottom: '4px',
                     objectFit: 'contain'
                   }}
+                  onError={(e) => {
+                    // Se a imagem não carregar, mostrar emoji
+                    e.currentTarget.style.display = 'none'
+                    const emojiSpan = document.createElement('span')
+                    emojiSpan.textContent = categoryEmojis[category.name] || '🧁'
+                    emojiSpan.style.fontSize = '24px'
+                    emojiSpan.style.marginBottom = '4px'
+                    e.currentTarget.parentNode?.insertBefore(emojiSpan, e.currentTarget.nextSibling)
+                  }}
                 />
               ) : (
                 <span style={{ 
                   fontSize: '24px', 
                   marginBottom: '4px'
                 }}>
-                  {category.icon}
+                  {iconToUse}
                 </span>
               )}
               <span style={{ 
