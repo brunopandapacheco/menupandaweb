@@ -17,30 +17,19 @@ const predefinedColors = [
 ]
 
 const gradientBackgrounds = [
-  // Existentes - Rosa
+  // Rosa
   { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
   
-  // Novos - Marrom
-  { name: 'Marrom Clássico', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2B48C 100%)' },
-  { name: 'Marrom Café', gradient: 'linear-gradient(135deg, #5C4033 0%, #8B4513 50%, #C19A6B 100%)' },
-  { name: 'Marrom Caramelo', gradient: 'linear-gradient(135deg, #6F4E37 0%, #A0522D 50%, #DEB887 100%)' },
-  
-  // Novos - Roxo
+  // Roxo
   { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
-  { name: 'Roxo Místico', gradient: 'linear-gradient(135deg, #4B0082 0%, #7B68EE 50%, #DDA0DD 100%)' },
-  { name: 'Roxo Elegante', gradient: 'linear-gradient(135deg, #800080 0%, #9932CC 50%, #BA55D3 100%)' },
   
-  // Novos - Amarelo
+  // Amarelo
   { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
-  { name: 'Amarelo Solar', gradient: 'linear-gradient(135deg, #FFC300 0%, #FFD700 50%, #FFEF99 100%)' },
-  { name: 'Amarelo Suave', gradient: 'linear-gradient(135deg, #F0E68C 0%, #FAFAD2 50%, #FFFFE0 100%)' },
   
-  // Novos - Preto/Cinza
-  { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' },
-  { name: 'Preto Noite', gradient: 'linear-gradient(135deg, #0A0A0A 0%, #1C1C1C 50%, #444444 100%)' },
-  { name: 'Cinza Fumê', gradient: 'linear-gradient(135deg, #111111 0%, #222222 50%, #555555 100%)' }
+  // Cinza
+  { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
 ]
 
 interface ColorSettingsProps {
