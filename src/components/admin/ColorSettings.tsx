@@ -293,10 +293,10 @@ export function ColorSettings({
           </div>
 
           {/* Botão Salvar */}
-          <div className="pt-6">
+          <div className="pt-6 flex justify-center">
             <Button 
               onClick={onSaveColors}
-              className="w-full py-4 font-[650] text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
               style={{ backgroundColor: '#F5C542', color: 'white' }}
             >
               Aplicar Cores
