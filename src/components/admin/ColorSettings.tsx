@@ -296,7 +296,8 @@ export function ColorSettings({
           <div className="pt-6">
             <Button 
               onClick={onSaveColors}
-              className="w-full py-4 font-[650] text-lg bg-gradient-to-r from-[#d11b70] to-[#ff6fae] hover:from-[#b0195f] hover:to-[#ff5a9d] transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full py-4 font-[650] text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+              style={{ backgroundColor: '#F5C542', color: 'white' }}
             >
               Aplicar Cores
             </Button>
