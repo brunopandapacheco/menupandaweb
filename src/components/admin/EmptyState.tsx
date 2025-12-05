@@ -18,17 +18,6 @@ export function EmptyState({ selectedCategory, onNewProduct }: EmptyStateProps) 
           : 'Tente selecionar outra categoria ou cadastre novos produtos'
         }
       </p>
-      {selectedCategory === 'todas' && (
-        <div className="flex justify-center">
-          <Button 
-            onClick={onNewProduct}
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Cadastrar Primeiro Produto
-          </Button>
-        </div>
-      )}
     </div>
   )
 }
