@@ -31,10 +31,45 @@ const defaultCategories = [
   'Salgados'
 ]
 
+// Mapeamento de categorias para ícones disponíveis na pasta public/icons
+const categoryIcons: { [key: string]: string } = {
+  'Bolos': '/icons/bolo.png',
+  'Brigadeiros': '/icons/brigadeiro.png',
+  'Cookies': '/icons/cookies.png',
+  'Coxinha': '/icons/coxinha.png',
+  'Pipoca': '/icons/pipoca.png',
+  'Pudim': '/icons/pudim.png',
+  'Trufas': '/icons/trufas.png',
+  'Doces': '/icons/Doces.png',
+  'Salgados': '/icons/Salgados.png',
+  'Todos': '/icons/Todos.png',
+  'iconebolo': '/icons/iconebolo.png',
+  'iconebrigadeiro': '/icons/iconebrigadeiro.png',
+  'iconetodos': '/icons/iconetodos.png'
+}
+
+// Lista de todos os ícones disponíveis na pasta public/icons
+const availableIcons = [
+  { name: 'Bolo', path: '/icons/bolo.png' },
+  { name: 'Brigadeiro', path: '/icons/brigadeiro.png' },
+  { name: 'Cookie', path: '/icons/cookies.png' },
+  { name: 'Coxinha', path: '/icons/coxinha.png' },
+  { name: 'Pipoca', path: '/icons/pipoca.png' },
+  { name: 'Pudim', path: '/icons/pudim.png' },
+  { name: 'Trufa', path: '/icons/trufas.png' },
+  { name: 'Doces', path: '/icons/Doces.png' },
+  { name: 'Salgados', path: '/icons/Salgados.png' },
+  { name: 'Todos', path: '/icons/Todos.png' },
+  { name: 'Ícone Bolo', path: '/icons/iconebolo.png' },
+  { name: 'Ícone Brigadeiro', path: '/icons/iconebrigadeiro.png' },
+  { name: 'Ícone Todos', path: '/icons/iconetodos.png' }
+]
+
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
+  const [selectedIcon, setSelectedIcon] = useState('🧁') // Ícone padrão emoji
 
   const handleImageUpload = async (file: File, index: number) => {
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
@@ -116,10 +151,11 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   const handleCreateNewCategory = () => {
     if (!newCategoryName.trim()) return
     
-    // Adiciona a nova categoria ao produto
+    // Adiciona a nova categoria ao produto com o ícone selecionado
     handleFieldChange('categoria', newCategoryName.trim())
     setNewCategoryName('')
     setIsCreatingNewCategory(false)
+    setSelectedIcon('🧁') // Reseta para o emoji padrão
   }
 
   const handleCategorySelect = (value: string) => {
@@ -129,6 +165,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       handleFieldChange('categoria', value)
       setIsCreatingNewCategory(false)
       setNewCategoryName('')
+      setSelectedIcon('🧁') // Reseta para o emoji padrão
     }
   }
 
@@ -260,35 +297,68 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
               </SelectContent>
             </Select>
           ) : (
-            <div className="space-y-2">
-              <div className="flex gap-2">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="newCategoryName" className="text-sm font-medium">Nome da Categoria</Label>
                 <Input
+                  id="newCategoryName"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Digite o nome da nova categoria"
                   className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
                   autoFocus
                 />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Ícone da Categoria</Label>
+                <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto p-2 border border-purple-200 rounded-lg bg-white">
+                  {availableIcons.map((icon) => (
+                    <button
+                      key={icon.path}
+                      type="button"
+                      onClick={() => setSelectedIcon(icon.path)}
+                      className={`p-2 rounded-lg border-2 transition-all ${
+                        selectedIcon === icon.path
+                          ? 'border-purple-500 bg-purple-50'
+                          : 'border-gray-200 hover:border-purple-300'
+                      }`}
+                      title={icon.name}
+                    >
+                      <img 
+                        src={icon.path} 
+                        alt={icon.name}
+                        className="w-6 h-6 object-contain mx-auto"
+                      />
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500">
+                  Escolha um ícone para representar sua categoria
+                </p>
+              </div>
+              
+              <div className="flex gap-2">
                 <Button
                   onClick={handleCreateNewCategory}
                   disabled={!newCategoryName.trim()}
-                  className="bg-purple-600 hover:bg-purple-700"
+                  className="bg-purple-600 hover:bg-purple-700 flex-1"
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className="w-4 h-4 mr-1" />
+                  Criar
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => {
                     setIsCreatingNewCategory(false)
                     setNewCategoryName('')
+                    setSelectedIcon('🧁')
                   }}
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 mr-1" />
+                  Cancelar
                 </Button>
               </div>
-              <p className="text-xs text-gray-500">
-                Digite o nome e clique em ✓ para criar
-              </p>
             </div>
           )}
         </div>
