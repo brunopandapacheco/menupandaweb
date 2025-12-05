@@ -23,7 +23,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect 
     'Pipoca': '/icons/7.png',
     'Pudim': '/icons/8.png',
     'Trufas': '/icons/9.png',
-    'Todos': '/icons/10.png'
+    'Todos': '/icons/TODOS.png' // Icone fixo para "Todos"
   }
 
   // Mapear emojis para categorias conhecidas (apenas para categorias personalizadas)

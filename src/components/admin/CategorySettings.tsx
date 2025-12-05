@@ -37,7 +37,7 @@ const categoryIconMap: { [key: string]: string } = {
   'Pipoca': '/icons/7.png',
   'Pudim': '/icons/8.png',
   'Trufas': '/icons/9.png',
-  'Todos': '/icons/10.png'
+  'Todos': '/icons/TODOS.png' // Icone fixo para "Todos"
 }
 
 interface CategorySettingsProps {
@@ -126,6 +126,11 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const getCategoryIcon = (category: string) => {
+    // Para "Todos", sempre usar o ícone fixo
+    if (category === 'Todos') {
+      return '/icons/TODOS.png'
+    }
+    
     // Primeiro verificar se há um ícone personalizado salvo
     if (categoryIcons[category]) {
       return categoryIcons[category]
@@ -146,6 +151,10 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const isDefaultCategory = (category: string) => {
     return defaultCategories.includes(category)
+  }
+
+  const isTodosCategory = (category: string) => {
+    return category === 'Todos'
   }
 
   return (
@@ -171,6 +180,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 const isEditing = editingCategory === category
                 const hasProductsInCategory = hasProducts(category)
                 const isDefault = isDefaultCategory(category)
+                const isTodos = isTodosCategory(category)
                 const currentIcon = getCategoryIcon(category)
                 
                 return (
@@ -203,13 +213,15 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                           <span className="text-2xl">{currentIcon}</span>
                         )}
                         
-                        {/* Botão para alterar ícone */}
-                        <button
-                          onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
-                          className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hover:bg-purple-700"
-                        >
-                          <Edit2 className="w-2 h-2" />
-                        </button>
+                        {/* Botão para alterar ícone - NÃO mostrar para "Todos" */}
+                        {!isTodos && (
+                          <button
+                            onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
+                            className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hover:bg-purple-700"
+                          >
+                            <Edit2 className="w-2 h-2" />
+                          </button>
+                        )}
                       </div>
                       
                       {/* Nome da categoria */}
@@ -243,6 +255,11 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       ) : (
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-gray-800">{category}</span>
+                          {isTodos && (
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                              Fixo
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
@@ -251,32 +268,38 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                     <div className="flex items-center gap-2">
                       {!isEditing && (
                         <>
-                          <button
-                            onClick={() => handleEditCategory(category)}
-                            className="text-blue-600 hover:text-blue-800 transition-colors"
-                            title="Renomear categoria"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
+                          {/* Botão editar - NÃO mostrar para "Todos" */}
+                          {!isTodos && (
+                            <button
+                              onClick={() => handleEditCategory(category)}
+                              className="text-blue-600 hover:text-blue-800 transition-colors"
+                              title="Renomear categoria"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                          )}
                           
-                          <button
-                            onClick={() => handleDeleteCategory(category)}
-                            className={`transition-colors ${
-                              isDefault || hasProductsInCategory
-                                ? 'text-gray-300 cursor-not-allowed'
-                                : 'text-red-600 hover:text-red-800'
-                            }`}
-                            title={
-                              isDefault 
-                                ? 'Categoria padrão não pode ser excluída'
-                                : hasProductsInCategory
-                                ? 'Categoria com produtos não pode ser excluída'
-                                : 'Excluir categoria'
-                            }
-                            disabled={isDefault || hasProductsInCategory}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {/* Botão excluir - NÃO mostrar para "Todos" */}
+                          {!isTodos && (
+                            <button
+                              onClick={() => handleDeleteCategory(category)}
+                              className={`transition-colors ${
+                                isDefault || hasProductsInCategory
+                                  ? 'text-gray-300 cursor-not-allowed'
+                                  : 'text-red-600 hover:text-red-800'
+                              }`}
+                              title={
+                                isDefault 
+                                  ? 'Categoria padrão não pode ser excluída'
+                                  : hasProductsInCategory
+                                  ? 'Categoria com produtos não pode ser excluída'
+                                  : 'Excluir categoria'
+                              }
+                              disabled={isDefault || hasProductsInCategory}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </>
                       )}
                     </div>
@@ -334,6 +357,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             <ul className="text-sm text-blue-700 space-y-1">
               <li>• Clique no ícone de editar para renomear uma categoria</li>
               <li>• Clique no ícone de lápis para alterar o ícone da categoria</li>
+              <li>• A categoria "Todos" é fixa e não pode ser alterada</li>
               <li>• Categorias padrão (Bolos, Doces, Salgados) não podem ser excluídas</li>
               <li>• Categorias com produtos não podem ser excluídas</li>
               <li>• As categorias aparecem no cardápio na ordem de criação dos produtos</li>
