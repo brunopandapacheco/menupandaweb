@@ -108,13 +108,14 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Configurações - Glassmorphism com texto marrom escuro e bold */}
-          <div className="pt-6">
-            <Button 
+          {/* Botão Salvar Configurações - estilo copiado */}
+          <div className="pt-6 flex justify-center">
+            <Button
               onClick={onSaveConfig}
-              className="w-full py-3 text-lg font-bold rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-[#4A3531] hover:bg-white/20 hover:border-white/30 transition-all duration-300 shadow-md"
+              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
+                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
             >
-              Salvar Configurações
+              <span style={{ color: '#4A3531', fontWeight: 'bold' }}>Salvar Configurações</span>
             </Button>
           </div>
         </CardContent>
@@ -225,13 +226,14 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar Horários - Glassmorphism com texto marrom escuro e bold */}
-          <div className="pt-6">
-            <Button 
+          {/* Botão Salvar Horários - estilo copiado */}
+          <div className="pt-6 flex justify-center">
+            <Button
               onClick={onSaveHorarios}
-              className="w-full py-3 text-lg font-bold rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-[#4A3531] hover:bg-white/20 hover:border-white/30 transition-all duration-300 shadow-md"
+              className="px-8 py-3 rounded-xl backdrop-blur-md bg-white/20 border border-white/30 
+                         shadow-lg hover:bg-white/30 transition-all duration-200 font-semibold"
             >
-              Salvar Horários
+              <span style={{ color: '#4A3531', fontWeight: 'bold' }}>Salvar Horários</span>
             </Button>
           </div>
         </CardContent>
