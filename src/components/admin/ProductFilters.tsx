@@ -42,7 +42,8 @@ export function ProductFilters({
           </div>
           <Button 
             onClick={onNewProduct}
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+            style={{ backgroundColor: '#F5C542', color: 'white' }}
           >
             <Plus className="w-5 h-5 mr-2" />
             Novo Produto
