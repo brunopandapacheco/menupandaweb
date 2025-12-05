@@ -159,11 +159,12 @@ export default function CardapioDemo() {
   // Obter categorias na ordem que foram cadastradas nos produtos
   const getCategories = () => {
     // Sempre incluir "Todos" primeiro
-    const categories = [{ name: 'Todos', icon: '/icons/Todos.png' }]
+    const categories = [{ name: 'Todos', icon: '/icons/TODOS.png' }]
     
     // Obter categorias únicas dos produtos na ordem de criação
     const productCategories = Array.from(new Set(mockProdutos.map(p => p.categoria)))
       .filter(cat => cat && cat.trim() !== '')
+      .sort() // Ordenar alfabeticamente
     
     // Adicionar categorias na ordem que aparecem nos produtos
     productCategories.forEach(category => {
