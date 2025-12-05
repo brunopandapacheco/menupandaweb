@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Upload, X, Move } from 'lucide-react'
+import { Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Star } from 'lucide-react'
@@ -35,41 +35,7 @@ export function Logo({
   onLogoPositionChange,
   logoPosition = { x: 0, y: 0 }
 }: LogoProps) {
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [showUpload, setShowUpload] = useState(false)
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!isEditable || !onLogoPositionChange) return
-    
-    setIsDragging(true)
-    setDragStart({
-      x: e.clientX - logoPosition.x,
-      y: e.clientY - logoPosition.y
-    })
-  }
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !isEditable || !onLogoPositionChange) return
-    
-    const newX = e.clientX - dragStart.x
-    const newY = e.clientY - dragStart.y
-    
-    // Limitar movimento dentro do container
-    const maxX = 100
-    const maxY = 50
-    const minX = -100
-    const minY = -50
-    
-    onLogoPositionChange({
-      x: Math.max(minX, Math.min(maxX, newX)),
-      y: Math.max(minY, Math.min(maxY, newY))
-    })
-  }
-
-  const handleMouseUp = () => {
-    setIsDragging(false)
-  }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -169,15 +135,13 @@ export function Logo({
     <div className="relative">
       {/* Logo circular posicionada fora do container para ficar sobre o banner */}
       <div 
-        className={`absolute ${isEditable ? 'cursor-move' : 'cursor-default'}`}
+        className="absolute"
         style={{
           top: '-50px', // Ajustado para logo maior
           left: '50%',
-          transform: `translateX(-50%) ${isEditable ? `translate(${logoPosition.x}px, ${logoPosition.y}px)` : ''}`,
-          transition: isDragging ? 'none' : 'transform 0.2s ease',
+          transform: 'translateX(-50%)', // Mantém sempre centralizado
           zIndex: 50, // Aumentado z-index para garantir que fique acima do banner
         }}
-        onMouseDown={handleMouseDown}
       >
         {logoUrl ? (
           <div 
@@ -238,18 +202,7 @@ export function Logo({
           zIndex: 20,
           paddingTop: '100px' // Ajustado para logo maior
         }}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
       >
-        {/* Indicador de movimento apenas no modo de edição */}
-        {isEditable && (
-          <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
-            <Move className="w-3 h-3" />
-            Arraste para mover
-          </div>
-        )}
-
         {/* Nome e descrição */}
         <div className="text-center mt-8 mb-4">
           <h1 
