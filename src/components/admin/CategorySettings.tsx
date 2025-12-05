@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { X, Edit2, Trash2, Check, AlertTriangle, RefreshCw } from 'lucide-react'
+import { X, Edit2, Trash2, Check } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
@@ -12,7 +12,6 @@ const defaultCategories = [
   'Salgados'
 ]
 
-// Lista de ícones disponíveis (baseado nos arquivos que você tem)
 const availableIcons = [
   { name: '1', path: '/icons/1.png' },
   { name: '2', path: '/icons/2.png' },
@@ -26,7 +25,6 @@ const availableIcons = [
   { name: '10', path: '/icons/10.png' }
 ]
 
-// Mapeamento de categorias para ícones (baseado nos seus arquivos)
 const categoryIconMap: { [key: string]: string } = {
   'Bolos': '/icons/1.png',
   'Doces': '/icons/2.png',
@@ -50,19 +48,15 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const { produtos, designSettings, saveDesignSettings } = useDatabase()
   const [editingCategory, setEditingCategory] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
-  const [editingIcon, setEditingIcon] = useState('')
   const [showIconSelector, setShowIconSelector] = useState<string | null>(null)
   const [categoryIcons, setCategoryIcons] = useState<{ [key: string]: string }>({})
 
-  // Carregar ícones personalizados do design_settings quando o componente montar
   useEffect(() => {
     if (designSettings?.category_icons) {
-      console.log('Loading category icons from database:', designSettings.category_icons)
       setCategoryIcons(designSettings.category_icons)
     }
   }, [designSettings])
 
-  // Obter categorias que realmente existem nos produtos
   const getProductCategories = () => {
     const categories = Array.from(new Set(produtos.map(p => p.categoria)))
     return categories.filter(cat => cat && cat.trim() !== '')
@@ -70,10 +64,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const productCategories = getProductCategories()
 
-  // Combinar todas as categorias para exibição
   const allCategories = () => {
     const categories = [...new Set([...defaultCategories, ...productCategories])]
-    return categories.sort() // Ordenar alfabeticamente
+    return categories.sort()
   }
 
   const displayCategories = allCategories()
@@ -81,14 +74,12 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const handleEditCategory = (category: string) => {
     setEditingCategory(category)
     setEditingName(category)
-    setEditingIcon('')
     setShowIconSelector(null)
   }
 
   const handleSaveEdit = () => {
     if (!editingCategory || !editingName.trim()) return
 
-    // Atualizar nome da categoria em todos os produtos
     const updatedProducts = produtos.map(product => {
       if (product.categoria === editingCategory) {
         return { ...product, categoria: editingName.trim() }
@@ -96,12 +87,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return product
     })
 
-    // Aqui você precisaria atualizar os produtos no banco
-    // Por enquanto, apenas atualizamos o estado local
     showSuccess(`Categoria "${editingCategory}" renomeada para "${editingName.trim()}"`)
     setEditingCategory(null)
     setEditingName('')
-    setEditingIcon('')
   }
 
   const handleDeleteCategory = (category: string) => {
@@ -116,7 +104,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return
     }
 
-    // Remover categoria da lista
     const updatedCategories = mainCategories.filter(c => c !== category)
     onMainCategoriesChange(updatedCategories)
     showSuccess(`Categoria "${category}" excluída com sucesso!`)
@@ -124,27 +111,18 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const handleIconChange = async (category: string, iconPath: string) => {
     try {
-      console.log('🔄 Changing icon for category:', category, 'to:', iconPath)
-      
-      // Atualizar o estado local primeiro
       const updatedIcons = { ...categoryIcons, [category]: iconPath }
       setCategoryIcons(updatedIcons)
-      
-      // Salvar no banco de dados usando o campo category_icons
-      console.log('💾 Saving to database with category_icons:', updatedIcons)
       
       const success = await saveDesignSettings({
         category_icons: updatedIcons
       })
       
       if (success) {
-        console.log('✅ Icon saved successfully to database')
         showSuccess(`Ícone da categoria "${category}" atualizado e salvo!`)
         setShowIconSelector(null)
       } else {
-        console.error('❌ Failed to save icon to database')
         showError('Erro ao salvar ícone da categoria no banco')
-        // Reverter para o estado anterior se falhou
         setCategoryIcons(prev => {
           const newIcons = { ...prev }
           delete newIcons[category]
@@ -152,9 +130,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
         })
       }
     } catch (error) {
-      console.error('❌ Error saving icon:', error)
       showError('Erro ao salvar ícone da categoria')
-      // Reverter para o estado anterior se falhou
       setCategoryIcons(prev => {
         const newIcons = { ...prev }
         delete newIcons[category]
@@ -164,25 +140,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const getCategoryIcon = (category: string) => {
-    // Para "Todos", sempre usar o ícone fixo
-    if (category === 'Todos') {
-      return '/icons/TODOS.png'
-    }
-    
-    // Primeiro verificar se há um ícone personalizado salvo no estado local
-    if (categoryIcons[category]) {
-      console.log(`📁 Using custom icon for ${category}:`, categoryIcons[category])
-      return categoryIcons[category]
-    }
-    
-    // Depois verificar o mapeamento padrão
-    if (categoryIconMap[category]) {
-      console.log(`📁 Using default icon for ${category}:`, categoryIconMap[category])
-      return categoryIconMap[category]
-    }
-    
-    // Por último, usar um ícone padrão
-    console.log(`📁 Using fallback icon for ${category}: /icons/1.png`)
+    if (category === 'Todos') return '/icons/TODOS.png'
+    if (categoryIcons[category]) return categoryIcons[category]
+    if (categoryIconMap[category]) return categoryIconMap[category]
     return '/icons/1.png'
   }
 
@@ -196,7 +156,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   return (
     <div className="space-y-6">
-      {/* Card de Gerenciamento de Categorias */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#4A3531' }}>Gerenciar Categorias</CardTitle>
@@ -206,7 +165,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Lista de Categorias */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
               Todas as Categorias
@@ -226,23 +184,13 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                     className="flex items-center justify-between p-4 rounded-lg border bg-white hover:shadow-sm transition-shadow"
                   >
                     <div className="flex items-center gap-3">
-                      {/* Ícone da categoria */}
                       <div className="relative">
                         <img 
                           src={currentIcon} 
                           alt={category}
                           className="w-8 h-8 object-contain"
-                          onError={(e) => {
-                            // Se a imagem não carregar, mostrar ícone padrão
-                            console.error(`Failed to load icon: ${currentIcon}`)
-                            e.currentTarget.src = '/icons/1.png'
-                          }}
-                          onLoad={() => {
-                            console.log(`Successfully loaded icon: ${currentIcon}`)
-                          }}
+                          onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
-                        
-                        {/* Botão para alterar ícone - não mostrar para "Todos" */}
                         {!isTodosCategory && (
                           <button
                             onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
@@ -253,7 +201,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                         )}
                       </div>
                       
-                      {/* Nome da categoria */}
                       {isEditing ? (
                         <div className="flex items-center gap-2">
                           <Input
@@ -288,7 +235,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       )}
                     </div>
                     
-                    {/* Ações */}
                     <div className="flex items-center gap-2">
                       {!isEditing && (
                         <>
@@ -327,7 +273,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
-          {/* Seletor de Ícone */}
           {showIconSelector && (
             <div className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50">
               <h4 className="text-sm font-semibold text-purple-800 mb-3">
@@ -345,10 +290,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       src={icon.path} 
                       alt={`Ícone ${icon.name}`}
                       className="w-8 h-8 object-contain mx-auto"
-                      onError={(e) => {
-                        console.error(`Failed to load selector icon: ${icon.path}`)
-                        e.currentTarget.src = '/icons/1.png'
-                      }}
+                      onError={(e) => e.currentTarget.src = '/icons/1.png'}
                     />
                   </button>
                 ))}
@@ -365,18 +307,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           )}
 
-          {/* Informações */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-blue-800 mb-2">ℹ️ Informações Importantes</h4>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Clique no ícone de editar para renomear uma categoria</li>
-              <li>• Clique no ícone de lápis para alterar o ícone da categoria</li>
-              <li>• O ícone da categoria "Todos" é fixo e não pode ser alterado</li>
-              <li>• Categorias padrão (Bolos, Doces, Salgados) não podem ser excluídas</li>
-              <li>• Categorias com produtos não podem ser excluídas</li>
-              <li>• As categorias aparecem no cardápio na ordem de criação dos produtos</li>
-            </ul>
-          </div>
         </CardContent>
       </Card>
     </div>
