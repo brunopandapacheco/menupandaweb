@@ -99,7 +99,7 @@ export function ColorSettings({
                   <Button 
                     size="sm" 
                     className="w-full font-[650] text-xs"
-                    style={{ backgroundColor: '#1A1A1A', color: 'white' }}
+                    style={{ backgroundColor: '#111111', color: 'white' }}
                     onClick={() => onApplyGradient(gradient)}
                   >
                     Aplicar
