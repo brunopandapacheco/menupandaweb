@@ -73,6 +73,12 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const displayCategories = allCategories()
 
   const handleEditCategory = (category: string) => {
+    // Não permitir editar a categoria "Todos"
+    if (category === 'Todos') {
+      showError('A categoria "Todos" não pode ser alterada')
+      return
+    }
+    
     setEditingCategory(category)
     setEditingName(category)
     setEditingIcon('')
@@ -115,6 +121,12 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const handleIconChange = async (category: string, iconPath: string) => {
+    // Não permitir alterar o ícone da categoria "Todos"
+    if (category === 'Todos') {
+      showError('O ícone da categoria "Todos" não pode ser alterado')
+      return
+    }
+
     try {
       console.log('🔄 Changing icon for category:', category, 'to:', iconPath)
       
@@ -214,7 +226,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 return (
                   <div
                     key={category}
-                    className="flex items-center justify-between p-4 rounded-lg border bg-white hover:shadow-sm transition-shadow"
+                    className={`flex items-center justify-between p-4 rounded-lg border bg-white hover:shadow-sm transition-shadow ${
+                      isTodos ? 'bg-gray-50 border-gray-200' : ''
+                    }`}
                   >
                     <div className="flex items-center gap-3">
                       {/* Ícone da categoria */}
@@ -267,7 +281,14 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-800">{category}</span>
+                          <span className={`font-medium ${isTodos ? 'text-gray-600' : 'text-gray-800'}`}>
+                            {category}
+                          </span>
+                          {isTodos && (
+                            <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
+                              Padrão
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
@@ -278,8 +299,17 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                         <>
                           <button
                             onClick={() => handleEditCategory(category)}
-                            className="text-blue-600 hover:text-blue-800 transition-colors"
-                            title="Renomear categoria"
+                            className={`transition-colors ${
+                              isTodos 
+                                ? 'text-gray-300 cursor-not-allowed' 
+                                : 'text-blue-600 hover:text-blue-800'
+                            }`}
+                            title={
+                              isTodos 
+                                ? 'Categoria "Todos" não pode ser alterada'
+                                : 'Renomear categoria'
+                            }
+                            disabled={isTodos}
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
