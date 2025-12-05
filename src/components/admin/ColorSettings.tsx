@@ -111,199 +111,189 @@ export function ColorSettings({
         </CardContent>
       </Card>
 
-      {/* Card Principal - Paleta de Cores */}
+      {/* Card da Cor da Borda */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor da Borda</CardTitle>
         </CardHeader>
-        
-        <CardContent className="space-y-8">
-          {/* Cor da Borda */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full border-4 shadow-sm" style={{ borderColor: corBorda }} />
-              <h3 className="text-lg font-semibold" style={{ color: '#333333', fontWeight: 600 }}>Cor da Borda</h3>
-            </div>
-            
-            <div className="grid grid-cols-5 gap-3">
-              {predefinedColors.map((color) => (
-                <button
-                  key={color.value}
-                  onClick={() => onCorBordaChange(color.value)}
-                  className={
-                    'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                    (corBorda === color.value 
-                      ? 'border-gray-800 shadow-lg scale-105' 
-                      : 'border-gray-200 hover:border-gray-400')
-                  }
-                  style={{ backgroundColor: color.value }}
-                  title={color.name}
-                >
-                  {corBorda === color.value && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
-                    </div>
-                  )}
-                </button>
-              ))}
-              
-              {/* Botão Personalizar */}
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-12 h-12 rounded-full border-4 shadow-sm" style={{ borderColor: corBorda }} />
+          </div>
+          
+          <div className="grid grid-cols-5 gap-3">
+            {predefinedColors.map((color) => (
               <button
-                onClick={() => setShowCustomBorderPicker(!showCustomBorderPicker)}
+                key={color.value}
+                onClick={() => onCorBordaChange(color.value)}
                 className={
                   'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                  (showCustomBorderPicker 
+                  (corBorda === color.value 
                     ? 'border-gray-800 shadow-lg scale-105' 
                     : 'border-gray-200 hover:border-gray-400')
                 }
-                style={{ 
-                  background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
-                  position: 'relative'
-                }}
-                title="Personalizar cor"
+                style={{ backgroundColor: color.value }}
+                title={color.name}
               >
-                <div className="w-full h-full flex items-center justify-center">
-                  <Palette className="w-4 h-4 text-white drop-shadow-lg" />
-                </div>
-              </button>
-            </div>
-
-            {showCustomBorderPicker && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={customBorderColor}
-                      onChange={(e) => handleCustomBorderColor(e.target.value)}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
-                    />
-                    <input
-                      type="text"
-                      value={customBorderColor}
-                      onChange={(e) => {
-                        const value = e.target.value
-                        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                          handleCustomBorderColor(value)
-                        }
-                      }}
-                      placeholder="#000000"
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
-                    />
+                {corBorda === color.value && (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
                   </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
-              </div>
-            )}
-          </div>
-
-          {/* Divisor Elegante */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center">
-              <Sparkles className="w-5 h-5 text-gray-400 bg-white px-2" />
-            </div>
-          </div>
-
-          {/* Cor do Nome */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div 
-                className="w-8 h-8 rounded-lg shadow-sm flex items-center justify-center font-bold text-white text-xs"
-                style={{ backgroundColor: corNome }}
-              >
-                Aa
-              </div>
-              <h3 className="text-lg font-semibold" style={{ color: '#333333', fontWeight: 600 }}>Cor do Nome</h3>
-            </div>
+                )}
+              </button>
+            ))}
             
-            <div className="grid grid-cols-5 gap-3">
-              {predefinedColors.map((color) => (
-                <button
-                  key={color.value}
-                  onClick={() => onCorNomeChange(color.value)}
-                  className={
-                    'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                    (corNome === color.value 
-                      ? 'border-gray-800 shadow-lg scale-105' 
-                      : 'border-gray-200 hover:border-gray-400')
-                  }
-                  style={{ backgroundColor: color.value }}
-                  title={color.name}
-                >
-                  {corNome === color.value && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
-                    </div>
-                  )}
-                </button>
-              ))}
-              
-              {/* Botão Personalizar */}
-              <button
-                onClick={() => setShowCustomNamePicker(!showCustomNamePicker)}
-                className={
-                  'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                  (showCustomNamePicker 
-                    ? 'border-gray-800 shadow-lg scale-105' 
-                    : 'border-gray-200 hover:border-gray-400')
-                }
-                style={{ 
-                  background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
-                  position: 'relative'
-                }}
-                title="Personalizar cor"
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <Palette className="w-4 h-4 text-white drop-shadow-lg" />
-                </div>
-              </button>
-            </div>
-
-            {showCustomNamePicker && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={customNameColor}
-                      onChange={(e) => handleCustomNameColor(e.target.value)}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
-                    />
-                    <input
-                      type="text"
-                      value={customNameColor}
-                      onChange={(e) => {
-                        const value = e.target.value
-                        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                          handleCustomNameColor(value)
-                        }
-                      }}
-                      placeholder="#000000"
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
-                    />
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
-              </div>
-            )}
-          </div>
-
-          {/* Botão Salvar */}
-          <div className="pt-6 flex justify-center">
-            <Button 
-              onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#F5C542', color: 'white' }}
+            {/* Botão Personalizar */}
+            <button
+              onClick={() => setShowCustomBorderPicker(!showCustomBorderPicker)}
+              className={
+                'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                (showCustomBorderPicker 
+                  ? 'border-gray-800 shadow-lg scale-105' 
+                  : 'border-gray-200 hover:border-gray-400')
+              }
+              style={{ 
+                background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
+                position: 'relative'
+              }}
+              title="Personalizar cor"
             >
-              Aplicar Cores
-            </Button>
+              <div className="w-full h-full flex items-center justify-center">
+                <Palette className="w-4 h-4 text-white drop-shadow-lg" />
+              </div>
+            </button>
           </div>
+
+          {showCustomBorderPicker && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={customBorderColor}
+                    onChange={(e) => handleCustomBorderColor(e.target.value)}
+                    className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    value={customBorderColor}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                        handleCustomBorderColor(value)
+                      }
+                    }}
+                    placeholder="#000000"
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Card da Cor do Nome */}
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor do Nome</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div 
+              className="w-12 h-12 rounded-lg shadow-sm flex items-center justify-center font-bold text-white text-base"
+              style={{ backgroundColor: corNome }}
+            >
+              Aa
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-5 gap-3">
+            {predefinedColors.map((color) => (
+              <button
+                key={color.value}
+                onClick={() => onCorNomeChange(color.value)}
+                className={
+                  'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                  (corNome === color.value 
+                    ? 'border-gray-800 shadow-lg scale-105' 
+                    : 'border-gray-200 hover:border-gray-400')
+                }
+                style={{ backgroundColor: color.value }}
+                title={color.name}
+              >
+                {corNome === color.value && (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
+                  </div>
+                )}
+              </button>
+            ))}
+            
+            {/* Botão Personalizar */}
+            <button
+              onClick={() => setShowCustomNamePicker(!showCustomNamePicker)}
+              className={
+                'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                (showCustomNamePicker 
+                  ? 'border-gray-800 shadow-lg scale-105' 
+                  : 'border-gray-200 hover:border-gray-400')
+              }
+              style={{ 
+                background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
+                position: 'relative'
+              }}
+              title="Personalizar cor"
+            >
+              <div className="w-full h-full flex items-center justify-center">
+                <Palette className="w-4 h-4 text-white drop-shadow-lg" />
+              </div>
+            </button>
+          </div>
+
+          {showCustomNamePicker && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={customNameColor}
+                    onChange={(e) => handleCustomNameColor(e.target.value)}
+                    className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    value={customNameColor}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                        handleCustomNameColor(value)
+                      }
+                    }}
+                    placeholder="#000000"
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Botão Salvar Global */}
+      <div className="flex justify-center">
+        <Button 
+          onClick={onSaveColors}
+          className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+          style={{ backgroundColor: '#F5C542', color: 'white' }}
+        >
+          Aplicar Cores
+        </Button>
+      </div>
     </div>
   )
 }
