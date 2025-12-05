@@ -44,7 +44,7 @@ export function TabletLayout({ children, activeTab = 'preview', onTabChange }: T
                   className={cn(
                     "w-full justify-start gap-3 h-12 text-white hover:bg-white/20 hover:text-white",
                     activeTab === tab.id 
-                      ? "bg-white text-[#ff967f] hover:bg-white hover:text-[#ff967f]" 
+                      ? "bg-white text-[#2b0033] hover:bg-white hover:text-[#2b0033]" 
                       : ""
                   )}
                   onClick={() => onTabChange?.(tab.id)}
