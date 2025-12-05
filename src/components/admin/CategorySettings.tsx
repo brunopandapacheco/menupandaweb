@@ -5,17 +5,10 @@ import { Input } from '@/components/ui/input'
 import { X, ChevronDown, Check, GripVertical, Plus } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
-const allCategories = [
-  'Bolo Simples',
-  'Bolo Decorado', 
-  'Bolos Caseiros',
-  'Bolo no Pote',
-  'Brigadeiro Gourmet',
-  'Doces Finos',
-  'Pipoca Gourmet',
-  'Topos de Bolos',
-  'Tortas Doces',
-  'Tortas Salgadas'
+const defaultCategories = [
+  'Bolos',
+  'Doces', 
+  'Salgados'
 ]
 
 interface CategorySettingsProps {
@@ -116,89 +109,100 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                 <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Fixo</span>
               </div>
               
-              {/* Categorias arrastáveis */}
-              {mainCategories.map((category, index) => (
-                <div
-                  key={category}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, index)}
-                  onDragEnd={handleDragEnd}
-                  className={`flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-lg cursor-move transition-all ${
-                    draggedIndex === index ? 'opacity-50' : 'hover:bg-blue-100'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <GripVertical className="w-4 h-4 text-blue-600" />
-                    <span className="text-blue-800 font-medium">{category}</span>
-                  </div>
-                  <button
-                    onClick={() => removeCategory(category)}
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
+              {/* Categorias padrão (Bolos, Doces, Salgados) */}
+              {defaultCategories.map((category, index) => {
+                const isInMainCategories = mainCategories.includes(category)
+                const actualIndex = mainCategories.indexOf(category)
+                
+                return (
+                  <div
+                    key={category}
+                    draggable={isInMainCategories}
+                    onDragStart={(e) => isInMainCategories ? handleDragStart(e, actualIndex) : undefined}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => isInMainCategories ? handleDrop(e, actualIndex) : undefined}
+                    onDragEnd={handleDragEnd}
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
+                      isInMainCategories 
+                        ? 'bg-blue-50 border border-blue-200 cursor-move hover:bg-blue-100' 
+                        : 'bg-gray-50 border border-gray-200'
+                    }`}
                   >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
+                    <div className="flex items-center gap-3">
+                      <GripVertical className={`w-4 h-4 ${isInMainCategories ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <span className={`${isInMainCategories ? 'text-blue-800' : 'text-gray-600'} font-medium`}>
+                        {category}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {!isInMainCategories && (
+                        <button
+                          onClick={() => addCategory(category)}
+                          className="text-green-600 hover:text-green-800 transition-colors"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      )}
+                      {isInMainCategories && (
+                        <button
+                          onClick={() => removeCategory(category)}
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+              
+              {/* Categorias personalizadas arrastáveis */}
+              {mainCategories
+                .filter(category => !defaultCategories.includes(category))
+                .map((category, index) => {
+                  const actualIndex = mainCategories.indexOf(category)
+                  return (
+                    <div
+                      key={category}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, actualIndex)}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, actualIndex)}
+                      onDragEnd={handleDragEnd}
+                      className={`flex items-center justify-between bg-purple-50 border border-purple-200 px-4 py-3 rounded-lg cursor-move transition-all ${
+                        draggedIndex === actualIndex ? 'opacity-50' : 'hover:bg-purple-100'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <GripVertical className="w-4 h-4 text-purple-600" />
+                        <span className="text-purple-800 font-medium">{category}</span>
+                      </div>
+                      <button
+                        onClick={() => removeCategory(category)}
+                        className="text-purple-600 hover:text-purple-800 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )
+                })}
             </div>
           </div>
 
           {/* Adicionar Nova Categoria */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold" style={{ color: '#4A3531' }}>
-              Adicionar Categoria
+              Criar Nova Categoria
             </h3>
             
             {!isCreatingNewCategory ? (
-              <div className="relative">
-                <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 border-2 border-gray-300 rounded-lg bg-white hover:border-gray-400 transition-colors"
-                >
-                  <span className="text-gray-700">
-                    Clique para selecionar categorias
-                  </span>
-                  <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                {isOpen && (
-                  <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {allCategories.map((category) => {
-                      const isSelected = mainCategories.includes(category)
-                      
-                      return (
-                        <button
-                          key={category}
-                          onClick={() => {
-                            handleCategorySelect(category)
-                            if (!isSelected) {
-                              setIsOpen(false)
-                            }
-                          }}
-                          className={`w-full px-4 py-3 text-left flex items-center justify-between transition-colors ${
-                            isSelected 
-                              ? 'bg-blue-50 text-blue-800 border-b border-blue-100' 
-                              : 'hover:bg-gray-50 text-gray-700 border-b border-gray-100'
-                          }`}
-                        >
-                          <span>{category}</span>
-                          {isSelected && (
-                            <Check className="w-4 h-4 text-blue-600" />
-                          )}
-                        </button>
-                      )
-                    })}
-                    <button
-                      onClick={() => handleCategorySelect('create-new')}
-                      className="w-full px-4 py-3 text-left flex items-center gap-2 hover:bg-gray-50 text-purple-600 font-medium border-b border-gray-100"
-                    >
-                      <Plus className="w-4 h-4" />
-                      Criar nova categoria
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button
+                onClick={() => setIsCreatingNewCategory(true)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-purple-300 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors text-purple-700 font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Criar nova categoria personalizada
+              </button>
             ) : (
               <div className="space-y-2">
                 <div className="flex gap-2">
