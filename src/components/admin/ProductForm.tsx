@@ -138,9 +138,9 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
   return (
     <div className="space-y-6">
-      <div className="bg-purple-50 rounded-xl p-6">
+      <div className="bg-pink-50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
-          <h3 className="text-lg font-semibold text-purple-800">Imagem do Produto</h3>
+          <h3 className="text-lg font-semibold text-pink-800">Imagem do Produto</h3>
         </div>
         <div className="flex justify-center">
           <div className="relative w-full max-w-sm">
@@ -149,7 +149,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 <img 
                   src={product.imagem_url} 
                   alt="Imagem do produto"
-                  className="w-full h-48 object-cover rounded-lg border-2 border-purple-200" 
+                  className="w-full h-48 object-cover rounded-lg border-2 border-pink-200" 
                 />
                 <Button
                   type="button"
@@ -162,7 +162,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 </Button>
               </div>
             ) : (
-              <div className="border-2 border-dashed border-purple-300 rounded-lg h-48 flex items-center justify-center bg-white hover:bg-purple-50 transition-colors">
+              <div className="border-2 border-dashed border-pink-300 rounded-lg h-48 flex items-center justify-center bg-white hover:bg-pink-50 transition-colors">
                 <Input
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
@@ -180,11 +180,11 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 />
                 <Button asChild size="sm" variant="ghost" className="h-full w-full">
                   <label htmlFor="product-image" className="cursor-pointer flex flex-col items-center justify-center gap-2">
-                    <Upload className="w-8 h-8 text-purple-400" />
-                    <span className="text-sm text-purple-600 font-medium">
+                    <Upload className="w-8 h-8 text-pink-400" />
+                    <span className="text-sm text-pink-600 font-medium">
                       Adicionar Imagem
                     </span>
-                    <span className="text-xs text-purple-400">
+                    <span className="text-xs text-pink-400">
                       PNG, JPEG ou WEBP (máx. 5MB)
                     </span>
                   </label>
@@ -203,7 +203,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             value={product?.nome || ''}
             onChange={(e) => handleFieldChange('nome', e.target.value)}
             placeholder="Ex: Bolo de Chocolate"
-            className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
+            className="border-pink-200 focus:border-pink-500 focus:ring-pink-500"
             required
           />
         </div>
@@ -211,11 +211,11 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700">Categoria *</Label>
           {!isCreatingNewCategory ? (
             <Select value={product?.categoria || ''} onValueChange={handleCategorySelect}>
-              <SelectTrigger className="border-purple-200 focus:border-purple-500 focus:ring-purple-500">
+              <SelectTrigger className="border-pink-200 focus:border-pink-500 focus:ring-pink-500">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="create-new" className="text-purple-600 font-medium">
+                <SelectItem value="create-new" className="text-pink-600 font-medium">
                   <div className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
                     Criar nova categoria
@@ -232,7 +232,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Digite o nome da nova categoria"
-                  className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
+                  className="border-pink-200 focus:border-pink-500 focus:ring-pink-500 flex-1"
                 />
               </div>
               
@@ -255,7 +255,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
               </div>
 
               {showIconSelector && (
-                <div className="border-2 border-purple-200 rounded-lg p-3 bg-purple-50 max-h-80 overflow-y-auto">
+                <div className="border-2 border-pink-200 rounded-lg p-3 bg-pink-50 max-h-80 overflow-y-auto">
                   <div className="grid grid-cols-4 gap-2">
                     {availableIcons.map((icon) => (
                       <button
@@ -264,8 +264,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                           setSelectedIcon(icon.path)
                           setShowIconSelector(false)
                         }}
-                        className={`p-1 rounded border-2 transition-all hover:border-purple-400 hover:bg-purple-100 ${
-                          selectedIcon === icon.path ? 'border-purple-600 bg-purple-100' : 'border-gray-200'
+                        className={`p-1 rounded border-2 transition-all hover:border-pink-400 hover:bg-pink-100 ${
+                          selectedIcon === icon.path ? 'border-pink-600 bg-pink-100' : 'border-gray-200'
                         }`}
                         title={`Ícone ${icon.name}`}
                       >
@@ -285,7 +285,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 <Button
                   onClick={handleCreateNewCategory}
                   disabled={!newCategoryName.trim()}
-                  className="bg-purple-600 hover:bg-purple-700 flex-1"
+                  className="bg-pink-600 hover:bg-pink-700 flex-1"
                 >
                   <Check className="w-4 h-4 mr-1" />
                   Criar
@@ -316,7 +316,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           onChange={(e) => handleFieldChange('descricao', e.target.value)}
           placeholder="Ingredientes, tamanho, sabor, etc"
           rows={3}
-          className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
+          className="border-pink-200 focus:border-pink-500 focus:ring-pink-500"
         />
       </div>
 
