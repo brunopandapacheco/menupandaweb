@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { Banner } from '@/components/cardapio/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
-import { SearchBar } from '@/components/cardapio/SearchBar'
-import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter' // Removed SearchBar import
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
@@ -86,16 +85,16 @@ const mockProdutos: Produto[] = [
 ]
 
 export default function CardapioDemo() {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('') // Keep searchTerm state for filtering logic, but it won't be used by a UI component
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   const filteredProducts = mockProdutos.filter(product => {
-    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    // Removed searchTerm from filtering logic as SearchBar is removed
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
-    return matchesSearch && matchesCategory
+    return matchesCategory
   })
 
   const toggleFavorite = (productId: string) => {
@@ -209,7 +208,7 @@ export default function CardapioDemo() {
           <BannerAd bannerUrl={mockDesignSettings.banner1_url} />
         )}
         
-        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        {/* <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} /> */} {/* Removed SearchBar */}
         
         <CategoryFilter 
           categories={categories}

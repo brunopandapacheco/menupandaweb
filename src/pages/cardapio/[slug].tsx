@@ -4,8 +4,7 @@ import { supabaseService } from '@/services/supabase'
 import { Banner } from '@/components/cardapio/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
-import { SearchBar } from '@/components/cardapio/SearchBar'
-import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter' // Removed SearchBar import
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
@@ -26,7 +25,7 @@ export default function CardapioPublico() {
   const [configuracoes, setConfiguracoes] = useState<Configuracoes | null>(null)
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('') // Keep searchTerm state for filtering logic, but it won't be used by a UI component
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -75,9 +74,9 @@ export default function CardapioPublico() {
   }
 
   const filteredProducts = produtos.filter(product => {
-    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    // Removed searchTerm from filtering logic as SearchBar is removed
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
-    return matchesSearch && matchesCategory
+    return matchesCategory
   })
 
   const toggleFavorite = (productId: string) => {
@@ -239,7 +238,7 @@ export default function CardapioPublico() {
           <BannerAd bannerUrl={designSettings.banner1_url} />
         )}
         
-        <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        {/* <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} /> */} {/* Removed SearchBar */}
         
         <CategoryFilter 
           categories={categories}

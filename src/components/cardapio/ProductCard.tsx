@@ -71,6 +71,19 @@ export function ProductCard({
               {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
             </span>
           )}
+
+          {/* PROMOTION RIBBON */}
+          {product.promocao && (
+            <div 
+              className="absolute top-3 -right-10 bg-red-500 text-white text-xs font-bold px-8 py-1 transform rotate-45 shadow-md z-10"
+              style={{ 
+                width: '150px', // Adjust width to ensure "PROMOÇÃO" fits well
+                textAlign: 'center'
+              }}
+            >
+              PROMOÇÃO
+            </div>
+          )}
         </div>
         
         {/* Conteúdo do produto */}

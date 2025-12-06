@@ -21,6 +21,9 @@ const saleTypes = [
   { value: 'unidade', label: 'Unidade' },
   { value: 'fatia', label: 'Fatia' },
   { value: 'cento', label: 'Cento' },
+  { value: 'tamanho-p', label: 'Tamanho P' }, // New option
+  { value: 'tamanho-m', label: 'Tamanho M' }, // New option
+  { value: 'tamanho-g', label: 'Tamanho G' }, // New option
   { value: 'outros', label: 'Outros' }
 ]
 
