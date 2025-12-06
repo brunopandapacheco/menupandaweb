@@ -286,7 +286,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   <img 
                     src={selectedIcon} 
                     alt="Ícone selecionado"
-                    className="w-16 h-16 object-contain border rounded-lg"
+                    className="w-12 h-12 object-contain border rounded"
                   />
                   <Button
                     variant="outline"
@@ -298,10 +298,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 </div>
               </div>
 
-              {/* Grid de Ícones - 3 por linha e MUITO maior */}
+              {/* Grid de Ícones - Container pequeno, imagem grande */}
               {showIconSelector && (
-                <div className="border-2 border-purple-200 rounded-lg p-6 bg-purple-50 max-h-96 overflow-y-auto">
-                  <div className="grid grid-cols-3 gap-4">
+                <div className="border-2 border-purple-200 rounded-lg p-3 bg-purple-50 max-h-80 overflow-y-auto">
+                  <div className="grid grid-cols-4 gap-2">
                     {availableIcons.map((icon) => (
                       <button
                         key={icon.path}
@@ -309,7 +309,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                           setSelectedIcon(icon.path)
                           setShowIconSelector(false)
                         }}
-                        className={`p-4 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100 ${
+                        className={`p-1 rounded border-2 transition-all hover:border-purple-400 hover:bg-purple-100 ${
                           selectedIcon === icon.path ? 'border-purple-600 bg-purple-100' : 'border-gray-200'
                         }`}
                         title={`Ícone ${icon.name}`}

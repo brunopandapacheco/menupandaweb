@@ -322,18 +322,18 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
-          {/* Seletor de Ícone - 3 por linha e MUITO maior */}
+          {/* Seletor de Ícone - Container pequeno, imagem grande */}
           {showIconSelector && (
-            <div className="border-2 border-purple-200 rounded-lg p-6 bg-purple-50 max-h-96 overflow-y-auto">
+            <div className="border-2 border-purple-200 rounded-lg p-3 bg-purple-50">
               <h4 className="text-sm font-semibold text-purple-800 mb-3">
                 Escolha um ícone para "{showIconSelector}"
               </h4>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-4 gap-2 max-h-80 overflow-y-auto">
                 {availableIcons.map((icon) => (
                   <button
                     key={icon.path}
                     onClick={() => handleIconChange(showIconSelector, icon.path)}
-                    className="p-4 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
+                    className="p-1 rounded border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
                     title={`Ícone ${icon.name}`}
                   >
                     <img 
