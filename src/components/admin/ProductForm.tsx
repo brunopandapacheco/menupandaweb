@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, X, GripVertical, DollarSign, Image as ImageIcon, Check, Star, Trash2, Plus } from 'lucide-react'
+import { Upload, X, GripVertical, DollarSign, Check, Star, Trash2, Plus } from 'lucide-react'
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 
@@ -140,7 +140,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     <div className="space-y-6">
       <div className="bg-purple-50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
-          <ImageIcon className="w-5 h-5 text-purple-600" />
           <h3 className="text-lg font-semibold text-purple-800">Imagem do Produto</h3>
         </div>
         <div className="flex justify-center">
@@ -334,10 +333,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
               <Input
                 id="preco_normal"
                 type="text"
-                value={getPriceDisplay(product?.preco_normal)}
+                value={`R$ ${getPriceDisplay(product?.preco_normal)}`}
                 onChange={(e) => handlePriceChange('preco_normal', e.target.value)}
-                placeholder="0,00"
-                className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
+                placeholder="R$ 0,00"
+                className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-16"
                 required
               />
             </div>
@@ -377,10 +376,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 <Input
                   id="preco_promocional"
                   type="text"
-                  value={getPriceDisplay(product?.preco_promocional)}
+                  value={`R$ ${getPriceDisplay(product?.preco_promocional)}`}
                   onChange={(e) => handlePriceChange('preco_promocional', e.target.value)}
-                  placeholder="0,00"
-                  className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
+                  placeholder="R$ 0,00"
+                  className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-16"
                 />
               </div>
             </div>
