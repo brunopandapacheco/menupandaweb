@@ -217,7 +217,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                         <img 
                           src={currentIcon} 
                           alt={category}
-                          className="w-8 h-8 object-contain"
+                          className="w-10 h-10 object-contain"
                           onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
                         
@@ -322,24 +322,24 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
-          {/* Seletor de Ícone */}
+          {/* Seletor de Ícone - 4 por linha e maior */}
           {showIconSelector && (
             <div className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50">
               <h4 className="text-sm font-semibold text-purple-800 mb-3">
                 Escolha um ícone para "{showIconSelector}"
               </h4>
-              <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto">
+              <div className="grid grid-cols-4 gap-3 max-h-64 overflow-y-auto">
                 {availableIcons.map((icon) => (
                   <button
                     key={icon.path}
                     onClick={() => handleIconChange(showIconSelector, icon.path)}
-                    className="p-2 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
+                    className="p-3 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
                     title={`Ícone ${icon.name}`}
                   >
                     <img 
                       src={icon.path} 
                       alt={`Ícone ${icon.name}`}
-                      className="w-6 h-6 object-contain mx-auto"
+                      className="w-10 h-10 object-contain mx-auto"
                       onError={(e) => e.currentTarget.src = '/icons/1.png'}
                     />
                   </button>
