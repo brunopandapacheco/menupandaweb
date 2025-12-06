@@ -320,6 +320,22 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         />
       </div>
 
+      <div className="space-y-2">
+        <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
+        <Select value={product?.forma_venda || 'unidade'} onValueChange={(value) => handleFieldChange('forma_venda', value)}>
+          <SelectTrigger className="border-pink-200 focus:border-pink-500 focus:ring-pink-500">
+            <SelectValue placeholder="Selecione" />
+          </SelectTrigger>
+          <SelectContent>
+            {saleTypes.map((type) => (
+              <SelectItem key={type.value} value={type.value}>
+                {type.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="bg-green-50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <DollarSign className="w-5 h-5 text-green-600" />
@@ -340,21 +356,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 required
               />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
-            <Select value={product?.forma_venda || 'unidade'} onValueChange={(value) => handleFieldChange('forma_venda', value)}>
-              <SelectTrigger className="border-green-200 focus:border-green-500 focus:ring-green-500">
-                <SelectValue placeholder="Selecione" />
-              </SelectTrigger>
-              <SelectContent>
-                {saleTypes.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
