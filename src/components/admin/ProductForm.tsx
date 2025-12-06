@@ -24,7 +24,6 @@ const saleTypes = [
   { value: 'outros', label: 'Outros' }
 ]
 
-// Lista de todos os ícones disponíveis na pasta public/icons
 const availableIcons = [
   { name: '1', path: '/icons/1.png' },
   { name: '2', path: '/icons/2.png' },
@@ -48,17 +47,16 @@ const availableIcons = [
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
   const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
-  const [selectedIcon, setSelectedIcon] = useState('/icons/1.png') // Ícone padrão
+  const [selectedIcon, setSelectedIcon] = useState('/icons/1.png')
   const [showIconSelector, setShowIconSelector] = useState(false)
 
   const handleImageUpload = async (file: File) => {
-    // Validações internas - não mostradas para o usuário
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
     if (!allowedFormats.includes(file.type)) {
       return { success: false, message: 'Formato de imagem inválido. Use apenas PNG, JPEG ou WEBP.' }
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB
+    if (file.size > 5 * 1024 * 1024) {
       return { success: false, message: 'Arquivo muito grande (máximo 5MB).' }
     }
 
@@ -71,7 +69,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       }
       
       if (product) {
-        // Apenas uma imagem por produto - substitui a anterior
         onSave({ ...product, imagem_url: url })
         return { success: true, message: 'Imagem enviada!' }
       }
@@ -94,12 +91,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
   const handleCreateNewCategory = () => {
     if (!newCategoryName.trim()) return
-    
-    // Adiciona a nova categoria ao produto com o ícone selecionado
     handleFieldChange('categoria', newCategoryName.trim())
     setNewCategoryName('')
     setIsCreatingNewCategory(false)
-    setSelectedIcon('/icons/1.png') // Reseta para o ícone padrão
+    setSelectedIcon('/icons/1.png')
     setShowIconSelector(false)
   }
 
@@ -117,7 +112,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
   return (
     <div className="space-y-6">
-      {/* Seção de Imagem - Apenas uma imagem */}
       <div className="bg-purple-50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <ImageIcon className="w-5 h-5 text-purple-600" />
@@ -154,9 +148,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                     if (file) {
                       const result = handleImageUpload(file)
                       result.then(res => {
-                        if (!res.success) {
-                          console.error(res.message)
-                        }
+                        if (!res.success) console.error(res.message)
                       })
                     }
                   }}
@@ -178,7 +170,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         </div>
       </div>
 
-      {/* Seção de Informações Básicas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="nome" className="text-sm font-semibold text-gray-700">Nome do Produto *</Label>
@@ -189,7 +180,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             placeholder="Ex: Bolo de Chocolate"
             className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
             required
-            autoFocus={false}
           />
         </div>
         <div className="space-y-2">
@@ -218,11 +208,9 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Digite o nome da nova categoria"
                   className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
-                  autoFocus={false}
                 />
               </div>
               
-              {/* Seletor de Ícone */}
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Ícone da Categoria</Label>
                 <div className="flex items-center gap-2">
@@ -241,7 +229,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 </div>
               </div>
 
-              {/* Grid de Ícones - Container pequeno, imagem grande */}
               {showIconSelector && (
                 <div className="border-2 border-purple-200 rounded-lg p-3 bg-purple-50 max-h-80 overflow-y-auto">
                   <div className="grid grid-cols-4 gap-2">
@@ -308,7 +295,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         />
       </div>
 
-      {/* Seção de Preços */}
       <div className="bg-green-50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <DollarSign className="w-5 h-5 text-green-600" />
@@ -374,7 +360,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         </div>
       </div>
 
-      {/* Seção de Status */}
       <div className="bg-blue-50 rounded-xl p-6">
         <div className="flex items-center space-x-3">
           <Switch
@@ -389,7 +374,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         </div>
       </div>
 
-      {/* Botão Excluir */}
       {product?.id && onDelete && (
         <div className="bg-red-50 rounded-xl p-6 border border-red-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
