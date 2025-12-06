@@ -329,14 +329,14 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           <div className="space-y-2">
             <Label htmlFor="preco_normal" className="text-sm font-semibold text-gray-700">Preço Normal *</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-light">R$</span>
               <Input
                 id="preco_normal"
                 type="text"
-                value={`R$ ${getPriceDisplay(product?.preco_normal)}`}
+                value={getPriceDisplay(product?.preco_normal)}
                 onChange={(e) => handlePriceChange('preco_normal', e.target.value)}
-                placeholder="R$ 0,00"
-                className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-16"
+                placeholder="0,00"
+                className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
                 required
               />
             </div>
@@ -372,14 +372,14 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             <div className="space-y-2">
               <Label htmlFor="preco_promocional" className="text-sm font-semibold text-gray-700">Preço Promocional</Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-light">R$</span>
                 <Input
                   id="preco_promocional"
                   type="text"
-                  value={`R$ ${getPriceDisplay(product?.preco_promocional)}`}
+                  value={getPriceDisplay(product?.preco_promocional)}
                   onChange={(e) => handlePriceChange('preco_promocional', e.target.value)}
-                  placeholder="R$ 0,00"
-                  className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-16"
+                  placeholder="0,00"
+                  className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
                 />
               </div>
             </div>
