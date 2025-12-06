@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { ProductForm } from './ProductForm'
@@ -16,6 +16,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   const { addProduto, editProduto, removeProduto } = useDatabase()
   const [localProduct, setLocalProduct] = useState<Partial<Produto> | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const neutralFocusRef = useRef<HTMLDivElement>(null)
 
   // Reset local product when dialog changes
   useEffect(() => {
@@ -31,6 +32,13 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
         disponivel: true,
         promocao: false,
       })
+      
+      // Focar no elemento neutro quando o modal abrir
+      setTimeout(() => {
+        if (neutralFocusRef.current) {
+          neutralFocusRef.current.focus()
+        }
+      }, 100)
     }
   }, [isOpen, product])
 
@@ -98,6 +106,24 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
+        {/* Elemento neutro para receber foco e evitar autofocus nos inputs */}
+        <div 
+          ref={neutralFocusRef}
+          tabIndex={-1}
+          style={{ 
+            position: 'absolute', 
+            width: '1px', 
+            height: '1px', 
+            padding: 0, 
+            margin: '-1px', 
+            overflow: 'hidden', 
+            clip: 'rect(0, 0, 0, 0)', 
+            whiteSpace: 'nowrap', 
+            border: 0 
+          }}
+          aria-hidden="true"
+        />
+        
         <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
           <DialogHeader>
             <div>
