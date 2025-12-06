@@ -314,7 +314,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           id="descricao"
           value={product?.descricao || ''}
           onChange={(e) => handleFieldChange('descricao', e.target.value)}
-          placeholder="Descreva seu produto..."
+          placeholder="Ingredientes, tamanho, sabor, etc"
           rows={3}
           className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
         />
