@@ -101,7 +101,7 @@ export function ProductCard({
             </button>
           </div>
           
-          <p className="text-gray-500 text-xs mb-2 line-clamp-2 leading-tight">
+          <p className="text-gray-500 text-xs mb-2 line-clamp-4 leading-tight">
             {product.descricao}
           </p>
           
