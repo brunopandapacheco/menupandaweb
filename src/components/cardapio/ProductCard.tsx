@@ -79,7 +79,7 @@ export function ProductCard({
               style={{ 
                 width: '130px', // Ajustado para um tamanho que acomode o texto
                 textAlign: 'center',
-                fontSize: '0.65rem' // Fonte ainda menor
+                fontSize: '0.6rem' // Fonte ainda menor
               }}
             >
               PROMOÇÃO
