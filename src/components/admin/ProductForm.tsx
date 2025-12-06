@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, X, GripVertical, DollarSign, Star, Trash2, Plus, Check } from 'lucide-react'
+import { Upload, X, GripVertical, Star, Trash2, Plus, Check } from 'lucide-react'
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 
@@ -337,10 +337,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       </div>
 
       <div className="bg-green-50 rounded-xl p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <DollarSign className="w-5 h-5 text-green-600" />
-          <h3 className="text-lg font-semibold text-green-800">Preços</h3>
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="preco_normal" className="text-sm font-semibold text-gray-700">Preço Normal *</Label>
