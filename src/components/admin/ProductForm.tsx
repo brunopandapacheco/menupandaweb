@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, X, GripVertical, DollarSign, Check, Star, Trash2, Plus } from 'lucide-react'
+import { Upload, X, GripVertical, DollarSign, Star, Trash2, Plus, Check } from 'lucide-react'
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 
@@ -395,9 +395,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             onCheckedChange={(checked) => handleFieldChange('disponivel', checked)}
           />
           <Label htmlFor="disponivel" className="font-semibold text-gray-700">Mostrar na vitrine</Label>
-          {product?.disponivel !== false && (
-            <Check className="w-5 h-5 text-green-600" />
-          )}
         </div>
       </div>
 
