@@ -6,7 +6,7 @@ import { X, Edit2, Trash2, Check, AlertTriangle, RefreshCw } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
-// Lista de ícones disponíveis (baseado nos arquivos que você tem)
+// Lista de todos os ícones disponíveis na pasta public/icons
 const availableIcons = [
   { name: '1', path: '/icons/1.png' },
   { name: '2', path: '/icons/2.png' },
@@ -17,22 +17,15 @@ const availableIcons = [
   { name: '7', path: '/icons/7.png' },
   { name: '8', path: '/icons/8.png' },
   { name: '9', path: '/icons/9.png' },
-  { name: '10', path: '/icons/10.png' }
+  { name: '10', path: '/icons/10.png' },
+  { name: '11', path: '/icons/11.png' },
+  { name: '12', path: '/icons/12.png' },
+  { name: '13', path: '/icons/13.png' },
+  { name: '14', path: '/icons/14.png' },
+  { name: '15', path: '/icons/15.png' },
+  { name: '16', path: '/icons/16.png' },
+  { name: 'TODOS', path: '/icons/TODOS.png' }
 ]
-
-// Mapeamento de categorias para ícones (baseado nos seus arquivos)
-const categoryIconMap: { [key: string]: string } = {
-  'Bolos': '/icons/1.png',
-  'Doces': '/icons/2.png',
-  'Salgados': '/icons/3.png',
-  'Brigadeiros': '/icons/4.png',
-  'Cookies': '/icons/5.png',
-  'Coxinha': '/icons/6.png',
-  'Pipoca': '/icons/7.png',
-  'Pudim': '/icons/8.png',
-  'Trufas': '/icons/9.png',
-  'Todos': '/icons/TODOS.png' // Ícone fixo para "Todos"
-}
 
 interface CategorySettingsProps {
   mainCategories: string[]
@@ -180,12 +173,6 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return categoryIcons[category]
     }
     
-    // Depois verificar o mapeamento padrão
-    if (categoryIconMap[category]) {
-      console.log(`📁 Using default icon for ${category}:`, categoryIconMap[category])
-      return categoryIconMap[category]
-    }
-    
     // Por último, usar ícone padrão
     console.log(`📁 Using fallback icon for ${category}: /icons/1.png`)
     return '/icons/1.png'
@@ -234,7 +221,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                           onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
                         
-                        {/* Botão para alterar ícone - NÃO mostrar para "Todos" */}
+                        {/* Botão para alterar ícone - não mostrar para "Todos" */}
                         {!isTodos && (
                           <button
                             onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
@@ -341,18 +328,18 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
               <h4 className="text-sm font-semibold text-purple-800 mb-3">
                 Escolha um ícone para "{showIconSelector}"
               </h4>
-              <div className="grid grid-cols-5 gap-3 max-h-48 overflow-y-auto">
+              <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto">
                 {availableIcons.map((icon) => (
                   <button
                     key={icon.path}
                     onClick={() => handleIconChange(showIconSelector, icon.path)}
-                    className="p-3 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
+                    className="p-2 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
                     title={`Ícone ${icon.name}`}
                   >
                     <img 
                       src={icon.path} 
                       alt={`Ícone ${icon.name}`}
-                      className="w-8 h-8 object-contain mx-auto"
+                      className="w-6 h-6 object-contain mx-auto"
                       onError={(e) => e.currentTarget.src = '/icons/1.png'}
                     />
                   </button>

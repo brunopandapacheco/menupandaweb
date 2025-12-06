@@ -24,46 +24,33 @@ const saleTypes = [
   { value: 'outros', label: 'Outros' }
 ]
 
-// Categorias padrão para confeiteiras (apenas as básicas)
-const defaultCategories = [
-  'Bolos',
-  'Doces', 
-  'Salgados'
-]
-
-// Mapeamento de categorias para ícones disponíveis na pasta public/icons
-const categoryIcons: { [key: string]: string } = {
-  'Bolos': '/icons/bolo.png',
-  'Brigadeiros': '/icons/brigadeiro.png',
-  'Cookies': '/icons/cookies.png',
-  'Coxinha': '/icons/coxinha.png',
-  'Pipoca': '/icons/pipoca.png',
-  'Pudim': '/icons/pudim.png',
-  'Trufas': '/icons/trufas.png',
-  'Doces': '/icons/Doces.png',
-  'Salgados': '/icons/Salgados.png',
-  'Todos': '/icons/TODOS.png'
-}
-
 // Lista de todos os ícones disponíveis na pasta public/icons
 const availableIcons = [
-  { name: 'Bolo', path: '/icons/bolo.png' },
-  { name: 'Brigadeiro', path: '/icons/brigadeiro.png' },
-  { name: 'Cookie', path: '/icons/cookies.png' },
-  { name: 'Coxinha', path: '/icons/coxinha.png' },
-  { name: 'Pipoca', path: '/icons/pipoca.png' },
-  { name: 'Pudim', path: '/icons/pudim.png' },
-  { name: 'Trufa', path: '/icons/trufas.png' },
-  { name: 'Doces', path: '/icons/Doces.png' },
-  { name: 'Salgados', path: '/icons/Salgados.png' },
-  { name: 'Todos', path: '/icons/TODOS.png' }
+  { name: '1', path: '/icons/1.png' },
+  { name: '2', path: '/icons/2.png' },
+  { name: '3', path: '/icons/3.png' },
+  { name: '4', path: '/icons/4.png' },
+  { name: '5', path: '/icons/5.png' },
+  { name: '6', path: '/icons/6.png' },
+  { name: '7', path: '/icons/7.png' },
+  { name: '8', path: '/icons/8.png' },
+  { name: '9', path: '/icons/9.png' },
+  { name: '10', path: '/icons/10.png' },
+  { name: '11', path: '/icons/11.png' },
+  { name: '12', path: '/icons/12.png' },
+  { name: '13', path: '/icons/13.png' },
+  { name: '14', path: '/icons/14.png' },
+  { name: '15', path: '/icons/15.png' },
+  { name: '16', path: '/icons/16.png' },
+  { name: 'TODOS', path: '/icons/TODOS.png' }
 ]
 
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
-  const [selectedIcon, setSelectedIcon] = useState('🧁') // Ícone padrão emoji
+  const [selectedIcon, setSelectedIcon] = useState('/icons/1.png') // Ícone padrão
+  const [showIconSelector, setShowIconSelector] = useState(false)
 
   const handleImageUpload = async (file: File, index: number) => {
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
@@ -149,7 +136,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     handleFieldChange('categoria', newCategoryName.trim())
     setNewCategoryName('')
     setIsCreatingNewCategory(false)
-    setSelectedIcon('🧁') // Reseta para o emoji padrão
+    setSelectedIcon('/icons/1.png') // Reseta para o ícone padrão
+    setShowIconSelector(false)
   }
 
   const handleCategorySelect = (value: string) => {
@@ -159,7 +147,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       handleFieldChange('categoria', value)
       setIsCreatingNewCategory(false)
       setNewCategoryName('')
-      setSelectedIcon('🧁') // Reseta para o emoji padrão
+      setSelectedIcon('/icons/1.png')
+      setShowIconSelector(false)
     }
   }
 
@@ -222,7 +211,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                           const result = handleImageUpload(file, index)
                           result.then(res => {
                             if (!res.success) {
-                              // Aqui você pode mostrar uma notificação com res.message
                               console.error(res.message)
                             }
                           })
@@ -244,16 +232,13 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           })}
         </div>
         <p className="text-xs text-purple-600 text-center mt-3">
-          💡 Arraste as imagens para reordenar a posição. A primeira imagem será sempre a capa.
-        </p>
+         💡 Arraste as imagens para reordenar a posição. A primeira imagem será sempre a capa.</p>
       </div>
 
       {/* Seção de Informações Básicas */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="nome" className="text-sm font-semibold text-gray-700">
-            Nome do Produto *
-          </Label>
+          <Label htmlFor="nome" className="text-sm font-semibold text-gray-700">Nome do Produto *</Label>
           <Input
             id="nome"
             value={product?.nome || ''}
@@ -265,23 +250,13 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700">
-            Categoria *
-          </Label>
+          <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700">Categoria *</Label>
           {!isCreatingNewCategory ? (
-            <Select
-              value={product?.categoria || ''}
-              onValueChange={handleCategorySelect}
-            >
+            <Select value={product?.categoria || ''} onValueChange={handleCategorySelect}>
               <SelectTrigger className="border-purple-200 focus:border-purple-500 focus:ring-purple-500">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
-                {defaultCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
                 <SelectItem value="create-new" className="text-purple-600 font-medium">
                   <div className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
@@ -304,6 +279,53 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 />
               </div>
               
+              {/* Seletor de Ícone */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Ícone da Categoria</Label>
+                <div className="flex items-center gap-2">
+                  <img 
+                    src={selectedIcon} 
+                    alt="Ícone selecionado"
+                    className="w-8 h-8 object-contain border rounded"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowIconSelector(!showIconSelector)}
+                  >
+                    {showIconSelector ? 'Fechar' : 'Escolher Ícone'}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Grid de Ícones */}
+              {showIconSelector && (
+                <div className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50 max-h-48 overflow-y-auto">
+                  <div className="grid grid-cols-6 gap-2">
+                    {availableIcons.map((icon) => (
+                      <button
+                        key={icon.path}
+                        onClick={() => {
+                          setSelectedIcon(icon.path)
+                          setShowIconSelector(false)
+                        }}
+                        className={`p-2 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100 ${
+                          selectedIcon === icon.path ? 'border-purple-600 bg-purple-100' : 'border-gray-200'
+                        }`}
+                        title={`Ícone ${icon.name}`}
+                      >
+                        <img 
+                          src={icon.path} 
+                          alt={`Ícone ${icon.name}`}
+                          className="w-6 h-6 object-contain mx-auto"
+                          onError={(e) => e.currentTarget.src = '/icons/1.png'}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <div className="flex gap-2">
                 <Button
                   onClick={handleCreateNewCategory}
@@ -318,7 +340,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   onClick={() => {
                     setIsCreatingNewCategory(false)
                     setNewCategoryName('')
-                    setSelectedIcon('🧁')
+                    setSelectedIcon('/icons/1.png')
+                    setShowIconSelector(false)
                   }}
                 >
                   <X className="w-4 h-4 mr-1" />
@@ -350,9 +373,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="preco_normal" className="text-sm font-semibold text-gray-700">
-              Preço Normal *
-            </Label>
+            <Label htmlFor="preco_normal" className="text-sm font-semibold text-gray-700">Preço Normal *</Label>
             <Input
               id="preco_normal"
               type="number"
@@ -366,13 +387,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">
-              Tipo de Venda
-            </Label>
-            <Select
-              value={product?.forma_venda || 'unidade'}
-              onValueChange={(value) => handleFieldChange('forma_venda', value)}
-            >
+            <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
+            <Select value={product?.forma_venda || 'unidade'} onValueChange={(value) => handleFieldChange('forma_venda', value)}>
               <SelectTrigger className="border-green-200 focus:border-green-500 focus:ring-green-500">
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
@@ -399,9 +415,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           
           {product?.promocao && (
             <div className="space-y-2">
-              <Label htmlFor="preco_promocional" className="text-sm font-semibold text-gray-700">
-                Preço Promocional
-              </Label>
+              <Label htmlFor="preco_promocional" className="text-sm font-semibold text-gray-700">Preço Promocional</Label>
               <Input
                 id="preco_promocional"
                 type="number"
