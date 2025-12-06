@@ -286,7 +286,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   <img 
                     src={selectedIcon} 
                     alt="Ícone selecionado"
-                    className="w-10 h-10 object-contain border rounded"
+                    className="w-16 h-16 object-contain border rounded-lg"
                   />
                   <Button
                     variant="outline"
@@ -298,10 +298,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 </div>
               </div>
 
-              {/* Grid de Ícones - 4 por linha e maior */}
+              {/* Grid de Ícones - 3 por linha e MUITO maior */}
               {showIconSelector && (
-                <div className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50 max-h-64 overflow-y-auto">
-                  <div className="grid grid-cols-4 gap-3">
+                <div className="border-2 border-purple-200 rounded-lg p-6 bg-purple-50 max-h-96 overflow-y-auto">
+                  <div className="grid grid-cols-3 gap-4">
                     {availableIcons.map((icon) => (
                       <button
                         key={icon.path}
@@ -309,7 +309,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                           setSelectedIcon(icon.path)
                           setShowIconSelector(false)
                         }}
-                        className={`p-3 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100 ${
+                        className={`p-4 rounded-lg border-2 transition-all hover:border-purple-400 hover:bg-purple-100 ${
                           selectedIcon === icon.path ? 'border-purple-600 bg-purple-100' : 'border-gray-200'
                         }`}
                         title={`Ícone ${icon.name}`}
@@ -317,7 +317,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                         <img 
                           src={icon.path} 
                           alt={`Ícone ${icon.name}`}
-                          className="w-10 h-10 object-contain mx-auto"
+                          className="w-16 h-16 object-contain mx-auto"
                           onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
                       </button>
