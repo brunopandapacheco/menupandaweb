@@ -31,7 +31,7 @@ const categoryIconMap: { [key: string]: string } = {
   'Pipoca': '/icons/7.png',
   'Pudim': '/icons/8.png',
   'Trufas': '/icons/9.png',
-  'Todos': '/icons/TODOS.png'
+  'Todos': '/icons/TODOS.png' // Ícone fixo para "Todos"
 }
 
 interface CategorySettingsProps {
@@ -168,8 +168,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const getCategoryIcon = (category: string) => {
-    // Para "Todos", sempre usar o ícone fixo
+    // Para "Todos", SEMPRE usar o ícone fixo - NÃO pode ser alterado
     if (category === 'Todos') {
+      console.log(`🔒 Using FIXED icon for "Todos": /icons/TODOS.png`)
       return '/icons/TODOS.png'
     }
     
@@ -233,7 +234,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                           onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
                         
-                        {/* Botão para alterar ícone - não mostrar para "Todos" */}
+                        {/* Botão para alterar ícone - NÃO mostrar para "Todos" */}
                         {!isTodos && (
                           <button
                             onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}

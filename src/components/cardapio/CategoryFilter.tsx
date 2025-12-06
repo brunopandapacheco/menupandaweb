@@ -52,8 +52,13 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
           // Determinar qual ícone usar - prioridade para ícones personalizados
           let iconToUse: string
           
-          // 1. Primeiro verificar se há um ícone personalizado salvo
-          if (categoryIcons[category.name]) {
+          // Para a categoria "Todos", SEMPRE usar o ícone fixo
+          if (category.name === 'Todos') {
+            iconToUse = '/icons/TODOS.png'
+            console.log(`🔒 Using FIXED icon for "Todos":`, iconToUse)
+          }
+          // 1. Primeiro verificar se há um ícone personalizado salvo (para outras categorias)
+          else if (categoryIcons[category.name]) {
             iconToUse = categoryIcons[category.name]
             console.log(`🎨 Using custom icon for ${category.name}:`, iconToUse)
           }
