@@ -75,9 +75,9 @@ export function ProductCard({
           {/* PROMOTION RIBBON */}
           {product.promocao && (
             <div 
-              className="absolute top-3 -right-10 bg-red-500 text-white text-xs font-bold px-8 py-1 transform rotate-45 shadow-md z-10"
+              className="absolute top-3 -right-10 bg-red-500 text-white text-xs font-bold px-4 py-1 transform rotate-45 shadow-md z-10"
               style={{ 
-                width: '150px', // Adjust width to ensure "PROMOÇÃO" fits well
+                width: '130px', // Ajustado para um tamanho que acomode o texto
                 textAlign: 'center'
               }}
             >
