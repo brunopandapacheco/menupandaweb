@@ -46,13 +46,13 @@ const availableIcons = [
 ]
 
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
   const [selectedIcon, setSelectedIcon] = useState('/icons/1.png') // Ícone padrão
   const [showIconSelector, setShowIconSelector] = useState(false)
 
-  const handleImageUpload = async (file: File, index: number) => {
+  const handleImageUpload = async (file: File) => {
+    // Validações internas - não mostradas para o usuário
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
     if (!allowedFormats.includes(file.type)) {
       return { success: false, message: 'Formato de imagem inválido. Use apenas PNG, JPEG ou WEBP.' }
@@ -63,7 +63,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     }
 
     try {
-      const fileName = `produto-${Date.now()}-${index}.${file.name.split('.').pop()}`
+      const fileName = `produto-${Date.now()}.${file.name.split('.').pop()}`
       const url = await supabaseService.uploadImage(file, 'products', fileName)
       
       if (!url) {
@@ -71,9 +71,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       }
       
       if (product) {
-        const currentImages = product.imagem_url ? product.imagem_url.split(',') : []
-        currentImages[index] = url
-        onSave({ ...product, imagem_url: currentImages.filter(Boolean).join(',') })
+        // Apenas uma imagem por produto - substitui a anterior
+        onSave({ ...product, imagem_url: url })
         return { success: true, message: 'Imagem enviada!' }
       }
       
@@ -83,46 +82,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     }
   }
 
-  const removeImage = (index: number) => {
+  const removeImage = () => {
     if (product?.imagem_url) {
-      const currentImages = product.imagem_url.split(',')
-      currentImages.splice(index, 1)
-      onSave({ ...product, imagem_url: currentImages.filter(Boolean).join(',') })
+      onSave({ ...product, imagem_url: '' })
     }
-  }
-
-  const getProductImages = (imagemUrl: string) => {
-    if (!imagemUrl) return []
-    return imagemUrl.split(',').filter(Boolean)
-  }
-
-  const handleDragStart = (e: React.DragEvent, index: number) => {
-    setDraggedIndex(index)
-    e.dataTransfer.effectAllowed = 'move'
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-  }
-
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-    e.preventDefault()
-    
-    if (draggedIndex === null || draggedIndex === dropIndex || !product?.imagem_url) return
-    
-    const currentImages = getProductImages(product.imagem_url)
-    const draggedImage = currentImages[draggedIndex]
-    
-    currentImages.splice(draggedIndex, 1)
-    currentImages.splice(dropIndex, 0, draggedImage)
-    
-    onSave({ ...product, imagem_url: currentImages.filter(Boolean).join(',') })
-    setDraggedIndex(null)
-  }
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null)
   }
 
   const handleFieldChange = (field: keyof Produto, value: any) => {
@@ -154,85 +117,65 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
   return (
     <div className="space-y-6">
-      {/* Seção de Imagens */}
+      {/* Seção de Imagem - Apenas uma imagem */}
       <div className="bg-purple-50 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <ImageIcon className="w-5 h-5 text-purple-600" />
-          <h3 className="text-lg font-semibold text-purple-800">Imagens do Produto</h3>
+          <h3 className="text-lg font-semibold text-purple-800">Imagem do Produto</h3>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          {[0, 1].map((index) => {
-            const images = getProductImages(product?.imagem_url || '')
-            return (
-              <div key={index} className="relative">
-                {images[index] ? (
-                  <div 
-                    className="relative cursor-move group"
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, index)}
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, index)}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <img 
-                      src={images[index]} 
-                      alt={`Imagem ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg border-2 border-purple-200 hover:border-purple-400 transition-all duration-200" 
-                    />
-                    <div className="absolute top-2 left-2 bg-purple-600/80 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                      <GripVertical className="w-4 h-4" />
-                    </div>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-8 w-8 p-0 rounded-full shadow-lg"
-                      onClick={() => removeImage(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                    {index === 0 && (
-                      <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                        <Star className="w-3 h-3" />
-                        Capa
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="border-2 border-dashed border-purple-300 rounded-lg h-32 flex items-center justify-center bg-white hover:bg-purple-50 transition-colors">
-                    <Input
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      className="hidden"
-                      id={`product-image-${index}`}
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) {
-                          const result = handleImageUpload(file, index)
-                          result.then(res => {
-                            if (!res.success) {
-                              console.error(res.message)
-                            }
-                          })
-                        }
-                      }}
-                    />
-                    <Button asChild size="sm" variant="ghost" className="h-full w-full">
-                      <label htmlFor={`product-image-${index}`} className="cursor-pointer flex flex-col items-center justify-center gap-2">
-                        <Upload className="w-6 h-6 text-purple-400" />
-                        <span className="text-xs text-purple-500">
-                          {index === 0 ? 'Capa' : 'Adicionar'}
-                        </span>
-                      </label>
-                    </Button>
-                  </div>
-                )}
+        <div className="flex justify-center">
+          <div className="relative w-full max-w-sm">
+            {product?.imagem_url ? (
+              <div className="relative group">
+                <img 
+                  src={product.imagem_url} 
+                  alt="Imagem do produto"
+                  className="w-full h-48 object-cover rounded-lg border-2 border-purple-200" 
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-8 w-8 p-0 rounded-full shadow-lg"
+                  onClick={removeImage}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
-            )
-          })}
+            ) : (
+              <div className="border-2 border-dashed border-purple-300 rounded-lg h-48 flex items-center justify-center bg-white hover:bg-purple-50 transition-colors">
+                <Input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  id="product-image"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      const result = handleImageUpload(file)
+                      result.then(res => {
+                        if (!res.success) {
+                          console.error(res.message)
+                        }
+                      })
+                    }
+                  }}
+                />
+                <Button asChild size="sm" variant="ghost" className="h-full w-full">
+                  <label htmlFor="product-image" className="cursor-pointer flex flex-col items-center justify-center gap-2">
+                    <Upload className="w-8 h-8 text-purple-400" />
+                    <span className="text-sm text-purple-600 font-medium">
+                      Adicionar Imagem
+                    </span>
+                    <span className="text-xs text-purple-400">
+                      PNG, JPEG ou WEBP (máx. 5MB)
+                    </span>
+                  </label>
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-        <p className="text-xs text-purple-600 text-center mt-3">
-         💡 Arraste as imagens para reordenar a posição. A primeira imagem será sempre a capa.</p>
       </div>
 
       {/* Seção de Informações Básicas */}
@@ -246,7 +189,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             placeholder="Ex: Bolo de Chocolate"
             className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
             required
-            autoFocus={false}
+            // REMOVIDO: autoFocus={false} - sem autofocus automático
           />
         </div>
         <div className="space-y-2">
@@ -275,7 +218,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Digite o nome da nova categoria"
                   className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
-                  autoFocus
+                  // REMOVIDO: autoFocus - sem autofocus automático
                 />
               </div>
               
