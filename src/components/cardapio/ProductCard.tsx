@@ -134,8 +134,8 @@ export function ProductCard({
                     className="text-xs px-1 py-0 rounded-sm"
                     style={{ 
                       borderRadius: '2px',
-                      backgroundColor: '#ec4899',
-                      color: 'white',
+                      backgroundColor: 'transparent', // Removido o background
+                      color: '#ec4899', // Apenas o texto rosa
                       pointerEvents: 'none'
                     }}
                   >
@@ -153,8 +153,8 @@ export function ProductCard({
                   className="text-xs px-1 py-0 rounded-sm"
                   style={{ 
                     borderRadius: '2px',
-                    backgroundColor: '#ec4899',
-                    color: 'white',
+                    backgroundColor: 'transparent', // Removido o background
+                    color: '#ec4899', // Apenas o texto rosa
                     pointerEvents: 'none'
                   }}
                 >
