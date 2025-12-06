@@ -124,7 +124,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
           aria-hidden="true"
         />
         
-        <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6 rounded-t-2xl">
+        <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6">
           <DialogHeader>
             <div>
               <DialogTitle className="text-2xl font-bold">
