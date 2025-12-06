@@ -124,13 +124,13 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
           aria-hidden="true"
         />
         
-        <div className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-6">
+        <div className="bg-gradient-to-r from-[#201616] to-[#201616] text-white p-6">
           <DialogHeader>
             <div>
               <DialogTitle className="text-2xl font-bold">
                 {localProduct?.id ? 'Editar Produto' : 'Novo Produto'}
               </DialogTitle>
-              <DialogDescription className="text-pink-100">
+              <DialogDescription className="text-gray-300">
                 Preencha as informações do produto
               </DialogDescription>
             </div>
