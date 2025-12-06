@@ -130,9 +130,6 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
               <DialogTitle className="text-2xl font-bold">
                 {localProduct?.id ? 'Editar Produto' : 'Novo Produto'}
               </DialogTitle>
-              <DialogDescription className="text-gray-300">
-                Preencha as informações do produto
-              </DialogDescription>
             </div>
           </DialogHeader>
         </div>
