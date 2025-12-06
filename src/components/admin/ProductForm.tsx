@@ -110,6 +110,32 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     }
   }
 
+  const formatCurrency = (value: string) => {
+    // Remove tudo que não é número
+    const numbers = value.replace(/\D/g, '')
+    // Converte para centavos
+    const cents = parseInt(numbers) || 0
+    // Formata como moeda brasileira
+    return (cents / 100).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
+  const handlePriceChange = (field: 'preco_normal' | 'preco_promocional', value: string) => {
+    const formattedValue = formatCurrency(value)
+    const numericValue = parseFloat(formattedValue.replace(',', '.')) || 0
+    handleFieldChange(field, numericValue)
+  }
+
+  const getPriceDisplay = (value: number | undefined) => {
+    if (!value) return ''
+    return value.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
   return (
     <div className="space-y-6">
       <div className="bg-purple-50 rounded-xl p-6">
@@ -303,17 +329,18 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="preco_normal" className="text-sm font-semibold text-gray-700">Preço Normal *</Label>
-            <Input
-              id="preco_normal"
-              type="number"
-              step="0.01"
-              min="0.01"
-              value={product?.preco_normal || ''}
-              onChange={(e) => handleFieldChange('preco_normal', parseFloat(e.target.value) || 0)}
-              placeholder="0.00"
-              className="border-green-200 focus:border-green-500 focus:ring-green-500"
-              required
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
+              <Input
+                id="preco_normal"
+                type="text"
+                value={getPriceDisplay(product?.preco_normal)}
+                onChange={(e) => handlePriceChange('preco_normal', e.target.value)}
+                placeholder="0,00"
+                className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
+                required
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
@@ -345,16 +372,17 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           {product?.promocao && (
             <div className="space-y-2">
               <Label htmlFor="preco_promocional" className="text-sm font-semibold text-gray-700">Preço Promocional</Label>
-              <Input
-                id="preco_promocional"
-                type="number"
-                step="0.01"
-                min="0.01"
-                value={product?.preco_promocional || ''}
-                onChange={(e) => handleFieldChange('preco_promocional', parseFloat(e.target.value) || 0)}
-                placeholder="0.00"
-                className="border-green-200 focus:border-green-500 focus:ring-green-500"
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
+                <Input
+                  id="preco_promocional"
+                  type="text"
+                  value={getPriceDisplay(product?.preco_promocional)}
+                  onChange={(e) => handlePriceChange('preco_promocional', e.target.value)}
+                  placeholder="0,00"
+                  className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
+                />
+              </div>
             </div>
           )}
         </div>
