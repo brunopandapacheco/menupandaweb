@@ -105,7 +105,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl p-0">
         {/* Elemento neutro para receber foco e evitar autofocus nos inputs */}
         <div 
           ref={neutralFocusRef}
