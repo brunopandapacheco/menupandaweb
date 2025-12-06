@@ -189,7 +189,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             placeholder="Ex: Bolo de Chocolate"
             className="border-purple-200 focus:border-purple-500 focus:ring-purple-500"
             required
-            // REMOVIDO: autoFocus={false} - sem autofocus automático
+            autoFocus={false}
           />
         </div>
         <div className="space-y-2">
@@ -218,7 +218,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Digite o nome da nova categoria"
                   className="border-purple-200 focus:border-purple-500 focus:ring-purple-500 flex-1"
-                  // REMOVIDO: autoFocus - sem autofocus automático
+                  autoFocus={false}
                 />
               </div>
               
