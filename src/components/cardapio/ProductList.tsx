@@ -17,7 +17,6 @@ interface ProductListProps {
   produtos: Produto[]
   favorites: string[]
   onToggleFavorite: (productId: string) => void
-  onOrder: (product: Produto) => void
   backgroundColor: string
   borderColor: string
   selectedCategory: string | null
@@ -27,7 +26,6 @@ export function ProductList({
   produtos, 
   favorites, 
   onToggleFavorite, 
-  onOrder, 
   backgroundColor, 
   borderColor,
   selectedCategory
@@ -53,7 +51,6 @@ export function ProductList({
                   product={product}
                   isFavorite={favorites.includes(product.id)}
                   onToggleFavorite={onToggleFavorite}
-                  onAddToCart={onOrder}
                   backgroundColor={backgroundColor}
                   borderColor={borderColor}
                 />
@@ -75,7 +72,6 @@ export function ProductList({
                   product={product}
                   isFavorite={favorites.includes(product.id)}
                   onToggleFavorite={onToggleFavorite}
-                  onAddToCart={onOrder}
                   backgroundColor={backgroundColor}
                   borderColor={borderColor}
                 />
@@ -107,7 +103,6 @@ export function ProductList({
                 product={product}
                 isFavorite={favorites.includes(product.id)}
                 onToggleFavorite={onToggleFavorite}
-                onAddToCart={onOrder}
                 backgroundColor={backgroundColor}
                 borderColor={borderColor}
               />
@@ -129,7 +124,6 @@ export function ProductList({
                 product={product}
                 isFavorite={favorites.includes(product.id)}
                 onToggleFavorite={onToggleFavorite}
-                onAddToCart={onOrder}
                 backgroundColor={backgroundColor}
                 borderColor={borderColor}
               />

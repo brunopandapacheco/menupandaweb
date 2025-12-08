@@ -18,7 +18,6 @@ interface ProductCardProps {
   product: Produto
   isFavorite: boolean
   onToggleFavorite: (productId: string) => void
-  onAddToCart: (product: Produto) => void
   backgroundColor: string
   borderColor?: string // agora opcional, define padrão se não passar
 }
@@ -35,8 +34,7 @@ const categoryIcons = {
 export function ProductCard({ 
   product, 
   isFavorite, 
-  onToggleFavorite, 
-  onAddToCart,
+  onToggleFavorite,
   backgroundColor, 
   borderColor = '#ec4899' // cor padrão do botão
 }: ProductCardProps) {
@@ -162,15 +160,6 @@ export function ProductCard({
                 </Badge>
               </div>
             )}
-            
-            {/* Botão atualizado - cor fixa rosa */}
-            <button 
-              className="w-full h-6 font-semibold text-white rounded-md cursor-pointer transition-transform hover:scale-105 text-xs"
-              style={{ backgroundColor: '#ec4899' }}
-              onClick={() => onAddToCart(product)}
-            >
-              Comprar
-            </button>
           </div>
         </div>
       </div>
