@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X, Plus, Minus, ShoppingBag, MessageCircle, Trash2 } from 'lucide-react'
+import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
@@ -20,7 +20,6 @@ interface CartProps {
   onUpdateQuantity: (id: string, quantity: number) => void
   onRemoveItem: (id: string) => void
   onClearCart: () => void
-  whatsappNumber: string
   storeName: string
 }
 
@@ -31,11 +30,9 @@ export function Cart({
   onUpdateQuantity, 
   onRemoveItem, 
   onClearCart,
-  whatsappNumber,
   storeName 
 }: CartProps) {
   const [observations, setObservations] = useState('')
-  const [isSending, setIsSending] = useState(false)
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -48,12 +45,10 @@ export function Cart({
     }
   }
 
-  const sendWhatsAppOrder = () => {
+  const copyOrderToClipboard = () => {
     if (items.length === 0) return
 
-    setIsSending(true)
-
-    // Formatar mensagem para WhatsApp
+    // Formatar mensagem do pedido
     let message = `🛒 *NOVO PEDIDO - ${storeName.toUpperCase()}*\n\n`
     message += `📋 *RESUMO DO PEDIDO:*\n`
     message += `━━━━━━━━━━━━━━━━━━━━\n\n`
@@ -76,22 +71,25 @@ export function Cart({
     message += `⏰ *Data do pedido:* ${new Date().toLocaleString('pt-BR')}\n`
     message += `🙏 *Agradecemos a preferência!*\n`
 
-    // Limpar o número de WhatsApp (remover caracteres não numéricos)
-    const cleanNumber = whatsappNumber.replace(/\D/g, '')
-    
-    // Criar URL do WhatsApp
-    const whatsappUrl = `https://wa.me/55${cleanNumber}?text=${encodeURIComponent(message)}`
-    
-    // Abrir WhatsApp em nova aba
-    window.open(whatsappUrl, '_blank')
-    
-    // Limpar carrinho após envio
-    setTimeout(() => {
+    // Copiar para área de transferência
+    navigator.clipboard.writeText(message).then(() => {
+      alert('Pedido copiado para a área de transferência! Envie para a confeitaria pelo seu aplicativo de mensagens preferido.')
       onClearCart()
       setObservations('')
-      setIsSending(false)
       onClose()
-    }, 1000)
+    }).catch(() => {
+      // Fallback para navegadores mais antigos
+      const textArea = document.createElement('textarea')
+      textArea.value = message
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      alert('Pedido copiado para a área de transferência! Envie para a confeitaria pelo seu aplicativo de mensagens preferido.')
+      onClearCart()
+      setObservations('')
+      onClose()
+    })
   }
 
   if (!isOpen) return null
@@ -227,23 +225,14 @@ export function Cart({
               </div>
             </div>
 
-            {/* Send Button */}
+            {/* Send Button - Sem WhatsApp */}
             <Button
-              onClick={sendWhatsAppOrder}
-              disabled={isSending || items.length === 0}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3"
+              onClick={copyOrderToClipboard}
+              disabled={items.length === 0}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3"
             >
-              {isSending ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Enviando...
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5" />
-                  Enviar pedido pelo WhatsApp
-                </div>
-              )}
+              <ShoppingBag className="w-5 h-5 mr-2" />
+              Copiar Pedido para Enviar
             </Button>
           </div>
         )}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Banner } from '@/components/cardapio/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
-import { CategoryFilter } from '@/components/cardapio/CategoryFilter' // Removed SearchBar import
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
@@ -23,7 +23,7 @@ const mockDesignSettings = {
   cor_background: '#fef2f2',
   cor_nome: '#be185d',
   background_topo_color: '#fce7f3',
-  texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+  texto_rodape: 'Faça seu pedido! 📞 Copie e envie seu pedido',
   logo_url: '',
   banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
   background_image_url: '',
@@ -85,16 +85,17 @@ const mockProdutos: Produto[] = [
 ]
 
 export default function CardapioDemo() {
-  const [searchTerm, setSearchTerm] = useState('') // Keep searchTerm state for filtering logic, but it won't be used by a UI component
+  const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   const filteredProducts = mockProdutos.filter(product => {
-    // Removed searchTerm from filtering logic as SearchBar is removed
+    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
-    return matchesCategory
+    return matchesSearch && matchesCategory
   })
 
   const toggleFavorite = (productId: string) => {
@@ -208,8 +209,6 @@ export default function CardapioDemo() {
           <BannerAd bannerUrl={mockDesignSettings.banner1_url} />
         )}
         
-        {/* <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} /> */} {/* Removed SearchBar */}
-        
         <CategoryFilter 
           categories={categories}
           selectedCategory={selectedCategory}
@@ -238,7 +237,7 @@ export default function CardapioDemo() {
         data_retorno_ferias={mockDesignSettings.data_retorno_ferias} 
       />
 
-      {/* Cart Component */}
+      {/* Cart Component - Sem WhatsApp */}
       <Cart
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -246,7 +245,6 @@ export default function CardapioDemo() {
         onUpdateQuantity={updateCartQuantity}
         onRemoveItem={removeCartItem}
         onClearCart={clearCart}
-        whatsappNumber={mockConfiguracoes.telefone}
         storeName={mockDesignSettings.nome_loja}
       />
 

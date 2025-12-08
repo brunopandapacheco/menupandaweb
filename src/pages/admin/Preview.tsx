@@ -8,7 +8,7 @@ import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
-import { CategoryFilter } from '@/components/cardapio/CategoryFilter' // Removed SearchBar import
+import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
@@ -26,7 +26,7 @@ interface CartItem {
 
 export default function Preview() {
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
-  const [searchTerm, setSearchTerm] = useState('') // Keep searchTerm state for filtering logic, but it won't be used by a UI component
+  const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -47,9 +47,10 @@ export default function Preview() {
   }
 
   const filteredProducts = produtos.filter(product => {
-    // Removed searchTerm from filtering logic as SearchBar is removed
+    const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
-    return matchesCategory
+    return matchesSearch && matchesCategory
   })
 
   const toggleFavorite = (productId: string) => {
@@ -229,8 +230,6 @@ export default function Preview() {
             <BannerAd bannerUrl={designSettings.banner1_url} />
           )}
           
-          {/* <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} /> */} {/* Removed SearchBar */}
-          
           <CategoryFilter 
             categories={categories}
             selectedCategory={selectedCategory}
@@ -259,7 +258,7 @@ export default function Preview() {
           data_retorno_ferias={configuracoes?.data_retorno_ferias} 
         />
 
-        {/* Cart Component */}
+        {/* Cart Component - Sem WhatsApp */}
         <Cart
           isOpen={isCartOpen}
           onClose={() => setIsCartOpen(false)}
@@ -267,7 +266,6 @@ export default function Preview() {
           onUpdateQuantity={updateCartQuantity}
           onRemoveItem={removeCartItem}
           onClearCart={clearCart}
-          whatsappNumber={configuracoes?.telefone || '(11) 99999-9999'}
           storeName={designSettings?.nome_loja || 'Minha Loja'}
         />
 
@@ -331,8 +329,6 @@ export default function Preview() {
           <BannerAd bannerUrl={designSettings.banner1_url} />
         )}
         
-        {/* <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} /> */} {/* Removed SearchBar */}
-        
         <CategoryFilter 
           categories={categories}
           selectedCategory={selectedCategory}
@@ -361,7 +357,7 @@ export default function Preview() {
         data_retorno_ferias={configuracoes?.data_retorno_ferias} 
       />
 
-      {/* Cart Component */}
+      {/* Cart Component - Sem WhatsApp */}
       <Cart
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -369,7 +365,6 @@ export default function Preview() {
         onUpdateQuantity={updateCartQuantity}
         onRemoveItem={removeCartItem}
         onClearCart={clearCart}
-        whatsappNumber={configuracoes?.telefone || '(11) 99999-9999'}
         storeName={designSettings?.nome_loja || 'Minha Loja'}
       />
 
