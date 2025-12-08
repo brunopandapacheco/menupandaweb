@@ -26,15 +26,6 @@ VITE_SUPABASE_ANON_KEY=sua-chave-anon-aqui`
           Configuração do Supabase
         </h1>
         
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p className="text-blue-800 font-medium mb-2">
-            ℹ️ Modo Demonstração Ativado
-          </p>
-          <p className="text-blue-700 text-sm">
-            O sistema está funcionando em modo demonstração. Para uso completo, configure as variáveis de ambiente do Supabase.
-          </p>
-        </div>
-        
         <div className="text-left bg-gray-50 p-6 rounded-lg mb-6">
           <p className="text-sm font-medium text-gray-800 mb-4">🔧 Para configurar o ambiente:</p>
           
@@ -57,11 +48,6 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`}
         </div>
         
         <div className="space-y-3">
-          <Button onClick={() => window.location.reload()} className="w-full">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Continuar em Modo Demonstração
-          </Button>
-          
           <Button 
             variant="outline" 
             className="w-full"
@@ -69,6 +55,14 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`}
           >
             <ExternalLink className="w-4 h-4 mr-2" />
             Abrir Supabase
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="w-full"
+            onClick={copyToClipboard}
+          >
+            {copied ? 'Copiado!' : 'Copiar variáveis'}
           </Button>
         </div>
       </div>
