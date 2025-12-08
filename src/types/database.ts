@@ -14,7 +14,7 @@ export interface DesignSettings {
   descricao_loja?: string
   banner_gradient?: string
   banner1_url?: string
-  category_icons?: { [key: string]: string } // Added this field
+  category_icons?: { [key: string]: string }
 }
 
 export interface Configuracoes {

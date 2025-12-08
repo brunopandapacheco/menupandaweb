@@ -29,40 +29,6 @@ export default function DesignSettings() {
 
   useEffect(() => {
     if (designSettings) {
-      if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient
-
-<dyad-write path="src/pages/admin/DesignSettings.tsx">
-import { useState, useEffect } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useDatabase } from '@/hooks/useDatabase'
-import { showSuccess, showError } from '@/utils/toast'
-import { ColorSettings } from '@/components/admin/ColorSettings'
-import { ImageSettings } from '@/components/admin/ImageSettings'
-import { StoreSettings } from '@/components/admin/StoreSettings'
-import { CategorySettings } from '@/components/admin/CategorySettings'
-
-const gradientBackgrounds = [
-  { name: 'Dourado Quente', gradient: '#F5C542' } // AGORA COR FIXA
-]
-
-export default function DesignSettings() {
-  const { designSettings, configuracoes, saveDesignSettings, saveConfiguracoes, loading } = useDatabase()
-  const [activeTab, setActiveTab] = useState('cores')
-  
-  // Estados
-  const [bannerGradient, setBannerGradient] = useState(gradientBackgrounds[0].gradient)
-  const [corBorda, setCorBorda] = useState('#F5C542')
-  const [corNome, setCorNome] = useState('#FCEBB3')
-  
-  const [nomeLoja, setNomeLoja] = useState('')
-  const [descricaoLoja, setDescricaoLoja] = useState('')
-  const [logoUrl, setLogoUrl] = useState('')
-  const [bannerUrl, setBannerUrl] = useState('')
-  
-  const [mainCategories, setMainCategories] = useState<string[]>([])
-
-  useEffect(() => {
-    if (designSettings) {
       if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient)
       if (designSettings.cor_borda) setCorBorda(designSettings.cor_borda)
       if (designSettings.cor_nome) setCorNome(designSettings.cor_nome)
