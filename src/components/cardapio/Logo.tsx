@@ -9,7 +9,6 @@ interface LogoProps {
   storeDescription?: string
   corNome?: string
   avaliacaoMedia?: number
-  emFerias?: boolean
   horarioFuncionamentoInicio?: string
   horarioFuncionamentoFim?: string
   isEditable?: boolean
@@ -23,7 +22,6 @@ export function Logo({
   storeDescription,
   corNome,
   avaliacaoMedia = 4.9,
-  emFerias,
   horarioFuncionamentoInicio = '08:00',
   horarioFuncionamentoFim = '18:00',
   isEditable = false,
@@ -76,15 +74,6 @@ export function Logo({
   }
 
   const getStatusMessage = () => {
-    if (emFerias) {
-      return { 
-        status: 'Fechado', 
-        time: 'De férias', 
-        color: '#dc2626',
-        bgColor: '#fee2e2'
-      }
-    }
-
     const now = new Date()
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()

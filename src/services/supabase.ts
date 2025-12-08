@@ -158,7 +158,6 @@ export class SupabaseService {
         meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
         entrega: true,
         taxa_entrega: 5.00,
-        em_ferias: false,
         horarios_semana: [
           { day: 'Segunda', open: true, openTime: '08:00', closeTime: '18:00' },
           { day: 'Terça', open: true, openTime: '08:00', closeTime: '18:00' },

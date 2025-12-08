@@ -28,8 +28,6 @@ const mockDesignSettings = {
   banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
   background_image_url: '',
   use_background_image: false,
-  em_ferias: false,
-  data_retorno_ferias: '',
   banner1_url: '',
   category_icons: {} // Ícones personalizados vazios para demo
 }
@@ -233,8 +231,6 @@ export default function CardapioDemo() {
 
       <Footer 
         textoRodape={mockDesignSettings.texto_rodape} 
-        em_ferias={mockDesignSettings.em_ferias} 
-        data_retorno_ferias={mockDesignSettings.data_retorno_ferias} 
       />
 
       {/* Cart Component - Sem WhatsApp */}

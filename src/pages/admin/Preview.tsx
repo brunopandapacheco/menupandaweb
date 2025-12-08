@@ -219,7 +219,6 @@ export default function Preview() {
           storeDescription={designSettings?.descricao_loja}
           corNome={designSettings?.cor_nome}
           avaliacaoMedia={configuracoes?.avaliacao_media}
-          emFerias={configuracoes?.em_ferias}
           horarioFuncionamentoInicio={horarios.inicio}
           horarioFuncionamentoFim={horarios.fim}
         />
@@ -254,8 +253,6 @@ export default function Preview() {
 
         <Footer 
           textoRodape={designSettings?.texto_rodape} 
-          em_ferias={configuracoes?.em_ferias} 
-          data_retorno_ferias={configuracoes?.data_retorno_ferias} 
         />
 
         {/* Cart Component - Sem WhatsApp */}
@@ -318,7 +315,6 @@ export default function Preview() {
         storeDescription={designSettings?.descricao_loja}
         corNome={designSettings?.cor_nome}
         avaliacaoMedia={configuracoes?.avaliacao_media}
-        emFerias={configuracoes?.em_ferias}
         horarioFuncionamentoInicio={horarios.inicio}
         horarioFuncionamentoFim={horarios.fim}
       />
@@ -353,8 +349,6 @@ export default function Preview() {
 
       <Footer 
         textoRodape={designSettings?.texto_rodape} 
-        em_ferias={configuracoes?.em_ferias} 
-        data_retorno_ferias={configuracoes?.data_retorno_ferias} 
       />
 
       {/* Cart Component - Sem WhatsApp */}

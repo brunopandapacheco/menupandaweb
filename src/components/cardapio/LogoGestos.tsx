@@ -7,7 +7,6 @@ interface LogoGestosProps {
   storeName?: string
   storeDescription?: string
   avaliacaoMedia?: number
-  emFerias?: boolean
   horarioFuncionamentoInicio?: string
   horarioFuncionamentoFim?: string
   corNome?: string
@@ -19,7 +18,6 @@ export function LogoGestos({
   storeName, 
   storeDescription, 
   avaliacaoMedia = 4.9,
-  emFerias,
   horarioFuncionamentoInicio = '08:00',
   horarioFuncionamentoFim = '18:00',
   corNome = '#1A1A1A'
@@ -73,15 +71,6 @@ export function LogoGestos({
   }
 
   const getStatusMessage = () => {
-    if (emFerias) {
-      return { 
-        status: 'Fechado', 
-        time: 'De férias', 
-        color: '#dc2626',
-        bgColor: '#fee2e2'
-      }
-    }
-
     const now = new Date()
     const currentHour = now.getHours()
     const currentMinute = now.getMinutes()
@@ -95,7 +84,7 @@ export function LogoGestos({
     if (currentTime >= startTime && currentTime <= endTime) {
       return { 
         status: 'Aberto', 
-        time: `Date às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
+        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
         color: '#15803d',
         bgColor: '#dcfce7'
       }

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Clock, Calendar, Power, Sun, Moon, Plane, Type, Phone } from 'lucide-react'
+import { Clock, Sun, Moon, Type, Phone } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
@@ -28,8 +28,6 @@ const weekDays: DaySchedule[] = [
 export default function Settings() {
   const { designSettings, configuracoes, saveConfiguracoes, saveDesignSettings, loading } = useDatabase()
   const [settings, setSettings] = useState({
-    em_ferias: false,
-    data_retorno_ferias: '',
     horarios_semana: weekDays,
     telefone: '(11) 99999-9999'
   })
@@ -42,8 +40,6 @@ export default function Settings() {
   useEffect(() => {
     if (configuracoes) {
       setSettings({
-        em_ferias: configuracoes.em_ferias || false,
-        data_retorno_ferias: configuracoes.data_retorno_ferias || '',
         horarios_semana: configuracoes.horarios_semana || weekDays,
         telefone: configuracoes.telefone || '(11) 99999-9999'
       })
@@ -199,75 +195,6 @@ export default function Settings() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Status da Loja */}
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: '#1A1A1A' }}>
-                <Power className="w-5 h-5" />
-                Status da Loja
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Loja Aberta/Fechada */}
-            <div className="flex items-center justify-between p-4 rounded-lg border bg-gray-50">
-              <div className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full ${settings.em_ferias ? 'bg-red-500' : 'bg-green-500'} animate-pulse`}></div>
-                <div>
-                  <Label className="font-medium text-base">
-                    {settings.em_ferias ? 'Loja Fechada' : 'Loja Aberta'}
-                  </Label>
-                  <p className="text-sm text-gray-600">
-                    {settings.em_ferias ? 'Em férias temporariamente' : 'Funcionando normalmente'}
-                  </p>
-                </div>
-              </div>
-              <Switch
-                checked={!settings.em_ferias}
-                onCheckedChange={(checked) => setSettings(prev => ({ ...prev, em_ferias: !checked }))}
-                className="data-[state=checked]:bg-green-600"
-              />
-            </div>
-
-            {/* Loja de Férias */}
-            <div className="flex items-center justify-between p-4 rounded-lg border bg-blue-50">
-              <div className="flex items-center gap-3">
-                <Plane className="w-5 h-5 text-blue-600" />
-                <div>
-                  <Label className="font-medium text-base">Loja de Férias</Label>
-                  <p className="text-sm text-gray-600">
-                    {settings.em_ferias && settings.data_retorno_ferias 
-                      ? `Voltamos em ${new Date(settings.data_retorno_ferias).toLocaleDateString('pt-BR')}`
-                      : 'Configure um período de férias'
-                    }
-                  </p>
-                </div>
-              </div>
-              <Switch
-                checked={settings.em_ferias}
-                onCheckedChange={(checked) => setSettings(prev => ({ ...prev, em_ferias: checked }))}
-                className="data-[state=checked]:bg-blue-600"
-              />
-            </div>
-
-            {/* Data de Retorno */}
-            {settings.em_ferias && (
-              <div className="p-4 rounded-lg border bg-yellow-50">
-                <Label className="font-medium text-sm mb-2 block">Data de Retorno</Label>
-                <Input
-                  type="date"
-                  value={settings.data_retorno_ferias}
-                  onChange={(e) => setSettings(prev => ({ ...prev, data_retorno_ferias: e.target.value }))}
-                  className="w-full"
-                  min={new Date().toISOString().split('T')[0]}
-                />
-                <p className="text-xs text-gray-600 mt-2">
-                  Seus clientes verão a data de retorno no cardápio
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
 
         {/* Horário de Funcionamento */}
         <Card className="border-0 shadow-md">
