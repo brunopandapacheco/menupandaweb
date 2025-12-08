@@ -9,8 +9,6 @@ interface LogoProps {
   storeDescription?: string
   corNome?: string
   avaliacaoMedia?: number
-  horarioFuncionamentoInicio?: string
-  horarioFuncionamentoFim?: string
   isEditable?: boolean
   onLogoChange?: (url: string) => void
 }
@@ -22,8 +20,6 @@ export function Logo({
   storeDescription,
   corNome,
   avaliacaoMedia = 4.9,
-  horarioFuncionamentoInicio = '08:00',
-  horarioFuncionamentoFim = '18:00',
   isEditable = false,
   onLogoChange
 }: LogoProps) {
@@ -72,36 +68,6 @@ export function Logo({
 
     return stars
   }
-
-  const getStatusMessage = () => {
-    const now = new Date()
-    const currentHour = now.getHours()
-    const currentMinute = now.getMinutes()
-    const currentTime = currentHour * 60 + currentMinute
-    
-    const [startHour, startMinute] = horarioFuncionamentoInicio.split(':').map(Number)
-    const [endHour, endMinute] = horarioFuncionamentoFim.split(':').map(Number)
-    const startTime = startHour * 60 + startMinute
-    const endTime = endHour * 60 + endMinute
-    
-    if (currentTime >= startTime && currentTime <= endTime) {
-      return { 
-        status: 'Aberto', 
-        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
-        color: '#15803d',
-        bgColor: '#dcfce7'
-      }
-    } else {
-      return { 
-        status: 'Fechado', 
-        time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, 
-        color: '#dc2626',
-        bgColor: '#fee2e2'
-      }
-    }
-  }
-
-  const status = getStatusMessage()
 
   return (
     <div className="relative">
@@ -208,23 +174,6 @@ export function Logo({
             <span className="text-sm font-semibold text-gray-700">
               {avaliacaoMedia}/5.0
             </span>
-          </div>
-          
-          {/* Status de funcionamento */}
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div>
-              <p style={{ 
-                fontWeight: 'bold', 
-                color: status.color,
-                backgroundColor: status.bgColor,
-                padding: '2px 8px',
-                borderRadius: '4px',
-                display: 'inline-block',
-                fontSize: '14px'
-              }}>
-                {status.status} • {status.time}
-              </p>
-            </div>
           </div>
           
           <p className="text-gray-600 text-sm">
