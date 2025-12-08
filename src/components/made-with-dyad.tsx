@@ -1,0 +1,1 @@
+// Componente removido - não é mais necessário
