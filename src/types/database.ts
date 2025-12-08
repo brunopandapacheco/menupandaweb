@@ -4,8 +4,6 @@ export interface DesignSettings {
   user_id: string
   slug?: string
   logo_url?: string
-  background_image_url?: string
-  use_background_image?: boolean
   nome_loja: string
   cor_borda: string
   cor_background: string
@@ -21,22 +19,12 @@ export interface DesignSettings {
 
 export interface Configuracoes {
   user_id: string
-  horario_funcionamento_inicio: string
-  horario_funcionamento_fim: string
   telefone: string
   meios_pagamento: string[]
   entrega: boolean
   taxa_entrega: number
-  horarios_semana?: DaySchedule[]
   total_pedidos?: number
   avaliacao_media?: number
-}
-
-export interface DaySchedule {
-  day: string
-  open: boolean
-  openTime: string
-  closeTime: string
 }
 
 export interface Produto {

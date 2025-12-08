@@ -4,31 +4,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Clock, Sun, Moon, Type, Phone } from 'lucide-react'
+import { Type, Phone } from 'lucide-react'
 import { showSuccess } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
-
-interface DaySchedule {
-  day: string
-  open: boolean
-  openTime: string
-  closeTime: string
-}
-
-const weekDays: DaySchedule[] = [
-  { day: 'Segunda', open: true, openTime: '08:00', closeTime: '18:00' },
-  { day: 'Terça', open: true, openTime: '08:00', closeTime: '18:00' },
-  { day: 'Quarta', open: true, openTime: '08:00', closeTime: '18:00' },
-  { day: 'Quinta', open: true, openTime: '08:00', closeTime: '18:00' },
-  { day: 'Sexta', open: true, openTime: '08:00', closeTime: '18:00' },
-  { day: 'Sábado', open: true, openTime: '08:00', closeTime: '18:00' },
-  { day: 'Domingo', open: false, openTime: '08:00', closeTime: '18:00' },
-]
 
 export default function Settings() {
   const { designSettings, configuracoes, saveConfiguracoes, saveDesignSettings, loading } = useDatabase()
   const [settings, setSettings] = useState({
-    horarios_semana: weekDays,
     telefone: '(11) 99999-9999'
   })
   const [designSettingsLocal, setDesignSettingsLocal] = useState({
@@ -40,7 +22,6 @@ export default function Settings() {
   useEffect(() => {
     if (configuracoes) {
       setSettings({
-        horarios_semana: configuracoes.horarios_semana || weekDays,
         telefone: configuracoes.telefone || '(11) 99999-9999'
       })
     }
@@ -93,19 +74,7 @@ export default function Settings() {
     }
   }
 
-  const updateDaySchedule = (index: number, field: keyof DaySchedule, value: any) => {
-    setSettings(prev => ({
-      ...prev,
-      horarios_semana: prev.horarios_semana.map((day, i) => 
-        i === index ? { ...day, [field]: value } : day
-      )
-    }))
-  }
-
   if (loading) return <div>Carregando configurações...</div>
-
-  const weekdays = settings.horarios_semana.slice(0, 5)
-  const weekend = settings.horarios_semana.slice(5)
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
@@ -194,104 +163,6 @@ export default function Settings() {
               </Button>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Horário de Funcionamento */}
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: '#1A1A1A' }}>
-                <Clock className="w-5 h-5" />
-                Horário de Funcionamento
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Dias de Semana */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Sun className="w-4 h-4 text-orange-500" />
-                <h3 className="text-lg font-semibold text-gray-800">Dias de Semana</h3>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {weekdays.map((day, index) => (
-                  <div key={day.day} className="flex items-center gap-3 p-3 border rounded-lg bg-white hover:shadow-sm transition-shadow">
-                    <Switch
-                      checked={day.open}
-                      onCheckedChange={(checked) => updateDaySchedule(index, 'open', checked)}
-                      className="data-[state=checked]:bg-pink-600"
-                    />
-                    <div className="flex-1">
-                      <Label className="font-medium text-sm">{day.day}</Label>
-                      {day.open && (
-                        <div className="flex items-center gap-1 mt-1">
-                          <Input
-                            type="time"
-                            value={day.openTime}
-                            onChange={(e) => updateDaySchedule(index, 'openTime', e.target.value)}
-                            className="h-7 text-xs w-20"
-                          />
-                          <span className="text-xs text-gray-500">às</span>
-                          <Input
-                            type="time"
-                            value={day.closeTime}
-                            onChange={(e) => updateDaySchedule(index, 'closeTime', e.target.value)}
-                            className="h-7 text-xs w-20"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Fim de Semana */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Moon className="w-4 h-4 text-purple-500" />
-                <h3 className="text-lg font-semibold text-gray-800">Fim de Semana</h3>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {weekend.map((day, index) => {
-                  const actualIndex = index + 5
-                  return (
-                    <div key={day.day} className="flex items-center gap-3 p-3 border rounded-lg bg-white hover:shadow-sm transition-shadow">
-                      <Switch
-                        checked={day.open}
-                        onCheckedChange={(checked) => updateDaySchedule(actualIndex, 'open', checked)}
-                        className="data-[state=checked]:bg-pink-600"
-                      />
-                      <div className="flex-1">
-                        <Label className="font-medium text-sm">{day.day}</Label>
-                        {day.open && (
-                          <div className="flex items-center gap-1 mt-1">
-                            <Input
-                              type="time"
-                              value={day.openTime}
-                              onChange={(e) => updateDaySchedule(actualIndex, 'openTime', e.target.value)}
-                              className="h-7 text-xs w-20"
-                            />
-                            <span className="text-xs text-gray-500">às</span>
-                            <Input
-                              type="time"
-                              value={day.closeTime}
-                              onChange={(e) => updateDaySchedule(actualIndex, 'closeTime', e.target.value)}
-                              className="h-7 text-xs w-20"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-end">
-          <Button onClick={handleSave} size="lg" className="bg-gradient-to-r from-[#d11b70] to-[#ff6fae] hover:from-[#b0195f] hover:to-[#ff5a9d]">
-            Salvar Configurações
-          </Button>
         </div>
       </div>
     </div>

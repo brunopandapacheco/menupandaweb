@@ -134,8 +134,6 @@ export default function CardapioPublico() {
       <Banner 
         borderColor={designSettings.cor_borda}
         bannerGradient={designSettings.banner_gradient}
-        backgroundImageUrl={designSettings.background_image_url}
-        useBackgroundImage={designSettings.use_background_image}
       />
       
       <Logo 

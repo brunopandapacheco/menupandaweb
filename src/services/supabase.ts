@@ -152,21 +152,10 @@ export class SupabaseService {
       .from('configuracoes')
       .insert({
         user_id: userId,
-        horario_funcionamento_inicio: '08:00',
-        horario_funcionamento_fim: '18:00',
         telefone: '(11) 99999-9999',
         meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
         entrega: true,
-        taxa_entrega: 5.00,
-        horarios_semana: [
-          { day: 'Segunda', open: true, openTime: '08:00', closeTime: '18:00' },
-          { day: 'Terça', open: true, openTime: '08:00', closeTime: '18:00' },
-          { day: 'Quarta', open: true, openTime: '08:00', closeTime: '18:00' },
-          { day: 'Quinta', open: true, openTime: '08:00', closeTime: '18:00' },
-          { day: 'Sexta', open: true, openTime: '08:00', closeTime: '18:00' },
-          { day: 'Sábado', open: true, openTime: '08:00', closeTime: '18:00' },
-          { day: 'Domingo', open: false, openTime: '08:00', closeTime: '18:00' }
-        ]
+        taxa_entrega: 5.00
       })
       .select()
       .single()

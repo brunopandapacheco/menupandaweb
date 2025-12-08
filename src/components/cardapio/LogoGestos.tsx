@@ -7,8 +7,6 @@ interface LogoGestosProps {
   storeName?: string
   storeDescription?: string
   avaliacaoMedia?: number
-  horarioFuncionamentoInicio?: string
-  horarioFuncionamentoFim?: string
   corNome?: string
 }
 
@@ -18,8 +16,6 @@ export function LogoGestos({
   storeName, 
   storeDescription, 
   avaliacaoMedia = 4.9,
-  horarioFuncionamentoInicio = '08:00',
-  horarioFuncionamentoFim = '18:00',
   corNome = '#1A1A1A'
 }: LogoGestosProps) {
   const [imageError, setImageError] = useState(false)
@@ -70,35 +66,6 @@ export function LogoGestos({
     return stars
   }
 
-  const getStatusMessage = () => {
-    const now = new Date()
-    const currentHour = now.getHours()
-    const currentMinute = now.getMinutes()
-    const currentTime = currentHour * 60 + currentMinute
-    
-    const [startHour, startMinute] = horarioFuncionamentoInicio.split(':').map(Number)
-    const [endHour, endMinute] = horarioFuncionamentoFim.split(':').map(Number)
-    const startTime = startHour * 60 + startMinute
-    const endTime = endHour * 60 + endMinute
-    
-    if (currentTime >= startTime && currentTime <= endTime) {
-      return { 
-        status: 'Aberto', 
-        time: `Fecha às ${endHour}:${endMinute.toString().padStart(2, '0')}`, 
-        color: '#15803d',
-        bgColor: '#dcfce7'
-      }
-    } else {
-      return { 
-        status: 'Fechado', 
-        time: `Abre às ${startHour}:${startMinute.toString().padStart(2, '0')}`, 
-        color: '#dc2626',
-        bgColor: '#fee2e2'
-      }
-    }
-  }
-
-  const status = getStatusMessage()
   const displayName = getDisplayName(storeName)
   const hasValidLogo = logoUrl && !imageError
 
@@ -189,22 +156,6 @@ export function LogoGestos({
           <span style={{ fontSize: '14px', fontWeight: '600', color: '#1f2937' }}>
             {avaliacaoMedia}/5.0
           </span>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
-          <div>
-            <p style={{ 
-              fontWeight: 'bold', 
-              color: status.color,
-              backgroundColor: status.bgColor,
-              padding: '2px 8px',
-              borderRadius: '4px',
-              display: 'inline-block',
-              fontSize: '14px'
-            }}>
-              {status.status} • {status.time}
-            </p>
-          </div>
         </div>
         
         <p style={{ 

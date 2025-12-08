@@ -17,8 +17,6 @@ const mockDesignSettings = {
   texto_rodape: 'Faça seu pedido! 📞 Copie e envie seu pedido',
   logo_url: '',
   banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-  background_image_url: '',
-  use_background_image: false,
   banner1_url: '',
   category_icons: {} // Ícones personalizados vazios para demo
 }
@@ -128,8 +126,6 @@ export default function CardapioDemo() {
       <Banner 
         borderColor={mockDesignSettings.cor_borda}
         bannerGradient={mockDesignSettings.banner_gradient}
-        backgroundImageUrl={mockDesignSettings.background_image_url}
-        useBackgroundImage={mockDesignSettings.use_background_image}
       />
       
       <Logo 
