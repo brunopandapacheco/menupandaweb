@@ -111,9 +111,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                 src={iconToUse} 
                 alt={category.name}
                 style={{ 
-                  width: '24px', 
-                  height: '24px',
-                  marginBottom: '4px',
+                  width: '40px', 
+                  height: '40px',
                   objectFit: 'contain'
                 }}
                 onError={(e) => {
@@ -122,16 +121,6 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                   e.currentTarget.src = '/icons/1.png' // Usa ícone padrão
                 }}
               />
-              <span style={{ 
-                fontSize: '10px', 
-                fontWeight: '600', 
-                textAlign: 'center',
-                lineHeight: '1.2',
-                maxWidth: '60px',
-                wordWrap: 'break-word'
-              }}>
-                {category.name}
-              </span>
             </button>
           )
         })}
