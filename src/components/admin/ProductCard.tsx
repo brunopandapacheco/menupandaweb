@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Edit, Package } from 'lucide-react'
 import { Produto } from '@/types/database'
 
@@ -59,48 +58,23 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
           <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.descricao}</p>
         )}
 
-        {/* Preço e Tipo de Venda na mesma linha */}
+        {/* Preço */}
         <div className="mb-3">
           {product.promocao && product.preco_promocional ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
-                <span className="text-sm text-gray-400 line-through">
-                  R$ {product.preco_normal.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-base font-bold text-green-600">
-                  R$ {product.preco_promocional.toFixed(2)}
-                </span>
-                <Badge 
-                  variant="secondary" 
-                  className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-                >
-                  {product.forma_venda}
-                </Badge>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <span className="text-base font-bold text-gray-800">
+            <div className="flex items-center gap-1">
+              <span className="text-sm text-gray-400 line-through">
                 R$ {product.preco_normal.toFixed(2)}
               </span>
-              <Badge 
-                variant="secondary" 
-                className="bg-[#ff6fae] text-white font-medium capitalize text-xs rounded-sm"
-              >
-                {product.forma_venda}
-              </Badge>
+              <span className="text-base font-bold text-green-600">
+                R$ {product.preco_promocional.toFixed(2)}
+              </span>
             </div>
+          ) : (
+            <span className="text-base font-bold text-gray-800">
+              R$ {product.preco_normal.toFixed(2)}
+            </span>
           )}
         </div>
-
-        {/* Badge de Promoção (apenas se estiver em promoção) */}
-        {product.promocao && (
-          <Badge variant="destructive" className="bg-red-100 text-red-700">
-            Promoção
-          </Badge>
-        )}
       </CardContent>
     </Card>
   )
