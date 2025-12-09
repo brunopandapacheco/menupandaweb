@@ -93,7 +93,7 @@ export default function DesignSettings() {
         <TabsList
           className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
           style={{
-            background: '#F5C542'
+            background: '#ec4899'
           }}
         >
 
@@ -102,9 +102,9 @@ export default function DesignSettings() {
             value="cores"
             className="
               rounded-lg font-[650] py-3 transition-all duration-200
-              text-black
+              text-white
               hover:bg-[#1A1A1A] hover:text-white
-              data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md
+              data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
             "
           >
             Cores
@@ -114,9 +114,9 @@ export default function DesignSettings() {
             value="imagens"
             className="
               rounded-lg font-[650] py-3 transition-all duration-200
-              text-black
+              text-white
               hover:bg-[#1A1A1A] hover:text-white
-              data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md
+              data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
             "
           >
             Imagens
@@ -126,9 +126,9 @@ export default function DesignSettings() {
             value="configuracao"
             className="
               rounded-lg font-[650] py-3 transition-all duration-200
-              text-black
+              text-white
               hover:bg-[#1A1A1A] hover:text-white
-              data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md
+              data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
             "
           >
             Configuração
