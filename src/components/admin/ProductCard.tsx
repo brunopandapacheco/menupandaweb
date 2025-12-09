@@ -62,7 +62,7 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
         <div className="mb-3">
           {product.promocao && product.preco_promocional ? (
             <div className="flex items-center gap-1">
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-sm text-red-500 line-through">
                 R$ {product.preco_normal.toFixed(2)}
               </span>
               <span className="text-base font-bold text-green-600">
@@ -70,7 +70,7 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
               </span>
             </div>
           ) : (
-            <span className="text-base font-bold text-gray-800">
+            <span className="text-base font-bold text-green-600">
               R$ {product.preco_normal.toFixed(2)}
             </span>
           )}
