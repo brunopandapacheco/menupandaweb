@@ -57,7 +57,7 @@ export function StoreSettings({
               value={descricaoLoja}
               onChange={(e) => handleDescricaoChange(e.target.value)}
               placeholder="Descreva sua confeitaria..."
-              rows={4}
+              rows={8}
               className="w-full p-3 border border-gray-300 rounded-lg resize-none"
             />
             <div className="flex justify-end">
