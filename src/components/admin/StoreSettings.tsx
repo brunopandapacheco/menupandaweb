@@ -62,22 +62,18 @@ export function StoreSettings({
               rows={8}
               className="w-full p-3 border border-gray-300 rounded-lg resize-none"
             />
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center">
               <p className="text-xs text-gray-500">
                 {descricaoLoja.length}/300 caracteres
               </p>
+              <Button 
+                onClick={onSaveConfig}
+                className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
+                style={{ backgroundColor: '#ec4899', color: 'white' }}
+              >
+                Salvar Informações
+              </Button>
             </div>
-          </div>
-
-          {/* Botão Salvar - Estilo Rosa */}
-          <div className="pt-6 flex justify-center">
-            <Button 
-              onClick={onSaveConfig}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#ec4899', color: 'white' }}
-            >
-              Salvar Informações
-            </Button>
           </div>
         </CardContent>
       </Card>
