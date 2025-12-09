@@ -47,7 +47,7 @@ export default function ProductManager() {
   if (loading) return <div>Carregando produtos...</div>
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#2b0033' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#111111' }}>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Filtros e Ações */}
         <ProductFilters
