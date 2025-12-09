@@ -111,68 +111,112 @@ export class SupabaseService {
 
   // Configurações
   async getConfiguracoes(userId: string) {
-    const { data, error } = await supabase
-      .from('configuracoes')
-      .select('*')
-      .eq('user_id', userId)
-      .single()
-    
-    if (error && error.code !== 'PGRST116') {
+    try {
+      console.log('🔍 getConfiguracoes: Getting config for user:', userId)
+      
+      const { data, error } = await supabase
+        .from('configuracoes')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+      
+      if (error) {
+        console.log('⚠️ getConfiguracoes error:', error)
+        
+        // Se não encontrar, criar configurações padrão
+        if (error.code === 'PGRST116') {
+          console.log('📝 No config found, creating default...')
+          return this.createDefaultConfiguracoes(userId)
+        }
+        
+        throw error
+      }
+      
+      console.log('✅ getConfiguracoes success:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Error in getConfiguracoes:', error)
       throw error
     }
-    
-    if (!data) {
-      // Criar configurações padrão
-      return this.createDefaultConfiguracoes(userId)
-    }
-    
-    return data
   }
 
   async getConfiguracoesBySlug(slug: string) {
-    const { data, error } = await supabase
-      .from('design_settings')
-      .select('user_id')
-      .eq('slug', slug)
-      .single()
-    
-    if (error && error.code !== 'PGRST116') {
+    try {
+      console.log('🔍 getConfiguracoesBySlug: Getting config for slug:', slug)
+      
+      const { data: designData, error: designError } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('slug', slug)
+        .single()
+      
+      if (designError) {
+        console.error('❌ Design settings not found for slug:', slug)
+        throw new Error('Design settings not found')
+      }
+      
+      if (!designData) {
+        throw new Error('Design settings not found')
+      }
+      
+      console.log('✅ Found user_id:', designData.user_id)
+      return this.getConfiguracoes(designData.user_id)
+    } catch (error) {
+      console.error('❌ Error in getConfiguracoesBySlug:', error)
       throw error
     }
-    
-    if (!data) {
-      throw new Error('Design settings not found')
-    }
-    
-    return this.getConfiguracoes(data.user_id)
   }
 
   async createDefaultConfiguracoes(userId: string) {
-    const { data, error } = await supabase
-      .from('configuracoes')
-      .insert({
-        user_id: userId,
-        telefone: '(11) 99999-9999',
-        meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
-        entrega: true,
-        taxa_entrega: 5.00
-      })
-      .select()
-      .single()
-    
-    if (error) throw error
-    return data
+    try {
+      console.log('📝 createDefaultConfiguracoes: Creating default config for user:', userId)
+      
+      const { data, error } = await supabase
+        .from('configuracoes')
+        .insert({
+          user_id: userId,
+          telefone: '(11) 99999-9999',
+          meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
+          entrega: true,
+          taxa_entrega: 5.00
+        })
+        .select()
+        .single()
+      
+      if (error) {
+        console.error('❌ createDefaultConfiguracoes error:', error)
+        throw error
+      }
+      
+      console.log('✅ createDefaultConfiguracoes success:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Error creating default config:', error)
+      throw error
+    }
   }
 
   async updateConfiguracoes(userId: string, config: any) {
-    const { data, error } = await supabase
-      .from('configuracoes')
-      .upsert({ user_id: userId, ...config })
-      .select()
-      .single()
-    
-    if (error) throw error
-    return data
+    try {
+      console.log('💾 updateConfiguracoes: Updating config for user:', userId, config)
+      
+      const { data, error } = await supabase
+        .from('configuracoes')
+        .upsert({ user_id: userId, ...config })
+        .select()
+        .single()
+      
+      if (error) {
+        console.error('❌ updateConfiguracoes error:', error)
+        throw error
+      }
+      
+      console.log('✅ updateConfiguracoes success:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Error updating config:', error)
+      throw error
+    }
   }
 
   // Produtos
@@ -188,21 +232,30 @@ export class SupabaseService {
   }
 
   async getProductsBySlug(slug: string) {
-    const { data, error } = await supabase
-      .from('design_settings')
-      .select('user_id')
-      .eq('slug', slug)
-      .single()
-    
-    if (error && error.code !== 'PGRST116') {
+    try {
+      console.log('🔍 getProductsBySlug: Getting products for slug:', slug)
+      
+      const { data: designData, error: designError } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('slug', slug)
+        .single()
+      
+      if (designError) {
+        console.error('❌ Design settings not found for slug:', slug)
+        throw new Error('Design settings not found')
+      }
+      
+      if (!designData) {
+        throw new Error('Design settings not found')
+      }
+      
+      console.log('✅ Found user_id for products:', designData.user_id)
+      return this.getProducts(designData.user_id)
+    } catch (error) {
+      console.error('❌ Error in getProductsBySlug:', error)
       throw error
     }
-    
-    if (!data) {
-      throw new Error('Design settings not found')
-    }
-    
-    return this.getProducts(data.user_id)
   }
 
   async createProduct(userId: string, product: any) {
