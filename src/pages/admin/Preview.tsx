@@ -21,7 +21,18 @@ export default function Preview() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [copied, setCopied] = useState(false)
+  const [showButton, setShowButton] = useState(true)
   const device = useDeviceDetection()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      setShowButton(scrollY < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Se estiver carregando, mostrar loading
   if (loading) {
@@ -112,7 +123,11 @@ export default function Preview() {
     return (
       <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
         {/* Botão de compartilhar */}
-        <div className="fixed top-4 right-4 z-50">
+        <div 
+          className={`fixed top-4 right-4 z-50 transition-opacity duration-300 ${
+            showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
           <Button
             onClick={copyLink}
             className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
@@ -174,7 +189,11 @@ export default function Preview() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
       {/* Botão de compartilhar */}
-      <div className="fixed top-4 right-4 z-50">
+      <div 
+        className={`fixed top-4 right-4 z-50 transition-opacity duration-300 ${
+          showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
         <Button
           onClick={copyLink}
           className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
