@@ -23,7 +23,7 @@ export function DesktopLayout({ children, activeTab = 'preview', onTabChange }: 
   return (
     <div className="min-h-screen bg-pink-50 flex">
       <div className="w-64 border-r border-pink-200 flex flex-col" style={{
-        background: 'linear-gradient(135deg, #ff967f 0%, #ffc8b4 50%, #ffffff 100%)',
+        background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
         animation: 'gradient-x 3s ease infinite',
         backgroundSize: '200% 200%'
       }}>
@@ -48,7 +48,7 @@ export function DesktopLayout({ children, activeTab = 'preview', onTabChange }: 
                   className={cn(
                     "w-full justify-start gap-3 h-12 text-white hover:bg-white/20 hover:text-white",
                     activeTab === tab.id 
-                      ? "bg-white text-[#2b0033] hover:bg-white hover:text-[#2b0033]" 
+                      ? "bg-white text-[#ec4899] hover:bg-white hover:text-[#ec4899]" 
                       : ""
                   )}
                   onClick={() => onTabChange?.(tab.id)}
