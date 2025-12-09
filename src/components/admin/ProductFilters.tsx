@@ -1,6 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Filter } from 'lucide-react'
 
 interface ProductFiltersProps {
   selectedCategory: string
@@ -21,7 +20,6 @@ export function ProductFilters({
     <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <Filter className="w-5 h-5 text-purple-600" />
           <Select value={selectedCategory} onValueChange={onCategoryChange}>
             <SelectTrigger className="w-full sm:w-64">
               <SelectValue placeholder="Filtrar por categoria" />
