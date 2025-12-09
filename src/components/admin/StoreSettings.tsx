@@ -32,7 +32,7 @@ export function StoreSettings({
       {/* Card Principal - Configurações da Loja */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Nome da Loja</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#ec4899' }}>Nome da Loja</CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6">
