@@ -67,12 +67,12 @@ export function StoreSettings({
             </div>
           </div>
 
-          {/* Botão Salvar - Estilo Amarelo */}
+          {/* Botão Salvar - Estilo Rosa */}
           <div className="pt-6 flex justify-center">
             <Button 
               onClick={onSaveConfig}
               className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#F5C542', color: 'white' }}
+              style={{ backgroundColor: '#ec4899', color: 'white' }}
             >
               Salvar Informações
             </Button>
