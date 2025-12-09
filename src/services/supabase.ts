@@ -27,6 +27,28 @@ export class SupabaseService {
     }
   }
 
+  // Gerar código único de 5 caracteres
+  generateUniqueCode(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let code = ''
+    for (let i = 0; i < 5; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return code
+  }
+
+  // Gerar slug completo (código + nome da loja)
+  generateFullSlug(nomeLoja: string): string {
+    const code = this.generateUniqueCode()
+    const nameSlug = nomeLoja
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+    return `${code}/${nameSlug}`
+  }
+
   // Design Settings
   async getDesignSettings(userId: string) {
     const { data, error } = await supabase
@@ -43,17 +65,29 @@ export class SupabaseService {
   }
 
   async getDesignSettingsBySlug(slug: string) {
-    const { data, error } = await supabase
-      .from('design_settings')
-      .select('*')
-      .eq('slug', slug)
-      .single()
-    
-    if (error && error.code !== 'PGRST116') {
+    try {
+      console.log('🔍 getDesignSettingsBySlug: Getting settings for slug:', slug)
+      
+      // Extrair o código do slug (primeira parte antes da barra)
+      const code = slug.split('/')[0]
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('codigo', code)
+        .single()
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ getDesignSettingsBySlug error:', error)
+        throw error
+      }
+      
+      console.log('✅ getDesignSettingsBySlug success:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Error in getDesignSettingsBySlug:', error)
       throw error
     }
-    
-    return data
   }
 
   async updateDesignSettings(userId: string, settings: any) {
@@ -88,19 +122,24 @@ export class SupabaseService {
     }
   }
 
-  async createDefaultDesignSettings(userId: string) {
+  async createDefaultDesignSettings(userId: string, nomeLoja?: string) {
+    const storeName = nomeLoja || 'Minha Loja'
+    const fullSlug = this.generateFullSlug(storeName)
+    const code = fullSlug.split('/')[0]
+    
     const { data, error } = await supabase
       .from('design_settings')
       .insert({
         user_id: userId,
-        nome_loja: 'Minha Loja',
+        nome_loja: storeName,
         cor_borda: '#ec4899',
         cor_background: '#fef2f2',
         cor_nome: '#be185d',
         background_topo_color: '#fce7f3',
         texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
         banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-        slug: `minha-loja-${Date.now()}`
+        slug: fullSlug,
+        codigo: code
       })
       .select()
       .single()
@@ -147,7 +186,7 @@ export class SupabaseService {
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
-        .eq('slug', slug)
+        .eq('codigo', slug.split('/')[0])
         .single()
       
       if (designError) {
@@ -238,7 +277,7 @@ export class SupabaseService {
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
-        .eq('slug', slug)
+        .eq('codigo', slug.split('/')[0])
         .single()
       
       if (designError) {
