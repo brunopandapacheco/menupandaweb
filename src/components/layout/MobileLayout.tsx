@@ -27,7 +27,7 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
       <div
         className="fixed bottom-0 left-0 right-0 border-t border-pink-200 rounded-t-2xl z-50"
         style={{
-          background: 'linear-gradient(135deg, #3a0050 0%, #7a00a8 50%, #c070ff 100%)',
+          background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
           animation: 'gradient-x 3s ease infinite',
           backgroundSize: '200% 200%'
         }}
@@ -43,10 +43,10 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
 
                   // ABA ATIVA
                   activeTab === tab.id 
-                    ? "bg-white text-[#3a0050] hover:bg-white hover:text-[#3a0050]"
+                    ? "bg-white text-[#ec4899] hover:bg-white hover:text-[#ec4899]"
 
                     // ABA INATIVA
-                    : "text-[#e9ccff] hover:bg-[#c070ff]/20 hover:text-white"
+                    : "text-[#fce7f3] hover:bg-[#f9a8d4]/20 hover:text-white"
                 )}
                 onClick={() => onTabChange?.(tab.id)}
               >
@@ -54,8 +54,8 @@ export function MobileLayout({ children, activeTab = 'preview', onTabChange }: M
                   className={cn(
                     "text-xs font-[700]",
                     activeTab === tab.id
-                      ? "text-[#3a0050]"
-                      : "text-[#e9ccff]"
+                      ? "text-[#ec4899]"
+                      : "text-[#fce7f3]"
                   )}
                 >
                   {tab.label}
