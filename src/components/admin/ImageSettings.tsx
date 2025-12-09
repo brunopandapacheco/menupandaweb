@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Upload, Image as ImageIcon } from 'lucide-react'
+import { Image as ImageIcon } from 'lucide-react'
 import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabaseService } from '@/services/supabase'
@@ -153,9 +153,8 @@ export function ImageSettings({
             >
               <label 
                 htmlFor="logo-upload" 
-                className="cursor-pointer flex items-center gap-2"
+                className="cursor-pointer"
               >
-                <Upload className="w-5 h-5" />
                 {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
               </label>
             </Button>
@@ -207,9 +206,8 @@ export function ImageSettings({
             >
               <label 
                 htmlFor="banner-upload" 
-                className="cursor-pointer flex items-center gap-2"
+                className="cursor-pointer"
               >
-                <Upload className="w-5 h-5" />
                 {uploadingBanner ? 'Processando...' : 'Selecionar Banner'}
               </label>
             </Button>
