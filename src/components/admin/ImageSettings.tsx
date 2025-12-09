@@ -133,7 +133,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Amarelo (Logo) */}
+          {/* Botão Rosa (Logo) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -148,7 +148,7 @@ export function ImageSettings({
               asChild
               size="lg"
               className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#F5C542', color: 'white' }}
+              style={{ backgroundColor: '#ec4899', color: 'white' }}
               disabled={uploadingLogo}
             >
               <label 
@@ -187,7 +187,7 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Amarelo (Banner) */}
+          {/* Botão Rosa (Banner) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -202,7 +202,7 @@ export function ImageSettings({
               asChild
               size="lg"
               className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#F5C542', color: 'white' }}
+              style={{ backgroundColor: '#ec4899', color: 'white' }}
               disabled={uploadingBanner}
             >
               <label 
