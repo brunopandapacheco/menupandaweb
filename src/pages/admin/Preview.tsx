@@ -115,7 +115,7 @@ export default function Preview() {
         <div className="fixed top-4 right-4 z-50">
           <Button
             onClick={copyLink}
-            className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 px-3 py-1 h-8 text-xs"
+            className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
             size="sm"
           >
             {copied ? 'Copiado!' : 'Compartilhar'}
@@ -177,7 +177,7 @@ export default function Preview() {
       <div className="fixed top-4 right-4 z-50">
         <Button
           onClick={copyLink}
-          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg border border-gray-200 px-3 py-1 h-8 text-xs"
+          className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
           size="sm"
         >
           {copied ? 'Copiado!' : 'Compartilhar'}
