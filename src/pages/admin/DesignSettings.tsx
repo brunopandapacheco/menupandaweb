@@ -24,6 +24,13 @@ export default function DesignSettings() {
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
+  const [endereco, setEndereco] = useState({
+    cidade: '',
+    estado: '',
+    rua: '',
+    numero: '',
+    complemento: ''
+  })
   
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
@@ -175,8 +182,10 @@ export default function DesignSettings() {
             <StoreSettings
               nomeLoja={nomeLoja}
               descricaoLoja={descricaoLoja}
+              endereco={endereco}
               onNomeLojaChange={setNomeLoja}
               onDescricaoLojaChange={setDescricaoLoja}
+              onEnderecoChange={setEndereco}
               onSaveConfig={saveConfig}
             />
 
