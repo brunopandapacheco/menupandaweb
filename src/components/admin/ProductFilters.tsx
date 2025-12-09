@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Filter, Plus } from 'lucide-react'
+import { Filter } from 'lucide-react'
 
 interface ProductFiltersProps {
   selectedCategory: string
@@ -43,9 +43,8 @@ export function ProductFilters({
           <Button 
             onClick={onNewProduct}
             className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-            style={{ backgroundColor: '#F5C542', color: 'white' }}
+            style={{ backgroundColor: '#ec4899', color: 'white' }}
           >
-            <Plus className="w-5 h-5 mr-2" />
             Novo Produto
           </Button>
         </div>
