@@ -114,18 +114,6 @@ export function ProductCard({
                   <span className="text-xs text-gray-400 line-through">
                     R$ {product.preco_normal.toFixed(2)}
                   </span>
-                  <Badge 
-                    variant="destructive" 
-                    className="text-xs px-1 py-0 rounded-sm"
-                    style={{ 
-                      borderRadius: '2px',
-                      backgroundColor: '#ef4444',
-                      color: 'white',
-                      pointerEvents: 'none'
-                    }}
-                  >
-                    -{Math.round((1 - product.preco_promocional / product.preco_normal) * 100)}%
-                  </Badge>
                 </div>
                 <div className="flex items-center gap-1 mb-1">
                   <span className="text-sm font-bold text-green-600">
