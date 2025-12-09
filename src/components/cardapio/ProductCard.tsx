@@ -111,7 +111,7 @@ export function ProductCard({
             {product.promocao && product.preco_promocional ? (
               <div className="mb-2">
                 <div className="flex items-center gap-1 mb-1">
-                  <span className="text-xs text-gray-400 line-through">
+                  <span className="text-xs text-red-500 line-through">
                     R$ {product.preco_normal.toFixed(2)}
                   </span>
                 </div>
