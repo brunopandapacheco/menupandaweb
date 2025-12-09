@@ -160,11 +160,12 @@ export function Logo({
         {/* Nome e descrição */}
         <div className="text-center mt-8 mb-4">
           <h1 
-            className="text-2xl mb-2"
+            className="text-2xl mb-2 font-bold"
             style={{ 
               color: corNome,
               fontFamily: '"Bebas Neue", sans-serif',
-              fontWeight: 'bold'
+              fontWeight: 900,
+              letterSpacing: '0.5px'
             }}
           >
             {storeName}
