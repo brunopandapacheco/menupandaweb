@@ -49,9 +49,11 @@ export function StoreSettings({
 
           {/* Descrição da Loja */}
           <div className="space-y-2">
-            <Label htmlFor="descricaoLoja" className="text-sm font-medium" style={{ color: '#ec4899' }}>
-              Descrição da Loja
-            </Label>
+            <div className="text-center pb-4">
+              <Label htmlFor="descricaoLoja" className="text-2xl font-bold" style={{ color: '#ec4899' }}>
+                Descrição da Loja
+              </Label>
+            </div>
             <textarea
               id="descricaoLoja"
               value={descricaoLoja}
