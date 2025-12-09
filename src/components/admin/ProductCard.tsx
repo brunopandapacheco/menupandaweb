@@ -50,7 +50,7 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
       <CardContent className="p-4 border-t-2 border-white">
         {/* Nome do Produto */}
         <div className="mb-2">
-          <h3 className="text-lg font-bold text-gray-800">{product.nome}</h3>
+          <h3 className="text-base font-bold text-gray-800">{product.nome}</h3>
         </div>
 
         {/* Descrição do Produto */}
