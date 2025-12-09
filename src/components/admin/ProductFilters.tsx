@@ -37,9 +37,6 @@ export function ProductFilters({
           </Select>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <div className="text-sm text-gray-600 bg-purple-50 px-3 py-1 rounded-full">
-            {productCount} produto{productCount !== 1 ? 's' : ''}
-          </div>
           <Button 
             onClick={onNewProduct}
             className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
