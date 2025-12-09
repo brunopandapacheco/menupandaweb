@@ -17,14 +17,14 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
   const images = getProductImages(product.imagem_url)
 
   return (
-    <Card className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+    <Card className="group hover:shadow-2xl transition-all duration-300 border-2 border-white shadow-lg overflow-hidden">
       {/* Imagem do Produto - Container quadrado 1:1 */}
       <div className="relative aspect-square bg-gradient-to-br from-purple-100 to-pink-100">
         {images.length > 0 ? (
           <img 
             src={images[0]} 
             alt={product.nome} 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-cover border-2 border-white" 
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -47,7 +47,7 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
         </div>
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="p-4 border-t-2 border-white">
         {/* Nome do Produto */}
         <div className="mb-2">
           <h3 className="text-lg font-bold text-gray-800">{product.nome}</h3>
