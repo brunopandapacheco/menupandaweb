@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Autocomplete } from '@/components/ui/autocomplete'
 import { Store, MapPin } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
+import { BRAZILIAN_CITIES, BRAZILIAN_STATES } from '@/data/locations'
 
 interface StoreSettingsProps {
   nomeLoja: string
@@ -147,11 +149,11 @@ export function StoreSettings({
               <Label htmlFor="cidade" className="text-sm font-medium" style={{ color: '#4A3531' }}>
                 Cidade
               </Label>
-              <Input
-                id="cidade"
+              <Autocomplete
                 value={endereco.cidade}
-                onChange={(e) => handleEnderecoFieldChange('cidade', e.target.value)}
+                onChange={(value) => handleEnderecoFieldChange('cidade', value)}
                 placeholder="São Paulo"
+                options={BRAZILIAN_CITIES}
                 className="w-full"
               />
             </div>
@@ -161,11 +163,11 @@ export function StoreSettings({
               <Label htmlFor="estado" className="text-sm font-medium" style={{ color: '#4A3531' }}>
                 Estado
               </Label>
-              <Input
-                id="estado"
+              <Autocomplete
                 value={endereco.estado}
-                onChange={(e) => handleEnderecoFieldChange('estado', e.target.value)}
+                onChange={(value) => handleEnderecoFieldChange('estado', value)}
                 placeholder="SP"
+                options={BRAZILIAN_STATES}
                 className="w-full"
                 maxLength={2}
               />

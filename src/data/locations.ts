@@ -1,0 +1,43 @@
+export const BRAZILIAN_STATES = [
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", 
+  "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", 
+  "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
+];
+
+export const BRAZILIAN_CITIES = [
+  "São Paulo", "Rio de Janeiro", "Brasília", "Salvador", "Fortaleza",
+  "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre",
+  "Belém", "Goiânia", "Guarulhos", "Campinas", "São Luís",
+  "São Gonçalo", "Maceió", "Duque de Caxias", "Nova Iguaçu", "Teresina",
+  "São Bernardo do Campo", "Santo André", "Osasco", "João Pessoa", "Jaboatão dos Guararapes",
+  "Contagem", "Sorocaba", "Ribeirão Preto", "Aracaju", "Feira de Santana",
+  "Cuiabá", "Joinville", "Juiz de Fora", "Aparecida de Goiânia", "Londrina",
+  "Ananindeua", "Porto Velho", "Serra", "Niterói", "Caxias do Sul",
+  "Campos dos Goytacazes", "Vila Velha", "Mauá", "São José dos Campos", "Mogi das Cruzes",
+  "Santo André", "Betim", "Jundiaí", "Carapicuíba", "Piracicaba",
+  "Canoas", "Cariacica", "Montes Claros", "Bauru", "São Vicente",
+  "Olinda", "São José do Rio Preto", "Santos", "Franca", "Maringá",
+  "Florianópolis", "Petrópolis", "Maceió", "Vitória da Conquista", "Itajaí",
+  "Juazeiro do Norte", "São José de Ribamar", "Caxias", "Imperatriz", "Sumaré",
+  "Camaragibe", "Paulista", "Castanhal", "Parnaíba", "Palmas",
+  "Araguaina", "Barreiras", "Passo Fundo", "Sobral", "Luziânia",
+  "Criciúma", "Itabuna", "Chapecó", "Ponta Grossa", "Rio Branco",
+  "Blumenau", "Caruaru", "Viamão", "Petrolina", "Cabo de Santo Agostinho",
+  "Várzea Grande", "Ipatinga", "Suzano", "Lages", "Gravataí",
+  "São José", "Marília", "Guarujá", "Americana", "Presidente Prudente",
+  "Taubaté", "Eunápolis", "São Leopoldo", "Itapevi", "Maracanaú",
+  "Santa Maria", "Garanhuns", "Barueri", "Boa Vista", "Ji-Paraná",
+  "Arapiraca", "Passos", "São Caetano do Sul", "Pouso Alegre", "Taguatinga",
+  "Colombo", "Divinópolis", "Ribeirão das Neves", "Cotia", "Diadema",
+  "Anápolis", "Abaetetuba", "São João de Meriti", "Poá", "Catanduva",
+  "Pindamonhangaba", "Caraguatatuba", "Guaratinguetá", "Itabira", "Birigui",
+  "Mossoró", "Parauapebas", "Timon", "Teixeira de Freitas", "Palhoça",
+  "Iguatu", "Barbacena", "São Bento do Sul", "Sabará", "Santa Bárbara d'Oeste",
+  "Nova Friburgo", "Poços de Caldas", "Franco da Rocha", "Itajaí", "Linhares",
+  "Araguaina", "Serra Talhada", "Rio Verde", "Bragança Paulista", "Paranaguá",
+  "Alagoinhas", "Itapetininga", "Uruguaiana", "Paranavaí", "Irecê",
+  "Cachoeiro de Itapemirim", "Camaçari", "São Mateus", "Barra do Piraí", "Erechim",
+  "São Pedro da Aldeia", "Nova Serrana", "Botucatu", "Conselheiro Lafaiete", "São José dos Pinhais",
+  "Itaguaí", "Coronel Fabriciano", "Uruaçu", "Araguari", "Cabo Frio",
+  "Itapipoca", "Santo Antônio de Jesus", "Redenção", "Apucarana", "Araras"
+];
