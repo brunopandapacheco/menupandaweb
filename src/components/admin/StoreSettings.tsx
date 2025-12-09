@@ -60,12 +60,10 @@ export function StoreSettings({
               onChange={(e) => handleDescricaoChange(e.target.value)}
               placeholder="Descreva sua confeitaria..."
               rows={8}
+              maxLength={300}
               className="w-full p-3 border border-gray-300 rounded-lg resize-none"
             />
-            <div className="flex justify-between items-center">
-              <p className="text-xs text-gray-500">
-                {descricaoLoja.length}/300 caracteres
-              </p>
+            <div className="flex justify-end">
               <Button 
                 onClick={onSaveConfig}
                 className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
