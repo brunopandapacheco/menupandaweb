@@ -17,8 +17,8 @@ interface StoreSettingsProps {
 export function StoreSettings({
   nomeLoja,
   descricaoLoja,
-  onNomeLojaChange,
   onDescricaoLojaChange,
+  onNomeLojaChange,
   onSaveConfig
 }: StoreSettingsProps) {
   const handleDescricaoChange = (value: string) => {
@@ -63,7 +63,7 @@ export function StoreSettings({
               maxLength={300}
               className="w-full p-3 border border-gray-300 rounded-lg resize-none"
             />
-            <div className="flex justify-end">
+            <div className="flex justify-center">
               <Button 
                 onClick={onSaveConfig}
                 className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
