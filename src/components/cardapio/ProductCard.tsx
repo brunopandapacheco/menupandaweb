@@ -135,7 +135,7 @@ export function ProductCard({
               </div>
             ) : (
               <div className="flex items-center gap-1 mb-2">
-                <span className="text-sm font-bold">
+                <span className="text-sm font-bold text-green-600">
                   R$ {product.preco_normal.toFixed(2)}
                 </span>
                 <Badge 
