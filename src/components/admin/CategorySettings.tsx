@@ -34,7 +34,7 @@ interface CategorySettingsProps {
 }
 
 export function CategorySettings({ mainCategories, onMainCategoriesChange, onSaveCategories }: CategorySettingsProps) {
-  const { produtos, designSettings, saveDesignSettings } = useDatabase()
+  const { produtos, designSettings, saveDesignSettings, editProduto } = useDatabase()
   const [editingCategory, setEditingCategory] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
   const [editingIcon, setEditingIcon] = useState('')
@@ -78,21 +78,51 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     setShowIconSelector(null)
   }
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editingCategory || !editingName.trim()) return
 
-    // Atualizar nome da categoria em todos os produtos
-    const updatedProducts = produtos.map(product => {
-      if (product.categoria === editingCategory) {
-        return { ...product, categoria: editingName.trim() }
+    try {
+      // Atualizar o nome da categoria em todos os produtos
+      const productsToUpdate = produtos.filter(product => product.categoria === editingCategory)
+      
+      console.log(`🔄 Updating category "${editingCategory}" to "${editingName.trim()}" in ${productsToUpdate.length} products`)
+      
+      // Atualizar cada produto individualmente
+      for (const product of productsToUpdate) {
+        const success = await editProduto(product.id, { categoria: editingName.trim() })
+        if (!success) {
+          throw new Error(`Falha ao atualizar produto ${product.nome}`)
+        }
       }
-      return product
-    })
 
-    showSuccess(`Categoria "${editingCategory}" renomeada para "${editingName.trim()}"`)
-    setEditingCategory(null)
-    setEditingName('')
-    setEditingIcon('')
+      // Se houver ícone personalizado para a categoria antiga, mover para a nova
+      if (categoryIcons[editingCategory]) {
+        const updatedIcons = { ...categoryIcons }
+        updatedIcons[editingName.trim()] = updatedIcons[editingCategory]
+        delete updatedIcons[editingCategory]
+        
+        console.log('🔄 Moving icon from old category to new category:', updatedIcons)
+        
+        const success = await saveDesignSettings({
+          category_icons: updatedIcons
+        })
+        
+        if (success) {
+          setCategoryIcons(updatedIcons)
+          console.log('✅ Icons updated successfully')
+        } else {
+          console.error('❌ Failed to update icons')
+        }
+      }
+
+      showSuccess(`Categoria "${editingCategory}" renomeada para "${editingName.trim()}" em ${productsToUpdate.length} produtos`)
+      setEditingCategory(null)
+      setEditingName('')
+      setEditingIcon('')
+    } catch (error: any) {
+      console.error('❌ Error updating category:', error)
+      showError('Erro ao atualizar categoria. Tente novamente.')
+    }
   }
 
   const handleDeleteCategory = (category: string) => {
