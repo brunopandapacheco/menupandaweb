@@ -48,7 +48,11 @@ export function ProductCard({
   const firstImage = getFirstImage(product.imagem_url)
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+    <div className={`bg-white rounded-lg overflow-hidden shadow-sm ${
+      product.promocao 
+        ? 'border-2 border-dashed border-red-400' 
+        : 'border border-gray-100'
+    }`}>
       <div className="p-3">
         {/* Imagem em primeiro - quadrada */}
         <div 
@@ -152,7 +156,7 @@ export function ProductCard({
                   style={{ 
                     borderRadius: '2px',
                     backgroundColor: '#ec4899',
-                    color: 'white',
+                  color: 'white',
                     pointerEvents: 'none'
                   }}
                 >
