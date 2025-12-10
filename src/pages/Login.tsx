@@ -49,7 +49,7 @@ export default function Login() {
           <div className="text-center">
             <h3 className="text-white font-semibold text-lg mb-4">Precisa de Ajuda?</h3>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               {/* Email */}
               <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
                 <Mail className="w-4 h-4" />
@@ -61,11 +61,6 @@ export default function Login() {
                 <MessageCircle className="w-4 h-4" />
                 <span className="text-sm">WhatsApp: 41 9 9884-3669</span>
               </div>
-            </div>
-            
-            <div className="text-white/70 text-xs">
-              <p>Horário de atendimento: Segunda a Sexta, 9h às 18h</p>
-              <p className="mt-1">Tempo médio de resposta: até 24 horas úteis</p>
             </div>
           </div>
         </div>
