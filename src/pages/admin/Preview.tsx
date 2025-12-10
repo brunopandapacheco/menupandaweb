@@ -120,20 +120,50 @@ export default function Preview() {
     setShowShareOptions(false)
   }
 
+  // Função de compartilhamento nativo
+  const shareNatively = async () => {
+    const url = getCardapioUrl()
+    if (!url) return
+
+    try {
+      // Verificar se a API de compartilhamento nativo está disponível
+      if (navigator.share) {
+        await navigator.share({
+          title: designSettings?.nome_loja || 'Cardápio Digital',
+          text: `🍰 Confira nosso cardápio de doces! ${designSettings?.nome_loja || ''}`,
+          url: url
+        })
+        showSuccess('Compartilhado com sucesso!')
+        setShowShareOptions(false)
+      } else {
+        // Se não tiver suporte, usar o método genérico
+        shareOnGeneric()
+      }
+    } catch (error) {
+      console.log('Compartilhamento cancelado ou falhou:', error)
+      // Se o usuário cancelar, não mostrar erro
+      if (error.name !== 'AbortError') {
+        shareOnGeneric()
+      }
+    }
+  }
+
   const shareOnGeneric = () => {
     const url = getCardapioUrl()
     if (!url) return
     
+    // Tentar compartilhamento nativo primeiro
     if (navigator.share) {
       navigator.share({
         title: designSettings?.nome_loja || 'Cardápio Digital',
-        text: `Confira nosso cardápio de doces!`,
+        text: `🍰 Confira nosso cardápio de doces!`,
         url: url
       }).then(() => {
         showSuccess('Compartilhado com sucesso!')
         setShowShareOptions(false)
       }).catch(() => {
-        setShowShareOptions(false)
+        // Se falhar, copiar link
+        copyLink()
       })
     } else {
       // Fallback: copiar link
@@ -178,9 +208,9 @@ export default function Preview() {
   if (device === 'desktop') {
     return (
       <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-        {/* Botão de compartilhar */}
+        {/* Botão de compartilhar com z-index alto */}
         <div 
-          className={`fixed top-4 right-4 z-50 transition-opacity duration-300 ${
+          className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 ${
             showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
@@ -194,10 +224,22 @@ export default function Preview() {
               Compartilhar
             </Button>
 
-            {/* Menu de opções de compartilhamento */}
+            {/* Menu de opções de compartilhamento com z-index mais alto */}
             {showShareOptions && (
-              <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-50">
+              <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-[10000]">
                 <div className="space-y-1">
+                  {/* Compartilhamento Nativo (prioridade) */}
+                  {navigator.share && (
+                    <Button
+                      onClick={shareNatively}
+                      variant="ghost"
+                      className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
+                    >
+                      <Share2 className="w-4 h-4 mr-2 text-blue-600" />
+                      Compartilhar
+                    </Button>
+                  )}
+                  
                   <Button
                     onClick={shareOnWhatsApp}
                     variant="ghost"
@@ -214,15 +256,6 @@ export default function Preview() {
                   >
                     <Instagram className="w-4 h-4 mr-2 text-pink-600" />
                     Instagram
-                  </Button>
-                  
-                  <Button
-                    onClick={shareOnGeneric}
-                    variant="ghost"
-                    className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
-                  >
-                    <Send className="w-4 h-4 mr-2 text-blue-600" />
-                    Outros
                   </Button>
                   
                   <hr className="my-1" />
@@ -301,9 +334,9 @@ export default function Preview() {
   // Em mobile e tablet, mostrar preview em tela cheia sem opções de dispositivo
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-      {/* Botão de compartilhar */}
+      {/* Botão de compartilhar com z-index alto */}
       <div 
-        className={`fixed top-4 right-4 z-50 transition-opacity duration-300 ${
+        className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 ${
           showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
@@ -317,10 +350,22 @@ export default function Preview() {
             Compartilhar
           </Button>
 
-          {/* Menu de opções de compartilhamento */}
+          {/* Menu de opções de compartilhamento com z-index mais alto */}
           {showShareOptions && (
-            <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-50">
+            <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-[10000]">
               <div className="space-y-1">
+                {/* Compartilhamento Nativo (prioridade) */}
+                {navigator.share && (
+                  <Button
+                    onClick={shareNatively}
+                    variant="ghost"
+                    className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
+                  >
+                    <Share2 className="w-4 h-4 mr-2 text-blue-600" />
+                    Compartilhar
+                  </Button>
+                )}
+                
                 <Button
                   onClick={shareOnWhatsApp}
                   variant="ghost"
@@ -337,15 +382,6 @@ export default function Preview() {
                 >
                   <Instagram className="w-4 h-4 mr-2 text-pink-600" />
                   Instagram
-                </Button>
-                
-                <Button
-                  onClick={shareOnGeneric}
-                  variant="ghost"
-                  className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
-                >
-                  <Send className="w-4 h-4 mr-2 text-blue-600" />
-                  Outros
                 </Button>
                 
                 <hr className="my-1" />
