@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2, MessageCircle, Send, Instagram } from 'lucide-react'
+import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2, MessageCircle, Send, Instagram, LogOut } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
+import { useAuth } from '@/hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 import { Banner } from '@/components/cardapio/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
@@ -14,9 +16,12 @@ import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { Produto } from '@/types/database'
 import { showSuccess, showError } from '@/utils/toast'
+import { supabase } from '@/lib/supabase'
 
 export default function Preview() {
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
@@ -34,6 +39,26 @@ export default function Preview() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Função para fazer logout
+  const handleLogout = async () => {
+    try {
+      console.log('🔐 Fazendo logout...')
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error('❌ Erro ao fazer logout:', error)
+        showError('Erro ao sair. Tente novamente.')
+      } else {
+        console.log('✅ Logout realizado com sucesso')
+        showSuccess('Sessão encerrada com sucesso!')
+        navigate('/login')
+      }
+    } catch (error) {
+      console.error('❌ Erro inesperado ao fazer logout:', error)
+      showError('Erro ao sair. Tente novamente.')
+    }
+  }
 
   // Mostrar loading apenas na primeira carga
   if (loading && !designSettings) {
@@ -208,12 +233,23 @@ export default function Preview() {
   if (device === 'desktop') {
     return (
       <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-        {/* Botão de compartilhar com z-index alto */}
+        {/* Botões de ação com z-index alto */}
         <div 
-          className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 ${
+          className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 flex gap-2 ${
             showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
+          {/* Botão Sair */}
+          <Button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
+            size="sm"
+          >
+            <LogOut className="w-3 h-3 mr-1" />
+            Sair
+          </Button>
+
+          {/* Botão Compartilhar */}
           <div className="relative">
             <Button
               onClick={() => setShowShareOptions(!showShareOptions)}
@@ -334,12 +370,23 @@ export default function Preview() {
   // Em mobile e tablet, mostrar preview em tela cheia sem opções de dispositivo
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-      {/* Botão de compartilhar com z-index alto */}
+      {/* Botões de ação com z-index alto */}
       <div 
-        className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 ${
+        className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 flex gap-2 ${
           showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
+        {/* Botão Sair */}
+        <Button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
+          size="sm"
+        >
+          <LogOut className="w-3 h-3 mr-1" />
+          Sair
+        </Button>
+
+        {/* Botão Compartilhar */}
         <div className="relative">
           <Button
             onClick={() => setShowShareOptions(!showShareOptions)}
