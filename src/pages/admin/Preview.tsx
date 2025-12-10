@@ -13,7 +13,7 @@ import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { Produto } from '@/types/database'
-import { showSuccess } from '@/utils/toast'
+import { showSuccess, showError } from '@/utils/toast'
 
 export default function Preview() {
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
@@ -62,9 +62,13 @@ export default function Preview() {
   }
 
   const copyLink = async () => {
-    if (!designSettings?.slug) return
+    if (!designSettings?.codigo) {
+      showError('Código da loja não encontrado. Configure sua loja primeiro.')
+      return
+    }
     
-    const link = `${window.location.origin}/cardapio/${designSettings.slug}`
+    // Usar apenas o código único (fixo para cada usuário)
+    const link = `${window.location.origin}/cardapio/${designSettings.codigo}`
     
     try {
       await navigator.clipboard.writeText(link)

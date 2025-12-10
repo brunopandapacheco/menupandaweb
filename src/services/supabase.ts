@@ -37,7 +37,7 @@ export class SupabaseService {
     return code
   }
 
-  // Gerar slug completo (código + nome da loja)
+  // Gerar slug completo (código + nome da loja) - mantido para compatibilidade
   generateFullSlug(nomeLoja: string): string {
     const code = this.generateUniqueCode()
     const nameSlug = nomeLoja
@@ -64,17 +64,15 @@ export class SupabaseService {
     return data
   }
 
-  async getDesignSettingsBySlug(slug: string) {
+  async getDesignSettingsBySlug(codigo: string) {
     try {
-      console.log('🔍 getDesignSettingsBySlug: Getting settings for slug:', slug)
+      console.log('🔍 getDesignSettingsBySlug: Getting settings for código:', codigo)
       
-      // Extrair o código do slug (primeira parte antes da barra)
-      const code = slug.split('/')[0]
-      
+      // Usar o campo codigo em vez de slug
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
-        .eq('codigo', code)
+        .eq('codigo', codigo)
         .single()
       
       if (error && error.code !== 'PGRST116') {
@@ -179,18 +177,18 @@ export class SupabaseService {
     }
   }
 
-  async getConfiguracoesBySlug(slug: string) {
+  async getConfiguracoesBySlug(codigo: string) {
     try {
-      console.log('🔍 getConfiguracoesBySlug: Getting config for slug:', slug)
+      console.log('🔍 getConfiguracoesBySlug: Getting config for código:', codigo)
       
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
-        .eq('codigo', slug.split('/')[0])
+        .eq('codigo', codigo)
         .single()
       
       if (designError) {
-        console.error('❌ Design settings not found for slug:', slug)
+        console.error('❌ Design settings not found for código:', codigo)
         throw new Error('Design settings not found')
       }
       
@@ -270,18 +268,18 @@ export class SupabaseService {
     return data || []
   }
 
-  async getProductsBySlug(slug: string) {
+  async getProductsBySlug(codigo: string) {
     try {
-      console.log('🔍 getProductsBySlug: Getting products for slug:', slug)
+      console.log('🔍 getProductsBySlug: Getting products for código:', codigo)
       
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
-        .eq('codigo', slug.split('/')[0])
+        .eq('codigo', codigo)
         .single()
       
       if (designError) {
-        console.error('❌ Design settings not found for slug:', slug)
+        console.error('❌ Design settings not found for código:', codigo)
         throw new Error('Design settings not found')
       }
       

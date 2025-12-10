@@ -26,12 +26,14 @@ export default function CardapioPublico() {
     }
   }, [slug])
 
-  const loadData = async (slug: string) => {
+  const loadData = async (codigo: string) => {
     try {
+      console.log('🔍 Carregando cardápio para código:', codigo)
+      
       const [designData, configData, productsData] = await Promise.all([
-        supabaseService.getDesignSettingsBySlug(slug),
-        supabaseService.getConfiguracoesBySlug(slug),
-        supabaseService.getProductsBySlug(slug)
+        supabaseService.getDesignSettingsBySlug(codigo),
+        supabaseService.getConfiguracoesBySlug(codigo),
+        supabaseService.getProductsBySlug(codigo)
       ])
 
       setDesignSettings(designData)
