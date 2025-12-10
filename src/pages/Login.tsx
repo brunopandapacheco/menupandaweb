@@ -50,16 +50,16 @@ export default function Login() {
             <h3 className="text-white font-semibold text-lg mb-4">Precisa de Ajuda?</h3>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              {/* Email */}
-              <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">suporte@pandamenu.com</span>
-              </div>
-              
               {/* WhatsApp */}
               <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
                 <MessageCircle className="w-4 h-4" />
                 <span className="text-sm">WhatsApp: 41 9 9884-3669</span>
+              </div>
+              
+              {/* Email */}
+              <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">suporte@pandamenu.com</span>
               </div>
             </div>
           </div>
