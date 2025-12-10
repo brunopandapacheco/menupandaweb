@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2, MessageCircle, Send, Instagram, LogOut } from 'lucide-react'
+import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2, MessageCircle, Send, Instagram, LogOut, RefreshCw } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { useAuth } from '@/hooks/useAuth'
@@ -15,11 +15,11 @@ import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { Produto } from '@/types/database'
-import { showSuccess, showError } from '@/utils/toast'
+import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast'
 import { supabase } from '@/lib/supabase'
 
 export default function Preview() {
-  const { designSettings, configuracoes, produtos, loading } = useDatabase()
+  const { designSettings, configuracoes, produtos, loading, refreshData } = useDatabase()
   const { user } = useAuth()
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
@@ -28,6 +28,7 @@ export default function Preview() {
   const [copied, setCopied] = useState(false)
   const [showShareOptions, setShowShareOptions] = useState(false)
   const [showButton, setShowButton] = useState(true)
+  const [generatingCode, setGeneratingCode] = useState(false)
   const device = useDeviceDetection()
 
   useEffect(() => {
@@ -89,7 +90,8 @@ export default function Preview() {
 
   const getCardapioUrl = () => {
     if (!designSettings?.codigo) {
-      showError('Código da loja não encontrado. Configure sua loja primeiro.')
+      showError('Código da loja não encontrado. Gerando um novo código...')
+      generateNewCode()
       return null
     }
     
@@ -97,6 +99,50 @@ export default function Preview() {
     const url = `${window.location.origin}/cardapio/${designSettings.codigo}`
     console.log('🔗 Generated URL:', url)
     return url
+  }
+
+  const generateNewCode = async () => {
+    if (!user) {
+      showError('Usuário não autenticado')
+      return
+    }
+
+    setGeneratingCode(true)
+    const toastId = showLoading('Gerando novo código...')
+
+    try {
+      // Forçar refresh dos dados para garantir que temos o código mais recente
+      await refreshData()
+      
+      // Verificar se o código foi gerado
+      if (designSettings?.codigo) {
+        dismissToast(String(toastId))
+        showSuccess(`Código gerado: ${designSettings.codigo}`)
+        return
+      }
+
+      // Se ainda não tiver código, tentar gerar manualmente
+      const { supabaseService } = await import('@/services/supabase')
+      const newCode = supabaseService.generateUniqueCode()
+      
+      const success = await supabaseService.updateDesignSettings(user.id, { codigo: newCode })
+      
+      if (success) {
+        dismissToast(String(toastId))
+        showSuccess(`Novo código gerado: ${newCode}`)
+        // Forçar refresh dos dados
+        await refreshData()
+      } else {
+        dismissToast(String(toastId))
+        showError('Erro ao gerar código. Tente novamente.')
+      }
+    } catch (error) {
+      console.error('❌ Erro ao gerar código:', error)
+      dismissToast(String(toastId))
+      showError('Erro ao gerar código. Tente novamente.')
+    } finally {
+      setGeneratingCode(false)
+    }
   }
 
   const copyLink = async () => {
@@ -319,6 +365,39 @@ export default function Preview() {
           </div>
         </div>
 
+        {/* Status do Código */}
+        <div className="fixed top-4 left-4 z-[9999]">
+          <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Seu código:</span>
+              {designSettings?.codigo ? (
+                <Badge className="bg-green-100 text-green-800">
+                  {designSettings.codigo}
+                </Badge>
+              ) : (
+                <Button
+                  onClick={generateNewCode}
+                  disabled={generatingCode}
+                  size="sm"
+                  className="h-6 text-xs"
+                >
+                  {generatingCode ? (
+                    <>
+                      <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
+                      Gerando...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-3 h-3 mr-1" />
+                      Gerar Código
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
         <Banner 
           borderColor={designSettings?.cor_borda}
           bannerGradient={designSettings?.banner_gradient}
@@ -453,6 +532,39 @@ export default function Preview() {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Status do Código */}
+      <div className="fixed top-4 left-4 z-[9999]">
+        <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Seu código:</span>
+            {designSettings?.codigo ? (
+              <Badge className="bg-green-100 text-green-800">
+                {designSettings.codigo}
+              </Badge>
+            ) : (
+              <Button
+                onClick={generateNewCode}
+                disabled={generatingCode}
+                size="sm"
+                className="h-6 text-xs"
+              >
+                {generatingCode ? (
+                  <>
+                    <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
+                    Gerando...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-3 h-3 mr-1" />
+                    Gerar Código
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

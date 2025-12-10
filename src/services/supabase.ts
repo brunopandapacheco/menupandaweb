@@ -89,61 +89,94 @@ export class SupabaseService {
   }
 
   async updateDesignSettings(userId: string, settings: any) {
-    // Primeiro, verificar se já existe um registro
-    const { data: existingRecord } = await supabase
-      .from('design_settings')
-      .select('*')
-      .eq('user_id', userId)
-      .single()
-    
-    if (existingRecord) {
-      // Se existe, fazer update
-      const { data, error } = await supabase
+    try {
+      console.log('💾 updateDesignSettings: Updating for user:', userId, 'settings:', settings)
+      
+      // Primeiro, verificar se já existe um registro
+      const { data: existingRecord } = await supabase
         .from('design_settings')
-        .update(settings)
+        .select('*')
         .eq('user_id', userId)
-        .select()
         .single()
       
-      if (error) throw error
-      return data
-    } else {
-      // Se não existe, fazer insert
-      const { data, error } = await supabase
-        .from('design_settings')
-        .insert({ user_id: userId, ...settings })
-        .select()
-        .single()
+      let result
       
-      if (error) throw error
-      return data
+      if (existingRecord) {
+        // Se existe, fazer update
+        console.log('📝 Updating existing record')
+        const { data, error } = await supabase
+          .from('design_settings')
+          .update(settings)
+          .eq('user_id', userId)
+          .select()
+          .single()
+        
+        if (error) throw error
+        result = data
+      } else {
+        // Se não existe, fazer insert com código gerado
+        console.log('➕ Creating new record with code')
+        const code = this.generateUniqueCode()
+        const { data, error } = await supabase
+          .from('design_settings')
+          .insert({ 
+            user_id: userId, 
+            ...settings,
+            codigo: code // Garantir que o código seja gerado
+          })
+          .select()
+          .single()
+        
+        if (error) throw error
+        result = data
+      }
+      
+      console.log('✅ updateDesignSettings success:', result)
+      return result
+    } catch (error) {
+      console.error('❌ Error in updateDesignSettings:', error)
+      throw error
     }
   }
 
   async createDefaultDesignSettings(userId: string, nomeLoja?: string) {
-    const storeName = nomeLoja || 'Minha Loja'
-    const fullSlug = this.generateFullSlug(storeName)
-    const code = fullSlug.split('/')[0]
-    
-    const { data, error } = await supabase
-      .from('design_settings')
-      .insert({
-        user_id: userId,
-        nome_loja: storeName,
-        cor_borda: '#ec4899',
-        cor_background: '#fef2f2',
-        cor_nome: '#be185d',
-        background_topo_color: '#fce7f3',
-        texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-        banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-        slug: fullSlug,
-        codigo: code
-      })
-      .select()
-      .single()
-    
-    if (error) throw error
-    return data
+    try {
+      console.log('📝 createDefaultDesignSettings: Creating for user:', userId, 'nome:', nomeLoja)
+      
+      const storeName = nomeLoja || 'Minha Loja'
+      const fullSlug = this.generateFullSlug(storeName)
+      const code = fullSlug.split('/')[0] // Extrair apenas o código
+      
+      console.log('🔑 Generated code:', code)
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .insert({
+          user_id: userId,
+          nome_loja: storeName,
+          cor_borda: '#ec4899',
+          cor_background: '#fef2f2',
+          cor_nome: '#be185d',
+          background_topo_color: '#fce7f3',
+          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+          banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+          slug: fullSlug,
+          codigo: code // Garantir que o código seja salvo
+        })
+        .select()
+        .single()
+      
+      if (error) {
+        console.error('❌ createDefaultDesignSettings error:', error)
+        throw error
+      }
+      
+      console.log('✅ createDefaultDesignSettings success:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Error in createDefaultDesignSettings:', error)
+      throw error
+    }
   }
 
   // Configurações

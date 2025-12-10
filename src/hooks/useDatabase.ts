@@ -28,7 +28,7 @@ export function useDatabase() {
 
     console.log('🔄 loadData: Starting data load for user:', user.id, 'forceRefresh:', forceRefresh)
     
-    // Verificar se já temos dados em cache e não for forçar refresh
+    // Verificar se já temos dados em cache e não forçar refresh
     const hasValidCache = !forceRefresh && 
       isCacheValid('designSettings') && 
       isCacheValid('configuracoes') && 
@@ -77,6 +77,17 @@ export function useDatabase() {
         console.log('📝 No design settings found, creating default...')
         designData = await supabaseService.createDefaultDesignSettings(user.id)
         console.log('✅ Default design settings created:', designData)
+      }
+
+      // Verificar se o código foi gerado
+      if (designData && !designData.codigo) {
+        console.log('⚠️ No code found, generating new one...')
+        const code = supabaseService.generateUniqueCode()
+        const updatedDesign = await supabaseService.updateDesignSettings(user.id, { codigo: code })
+        if (updatedDesign) {
+          designData = updatedDesign
+          console.log('✅ Code generated and saved:', code)
+        }
       }
 
       // Atualizar cache com os novos dados
