@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Cake, Palette, Smartphone, Users, AlertTriangle, Eye } from "lucide-react";
+import { Cake, Palette, Smartphone, Users, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -52,14 +52,6 @@ const Index = () => {
               disabled={!isSupabaseConfigured}
             >
               {isSupabaseConfigured ? 'Começar Agora' : 'Configure o Supabase Primeiro'}
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => navigate('/demo')}
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              Ver Demonstração
             </Button>
           </div>
         </div>
@@ -114,36 +106,6 @@ const Index = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Demo Preview Card */}
-        <Card className="mb-12 border-2 border-pink-200 bg-pink-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-pink-800">
-              <Eye className="w-5 h-5" />
-              Veja Como Fica para Seus Clientes
-            </CardTitle>
-            <CardDescription>
-              Experimente a demonstração do cardápio digital e veja como seus clientes visualizarão seus produtos.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-gray-800 mb-2">Cardápio Demonstração</h4>
-                <p className="text-sm text-gray-600">
-                  Interface moderna, responsiva e otimizada para conversão de vendas.
-                </p>
-              </div>
-              <Button 
-                onClick={() => navigate('/demo')}
-                className="bg-pink-600 hover:bg-pink-700"
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                Ver Demo
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* CTA Section */}
         <div className="text-center bg-white rounded-lg shadow-lg p-8">
