@@ -257,10 +257,7 @@ export class SupabaseService {
         .from('configuracoes')
         .insert({
           user_id: userId,
-          telefone: '(11) 99999-9999',
-          meios_pagamento: ['Pix', 'Cartão', 'Dinheiro'],
-          entrega: true,
-          taxa_entrega: 5.00
+          telefone: '(11) 99999-9999'
         })
         .select()
         .single()

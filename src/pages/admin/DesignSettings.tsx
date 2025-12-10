@@ -4,7 +4,6 @@ import { useDatabase } from '@/hooks/useDatabase'
 import { showSuccess, showError } from '@/utils/toast'
 import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
-import { StoreSettings } from '@/components/admin/StoreSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
 
 const gradientBackgrounds = [
@@ -24,13 +23,6 @@ export default function DesignSettings() {
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
-  const [endereco, setEndereco] = useState({
-    cidade: '',
-    estado: '',
-    rua: '',
-    numero: '',
-    complemento: ''
-  })
   
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
@@ -179,15 +171,47 @@ export default function DesignSettings() {
         <TabsContent value="configuracao">
           <div className="space-y-8">
             {/* Card 1: Nome da Loja + Descrição da Loja */}
-            <StoreSettings
-              nomeLoja={nomeLoja}
-              descricaoLoja={descricaoLoja}
-              endereco={endereco}
-              onNomeLojaChange={setNomeLoja}
-              onDescricaoLojaChange={setDescricaoLoja}
-              onEnderecoChange={setEndereco}
-              onSaveConfig={saveConfig}
-            />
+            <div className="space-y-8">
+              {/* Nome da Loja */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Nome da Loja</h3>
+                <div className="space-y-4">
+                  <input
+                    value={nomeLoja}
+                    onChange={(e) => setNomeLoja(e.target.value)}
+                    placeholder="Nome da sua confeitaria"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  <button 
+                    onClick={saveConfig}
+                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                  >
+                    Salvar Nome
+                  </button>
+                </div>
+              </div>
+
+              {/* Descrição da Loja */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Descrição da Loja</h3>
+                <div className="space-y-4">
+                  <textarea
+                    value={descricaoLoja}
+                    onChange={(e) => setDescricaoLoja(e.target.value)}
+                    placeholder="Descreva sua confeitaria..."
+                    rows={8}
+                    maxLength={300}
+                    className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+                  />
+                  <button 
+                    onClick={saveConfig}
+                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                  >
+                    Salvar Descrição
+                  </button>
+                </div>
+              </div>
+            </div>
 
             {/* Card 2: Gerenciar Categorias */}
             <CategorySettings

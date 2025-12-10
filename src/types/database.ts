@@ -15,14 +15,12 @@ export interface DesignSettings {
   banner_gradient?: string
   banner1_url?: string
   category_icons?: { [key: string]: string }
+  codigo?: string
 }
 
 export interface Configuracoes {
   user_id: string
   telefone: string
-  meios_pagamento: string[]
-  entrega: boolean
-  taxa_entrega: number
   total_pedidos?: number
   avaliacao_media?: number
 }
