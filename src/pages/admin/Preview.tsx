@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2 } from 'lucide-react'
+import { Eye, Smartphone, Tablet, Monitor, Copy, Check, Share2, MessageCircle, Send, Instagram } from 'lucide-react'
 import { useDatabase } from '@/hooks/useDatabase'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
@@ -21,6 +21,7 @@ export default function Preview() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [copied, setCopied] = useState(false)
+  const [showShareOptions, setShowShareOptions] = useState(false)
   const [showButton, setShowButton] = useState(true)
   const device = useDeviceDetection()
 
@@ -61,24 +62,32 @@ export default function Preview() {
     )
   }
 
-  const copyLink = async () => {
+  const getCardapioUrl = () => {
     if (!designSettings?.codigo) {
       showError('Código da loja não encontrado. Configure sua loja primeiro.')
-      return
+      return null
     }
     
-    // Usar apenas o código único (fixo para cada usuário)
-    const link = `${window.location.origin}/cardapio/${designSettings.codigo}`
+    // URL formatada: dominio.com/cardapio/CODIGO_5_DIGITOS
+    const url = `${window.location.origin}/cardapio/${designSettings.codigo}`
+    console.log('🔗 Generated URL:', url)
+    return url
+  }
+
+  const copyLink = async () => {
+    const url = getCardapioUrl()
+    if (!url) return
     
     try {
-      await navigator.clipboard.writeText(link)
+      await navigator.clipboard.writeText(url)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
       setTimeout(() => setCopied(false), 2000)
+      setShowShareOptions(false)
     } catch (error) {
       // Fallback para navegadores mais antigos
       const textArea = document.createElement('textarea')
-      textArea.value = link
+      textArea.value = url
       document.body.appendChild(textArea)
       textArea.select()
       document.execCommand('copy')
@@ -86,6 +95,49 @@ export default function Preview() {
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
       setTimeout(() => setCopied(false), 2000)
+      setShowShareOptions(false)
+    }
+  }
+
+  const shareOnWhatsApp = () => {
+    const url = getCardapioUrl()
+    if (!url) return
+    
+    const message = `🍰 Confira nosso cardápio de doces! ${url}`
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
+    setShowShareOptions(false)
+    showSuccess('Abrindo WhatsApp...')
+  }
+
+  const shareOnInstagram = () => {
+    const url = getCardapioUrl()
+    if (!url) return
+    
+    // Instagram não tem URL direta para compartilhamento, então copiamos o link
+    copyLink()
+    showSuccess('Link copiado! Cole na sua bio do Instagram 📸')
+    setShowShareOptions(false)
+  }
+
+  const shareOnGeneric = () => {
+    const url = getCardapioUrl()
+    if (!url) return
+    
+    if (navigator.share) {
+      navigator.share({
+        title: designSettings?.nome_loja || 'Cardápio Digital',
+        text: `Confira nosso cardápio de doces!`,
+        url: url
+      }).then(() => {
+        showSuccess('Compartilhado com sucesso!')
+        setShowShareOptions(false)
+      }).catch(() => {
+        setShowShareOptions(false)
+      })
+    } else {
+      // Fallback: copiar link
+      copyLink()
     }
   }
 
@@ -132,13 +184,70 @@ export default function Preview() {
             showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
-          <Button
-            onClick={copyLink}
-            className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
-            size="sm"
-          >
-            {copied ? 'Copiado!' : 'Compartilhar'}
-          </Button>
+          <div className="relative">
+            <Button
+              onClick={() => setShowShareOptions(!showShareOptions)}
+              className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
+              size="sm"
+            >
+              <Share2 className="w-3 h-3 mr-1" />
+              Compartilhar
+            </Button>
+
+            {/* Menu de opções de compartilhamento */}
+            {showShareOptions && (
+              <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-50">
+                <div className="space-y-1">
+                  <Button
+                    onClick={shareOnWhatsApp}
+                    variant="ghost"
+                    className="w-full justify-start text-sm h-8 px-2 hover:bg-green-50"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2 text-green-600" />
+                    WhatsApp
+                  </Button>
+                  
+                  <Button
+                    onClick={shareOnInstagram}
+                    variant="ghost"
+                    className="w-full justify-start text-sm h-8 px-2 hover:bg-pink-50"
+                  >
+                    <Instagram className="w-4 h-4 mr-2 text-pink-600" />
+                    Instagram
+                  </Button>
+                  
+                  <Button
+                    onClick={shareOnGeneric}
+                    variant="ghost"
+                    className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
+                  >
+                    <Send className="w-4 h-4 mr-2 text-blue-600" />
+                    Outros
+                  </Button>
+                  
+                  <hr className="my-1" />
+                  
+                  <Button
+                    onClick={copyLink}
+                    variant="ghost"
+                    className="w-full justify-start text-sm h-8 px-2 hover:bg-gray-50"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2 text-green-600" />
+                        Copiado!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copiar Link
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <Banner 
@@ -198,13 +307,70 @@ export default function Preview() {
           showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <Button
-          onClick={copyLink}
-          className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
-          size="sm"
-        >
-          {copied ? 'Copiado!' : 'Compartilhar'}
-        </Button>
+        <div className="relative">
+          <Button
+            onClick={() => setShowShareOptions(!showShareOptions)}
+            className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
+            size="sm"
+          >
+            <Share2 className="w-3 h-3 mr-1" />
+            Compartilhar
+          </Button>
+
+          {/* Menu de opções de compartilhamento */}
+          {showShareOptions && (
+            <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-50">
+              <div className="space-y-1">
+                <Button
+                  onClick={shareOnWhatsApp}
+                  variant="ghost"
+                  className="w-full justify-start text-sm h-8 px-2 hover:bg-green-50"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2 text-green-600" />
+                  WhatsApp
+                </Button>
+                
+                <Button
+                  onClick={shareOnInstagram}
+                  variant="ghost"
+                  className="w-full justify-start text-sm h-8 px-2 hover:bg-pink-50"
+                >
+                  <Instagram className="w-4 h-4 mr-2 text-pink-600" />
+                  Instagram
+                </Button>
+                
+                <Button
+                  onClick={shareOnGeneric}
+                  variant="ghost"
+                  className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
+                >
+                  <Send className="w-4 h-4 mr-2 text-blue-600" />
+                  Outros
+                </Button>
+                
+                <hr className="my-1" />
+                
+                <Button
+                  onClick={copyLink}
+                  variant="ghost"
+                  className="w-full justify-start text-sm h-8 px-2 hover:bg-gray-50"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2 text-green-600" />
+                      Copiado!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copiar Link
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <Banner 
