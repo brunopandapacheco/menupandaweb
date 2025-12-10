@@ -1,4 +1,4 @@
-import { useState, useCallback, createContext, useContext, ReactNode } from 'react'
+import React, { useState, useCallback, createContext, useContext, ReactNode } from 'react'
 import { DesignSettings, Configuracoes, Produto } from '@/types/database'
 
 interface CacheData {
@@ -22,7 +22,7 @@ interface CacheContextType {
 
 const CacheContext = createContext<CacheContextType | null>(null)
 
-export function CacheProvider({ children }: { children: ReactNode }): ReactNode {
+export function CacheProvider({ children }: { children: ReactNode }) {
   const [cache, setCache] = useState<CacheData>({
     designSettings: null,
     configuracoes: null,
@@ -78,10 +78,10 @@ export function CacheProvider({ children }: { children: ReactNode }): ReactNode 
     clearCache
   }
 
-  return (
-    <CacheContext.Provider value={contextValue}>
-      {children}
-    </CacheContext.Provider>
+  return React.createElement(
+    CacheContext.Provider,
+    { value: contextValue },
+    children
   )
 }
 
