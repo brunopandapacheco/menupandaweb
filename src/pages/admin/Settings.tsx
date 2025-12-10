@@ -74,7 +74,17 @@ export default function Settings() {
     }
   }
 
-  if (loading) return <div>Carregando configurações...</div>
+  // Mostrar loading apenas na primeira carga
+  if (loading && !configuracoes) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando configurações...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>

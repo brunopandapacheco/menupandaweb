@@ -1,6 +1,10 @@
 import { Loader2 } from 'lucide-react'
 
-export function LoadingScreen() {
+interface LoadingScreenProps {
+  message?: string
+}
+
+export function LoadingScreen({ message = 'Carregando...' }: LoadingScreenProps) {
   return (
     <div 
       className="min-h-screen flex items-center justify-center"
@@ -11,8 +15,20 @@ export function LoadingScreen() {
       }}
     >
       <div className="text-center">
-        <Loader2 className="w-12 h-12 text-white animate-spin mx-auto mb-4" />
-        <p className="text-white text-lg font-medium">Carregando...</p>
+        <div className="relative">
+          <Loader2 className="w-16 h-16 text-white animate-spin mx-auto mb-6" />
+          <div 
+            className="absolute inset-0 w-16 h-16 mx-auto"
+            style={{
+              border: '3px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '3px solid transparent',
+              borderRadius: '50%',
+              animation: 'spin 1.5s linear infinite reverse'
+            }}
+          ></div>
+        </div>
+        <p className="text-white text-xl font-medium mb-2">{message}</p>
+        <p className="text-white/80 text-sm">Aguarde um instante...</p>
       </div>
     </div>
   )

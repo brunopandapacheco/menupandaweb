@@ -1,0 +1,94 @@
+import { useState, useCallback, createContext, useContext, ReactNode } from 'react'
+import { DesignSettings, Configuracoes, Produto } from '@/types/database'
+
+interface CacheData {
+  designSettings: DesignSettings | null
+  configuracoes: Configuracoes | null
+  produtos: Produto[]
+  lastUpdated: {
+    designSettings: number | null
+    configuracoes: number | null
+    produtos: number | null
+  }
+}
+
+interface CacheContextType {
+  cache: CacheData
+  updateCache: (type: keyof Omit<CacheData, 'lastUpdated'>, data: any) => void
+  getCache: (type: keyof Omit<CacheData, 'lastUpdated'>) => any
+  isCacheValid: (type: keyof Omit<CacheData, 'lastUpdated'>, maxAge?: number) => boolean
+  clearCache: () => void
+}
+
+const CacheContext = createContext<CacheContextType | null>(null)
+
+export function CacheProvider({ children }: { children: ReactNode }): ReactNode {
+  const [cache, setCache] = useState<CacheData>({
+    designSettings: null,
+    configuracoes: null,
+    produtos: [],
+    lastUpdated: {
+      designSettings: null,
+      configuracoes: null,
+      produtos: null
+    }
+  })
+
+  const updateCache = useCallback((type: keyof Omit<CacheData, 'lastUpdated'>, data: any) => {
+    console.log('Cache: Updating', type)
+    setCache(prev => ({
+      ...prev,
+      [type]: data,
+      lastUpdated: {
+        ...prev.lastUpdated,
+        [type]: Date.now()
+      }
+    }))
+  }, [])
+
+  const getCache = useCallback((type: keyof Omit<CacheData, 'lastUpdated'>) => {
+    return cache[type]
+  }, [cache])
+
+  const isCacheValid = useCallback((type: keyof Omit<CacheData, 'lastUpdated'>, maxAge = 300000) => {
+    const lastUpdated = cache.lastUpdated[type]
+    if (!lastUpdated) return false
+    return Date.now() - lastUpdated < maxAge
+  }, [cache])
+
+  const clearCache = useCallback(() => {
+    console.log('Cache: Clearing all cache')
+    setCache({
+      designSettings: null,
+      configuracoes: null,
+      produtos: [],
+      lastUpdated: {
+        designSettings: null,
+        configuracoes: null,
+        produtos: null
+      }
+    })
+  }, [])
+
+  const contextValue = {
+    cache,
+    updateCache,
+    getCache,
+    isCacheValid,
+    clearCache
+  }
+
+  return (
+    <CacheContext.Provider value={contextValue}>
+      {children}
+    </CacheContext.Provider>
+  )
+}
+
+export function useCache() {
+  const context = useContext(CacheContext)
+  if (!context) {
+    throw new Error('useCache must be used within a CacheProvider')
+  }
+  return context
+}

@@ -6,10 +6,9 @@ import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { StoreSettings } from '@/components/admin/StoreSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
-import { LoadingScreen } from '@/components/admin/LoadingScreen'
 
 const gradientBackgrounds = [
-  { name: 'Dourado Quente', gradient: '#F5C542' } // AGORA COR FIXA
+  { name: 'Dourado Quente', gradient: '#F5C542' }
 ]
 
 export default function DesignSettings() {
@@ -81,7 +80,17 @@ export default function DesignSettings() {
     success ? showSuccess('Categorias salvas com sucesso!') : showError('Erro ao salvar categorias')
   }
 
-  if (loading) return <LoadingScreen />
+  // Mostrar loading apenas na primeira carga
+  if (loading && !designSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando configurações...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div

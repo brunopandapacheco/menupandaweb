@@ -14,7 +14,6 @@ import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { Produto } from '@/types/database'
 import { showSuccess } from '@/utils/toast'
-import { LoadingScreen } from '@/components/admin/LoadingScreen'
 
 export default function Preview() {
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
@@ -35,8 +34,17 @@ export default function Preview() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Se estiver carregando, mostrar loading
-  if (loading) return <LoadingScreen />
+  // Mostrar loading apenas na primeira carga
+  if (loading && !designSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando prévia...</p>
+        </div>
+      </div>
+    )
+  }
 
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -84,7 +92,7 @@ export default function Preview() {
     
     // Obter categorias únicas dos produtos na ordem de criação
     const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
-      .filter(cat => cat && cat.trim() !== '')
+      .filter((cat): cat is string => cat && typeof cat === 'string' && cat.trim() !== '')
       .sort() // Ordenar alfabeticamente
     
     console.log('📋 Categorias dos produtos (ordem alfabética):', productCategories)

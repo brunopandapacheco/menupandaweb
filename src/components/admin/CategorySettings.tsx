@@ -50,15 +50,15 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }, [designSettings])
 
   // Obter categorias que realmente existem nos produtos
-  const getProductCategories = () => {
+  const getProductCategories = (): string[] => {
     const categories = Array.from(new Set(produtos.map(p => p.categoria)))
-    return categories.filter(cat => cat && cat.trim() !== '')
+    return categories.filter((cat): cat is string => cat && typeof cat === 'string' && cat.trim() !== '')
   }
 
   const productCategories = getProductCategories()
 
   // Combinar todas as categorias para exibição (apenas "Todos" + categorias dos produtos)
-  const allCategories = () => {
+  const allCategories = (): string[] => {
     const categories = ['Todos', ...productCategories]
     return categories.sort() // Ordenar alfabeticamente
   }
