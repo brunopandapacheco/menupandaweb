@@ -88,7 +88,8 @@ export function Logo({
               style={{
                 border: '3px solid white',
                 boxSizing: 'border-box',
-                padding: '3px'
+                padding: '3px',
+                animation: 'pulse-slow 3s ease-in-out infinite'
               }}
               onClick={() => isEditable && setShowEditor(true)}
             >
@@ -103,6 +104,9 @@ export function Logo({
                   src={logoUrl} 
                   alt="Logo" 
                   className="w-full h-full object-contain rounded-full"
+                  style={{
+                    animation: 'pulse-slow 3s ease-in-out infinite'
+                  }}
                 />
               </div>
               
@@ -121,7 +125,8 @@ export function Logo({
                 boxSizing: 'border-box',
                 padding: '3px',
                 backgroundColor: borderColor || '#ec4899',
-                color: 'white'
+                color: 'white',
+                animation: 'pulse-slow 3s ease-in-out infinite'
               }}
               onClick={() => isEditable && setShowEditor(true)}
             >
@@ -195,6 +200,18 @@ export function Logo({
         borderColor={borderColor}
         initialImage={logoUrl}
       />
+
+      {/* Estilo da animação de pulsação */}
+      <style>{`
+        @keyframes pulse-slow {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+        }
+      `}</style>
     </div>
   )
 }
