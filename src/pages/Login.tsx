@@ -9,15 +9,26 @@ export default function Login() {
   const { user, loading } = useAuth()
 
   useEffect(() => {
+    // Se já estiver logado, redirecionar para admin
     if (user && !loading) {
+      console.log('✅ Login: Usuário já logado, redirecionando para admin')
       navigate('/admin')
     }
   }, [user, loading, navigate])
 
+  // Se estiver carregando, mostrar loading
   if (loading) {
-    return <div>Carregando...</div>
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white">Carregando...</p>
+        </div>
+      </div>
+    )
   }
 
+  // Se já estiver logado, não mostrar nada (vai redirecionar)
   if (user) {
     return null
   }
@@ -38,7 +49,10 @@ export default function Login() {
               />
             </div>
             
-            <LoginForm onSuccess={() => navigate('/admin')} />
+            <LoginForm onSuccess={() => {
+              console.log('✅ Login bem-sucedido, redirecionando para admin')
+              navigate('/admin')
+            }} />
           </div>
         </div>
       </div>
