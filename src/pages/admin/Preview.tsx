@@ -14,6 +14,7 @@ import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { Produto } from '@/types/database'
 import { showSuccess } from '@/utils/toast'
+import { LoadingScreen } from '@/components/admin/LoadingScreen'
 
 export default function Preview() {
   const { designSettings, configuracoes, produtos, loading } = useDatabase()
@@ -35,16 +36,7 @@ export default function Preview() {
   }, [])
 
   // Se estiver carregando, mostrar loading
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando prévia...</p>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <LoadingScreen />
 
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||

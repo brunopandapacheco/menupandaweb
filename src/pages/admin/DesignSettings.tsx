@@ -6,6 +6,7 @@ import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { StoreSettings } from '@/components/admin/StoreSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
+import { LoadingScreen } from '@/components/admin/LoadingScreen'
 
 const gradientBackgrounds = [
   { name: 'Dourado Quente', gradient: '#F5C542' } // AGORA COR FIXA
@@ -80,7 +81,7 @@ export default function DesignSettings() {
     success ? showSuccess('Categorias salvas com sucesso!') : showError('Erro ao salvar categorias')
   }
 
-  if (loading) return <div>Carregando...</div>
+  if (loading) return <LoadingScreen />
 
   return (
     <div

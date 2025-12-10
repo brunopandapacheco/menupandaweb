@@ -6,6 +6,7 @@ import { ProductDialog } from '@/components/admin/ProductDialog'
 import { ProductFilters } from '@/components/admin/ProductFilters'
 import { ProductGrid } from '@/components/admin/ProductGrid'
 import { EmptyState } from '@/components/admin/EmptyState'
+import { LoadingScreen } from '@/components/admin/LoadingScreen'
 
 export default function ProductManager() {
   const { produtos, loading } = useDatabase()
@@ -44,7 +45,7 @@ export default function ProductManager() {
     setEditingProduct(null)
   }
 
-  if (loading) return <div>Carregando produtos...</div>
+  if (loading) return <LoadingScreen />
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#111111' }}>
