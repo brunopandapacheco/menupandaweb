@@ -13,6 +13,7 @@ import CardapioDemo from "./pages/CardapioDemo";
 import TestConnection from "./pages/TestConnection";
 import TestDatabase from "./pages/TestDatabase";
 import TestLogo from "./pages/TestLogo";
+import DebugEnv from "./pages/DebugEnv";
 import NotFound from "./pages/NotFound";
 import { EnvironmentError } from "./components/EnvironmentError";
 import { ErrorBoundary } from "./pages/ErrorBoundary";
@@ -85,6 +86,7 @@ const App = () => {
                 <Route path="/test" element={<TestConnection />} />
                 <Route path="/test-db" element={<TestDatabase />} />
                 <Route path="/test-logo" element={<TestLogo />} />
+                <Route path="/debug-env" element={<DebugEnv />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
