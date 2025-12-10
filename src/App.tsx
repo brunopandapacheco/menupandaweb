@@ -15,47 +15,7 @@ import TestDatabase from "./pages/TestDatabase";
 import TestLogo from "./pages/TestLogo";
 import NotFound from "./pages/NotFound";
 import { EnvironmentError } from "./components/EnvironmentError";
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error?: Error }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error Boundary capturou:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h1>Algo deu errado</h1>
-          <p>Por favor, recarregue a página.</p>
-          <button onClick={() => window.location.reload()}>
-            Recarregar
-          </button>
-          {process.env.NODE_ENV === 'development' && (
-            <details style={{ marginTop: '20px', textAlign: 'left' }}>
-              <summary>Detalhes do erro</summary>
-              <pre>{this.state.error?.stack}</pre>
-            </details>
-          )}
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
+import { ErrorBoundary } from "./pages/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
