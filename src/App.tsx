@@ -13,6 +13,7 @@ import CardapioDemo from "./pages/CardapioDemo";
 import TestConnection from "./pages/TestConnection";
 import TestDatabase from "./pages/TestDatabase";
 import TestLogo from "./pages/TestLogo";
+import TestCardapioPublico from "./pages/TestCardapioPublico";
 import DebugEnv from "./pages/DebugEnv";
 import NotFound from "./pages/NotFound";
 import { EnvironmentError } from "./components/EnvironmentError";
@@ -81,11 +82,13 @@ const App = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/admin" element={<AdminLayout />} />
+                {/* ROTA DO CARDÁPIO PÚBLICO - IMPORTANTE! */}
                 <Route path="/cardapio/:slug" element={<CardapioPublico />} />
                 <Route path="/demo" element={<CardapioDemo />} />
                 <Route path="/test" element={<TestConnection />} />
                 <Route path="/test-db" element={<TestDatabase />} />
                 <Route path="/test-logo" element={<TestLogo />} />
+                <Route path="/test-cardapio" element={<TestCardapioPublico />} />
                 <Route path="/debug-env" element={<DebugEnv />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

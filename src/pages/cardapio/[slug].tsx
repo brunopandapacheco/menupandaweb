@@ -16,12 +16,14 @@ export default function CardapioPublico() {
   const [configuracoes, setConfiguracoes] = useState<Configuracoes | null>(null)
   const [produtos, setProdutos] = useState<Produto[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
 
   useEffect(() => {
     if (slug) {
+      console.log('🔍 Carregando cardápio para código:', slug)
       loadData(slug)
     }
   }, [slug])
@@ -29,12 +31,25 @@ export default function CardapioPublico() {
   const loadData = async (codigo: string) => {
     try {
       console.log('🔍 Carregando cardápio para código:', codigo)
+      setLoading(true)
+      setError(null)
       
       const [designData, configData, productsData] = await Promise.all([
         supabaseService.getDesignSettingsBySlug(codigo),
         supabaseService.getConfiguracoesBySlug(codigo),
         supabaseService.getProductsBySlug(codigo)
       ])
+
+      console.log('📊 Dados carregados:', {
+        designData: !!designData,
+        configData: !!configData,
+        productsCount: productsData?.length || 0
+      })
+
+      if (!designData) {
+        setError('Cardápio não encontrado')
+        return
+      }
 
       setDesignSettings(designData)
       setConfiguracoes(configData)
@@ -57,8 +72,9 @@ export default function CardapioPublico() {
       } else {
         console.log('📁 No custom category icons found, using defaults')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading data:', error)
+      setError('Erro ao carregar cardápio: ' + error.message)
     } finally {
       setLoading(false)
     }
@@ -115,17 +131,28 @@ export default function CardapioPublico() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+          <p className="mt-4 text-gray-600">Carregando cardápio...</p>
+        </div>
       </div>
     )
   }
 
-  if (!designSettings) {
+  if (error || !designSettings) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Cardápio não encontrado</h1>
-          <p className="text-gray-600">Verifique o URL e tente novamente.</p>
+          <p className="text-gray-600 mb-4">{error || 'Verifique o URL e tente novamente.'}</p>
+          <div className="bg-gray-100 p-4 rounded-lg max-w-md">
+            <p className="text-sm text-gray-600">
+              <strong>Código buscado:</strong> {slug}
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Verifique se o código está correto ou entre em contato com o dono do cardápio.
+            </p>
+          </div>
         </div>
       </div>
     )

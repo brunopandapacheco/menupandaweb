@@ -75,8 +75,20 @@ export class SupabaseService {
         .eq('codigo', codigo)
         .single()
       
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('❌ getDesignSettingsBySlug error:', error)
+        
+        // Se não encontrar, tentar buscar todos para debug
+        if (error.code === 'PGRST116') {
+          console.log('🔍 Código não encontrado, buscando todos para debug...')
+          const { data: allSettings } = await supabase
+            .from('design_settings')
+            .select('codigo, nome_loja, user_id')
+            .limit(10)
+          
+          console.log('📋 Todos os códigos encontrados:', allSettings)
+        }
+        
         throw error
       }
       
