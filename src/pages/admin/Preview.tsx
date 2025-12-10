@@ -365,39 +365,6 @@ export default function Preview() {
           </div>
         </div>
 
-        {/* Status do Código */}
-        <div className="fixed top-4 left-4 z-[9999]">
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Seu código:</span>
-              {designSettings?.codigo ? (
-                <Badge className="bg-green-100 text-green-800">
-                  {designSettings.codigo}
-                </Badge>
-              ) : (
-                <Button
-                  onClick={generateNewCode}
-                  disabled={generatingCode}
-                  size="sm"
-                  className="h-6 text-xs"
-                >
-                  {generatingCode ? (
-                    <>
-                      <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
-                      Gerando...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="w-3 h-3 mr-1" />
-                      Gerar Código
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-
         <Banner 
           borderColor={designSettings?.cor_borda}
           bannerGradient={designSettings?.banner_gradient}
@@ -532,39 +499,6 @@ export default function Preview() {
               </div>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Status do Código */}
-      <div className="fixed top-4 left-4 z-[9999]">
-        <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Seu código:</span>
-            {designSettings?.codigo ? (
-              <Badge className="bg-green-100 text-green-800">
-                {designSettings.codigo}
-              </Badge>
-            ) : (
-              <Button
-                onClick={generateNewCode}
-                disabled={generatingCode}
-                size="sm"
-                className="h-6 text-xs"
-              >
-                {generatingCode ? (
-                  <>
-                    <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
-                    Gerando...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="w-3 h-3 mr-1" />
-                    Gerar Código
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
         </div>
       </div>
 
