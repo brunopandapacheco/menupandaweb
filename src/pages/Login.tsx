@@ -2,7 +2,7 @@ import { LoginForm } from '@/components/auth/LoginForm'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect } from 'react'
-import { Mail, Phone, MessageCircle } from 'lucide-react'
+import { Mail, MessageCircle } from 'lucide-react'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -56,16 +56,10 @@ export default function Login() {
                 <span className="text-sm">suporte@pandamenu.com</span>
               </div>
               
-              {/* Telefone */}
-              <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">(11) 99999-9999</span>
-              </div>
-              
               {/* WhatsApp */}
               <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
                 <MessageCircle className="w-4 h-4" />
-                <span className="text-sm">WhatsApp: (11) 98888-7777</span>
+                <span className="text-sm">WhatsApp: 41 9 9884-3669</span>
               </div>
             </div>
             
