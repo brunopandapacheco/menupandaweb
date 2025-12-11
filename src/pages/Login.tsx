@@ -59,11 +59,11 @@ export default function Login() {
 
       {/* Rodapé de Suporte */}
       <footer className="bg-white/10 backdrop-blur-sm border-t border-white/20">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-4">
           <div className="text-center">
-            <h3 className="text-white font-semibold text-lg mb-4">Precisa de Ajuda?</h3>
+            <h3 className="text-white font-semibold text-lg mb-2">Precisa de Ajuda?</h3>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {/* WhatsApp */}
               <div className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
                 <MessageCircle className="w-4 h-4" />
