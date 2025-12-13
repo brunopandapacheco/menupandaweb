@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { LogOut, Share2, Copy, Check, MessageCircle, Instagram } from 'lucide-react'
+import { LogOut, Share2, Copy, Check } from 'lucide-react'
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast'
 import { supabase } from '@/lib/supabase'
 
@@ -12,7 +12,6 @@ interface PreviewActionsProps {
 
 export function PreviewActions({ designSettings, onRefresh, showButton }: PreviewActionsProps) {
   const [copied, setCopied] = useState(false)
-  const [showShareOptions, setShowShareOptions] = useState(false)
   const [generatingCode, setGeneratingCode] = useState(false)
 
   const handleLogout = async () => {
@@ -95,7 +94,6 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
       setTimeout(() => setCopied(false), 2000)
-      setShowShareOptions(false)
     } catch (error) {
       const textArea = document.createElement('textarea')
       textArea.value = url
@@ -106,71 +104,6 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
       setTimeout(() => setCopied(false), 2000)
-      setShowShareOptions(false)
-    }
-  }
-
-  const shareOnWhatsApp = () => {
-    const url = getCardapioUrl()
-    if (!url) return
-    
-    const message = `🍰 Confira nosso cardápio de doces! ${url}`
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
-    window.open(whatsappUrl, '_blank')
-    setShowShareOptions(false)
-    showSuccess('Abrindo WhatsApp...')
-  }
-
-  const shareOnInstagram = () => {
-    const url = getCardapioUrl()
-    if (!url) return
-    
-    copyLink()
-    showSuccess('Link copiado! Cole na sua bio do Instagram 📸')
-    setShowShareOptions(false)
-  }
-
-  const shareNatively = async () => {
-    const url = getCardapioUrl()
-    if (!url) return
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: designSettings?.nome_loja || 'Cardápio Digital',
-          text: `🍰 Confira nosso cardápio de doces! ${designSettings?.nome_loja || ''}`,
-          url: url
-        })
-        showSuccess('Compartilhado com sucesso!')
-        setShowShareOptions(false)
-      } else {
-        shareOnGeneric()
-      }
-    } catch (error) {
-      console.log('Compartilhamento cancelado ou falhou:', error)
-      if (error.name !== 'AbortError') {
-        shareOnGeneric()
-      }
-    }
-  }
-
-  const shareOnGeneric = () => {
-    const url = getCardapioUrl()
-    if (!url) return
-    
-    if (navigator.share) {
-      navigator.share({
-        title: designSettings?.nome_loja || 'Cardápio Digital',
-        text: `🍰 Confira nosso cardápio de doces!`,
-        url: url
-      }).then(() => {
-        showSuccess('Compartilhado com sucesso!')
-        setShowShareOptions(false)
-      }).catch(() => {
-        copyLink()
-      })
-    } else {
-      copyLink()
     }
   }
 
@@ -189,71 +122,23 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
         Sair
       </Button>
 
-      <div className="relative">
-        <Button
-          onClick={() => setShowShareOptions(!showShareOptions)}
-          className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
-          size="sm"
-        >
-          <Share2 className="w-3 h-3 mr-1" />
-          Compartilhar
-        </Button>
-
-        {showShareOptions && (
-          <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[200px] z-[10000]">
-            <div className="space-y-1">
-              {navigator.share && (
-                <Button
-                  onClick={shareNatively}
-                  variant="ghost"
-                  className="w-full justify-start text-sm h-8 px-2 hover:bg-blue-50"
-                >
-                  <Share2 className="w-4 h-4 mr-2 text-blue-600" />
-                  Compartilhar
-                </Button>
-              )}
-              
-              <Button
-                onClick={shareOnWhatsApp}
-                variant="ghost"
-                className="w-full justify-start text-sm h-8 px-2 hover:bg-green-50"
-              >
-                <MessageCircle className="w-4 h-4 mr-2 text-green-600" />
-                WhatsApp
-              </Button>
-              
-              <Button
-                onClick={shareOnInstagram}
-                variant="ghost"
-                className="w-full justify-start text-sm h-8 px-2 hover:bg-pink-50"
-              >
-                <Instagram className="w-4 h-4 mr-2 text-pink-600" />
-                Instagram
-              </Button>
-              
-              <hr className="my-1" />
-              
-              <Button
-                onClick={copyLink}
-                variant="ghost"
-                className="w-full justify-start text-sm h-8 px-2 hover:bg-gray-50"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 mr-2 text-green-600" />
-                    Copiado!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copiar Link
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
+      <Button
+        onClick={copyLink}
+        className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
+        size="sm"
+      >
+        {copied ? (
+          <>
+            <Check className="w-3 h-3 mr-1" />
+            Copiado!
+          </>
+        ) : (
+          <>
+            <Copy className="w-3 h-3 mr-1" />
+            Copiar Link
+          </>
         )}
-      </div>
+      </Button>
     </div>
   )
 }
