@@ -68,7 +68,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getDesignSettingsBySlug: Getting settings for código:', codigo)
       
-      // Usar o campo codigo em vez de slug
+      // Usar o campo codigo em vez de slug - agora com acesso público
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -102,7 +102,7 @@ export class SupabaseService {
 
   async updateDesignSettings(userId: string, settings: any) {
     try {
-      console.log('💾 updateDesignSettings: Updating for user:', userId, 'settings:', settings)
+      console.log('💾 updateDesignSettings: Saving...', settings)
       
       // Primeiro, verificar se já existe um registro
       const { data: existingRecord } = await supabase
@@ -226,6 +226,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoesBySlug: Getting config for código:', codigo)
       
+      // Primeiro buscar o design_settings para obter o user_id
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -314,6 +315,7 @@ export class SupabaseService {
     try {
       console.log('🔍 getProductsBySlug: Getting products for código:', codigo)
       
+      // Primeiro buscar o design_settings para obter o user_id
       const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
