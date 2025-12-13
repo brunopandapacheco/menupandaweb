@@ -39,6 +39,6 @@ export default defineConfig({
     port: 3000,
     host: true,
   },
-  base: './',
+  base: '/', // Garante caminhos absolutos para todos os assets
   publicDir: 'public',
 });
