@@ -40,8 +40,12 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
       return null
     }
     
-    const url = `${window.location.origin}/cardapio/${designSettings.codigo}`
+    // Corrigindo o domínio para usar o ambiente atual
+    const currentDomain = window.location.origin
+    const url = `${currentDomain}/cardapio/${designSettings.codigo}`
     console.log('🔗 Generated URL:', url)
+    console.log('🌐 Current domain:', currentDomain)
+    console.log('🔑 Código:', designSettings.codigo)
     return url
   }
 
@@ -89,10 +93,13 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
     const url = getCardapioUrl()
     if (!url) return
     
+    console.log('📋 Copiando URL:', url)
+    
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
+      console.log('✅ URL copiada para área de transferência:', url)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
       const textArea = document.createElement('textarea')
@@ -103,6 +110,7 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
       document.body.removeChild(textArea)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
+      console.log('✅ URL copiada via fallback:', url)
       setTimeout(() => setCopied(false), 2000)
     }
   }
