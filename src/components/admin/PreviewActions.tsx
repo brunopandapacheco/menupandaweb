@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { LogOut, Share2, Copy, Check } from 'lucide-react'
+import { Share2, Copy, Check } from 'lucide-react'
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast'
 import { supabase } from '@/lib/supabase'
 
@@ -13,25 +13,6 @@ interface PreviewActionsProps {
 export function PreviewActions({ designSettings, onRefresh, showButton }: PreviewActionsProps) {
   const [copied, setCopied] = useState(false)
   const [generatingCode, setGeneratingCode] = useState(false)
-
-  const handleLogout = async () => {
-    try {
-      console.log('🔐 Fazendo logout...')
-      const { error } = await supabase.auth.signOut()
-      
-      if (error) {
-        console.error('❌ Erro ao fazer logout:', error)
-        showError('Erro ao sair. Tente novamente.')
-      } else {
-        console.log('✅ Logout realizado com sucesso')
-        showSuccess('Sessão encerrada com sucesso!')
-        window.location.href = '/login'
-      }
-    } catch (error) {
-      console.error('❌ Erro inesperado ao fazer logout:', error)
-      showError('Erro ao sair. Tente novamente.')
-    }
-  }
 
   const getCardapioUrl = () => {
     if (!designSettings?.codigo) {
@@ -121,15 +102,6 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
         showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
-      <Button
-        onClick={handleLogout}
-        className="bg-red-500 hover:bg-red-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
-        size="sm"
-      >
-        <LogOut className="w-3 h-3 mr-1" />
-        Sair
-      </Button>
-
       <Button
         onClick={copyLink}
         className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-3 py-1 h-8 text-xs transition-colors"
