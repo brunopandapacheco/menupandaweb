@@ -68,32 +68,21 @@ export class SupabaseService {
     try {
       console.log('🔍 getDesignSettingsBySlug: Getting settings for código:', codigo)
       
-      // Usar o campo codigo em vez de slug - agora com acesso público
-      const { data, error } = await supabase
-        .from('design_settings')
-        .select('*')
-        .eq('codigo', codigo)
-        .single()
+      // Usar a função segura para buscar dados públicos
+      const { data, error } = await supabase.rpc('get_cardapio_publico', { p_codigo: codigo })
       
       if (error) {
-        console.error('❌ getDesignSettingsBySlug error:', error)
-        
-        // Se não encontrar, tentar buscar todos para debug
-        if (error.code === 'PGRST116') {
-          console.log('🔍 Código não encontrado, buscando todos para debug...')
-          const { data: allSettings } = await supabase
-            .from('design_settings')
-            .select('codigo, nome_loja, user_id')
-            .limit(10)
-          
-          console.log('📋 Todos os códigos encontrados:', allSettings)
-        }
-        
+        console.error('❌ get_cardapio_publico error:', error)
         throw error
       }
       
-      console.log('✅ getDesignSettingsBySlug success:', data)
-      return data
+      if (!data || data.error) {
+        console.error('❌ Cardápio não encontrado:', data?.error)
+        throw new Error(data?.error || 'Cardápio não encontrado')
+      }
+      
+      console.log('✅ get_cardapio_publico success:', data)
+      return data.design_settings
     } catch (error) {
       console.error('❌ Error in getDesignSettingsBySlug:', error)
       throw error
@@ -226,24 +215,21 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoesBySlug: Getting config for código:', codigo)
       
-      // Primeiro buscar o design_settings para obter o user_id
-      const { data: designData, error: designError } = await supabase
-        .from('design_settings')
-        .select('user_id')
-        .eq('codigo', codigo)
-        .single()
+      // Usar a função segura para buscar dados públicos
+      const { data, error } = await supabase.rpc('get_cardapio_publico', { p_codigo: codigo })
       
-      if (designError) {
-        console.error('❌ Design settings not found for código:', codigo)
-        throw new Error('Design settings not found')
+      if (error) {
+        console.error('❌ get_cardapio_publico error:', error)
+        throw error
       }
       
-      if (!designData) {
-        throw new Error('Design settings not found')
+      if (!data || data.error) {
+        console.error('❌ Cardápio não encontrado:', data?.error)
+        throw new Error(data?.error || 'Cardápio não encontrado')
       }
       
-      console.log('✅ Found user_id:', designData.user_id)
-      return this.getConfiguracoes(designData.user_id)
+      console.log('✅ getConfiguracoesBySlug success:', data.configuracoes)
+      return data.configuracoes
     } catch (error) {
       console.error('❌ Error in getConfiguracoesBySlug:', error)
       throw error
@@ -315,24 +301,21 @@ export class SupabaseService {
     try {
       console.log('🔍 getProductsBySlug: Getting products for código:', codigo)
       
-      // Primeiro buscar o design_settings para obter o user_id
-      const { data: designData, error: designError } = await supabase
-        .from('design_settings')
-        .select('user_id')
-        .eq('codigo', codigo)
-        .single()
+      // Usar a função segura para buscar dados públicos
+      const { data, error } = await supabase.rpc('get_cardapio_publico', { p_codigo: codigo })
       
-      if (designError) {
-        console.error('❌ Design settings not found for código:', codigo)
-        throw new Error('Design settings not found')
+      if (error) {
+        console.error('❌ get_cardapio_publico error:', error)
+        throw error
       }
       
-      if (!designData) {
-        throw new Error('Design settings not found')
+      if (!data || data.error) {
+        console.error('❌ Cardápio não encontrado:', data?.error)
+        throw new Error(data?.error || 'Cardápio não encontrado')
       }
       
-      console.log('✅ Found user_id for products:', designData.user_id)
-      return this.getProducts(designData.user_id)
+      console.log('✅ getProductsBySlug success:', data.produtos)
+      return data.produtos || []
     } catch (error) {
       console.error('❌ Error in getProductsBySlug:', error)
       throw error
