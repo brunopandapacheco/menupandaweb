@@ -34,12 +34,12 @@ export interface Produto {
   preco_promocional?: number
   imagem_url?: string
   categoria: string
-  forma_venda: string
+  forma_venda: 'kg' | 'unidade' | 'fatia' | 'cento' | 'tamanho-p' | 'tamanho-m' | 'tamanho-g' | 'outros'
   disponivel: boolean
   promocao: boolean
   created_at: string
   updated_at: string
 }
 
-// Only export User from supabase, the others are already exported as interfaces above
+// Only export User from supabase, others are already exported as interfaces above
 export type { User }

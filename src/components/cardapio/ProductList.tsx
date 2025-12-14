@@ -1,17 +1,5 @@
 import { ProductCard } from './ProductCard'
-
-interface Produto {
-  id: string
-  nome: string
-  descricao: string
-  preco_normal: number
-  preco_promocional?: number
-  imagem_url?: string
-  categoria: string
-  forma_venda: string
-  disponivel: boolean
-  promocao: boolean
-}
+import { Produto } from '@/types/cart'
 
 interface ProductListProps {
   produtos: Produto[]
@@ -20,6 +8,7 @@ interface ProductListProps {
   backgroundColor: string
   borderColor: string
   selectedCategory: string | null
+  onAddToCart?: (product: Produto) => void // Nova prop
 }
 
 export function ProductList({ 
@@ -28,7 +17,8 @@ export function ProductList({
   onToggleFavorite, 
   backgroundColor, 
   borderColor,
-  selectedCategory
+  selectedCategory,
+  onAddToCart
 }: ProductListProps) {
   // Separar produtos em promoção e regulares
   const promotionalProducts = produtos.filter(p => p.promocao)
@@ -53,6 +43,7 @@ export function ProductList({
                   onToggleFavorite={onToggleFavorite}
                   backgroundColor={backgroundColor}
                   borderColor={borderColor}
+                  onAddToCart={onAddToCart}
                 />
               ))}
             </div>
@@ -74,6 +65,7 @@ export function ProductList({
                   onToggleFavorite={onToggleFavorite}
                   backgroundColor={backgroundColor}
                   borderColor={borderColor}
+                  onAddToCart={onAddToCart}
                 />
               ))}
             </div>
@@ -105,6 +97,7 @@ export function ProductList({
                 onToggleFavorite={onToggleFavorite}
                 backgroundColor={backgroundColor}
                 borderColor={borderColor}
+                onAddToCart={onAddToCart}
               />
             ))}
           </div>
@@ -126,6 +119,7 @@ export function ProductList({
                 onToggleFavorite={onToggleFavorite}
                 backgroundColor={backgroundColor}
                 borderColor={borderColor}
+                onAddToCart={onAddToCart}
               />
             ))}
           </div>

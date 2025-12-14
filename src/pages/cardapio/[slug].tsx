@@ -8,7 +8,9 @@ import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
-import { DesignSettings, Configuracoes, Produto } from '@/types/database'
+import { CartDrawer } from '@/components/cart/CartDrawer'
+import { DesignSettings, Configuracoes } from '@/types/database'
+import { Produto } from '@/types/cart'
 
 export default function CardapioPublico() {
   const { slug } = useParams<{ slug: string }>()
@@ -184,7 +186,7 @@ export default function CardapioPublico() {
           categories={categories}
           selectedCategory={selectedCategory}
           onCategorySelect={setSelectedCategory}
-          categoryIcons={designSettings.category_icons || {}} // Passar os ícones personalizados
+          categoryIcons={designSettings.category_icons || {}}
         />
 
         {filteredProducts.length > 0 ? (
@@ -204,6 +206,9 @@ export default function CardapioPublico() {
       <Footer 
         textoRodape={designSettings.texto_rodape} 
       />
+
+      {/* Carrinho */}
+      <CartDrawer />
     </div>
   )
 }
