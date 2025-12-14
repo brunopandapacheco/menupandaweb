@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/hooks/useCart'
-import { Produto } from '@/types/cart'
+import { Produto } from '@/types/database'
 import { formatCurrency } from '@/utils/helpers'
 
 interface ProductModalProps {
@@ -72,7 +72,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md w-[95vw] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-md w-[95vw] max-h-[90vh] overflow-y-auto rounded-2xl">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold">Adicionar ao Carrinho</DialogTitle>
@@ -89,7 +89,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
         <div className="space-y-4">
           {/* Imagem do produto */}
-          <div className="w-full h-48 rounded-lg overflow-hidden bg-gray-50">
+          <div className="w-full h-48 rounded-xl overflow-hidden bg-gray-50">
             {firstImage ? (
               <img 
                 src={firstImage} 
@@ -112,11 +112,11 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               <span className="text-2xl font-bold text-green-600">
                 {formatCurrency(product.preco_normal)}
               </span>
-              <Badge variant="secondary" className="bg-pink-100 text-pink-700">
+              <Badge variant="secondary" className="bg-pink-100 text-pink-700 rounded-full">
                 {product.forma_venda === 'kg' ? 'KG' : 'UNIDADE'}
               </Badge>
               {product.promocao && (
-                <Badge className="bg-red-500 text-white">
+                <Badge className="bg-red-500 text-white rounded-full">
                   PROMOÇÃO
                 </Badge>
               )}
@@ -132,7 +132,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               <Button
                 variant="outline"
                 onClick={decrementQuantity}
-                className="h-10 w-10 p-0"
+                className="h-10 w-10 p-0 rounded-full"
               >
                 <Minus className="w-4 h-4" />
               </Button>
@@ -144,7 +144,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               <Button
                 variant="outline"
                 onClick={incrementQuantity}
-                className="h-10 w-10 p-0"
+                className="h-10 w-10 p-0 rounded-full"
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -161,12 +161,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               onChange={(e) => setObservations(e.target.value)}
               placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
               rows={3}
-              className="resize-none"
+              className="resize-none rounded-xl"
             />
           </div>
 
           {/* Preço total */}
-          <div className="bg-gray-50 p-4 rounded-lg">
+          <div className="bg-gray-50 p-4 rounded-xl">
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Total:</span>
               <span className="text-2xl font-bold text-green-600">
@@ -178,7 +178,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           {/* Botão de adicionar */}
           <Button
             onClick={handleAddToCart}
-            className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3"
+            className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
             Adicionar ao Carrinho
