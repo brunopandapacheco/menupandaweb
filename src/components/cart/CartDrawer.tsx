@@ -90,7 +90,13 @@ export function CartDrawer() {
           </Button>
         </SheetTrigger>
         
-        <SheetContent className="w-full sm:w-[400px] max-w-[90vw] max-h-[85vh] overflow-y-auto">
+        <SheetContent 
+          className="w-full sm:w-[400px] max-w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl m-4"
+          style={{ 
+            borderRadius: '16px',
+            margin: '16px'
+          }}
+        >
           <SheetHeader className="border-b pb-4">
             <div className="flex items-center justify-between">
               <SheetTitle className="flex items-center gap-2">
@@ -100,7 +106,7 @@ export function CartDrawer() {
                   <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'itens'}</Badge>
                 )}
               </SheetTitle>
-              {/* Removido o botão X duplicado - o Sheet já tem um botão de fechar */}
+              {/* Removido completamente o botão X - será removido via CSS */}
             </div>
           </SheetHeader>
 
@@ -189,6 +195,13 @@ export function CartDrawer() {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* Estilos personalizados para esconder o X nativo */}
+      <style>{`
+        [data-state="open"] > button[data-radix-collection-item] {
+          display: none !important;
+        }
+      `}</style>
 
       {/* BOTÃO DE TESTE PARA DEBUG - REMOVER DEPOIS */}
       {process.env.NODE_ENV === 'development' && (
