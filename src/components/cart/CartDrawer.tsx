@@ -23,7 +23,7 @@ export function CartDrawer() {
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return
 
-    // Formatar mensagem for WhatsApp
+    // Formatar message for WhatsApp
     let message = `🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
     message += `*RESUMO DO PEDIDO:*\n\n`
 
@@ -55,7 +55,7 @@ export function CartDrawer() {
     setIsOpen(false)
   }
 
-  console.log('🛒 CartDrawer renderizado - Items in carrinho:', totalItems)
+  console.log('🛒 CartDrawer renderized - Items in carrinho:', totalItems)
 
   return (
     <>
@@ -63,7 +63,7 @@ export function CartDrawer() {
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button 
-            className="fixed bottom-6 right-6 z-50 bg-gray-800 hover:bg-gray-900 shadow-lg rounded-full w-14 h-14 p-0 flex items-center justify-center border-2 border-pink-300"
+            className="fixed bottom-6 right-6 z-50 bg-gray-800 hover:bg-gray-900 shadow-lg rounded-full w-16 h-16 p-0 flex items-center justify-center border-2 border-pink-300 hover:border-pink-400 hover:shadow-xl transition-all duration-200"
             style={{
               position: 'fixed',
               bottom: '24px',
@@ -74,7 +74,7 @@ export function CartDrawer() {
             <img 
               src="/carrinhoapp.png" 
               alt="Carrinho of Compras" 
-              className="w-6 h-6 object-contain"
+              className="w-8 h-8 object-contain"
             />
             {totalItems > 0 && (
               <Badge 
