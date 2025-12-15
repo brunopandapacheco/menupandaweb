@@ -99,7 +99,15 @@ export function CartDrawer() {
         >
           <SheetHeader className="border-b pb-4">
             <div className="flex items-center justify-between">
-              <SheetTitle className="flex items-center gap-2">
+              <SheetTitle 
+                className="flex items-center gap-2"
+                style={{ 
+                  color: '#f9a8d4', // Rosa claro
+                  backgroundColor: '#6b7280', // Cinza
+                  padding: '8px 16px',
+                  borderRadius: '8px'
+                }}
+              >
                 <ShoppingCart className="w-5 h-5" />
                 Meu Carrinho
                 {totalItems > 0 && (
