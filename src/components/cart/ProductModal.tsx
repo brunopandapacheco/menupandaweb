@@ -42,15 +42,9 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   }
 
   const handleAddToCart = () => {
-    console.log('🛒 Adicionando ao carrinho:', {
-      id: product.id,
-      name: product.nome,
-      price: product.preco_normal,
-      quantity,
-      observations
-    })
+    console.log('🛒 ProductModal: Iniciando adição ao carrinho')
     
-    addItem({
+    const cartItem = {
       id: product.id,
       name: product.nome,
       description: product.descricao || '',
@@ -59,10 +53,22 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
       saleType: product.forma_venda as any,
       quantity,
       observations
-    })
+    }
     
-    console.log('✅ Produto adicionado, fechando modal')
-    onClose()
+    console.log('🛒 ProductModal: Item que será adicionado:', cartItem)
+    
+    try {
+      addItem(cartItem)
+      console.log('✅ ProductModal: Item adicionado com sucesso!')
+      
+      // Pequeno delay para garantir que o item foi adicionado
+      setTimeout(() => {
+        console.log('🛒 ProductModal: Fechando modal')
+        onClose()
+      }, 300)
+    } catch (error) {
+      console.error('❌ ProductModal: Erro ao adicionar item:', error)
+    }
   }
 
   const formatQuantity = (qty: number, saleType: string) => {

@@ -57,10 +57,11 @@ export function CartDrawer() {
 
   console.log('🛒 CartDrawer renderizado - Items in carrinho:', totalItems)
   console.log('🛒 CartDrawer - Items array:', items)
+  console.log('🛒 CartDrawer - Items length:', items.length)
 
   return (
     <>
-      {/* BOTÃO FLUTUANTE DO CARRINHO - SEMPRE VISÍBLE */}
+      {/* BOTÃO FLUTUANTE DO CARRINHO - SEMPRE VISÍVEL */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button 
@@ -148,12 +149,12 @@ export function CartDrawer() {
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Carrinho vazio</h3>
-                <p className="text-gray-600 mb-6">Add products delicious to your carrinho!</p>
+                <p className="text-gray-600 mb-6">Adicione produtos deliciosos ao seu carrinho!</p>
                 <Button 
                   onClick={() => setIsOpen(false)}
                   className="bg-pink-500 hover:bg-pink-600"
                 >
-                  Continue Buying
+                  Continuar Comprando
                 </Button>
               </div>
             ) : (
@@ -178,8 +179,8 @@ export function CartDrawer() {
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Delivery:</span>
-                    <span className="font-medium text-green-600">To combine</span>
+                    <span className="text-gray-600">Entrega:</span>
+                    <span className="font-medium text-green-600">A combinar</span>
                   </div>
 
                   <div className="border-t pt-3">
@@ -197,7 +198,7 @@ export function CartDrawer() {
                     className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3"
                   >
                     <MessageCircle className="w-5 h-5 mr-2" />
-                    Finalizar Order by WhatsApp
+                    Finalizar Pedido pelo WhatsApp
                   </Button>
                   
                   <div className="flex gap-2">
@@ -206,7 +207,7 @@ export function CartDrawer() {
                       onClick={() => setIsOpen(false)}
                       className="flex-1"
                     >
-                      Continue Buying
+                      Continuar Comprando
                     </Button>
                     
                     {items.length > 0 && (
@@ -248,6 +249,7 @@ export function CartDrawer() {
           <div>🛒 Items: {totalItems}</div>
           <div>💰 Total: {formatCurrency(totalPrice)}</div>
           <div>📦 Array length: {items.length}</div>
+          <div>📦 Array: {JSON.stringify(items)}</div>
           <button 
             onClick={() => setIsOpen(true)}
             className="mt-1 bg-yellow-500 text-white px-2 py-1 rounded text-xs"
