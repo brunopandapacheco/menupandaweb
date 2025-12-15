@@ -143,21 +143,21 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
           />
 
           {/* Botões de Ação Principais */}
-          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t">
+          <div className="flex flex-col gap-3 pt-6 border-t">
+            <Button 
+              onClick={handleSave}
+              disabled={isSaving}
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-3"
+            >
+              {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
+            </Button>
             <Button 
               variant="outline" 
               onClick={onClose}
               disabled={isSaving}
-              className="w-full sm:w-auto px-6 py-2"
+              className="w-full sm:w-auto px-4 py-2 text-sm"
             >
               Cancelar
-            </Button>
-            <Button 
-              onClick={handleSave}
-              disabled={isSaving}
-              className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2"
-            >
-              {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
             </Button>
           </div>
         </div>
