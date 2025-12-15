@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Upload, X, GripVertical, Star, Trash2, Plus, Check } from 'lucide-react'
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
+import { supabase } from '@/lib/supabase'
 
 interface ProductFormProps {
   product: Partial<Produto> | null
@@ -57,7 +58,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data, error } = await supabaseService
+        const { data, error } = await supabase
           .from('categorias')
           .select('nome')
           .order('nome')
@@ -118,11 +119,11 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     
     try {
       // Insert new category into database
-      const { error } = await supabaseService
+      const { error } = await supabase
         .from('categorias')
         .insert({ 
           nome: newCategoryName.trim(),
-          user_id: (await supabaseService.auth.getUser()).data.user?.id
+          user_id: (await supabase.auth.getUser()).data.user?.id
         })
       
       if (error) throw error
@@ -131,7 +132,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       handleFieldChange('categoria', newCategoryName.trim())
       
       // Refresh categories list
-      const { data, error: fetchError } = await supabaseService
+      const { data, error: fetchError } = await supabase
         .from('categorias')
         .select('nome')
         .order('nome')
