@@ -115,12 +115,12 @@ export function CartDrawer() {
                 )}
               </SheetTitle>
               
-              {/* Botão X personalizado rosa e maior - usando SVG inline para evitar import */}
+              {/* Botão X personalizado rosa e maior - usando SVG inline */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsOpen(false)}
-                className="h-10 w-10 p-0 rounded-full"
+                className="custom-close-button h-10 w-10 p-0 rounded-full"
                 style={{
                   backgroundColor: '#FF99D8',
                   color: 'white',
@@ -229,40 +229,14 @@ export function CartDrawer() {
         </SheetContent>
       </Sheet>
 
-      {/* Estilos CSS AGRESSIVOS para esconder TODOS os X padrão */}
+      {/* CSS específico para esconder apenas o botão Close do Radix */}
       <style>{`
-        /* Esconder TODOS os botões X padrão do Radix Sheet */
-        [data-radix-sheet-content] button {
-          display: none !important;
-        }
-        
-        /* Esconder especificamente botões com aria-label="Close" */
+        /* Esconder APENAS o botão Close do Radix */
         button[aria-label="Close"] {
           display: none !important;
         }
         
-        /* Esconder botões dentro do SheetContent */
-        [data-radix-sheet-content] > button {
-          display: none !important;
-        }
-        
-        /* Esconder qualquer botão que seja filho direto do SheetContent */
-        [data-radix-sheet-content] > button:first-child,
-        [data-radix-sheet-content] > button:last-child {
-          display: none !important;
-        }
-        
-        /* Esconder botões com data-radix-dialog-close */
-        [data-radix-dialog-close] {
-          display: none !important;
-        }
-        
-        /* Esconder qualquer botão que contenha "Close" no aria-label */
-        button[aria-label*="Close"] {
-          display: none !important;
-        }
-        
-        /* Mostrar apenas nosso botão X personalizado */
+        /* Garantir que nosso botão X personalizado continue visível */
         .custom-close-button {
           display: flex !important;
         }
