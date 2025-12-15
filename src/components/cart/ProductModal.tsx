@@ -87,7 +87,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          border: '4px solid #FF99D8',
+          border: '4px solid #FF97D6',
           margin: '0'
         }}
       >
@@ -199,7 +199,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           >
             <div className="flex justify-between items-center">
               <span className="text-black font-medium">Total:</span>
-              <span className="text-2xl font-bold text-green-700">
+              <span className="text-2xl font-bold text-green-600">
                 {formatCurrency(product.preco_normal * quantity)}
               </span>
             </div>
