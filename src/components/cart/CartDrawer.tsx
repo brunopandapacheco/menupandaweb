@@ -24,7 +24,8 @@ export function CartDrawer() {
     if (items.length === 0) return
 
     // Formatar mensagem para WhatsApp
-    let message = `🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
+    let message = `
+🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
     message += `*RESUMO DO PEDIDO:*\n\n`
 
     items.forEach((item, index) => {
@@ -89,7 +90,7 @@ export function CartDrawer() {
           </Button>
         </SheetTrigger>
         
-        <SheetContent className="w-full sm:w-[450px] overflow-y-auto">
+        <SheetContent className="w-full sm:w-[400px] max-w-[90vw] max-h-[85vh] overflow-y-auto">
           <SheetHeader className="border-b pb-4">
             <div className="flex items-center justify-between">
               <SheetTitle className="flex items-center gap-2">
@@ -99,13 +100,7 @@ export function CartDrawer() {
                   <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'itens'}</Badge>
                 )}
               </SheetTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsOpen(false)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
+              {/* Removido o botão X duplicado - o Sheet já tem um botão de fechar */}
             </div>
           </SheetHeader>
 
