@@ -23,7 +23,7 @@ export function CartDrawer() {
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return
 
-    // Formatar message for WhatsApp
+    // Formatar mensagem para WhatsApp
     let message = `🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
     message += `*RESUMO DO PEDIDO:*\n\n`
 
@@ -40,40 +40,43 @@ export function CartDrawer() {
     })
 
     message += `*TOTAL DO PEDIDO: ${formatCurrency(totalPrice)}*\n\n`
-    message += `📞 *Gostaria of finalizar this pedido!*\n`
-    message += `Por favor, confirmem a disponibilidade and o prazo of delivery.`
+    message += `📞 *Gostaria de finalizar este pedido!*\n`
+    message += `Por favor, confirmem a disponibilidade e o prazo de entrega.`
 
-    // Codificar message for URL
+    // Codificar mensagem para URL
     const encodedMessage = encodeURIComponent(message)
     const whatsappUrl = `https://wa.me/5541998843669?text=${encodedMessage}`
 
     // Abrir WhatsApp
     window.open(whatsappUrl, '_blank')
     
-    // Limpar carrinho after send
+    // Limpar carrinho após enviar
     clearCart()
     setIsOpen(false)
   }
 
-  console.log('🛒 CartDrawer renderized - Items in carrinho:', totalItems)
+  console.log('🛒 CartDrawer renderizado - Itens no carrinho:', totalItems)
 
   return (
     <>
-      {/* BOTÃO FLUTUANTE DO CARRINHO - SEMPRE VISÍBLE */}
+      {/* BOTÃO FLUTUANTE DO CARRINHO - SEMPRE VISÍVEL */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button 
-            className="fixed bottom-6 right-6 z-50 bg-gray-800 hover:bg-gray-900 shadow-lg rounded-full w-16 h-16 p-0 flex items-center justify-center border-2 border-pink-300 hover:border-pink-400 hover:shadow-xl transition-all duration-200"
+            className="fixed bottom-6 right-6 z-50 shadow-lg rounded-full w-16 h-16 p-0 flex items-center justify-center border-4 border-pink-300 hover:border-pink-400 hover:shadow-xl transition-all duration-200"
             style={{
               position: 'fixed',
               bottom: '24px',
               right: '24px',
-              zIndex: 9999
+              zIndex: 9999,
+              background: 'linear-gradient(135deg, #374151 0%, #111827 50%, #000000 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradient-x 3s ease infinite'
             }}
           >
             <img 
               src="/carrinhoapp.png" 
-              alt="Carrinho of Compras" 
+              alt="Carrinho de Compras" 
               className="w-8 h-8 object-contain"
             />
             {totalItems > 0 && (
@@ -93,7 +96,7 @@ export function CartDrawer() {
                 <ShoppingCart className="w-5 h-5" />
                 Meu Carrinho
                 {totalItems > 0 && (
-                  <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'items'}</Badge>
+                  <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'itens'}</Badge>
                 )}
               </SheetTitle>
               <Button
@@ -110,18 +113,18 @@ export function CartDrawer() {
             {items.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Carrinho empty</h3>
-                <p className="text-gray-600 mb-6">Add delicious products to your carrinho!</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Carrinho vazio</h3>
+                <p className="text-gray-600 mb-6">Adicione produtos deliciosos ao seu carrinho!</p>
                 <Button 
                   onClick={() => setIsOpen(false)}
                   className="bg-pink-500 hover:bg-pink-600"
                 >
-                  Continue Shopping
+                  Continuar Comprando
                 </Button>
               </div>
             ) : (
               <>
-                {/* List of items */}
+                {/* Lista de itens */}
                 <div className="space-y-2 mb-6">
                   {items.map((item) => (
                     <CartItemComponent
@@ -136,7 +139,7 @@ export function CartDrawer() {
 
                 <Separator className="my-4" />
 
-                {/* Order summary */}
+                {/* Resumo do pedido */}
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Subtotal:</span>
@@ -144,8 +147,8 @@ export function CartDrawer() {
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Delivery:</span>
-                    <span className="font-medium text-green-600">To be arranged</span>
+                    <span className="text-gray-600">Entrega:</span>
+                    <span className="font-medium text-green-600">A combinar</span>
                   </div>
 
                   <Separator />
@@ -156,14 +159,14 @@ export function CartDrawer() {
                   </div>
                 </div>
 
-                {/* Action buttons */}
+                {/* Botões de ação */}
                 <div className="space-y-3 mt-6">
                   <Button
                     onClick={handleWhatsAppOrder}
                     className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3"
                   >
                     <MessageCircle className="w-5 h-5 mr-2" />
-                    Finalizar Order via WhatsApp
+                    Finalizar Pedido pelo WhatsApp
                   </Button>
                   
                   <div className="flex gap-2">
@@ -172,7 +175,7 @@ export function CartDrawer() {
                       onClick={() => setIsOpen(false)}
                       className="flex-1"
                     >
-                      Continue Shopping
+                      Continuar Comprando
                     </Button>
                     
                     {items.length > 0 && (
@@ -192,19 +195,19 @@ export function CartDrawer() {
         </SheetContent>
       </Sheet>
 
-      {/* DEBUG BUTTON - REMOVE LATER */}
+      {/* BOTÃO DE TESTE PARA DEBUG - REMOVER DEPOIS */}
       {process.env.NODE_ENV === 'development' && (
         <div 
           className="fixed top-4 left-4 bg-yellow-100 border border-yellow-300 rounded p-2 text-xs z-50"
           style={{ zIndex: 10000 }}
         >
-          <div>🛒 Items: {totalItems}</div>
+          <div>🛒 Itens: {totalItems}</div>
           <div>💰 Total: {formatCurrency(totalPrice)}</div>
           <button 
             onClick={() => setIsOpen(true)}
             className="mt-1 bg-yellow-500 text-white px-2 py-1 rounded text-xs"
           >
-            Open Cart
+            Abrir Carrinho
           </button>
         </div>
       )}
