@@ -19,16 +19,16 @@ interface ProductFormProps {
 }
 
 const saleTypes = [
-  { value: 'unidade', label: 'Unidade' },
-  { value: 'fatia', label: 'Fatia' },
-  { value: 'kg', label: 'Kg' },
-  { value: 'cento', label: 'Cento' },
-  { value: 'tamanho-p', label: 'Tamanho P' },
-  { value: 'tamanho-m', label: 'Tamanho M' },
-  { value: 'tamanho-g', label: 'Tamanho G' },
-  { value: 'kit-caixa', label: 'Kit / Caixa' },
-  { value: 'sob-encomenda', label: 'Sob encomenda' },
-  { value: 'outros', label: 'Outros' }
+  { value: 'unidade', label: '🍰 Unidade' },
+  { value: 'fatia', label: '🍰 Fatia' },
+  { value: 'kg', label: '⚖️ Kg' },
+  { value: 'cento', label: '💯 Cento' },
+  { value: 'tamanho-p', label: '📦 Tamanho P' },
+  { value: 'tamanho-m', label: '📦 Tamanho M' },
+  { value: 'tamanho-g', label: '📦 Tamanho G' },
+  { value: 'kit-caixa', label: '🎁 Kit / Caixa' },
+  { value: 'sob-encomenda', label: '📝 Sob encomenda' },
+  { value: 'outros', label: '📌 Outros' }
 ]
 
 const availableIcons = [
@@ -439,7 +439,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
       <div className="space-y-2">
         <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
-        <Select value={product?.forma_venda || ''} onValueChange={(value) => handleFieldChange('forma_venda', value)}>
+        <Select onValueChange={(value) => handleFieldChange('forma_venda', value)}>
           <SelectTrigger className="border-pink-200 focus:border-pink-500 focus:ring-pink-500">
             <SelectValue placeholder="Como este produto é vendido?" />
           </SelectTrigger>
