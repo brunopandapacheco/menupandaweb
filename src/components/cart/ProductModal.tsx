@@ -72,11 +72,13 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      {/* Backdrop with blur */}
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-        style={{ backdropFilter: 'blur(8px)' }}
-      />
+      {isOpen && (
+        /* Backdrop with blur - ONLY when modal is open */
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+          style={{ backdropFilter: 'blur(8px)' }}
+        />
+      )}
       
       <DialogContent 
         className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 border-pink-400 shadow-2xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
