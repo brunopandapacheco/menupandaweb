@@ -387,15 +387,13 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         </div>
       </div>
 
-      <div className="bg-blue-50 rounded-xl p-6">
-        <div className="flex items-center space-x-3">
-          <Switch
-            id="disponivel"
-            checked={product?.disponivel !== false}
-            onCheckedChange={(checked) => handleFieldChange('disponivel', checked)}
-          />
-          <Label htmlFor="disponivel" className="font-semibold text-gray-700">Mostrar na vitrine</Label>
-        </div>
+      <div className="flex items-center space-x-3">
+        <Switch
+          id="disponivel"
+          checked={product?.disponivel !== false}
+          onCheckedChange={(checked) => handleFieldChange('disponivel', checked)}
+        />
+        <Label htmlFor="disponivel" className="font-semibold text-gray-700">Mostrar na vitrine</Label>
       </div>
 
       {product?.id && onDelete && (
