@@ -114,7 +114,30 @@ export function CartDrawer() {
                   <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'itens'}</Badge>
                 )}
               </SheetTitle>
-              {/* Removido completamente o botão X - será removido via CSS */}
+              
+              {/* Botão X personalizado rosa e maior */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsOpen(false)}
+                className="h-10 w-10 p-0 rounded-full"
+                style={{
+                  backgroundColor: '#FF99D8',
+                  color: 'white',
+                  border: 'none',
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#ff7bc8'
+                  e.currentTarget.style.transform = 'scale(1.1)'
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FF99D8'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+              >
+                <X className="w-6 h-6" />
+              </Button>
             </div>
           </SheetHeader>
 
@@ -203,13 +226,6 @@ export function CartDrawer() {
           </div>
         </SheetContent>
       </Sheet>
-
-      {/* Estilos personalizados para esconder o X nativo */}
-      <style>{`
-        [data-state="open"] > button[data-radix-collection-item] {
-          display: none !important;
-        }
-      `}</style>
 
       {/* BOTÃO DE TESTE PARA DEBUG - REMOVER DEPOIS */}
       {process.env.NODE_ENV === 'development' && (
