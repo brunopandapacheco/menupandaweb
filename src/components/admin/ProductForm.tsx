@@ -315,7 +315,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
             value={product?.nome || ''}
             onChange={(e) => handleFieldChange('nome', e.target.value)}
             placeholder="Ex: Bolo de Chocolate"
-            className="border-pink-200 focus:border-pink-500 focus:ring-pink-500"
+            className="border-gray-200 focus:border-gray-400 focus:ring-gray-400"
             required
           />
         </div>
@@ -323,7 +323,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           <Label htmlFor="categoria" className="text-sm font-semibold text-gray-700">Categoria *</Label>
           {!isCreatingNewCategory ? (
             <Select value={product?.categoria || ''} onValueChange={handleCategorySelect}>
-              <SelectTrigger className="border-pink-200 focus:border-pink-500 focus:ring-pink-500">
+              <SelectTrigger className="border-gray-200 focus:border-gray-400 focus:ring-gray-400">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
@@ -349,7 +349,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Digite o nome da nova categoria"
-                  className="border-pink-200 focus:border-pink-500 focus:ring-pink-500 flex-1"
+                  className="border-gray-200 focus:border-gray-400 focus:ring-gray-400 flex-1"
                 />
               </div>
               
@@ -433,14 +433,14 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           onChange={(e) => handleFieldChange('descricao', e.target.value)}
           placeholder="Ingredientes, tamanho, sabor, etc"
           rows={3}
-          className="border-pink-200 focus:border-pink-500 focus:ring-pink-500"
+          className="border-gray-200 focus:border-gray-400 focus:ring-gray-400"
         />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
         <Select onValueChange={(value) => handleFieldChange('forma_venda', value)}>
-          <SelectTrigger className="border-pink-200 focus:border-pink-500 focus:ring-pink-500">
+          <SelectTrigger className="border-gray-200 focus:border-gray-400 focus:ring-gray-400">
             <SelectValue placeholder="Como este produto é vendido?" />
           </SelectTrigger>
           <SelectContent>
@@ -465,7 +465,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 value={getPriceDisplay(product?.preco_normal)}
                 onChange={(e) => handlePriceChange('preco_normal', e.target.value)}
                 placeholder="0,00"
-                className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
+                className="border-gray-200 focus:border-gray-400 focus:ring-gray-400 pl-10"
                 required
               />
             </div>
@@ -493,7 +493,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   value={getPriceDisplay(product?.preco_promocional)}
                   onChange={(e) => handlePriceChange('preco_promocional', e.target.value)}
                   placeholder="0,00"
-                  className="border-green-200 focus:border-green-500 focus:ring-green-500 pl-10"
+                  className="border-gray-200 focus:border-gray-400 focus:ring-gray-400 pl-10"
                 />
               </div>
             </div>
