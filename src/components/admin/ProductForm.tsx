@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -52,6 +52,27 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   const [newCategoryName, setNewCategoryName] = useState('')
   const [selectedIcon, setSelectedIcon] = useState('/icons/1.png')
   const [showIconSelector, setShowIconSelector] = useState(false)
+  const [categories, setCategories] = useState<string[]>([])
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data, error } = await supabaseService
+          .from('categorias')
+          .select('nome')
+          .order('nome')
+        
+        if (error) throw error
+        
+        const categoryNames = data?.map(cat => cat.nome) || []
+        setCategories(categoryNames)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleImageUpload = async (file: File) => {
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
@@ -92,13 +113,41 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     onSave({ ...product, [field]: value })
   }
 
-  const handleCreateNewCategory = () => {
+  const handleCreateNewCategory = async () => {
     if (!newCategoryName.trim()) return
-    handleFieldChange('categoria', newCategoryName.trim())
-    setNewCategoryName('')
-    setIsCreatingNewCategory(false)
-    setSelectedIcon('/icons/1.png')
-    setShowIconSelector(false)
+    
+    try {
+      // Insert new category into database
+      const { error } = await supabaseService
+        .from('categorias')
+        .insert({ 
+          nome: newCategoryName.trim(),
+          user_id: (await supabaseService.auth.getUser()).data.user?.id
+        })
+      
+      if (error) throw error
+      
+      // Update product with new category
+      handleFieldChange('categoria', newCategoryName.trim())
+      
+      // Refresh categories list
+      const { data, error: fetchError } = await supabaseService
+        .from('categorias')
+        .select('nome')
+        .order('nome')
+      
+      if (!fetchError && data) {
+        setCategories(data.map(cat => cat.nome))
+      }
+      
+      // Reset form
+      setNewCategoryName('')
+      setIsCreatingNewCategory(false)
+      setSelectedIcon('/icons/1.png')
+      setShowIconSelector(false)
+    } catch (error) {
+      console.error('Error creating category:', error)
+    }
   }
 
   const handleCategorySelect = (value: string) => {
@@ -218,6 +267,11 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
                 <SelectItem value="create-new" className="text-pink-600 font-medium">
                   <div className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
