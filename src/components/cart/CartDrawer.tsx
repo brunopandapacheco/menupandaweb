@@ -100,10 +100,10 @@ export function CartDrawer() {
           <SheetHeader className="border-b pb-4">
             <div className="flex items-center justify-between">
               <SheetTitle 
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 font-bold"
                 style={{ 
-                  color: '#f9a8d4', // Rosa claro
-                  backgroundColor: '#6b7280', // Cinza
+                  color: '#ffffff', // Texto branco
+                  backgroundColor: '#FF99D8', // Fundo rosa #FF99D8
                   padding: '8px 16px',
                   borderRadius: '8px'
                 }}
