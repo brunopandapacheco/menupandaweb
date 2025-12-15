@@ -9,6 +9,7 @@ import { Upload, X, GripVertical, Star, Trash2, Plus, Check } from 'lucide-react
 import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 import { supabase } from '@/lib/supabase'
+import { showError, showSuccess } from '@/utils/toast'
 
 interface ProductFormProps {
   product: Partial<Produto> | null
@@ -22,9 +23,9 @@ const saleTypes = [
   { value: 'unidade', label: 'Unidade' },
   { value: 'fatia', label: 'Fatia' },
   { value: 'cento', label: 'Cento' },
-  { value: 'tamanho-p', label: 'Tamanho P' }, // New option
-  { value: 'tamanho-m', label: 'Tamanho M' }, // New option
-  { value: 'tamanho-g', label: 'Tamanho G' }, // New option
+  { value: 'tamanho-p', label: 'Tamanho P' },
+  { value: 'tamanho-m', label: 'Tamanho M' },
+  { value: 'tamanho-g', label: 'Tamanho G' },
   { value: 'outros', label: 'Outros' }
 ]
 
@@ -54,6 +55,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   const [selectedIcon, setSelectedIcon] = useState('/icons/1.png')
   const [showIconSelector, setShowIconSelector] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
+  const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -114,41 +116,56 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     onSave({ ...product, [field]: value })
   }
 
-  const handleCreateNewCategory = async () => {
-    if (!newCategoryName.trim()) return
-    
+  const checkCategoryExists = async (categoryName: string): Promise<boolean> => {
     try {
-      // Insert new category into database
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('categorias')
-        .insert({ 
-          nome: newCategoryName.trim(),
-          user_id: (await supabase.auth.getUser()).data.user?.id
-        })
+        .select('id')
+        .eq('nome', categoryName.trim())
+        .single()
       
-      if (error) throw error
-      
-      // Update product with new category
-      handleFieldChange('categoria', newCategoryName.trim())
-      
-      // Refresh categories list
-      const { data, error: fetchError } = await supabase
-        .from('categorias')
-        .select('nome')
-        .order('nome')
-      
-      if (!fetchError && data) {
-        setCategories(data.map(cat => cat.nome))
+      if (error && error.code !== 'PGRST116') {
+        throw error
       }
       
-      // Reset form
-      setNewCategoryName('')
-      setIsCreatingNewCategory(false)
-      setSelectedIcon('/icons/1.png')
-      setShowIconSelector(false)
+      return !!data
     } catch (error) {
-      console.error('Error creating category:', error)
+      console.error('Error checking category:', error)
+      return false
     }
+  }
+
+  const handleCreateNewCategory = async () => {
+    if (!newCategoryName.trim()) {
+      showError('Digite um nome para a categoria')
+      return
+    }
+
+    const trimmedName = newCategoryName.trim()
+    
+    // Verificar se categoria já existe
+    const exists = await checkCategoryExists(trimmedName)
+    if (exists) {
+      showError('Já existe uma categoria com este nome')
+      return
+    }
+
+    // Salvar categoria pendente para criar só quando o produto for salvo
+    setPendingCategory({
+      name: trimmedName,
+      icon: selectedIcon
+    })
+
+    // Atualizar o campo categoria do produto
+    handleFieldChange('categoria', trimmedName)
+    
+    // Reset form de criação
+    setNewCategoryName('')
+    setIsCreatingNewCategory(false)
+    setSelectedIcon('/icons/1.png')
+    setShowIconSelector(false)
+    
+    showSuccess('Categoria será criada quando o produto for salvo')
   }
 
   const handleCategorySelect = (value: string) => {
@@ -160,6 +177,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       setNewCategoryName('')
       setSelectedIcon('/icons/1.png')
       setShowIconSelector(false)
+      setPendingCategory(null)
     }
   }
 
@@ -188,6 +206,45 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       maximumFractionDigits: 2
     })
   }
+
+  // Função para criar a categoria pendente quando o produto for salvo
+  const createPendingCategory = async () => {
+    if (!pendingCategory) return
+
+    try {
+      const { error } = await supabase
+        .from('categorias')
+        .insert({ 
+          nome: pendingCategory.name,
+          user_id: (await supabase.auth.getUser()).data.user?.id
+        })
+      
+      if (error) throw error
+      
+      // Atualizar lista de categorias
+      const { data, error: fetchError } = await supabase
+        .from('categorias')
+        .select('nome')
+        .order('nome')
+      
+      if (!fetchError && data) {
+        setCategories(data.map(cat => cat.nome))
+      }
+      
+      setPendingCategory(null)
+    } catch (error) {
+      console.error('Error creating category:', error)
+      showError('Erro ao criar a categoria')
+    }
+  }
+
+  // Expor função para o ProductDialog usar
+  useEffect(() => {
+    if (product?.id && pendingCategory) {
+      // Se o produto já tem ID, criar a categoria imediatamente
+      createPendingCategory()
+    }
+  }, [product?.id])
 
   return (
     <div className="space-y-6">

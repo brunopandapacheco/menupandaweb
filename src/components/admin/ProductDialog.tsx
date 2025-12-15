@@ -5,6 +5,7 @@ import { ProductForm } from './ProductForm'
 import { Produto } from '@/types/database'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
+import { supabase } from '@/lib/supabase'
 
 interface ProductDialogProps {
   isOpen: boolean
@@ -16,6 +17,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   const { addProduto, editProduto, removeProduto } = useDatabase()
   const [localProduct, setLocalProduct] = useState<Partial<Produto> | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
   const neutralFocusRef = useRef<HTMLDivElement>(null)
 
   // Reset local product when dialog changes
@@ -65,6 +67,22 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
 
     setIsSaving(true)
     try {
+      // Criar categoria pendente se existir
+      if (pendingCategory) {
+        const { error } = await supabase
+          .from('categorias')
+          .insert({ 
+            nome: pendingCategory.name,
+            user_id: (await supabase.auth.getUser()).data.user?.id
+          })
+        
+        if (error) throw error
+        
+        showSuccess('Categoria criada com sucesso!')
+        setPendingCategory(null)
+      }
+
+      // Salvar o produto
       if (localProduct.id) {
         const success = await editProduto(localProduct.id, localProduct)
         if (success) showSuccess('Produto atualizado!')
