@@ -170,7 +170,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     }
   }
 
-  const handleDeleteCategory = (category: string) => {
+  const handleDeleteCategory = async (category: string) => {
     if (category === 'Todos') {
       showError('Não é possível excluir a categoria "Todos"')
       return
@@ -182,10 +182,45 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       return
     }
 
-    // Remover categoria da lista
-    const updatedCategories = mainCategories.filter(c => c !== category)
-    onMainCategoriesChange(updatedCategories)
-    showSuccess(`Categoria "${category}" excluída com sucesso!`)
+    try {
+      // 1. Remover da tabela categorias (se existir)
+      const { error: dbError } = await supabase
+        .from('categorias')
+        .delete()
+        .eq('nome', category)
+      
+      if (dbError && dbError.code !== 'PGRST116') {
+        console.error('Error deleting from database:', dbError)
+        throw dbError
+      }
+
+      // 2. Remover da lista mainCategories
+      const updatedCategories = mainCategories.filter(c => c !== category)
+      onMainCategoriesChange(updatedCategories)
+
+      // 3. Remover ícone personalizado se existir
+      if (categoryIcons[category]) {
+        const updatedIcons = { ...categoryIcons }
+        delete updatedIcons[category]
+        
+        const success = await saveDesignSettings({
+          category_icons: updatedIcons
+        })
+        
+        if (success) {
+          setCategoryIcons(updatedIcons)
+        }
+      }
+
+      // 4. Atualizar a lista de categorias
+      const newAllCategories = allCategories.filter(c => c !== category)
+      setAllCategories(newAllCategories)
+
+      showSuccess(`Categoria "${category}" excluída com sucesso!`)
+    } catch (error: any) {
+      console.error('❌ Error deleting category:', error)
+      showError('Erro ao excluir categoria. Tente novamente.')
+    }
   }
 
   const handleIconChange = async (category: string, iconPath: string) => {
