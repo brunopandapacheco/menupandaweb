@@ -81,10 +81,10 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
       )}
       
       <DialogContent 
-        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 border-pink-400 shadow-2xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
         style={{
           margin: '0',
-          border: '4px solid #ec4899',
+          border: '4px solid #FF99D8',
           position: 'fixed',
           top: '50%',
           left: '50%',
