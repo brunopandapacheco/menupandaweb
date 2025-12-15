@@ -19,7 +19,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   const [quantity, setQuantity] = useState(1)
   const [observations, setObservations] = useState('')
 
-  // Resetar estado quando o produto mudar
+  // Reset state when product changes
   useState(() => {
     if (product) {
       setQuantity(product.forma_venda === 'kg' ? 0.5 : 1)
@@ -72,24 +72,30 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md w-[95vw] max-h-[90vh] overflow-y-auto rounded-2xl">
-        <DialogHeader>
+      <DialogContent 
+        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 border-pink-400 shadow-2xl"
+        style={{
+          margin: '16px',
+          border: '4px solid #ec4899'
+        }}
+      >
+        <DialogHeader className="border-b-2 border-pink-200 pb-4">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold">Adicionar ao Carrinho</DialogTitle>
+            <DialogTitle className="text-lg font-bold text-pink-800">Adicionar ao Carrinho</DialogTitle>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-100"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 text-pink-600" />
             </Button>
           </div>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Imagem do produto */}
-          <div className="w-full h-48 rounded-xl overflow-hidden bg-gray-50">
+        <div className="space-y-4 p-4">
+          {/* Imagem do produto com borda */}
+          <div className="w-full h-40 rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
             {firstImage ? (
               <img 
                 src={firstImage} 
@@ -104,11 +110,11 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           </div>
 
           {/* Informações do produto */}
-          <div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{product.nome}</h3>
-            <p className="text-gray-600 text-sm mb-3">{product.descricao}</p>
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-gray-900">{product.nome}</h3>
+            <p className="text-gray-600 text-sm">{product.descricao}</p>
             
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2">
               <span className="text-2xl font-bold text-green-600">
                 {formatCurrency(product.preco_normal)}
               </span>
@@ -123,8 +129,8 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Controle de quantidade */}
-          <div>
+          {/* Controle de quantidade com borda */}
+          <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Quantidade:
             </label>
@@ -132,27 +138,27 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               <Button
                 variant="outline"
                 onClick={decrementQuantity}
-                className="h-10 w-10 p-0 rounded-full"
+                className="h-10 w-10 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-50"
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="w-4 h-4 text-pink-600" />
               </Button>
               <div className="flex-1 text-center">
-                <span className="text-lg font-semibold">
+                <span className="text-lg font-semibold text-pink-800">
                   {formatQuantity(quantity, product.forma_venda)}
                 </span>
               </div>
               <Button
                 variant="outline"
                 onClick={incrementQuantity}
-                className="h-10 w-10 p-0 rounded-full"
+                className="h-10 w-10 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-50"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 text-pink-600" />
               </Button>
             </div>
           </div>
 
-          {/* Observações */}
-          <div>
+          {/* Observações com borda */}
+          <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Observações (opcional):
             </label>
@@ -161,24 +167,24 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               onChange={(e) => setObservations(e.target.value)}
               placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
               rows={3}
-              className="resize-none rounded-xl"
+              className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
           </div>
 
-          {/* Preço total */}
-          <div className="bg-gray-50 p-4 rounded-xl">
+          {/* Preço total com borda */}
+          <div className="bg-pink-50 border-2 border-pink-200 rounded-xl p-4">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Total:</span>
+              <span className="text-gray-700 font-medium">Total:</span>
               <span className="text-2xl font-bold text-green-600">
                 {formatCurrency(product.preco_normal * quantity)}
               </span>
             </div>
           </div>
 
-          {/* Botão de adicionar */}
+          {/* Botão de adicionar com borda */}
           <Button
             onClick={handleAddToCart}
-            className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl"
+            className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
             Adicionar ao Carrinho
