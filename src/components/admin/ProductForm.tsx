@@ -441,7 +441,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         <Label htmlFor="forma_venda" className="text-sm font-semibold text-gray-700">Tipo de Venda</Label>
         <Select value={product?.forma_venda || 'unidade'} onValueChange={(value) => handleFieldChange('forma_venda', value)}>
           <SelectTrigger className="border-pink-200 focus:border-pink-500 focus:ring-pink-500">
-            <SelectValue placeholder="Selecione" />
+            <SelectValue placeholder="Como este produto é vendido?" />
           </SelectTrigger>
           <SelectContent>
             {saleTypes.map((type) => (
