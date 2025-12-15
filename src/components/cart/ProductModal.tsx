@@ -192,9 +192,11 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
           {/* Preço total com borda */}
           <div 
-            className="border-2 border-pink-200 rounded-xl p-4"
+            className="border-2 border-pink-200 rounded-xl p-4 animate-pulse"
             style={{
-              backgroundColor: '#FF97D6'
+              background: 'linear-gradient(135deg, #FF97D6 0%, #FFB3D6 50%, #FF97D6 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite'
             }}
           >
             <div className="flex justify-between items-center">
@@ -215,6 +217,21 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           </Button>
         </div>
       </DialogContent>
+      
+      {/* CSS para animação de gradiente */}
+      <style>{`
+        @keyframes gradientShift {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </Dialog>
   )
 }
