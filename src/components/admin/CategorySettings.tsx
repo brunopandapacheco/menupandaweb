@@ -6,7 +6,7 @@ import { X, Edit2, Trash2, Check, AlertTriangle, RefreshCw } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
-// Lista de todos os ícones disponíveis na pasta public/icons
+// Lista of todos the ícones disponíveis na pasta public/icons
 const availableIcons = [
   { name: '1', path: '/icons/1.png' },
   { name: '2', path: '/icons/2.png' },
@@ -41,7 +41,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const [showIconSelector, setShowIconSelector] = useState<string | null>(null)
   const [categoryIcons, setCategoryIcons] = useState<{ [key: string]: string }>({})
 
-  // Carregar ícones personalizados do design_settings quando o componente montar
+  // Carregar ícones personalizados do design_settings when o component montar
   useEffect(() => {
     if (designSettings?.category_icons) {
       console.log('Loading category icons from database:', designSettings.category_icons)
@@ -49,7 +49,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     }
   }, [designSettings])
 
-  // Obter categorias que realmente existem nos produtos
+  // Obter categorias that really existem nos products
   const getProductCategories = (): string[] => {
     const categories = Array.from(new Set(produtos.map(p => p.categoria)))
     return categories.filter((cat): cat is string => cat && typeof cat === 'string' && cat.trim() !== '')
@@ -57,7 +57,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   const productCategories = getProductCategories()
 
-  // Combinar todas as categorias para exibição (apenas "Todos" + categorias dos produtos)
+  // Combinar all as categorias for exibição (apenas "Todos" + categorias dos products)
   const allCategories = (): string[] => {
     const categories = ['Todos', ...productCategories]
     return categories.sort() // Ordenar alfabeticamente
@@ -66,9 +66,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const displayCategories = allCategories()
 
   const handleEditCategory = (category: string) => {
-    // Não permitir editar a categoria "Todos"
+    // Não permiter edit the category "Todos"
     if (category === 'Todos') {
-      showError('A categoria "Todos" não pode ser alterada')
+      showError('A category "Todos" cannot be alterada')
       return
     }
     
@@ -82,20 +82,20 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     if (!editingCategory || !editingName.trim()) return
 
     try {
-      // Atualizar o nome da categoria em todos os produtos
+      // Atualizar o name da category in all the products
       const productsToUpdate = produtos.filter(product => product.categoria === editingCategory)
       
       console.log(`🔄 Updating category "${editingCategory}" to "${editingName.trim()}" in ${productsToUpdate.length} products`)
       
-      // Atualizar cada produto individualmente
+      // Atualizar each product individually
       for (const product of productsToUpdate) {
         const success = await editProduto(product.id, { categoria: editingName.trim() })
         if (!success) {
-          throw new Error(`Falha ao atualizar produto ${product.nome}`)
+          throw new Error(`Falha ao atualizar product ${product.nome}`)
         }
       }
 
-      // Se houver ícone personalizado para a categoria antiga, mover para a nova
+      // If there is ícone personalizado for the category antiga, mover for the new
       if (categoryIcons[editingCategory]) {
         const updatedIcons = { ...categoryIcons }
         updatedIcons[editingName.trim()] = updatedIcons[editingCategory]
@@ -115,49 +115,49 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
         }
       }
 
-      showSuccess(`Categoria "${editingCategory}" renomeada para "${editingName.trim()}" em ${productsToUpdate.length} produtos`)
+      showSuccess(`Category "${editingCategory}" renomeada for "${editingName.trim()}" em ${productsToUpdate.length} products`)
       setEditingCategory(null)
       setEditingName('')
       setEditingIcon('')
     } catch (error: any) {
       console.error('❌ Error updating category:', error)
-      showError('Erro ao atualizar categoria. Tente novamente.')
+      showError('Erro ao atualizar category. Tente again.')
     }
   }
 
   const handleDeleteCategory = (category: string) => {
     if (category === 'Todos') {
-      showError('Não é possível excluir a categoria "Todos"')
+      showError('Não is possible excluir the category "Todos"')
       return
     }
 
     const productsInCategory = produtos.filter(p => p.categoria === category)
     if (productsInCategory.length > 0) {
-      showError(`Não é possível excluir "${category}". Existem ${productsInCategory.length} produtos nesta categoria.`)
+      showError(`Não is possible excluir "${category}". Existem ${productsInCategory.length} products in this category.`)
       return
     }
 
-    // Remover categoria da lista
+    // Remover category da list
     const updatedCategories = mainCategories.filter(c => c !== category)
     onMainCategoriesChange(updatedCategories)
-    showSuccess(`Categoria "${category}" excluída com sucesso!`)
+    showSuccess(`Category "${category}" excluída with success!`)
   }
 
   const handleIconChange = async (category: string, iconPath: string) => {
-    // Não permitir alterar o ícone da categoria "Todos"
+    // Não permiter alterar the ícone da category "Todos"
     if (category === 'Todos') {
-      showError('O ícone da categoria "Todos" não pode ser alterado')
+      showError('O ícone da category "Todos" cannot be alterado')
       return
     }
 
     try {
       console.log('🔄 Changing icon for category:', category, 'to:', iconPath)
       
-      // Atualizar o estado local primeiro
+      // Atualizar the state local first
       const updatedIcons = { ...categoryIcons, [category]: iconPath }
       setCategoryIcons(updatedIcons)
       
-      // Salvar no banco de dados usando o campo category_icons
+      // Salvar no bank of data using the field category_icons
       console.log('💾 Saving to database with category_icons:', updatedIcons)
       
       const success = await saveDesignSettings({
@@ -166,12 +166,12 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       
       if (success) {
         console.log('✅ Icon saved successfully to database')
-        showSuccess(`Ícone da categoria "${category}" atualizado e salvo!`)
+        showSuccess(`Ícone da category "${category}" actualizado and salvo!`)
         setShowIconSelector(null)
       } else {
         console.error('❌ Failed to save icon to database')
-        showError('Erro ao salvar ícone da categoria no banco')
-        // Reverter para o estado anterior se falhou
+        showError('Erro ao salvar ícone da category no bank')
+        // Reverter for the state anterior if falhou
         setCategoryIcons(prev => {
           const newIcons = { ...prev }
           delete newIcons[category]
@@ -180,8 +180,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
       }
     } catch (error) {
       console.error('❌ Error saving icon:', error)
-      showError('Erro ao salvar ícone da categoria')
-      // Reverter para o estado anterior se falhou
+      showError('Erro ao salvar ícone da category')
+      // Reverter for the state anterior if falhou
       setCategoryIcons(prev => {
         const newIcons = { ...prev }
         delete newIcons[category]
@@ -191,19 +191,19 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const getCategoryIcon = (category: string) => {
-    // Para "Todos", SEMPRE usar o ícone fixo - NÃO pode ser alterado
+    // For "Todos", SEMPRE use the ícone fixo - NÃO can be alterado
     if (category === 'Todos') {
       console.log(`🔒 Using FIXED icon for "Todos": /icons/TODOS.png`)
       return '/icons/TODOS.png'
     }
     
-    // Primeiro verificar se há um ícone personalizado salvo no estado local
+    // Primeiro verify if there is ícone personalizado salvo no state local
     if (categoryIcons[category]) {
       console.log(`📁 Using custom icon for ${category}:`, categoryIcons[category])
       return categoryIcons[category]
     }
     
-    // Por último, usar ícone padrão
+    // Por last, use ícone padrão
     console.log(`📁 Using fallback icon for ${category}: /icons/1.png`)
     return '/icons/1.png'
   }
@@ -218,14 +218,14 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
 
   return (
     <div className="space-y-6">
-      {/* Card de Gerenciamento de Categorias */}
+      {/* Card of Gerenciamento of Categories */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Gerenciar Categorias</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Gerenciar Categories</CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Lista de Categorias */}
+          {/* List of Categories */}
           <div className="space-y-4">
             <div className="space-y-3">
               {displayCategories.map((category) => {
@@ -241,9 +241,9 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       isTodos ? 'bg-gray-50 border-gray-200' : ''
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      {/* Ícone da categoria */}
-                      <div className="relative">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      {/* Ícone da category */}
+                      <div className="relative flex-shrink-0">
                         <img 
                           src={currentIcon} 
                           alt={category}
@@ -251,7 +251,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                           onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
                         
-                        {/* Botão para alterar ícone - não mostrar para "Todos" */}
+                        {/* Botão for alterar ícone - not show for "Todos" */}
                         {!isTodos && (
                           <button
                             onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
@@ -262,19 +262,19 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                         )}
                       </div>
                       
-                      {/* Nome da categoria */}
+                      {/* Name da category */}
                       {isEditing ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
                           <Input
                             value={editingName}
                             onChange={(e) => setEditingName(e.target.value)}
-                            className="w-48 h-8"
-                            placeholder="Nome da categoria"
+                            className="flex-1 min-w-0"
+                            placeholder="Nome da category"
                           />
                           <Button
                             size="sm"
                             onClick={handleSaveEdit}
-                            className="bg-green-600 hover:bg-green-700 h-8"
+                            className="bg-green-600 hover:bg-green-700 h-8 flex-shrink-0"
                           >
                             <Check className="w-3 h-3" />
                           </Button>
@@ -285,18 +285,18 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                               setEditingCategory(null)
                               setEditingName('')
                             }}
-                            className="h-8"
+                            className="h-8 flex-shrink-0"
                           >
                             <X className="w-3 h-3" />
                           </Button>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-2">
-                          <span className={`font-medium ${isTodos ? 'text-gray-600' : 'text-gray-800'}`}>
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span className={`font-medium ${isTodos ? 'text-gray-600' : 'text-gray-800'} truncate`}>
                             {category}
                           </span>
                           {isTodos && (
-                            <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
+                            <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded flex-shrink-0">
                               Padrão
                             </span>
                           )}
@@ -304,8 +304,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                       )}
                     </div>
                     
-                    {/* Ações */}
-                    <div className="flex items-center gap-2">
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                       {!isEditing && (
                         <>
                           <button
@@ -317,8 +317,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                             }`}
                             title={
                               isTodos 
-                                ? 'Categoria "Todos" não pode ser alterada'
-                                : 'Renomear categoria'
+                                ? 'Category "Todos" cannot be alterada'
+                                : 'Renomear category'
                             }
                             disabled={isTodos}
                           >
@@ -334,10 +334,10 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                             }`}
                             title={
                               isTodos 
-                                ? 'Categoria "Todos" não pode ser excluída'
+                                ? 'Category "Todos" cannot be excluída'
                                 : hasProductsInCategory
-                                ? 'Categoria com produtos não pode ser excluída'
-                                : 'Excluir categoria'
+                                ? 'Category with products cannot be exclúda'
+                                : 'Excluir category'
                             }
                             disabled={isTodos || hasProductsInCategory}
                           >
@@ -352,11 +352,11 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
-          {/* Seletor de Ícone - Container pequeno, imagem grande */}
+          {/* Seletor of Ícone - Container small, image large */}
           {showIconSelector && (
             <div className="border-2 border-purple-200 rounded-lg p-3 bg-purple-50">
               <h4 className="text-sm font-semibold text-purple-800 mb-3">
-                Escolha um ícone para "{showIconSelector}"
+                Escolha an ícone for "{showIconSelector}"
               </h4>
               <div className="grid grid-cols-4 gap-2 max-h-80 overflow-y-auto">
                 {availableIcons.map((icon) => (
