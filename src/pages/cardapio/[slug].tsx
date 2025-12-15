@@ -207,7 +207,7 @@ export default function CardapioPublico() {
         textoRodape={designSettings.texto_rodape} 
       />
 
-      {/* Carrinho */}
+      {/* Carrinho - BOTÃO FLUTUANTE NO CANTO INFERIOR DIREITO */}
       <CartDrawer />
     </div>
   )
