@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { supabase } from '@/lib/supabase'
-import { showSuccess, showError } from '@/utils/toast'
+import { showError } from '@/utils/toast'
 import { Eye, EyeOff } from 'lucide-react'
 
 interface LoginFormProps {
@@ -52,7 +52,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         console.log('Access token:', data.session.access_token ? 'Presente' : 'Ausente')
         console.log('Refresh token:', data.session.refresh_token ? 'Presente' : 'Ausente')
         
-        showSuccess('Login realizado com sucesso!')
+        // Mensagem de sucesso removida
         
         // Aguardar um pouco para garantir que a sessão foi salva
         setTimeout(() => {
