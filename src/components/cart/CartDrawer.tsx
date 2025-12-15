@@ -227,6 +227,19 @@ export function CartDrawer() {
         </SheetContent>
       </Sheet>
 
+      {/* Estilos personalizados para esconder o X padrão do sistema */}
+      <style>{`
+        /* Esconder o botão X padrão do Radix Sheet */
+        [data-state="open"] > button[aria-label="Close"] {
+          display: none !important;
+        }
+        
+        /* Esconder qualquer botão de fechar padrão */
+        [data-radix-sheet-content] > button:first-child {
+          display: none !important;
+        }
+      `}</style>
+
       {/* BOTÃO DE TESTE PARA DEBUG - REMOVER DEPOIS */}
       {process.env.NODE_ENV === 'development' && (
         <div 
