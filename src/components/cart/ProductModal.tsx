@@ -72,11 +72,21 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
+      {/* Backdrop with blur */}
+      <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+        style={{ backdropFilter: 'blur(8px)' }}
+      />
+      
       <DialogContent 
-        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 border-pink-400 shadow-2xl"
+        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 border-pink-400 shadow-2xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
         style={{
-          margin: '16px',
-          border: '4px solid #ec4899'
+          margin: '0',
+          border: '4px solid #ec4899',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
         }}
       >
         <DialogHeader className="border-b-2 border-pink-200 pb-4">
