@@ -161,7 +161,7 @@ export default function CardapioPublico() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
+    <div className={`min-h-screen cardapio-scrollbar`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
       <Banner 
         borderColor={designSettings.cor_borda}
         bannerGradient={designSettings.banner_gradient}

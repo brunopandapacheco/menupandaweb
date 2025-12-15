@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/hooks/useCart'
-import type { Produto } from '@/types/database'
+import { Produto } from '@/types/database'
 import { formatCurrency } from '@/utils/helpers'
 
 interface ProductModalProps {
@@ -20,12 +20,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   const [observations, setObservations] = useState('')
 
   // Reset state when product changes
-  useEffect(() => {
+  useState(() => {
     if (product) {
       setQuantity(product.forma_venda === 'kg' ? 0.5 : 1)
       setObservations('')
     }
-  }, [product])
+  })
 
   if (!product) return null
 

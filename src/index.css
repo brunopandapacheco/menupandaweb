@@ -209,3 +209,29 @@ body.modal-open {
   -ms-user-select: none !important;
   user-select: none !important;
 }
+
+/* Barra de rolagem personalizada para o cardápio */
+.cardapio-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cardapio-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.cardapio-scrollbar::-webkit-scrollbar-thumb {
+  background: #FF97D6;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.cardapio-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ff7bc8;
+}
+
+/* Para Firefox */
+.cardapio-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #FF97D6 #f1f1f1;
+}
