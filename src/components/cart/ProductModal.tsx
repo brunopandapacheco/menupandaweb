@@ -198,8 +198,8 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             }}
           >
             <div className="flex justify-between items-center">
-              <span className="text-gray-700 font-medium">Total:</span>
-              <span className="text-2xl font-bold text-green-600">
+              <span className="text-black font-medium">Total:</span>
+              <span className="text-2xl font-bold text-green-700">
                 {formatCurrency(product.preco_normal * quantity)}
               </span>
             </div>
