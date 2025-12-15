@@ -392,6 +392,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           id="disponivel"
           checked={product?.disponivel !== false}
           onCheckedChange={(checked) => handleFieldChange('disponivel', checked)}
+          className="data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-600"
         />
         <Label htmlFor="disponivel" className="font-semibold text-gray-700">Mostrar na vitrine</Label>
       </div>
