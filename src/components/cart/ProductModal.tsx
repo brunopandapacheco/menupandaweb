@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/hooks/useCart'
@@ -108,7 +108,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
       >
         <DialogHeader className="border-b-2 border-pink-200 pb-4">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-bold text-pink-800">Adicionar ao Carrinho</DialogTitle>
+            <div>
+              <DialogTitle className="text-lg font-bold text-pink-800">Adicionar ao Carrinho</DialogTitle>
+              <DialogDescription className="text-sm text-gray-600">
+                Escolha a quantidade e adicione observações para o produto
+              </DialogDescription>
+            </div>
             <Button
               variant="ghost"
               size="sm"
