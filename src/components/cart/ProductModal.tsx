@@ -191,7 +191,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           </div>
 
           {/* Preço total com borda */}
-          <div className="bg-pink-50 border-2 border-pink-200 rounded-xl p-4">
+          <div 
+            className="border-2 border-pink-200 rounded-xl p-4"
+            style={{
+              backgroundColor: '#FFCEE4'
+            }}
+          >
             <div className="flex justify-between items-center">
               <span className="text-gray-700 font-medium">Total:</span>
               <span className="text-2xl font-bold text-green-600">
