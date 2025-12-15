@@ -63,7 +63,7 @@ export function CartDrawer() {
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button 
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 shadow-lg rounded-full w-14 h-14 p-0 flex items-center justify-center"
+            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 shadow-lg rounded-full w-14 h-14 p-0 flex items-center justify-center border-2 border-pink-300"
             style={{
               position: 'fixed',
               bottom: '24px',
