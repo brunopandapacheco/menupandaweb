@@ -43,26 +43,9 @@ export function ProductCard({
   const firstImage = getFirstImage(product.imagem_url)
 
   const handleAddToCart = () => {
-    console.log('🛒 ProductCard: handleAddToCart called for product:', product.nome)
-    
-    if (onAddToCart) {
-      onAddToCart(product)
-    } else {
-      // Adicionar directly ao carrinho
-      const cartItem = {
-        id: product.id,
-        name: product.nome,
-        description: product.descricao || '',
-        price: product.preco_normal,
-        imageUrl: product.imagem_url,
-        saleType: product.forma_venda as any,
-        quantity: product.forma_venda === 'kg' ? 0.5 : 1,
-        observations: ''
-      }
-      
-      console.log('🛒 ProductCard: Adding item to cart:', cartItem)
-      addItem(cartItem)
-    }
+    console.log('🛒 ProductCard: Opening modal for product:', product.nome)
+    // Abrir modal instead of adding directly
+    setShowModal(true)
   }
 
   return (
@@ -107,7 +90,7 @@ export function ProductCard({
               </div>
             )}
 
-            {/* Botão to add to cart */}
+            {/* Botão to add to cart - now opens modal */}
             <button
               onClick={handleAddToCart}
               className="absolute bottom-2 right-2 bg-pink-500 hover:bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-colors"
