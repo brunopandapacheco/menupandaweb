@@ -3,7 +3,6 @@ import { ShoppingCart, MessageCircle, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { CartItemComponent } from './CartItemComponent'
 import { useCart } from '@/hooks/useCart'
 import { formatCurrency } from '@/utils/helpers'
@@ -57,6 +56,7 @@ export function CartDrawer() {
   }
 
   console.log('🛒 CartDrawer renderizado - Items in carrinho:', totalItems)
+  console.log('🛒 CartDrawer - Items array:', items)
 
   return (
     <>
@@ -171,10 +171,7 @@ export function CartDrawer() {
                   ))}
                 </div>
 
-                <Separator className="my-4" />
-
-                {/* Summary of order */}
-                <div className="space-y-3">
+                <div className="border-t pt-4 space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Subtotal:</span>
                     <span className="font-medium">{formatCurrency(totalPrice)}</span>
@@ -185,11 +182,11 @@ export function CartDrawer() {
                     <span className="font-medium text-green-600">To combine</span>
                   </div>
 
-                  <Separator />
-
-                  <div className="flex justify-between items-center text-lg font-bold">
-                    <span>Total:</span>
-                    <span className="text-green-600">{formatCurrency(totalPrice)}</span>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between items-center text-lg font-bold">
+                      <span>Total:</span>
+                      <span className="text-green-600">{formatCurrency(totalPrice)}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -250,6 +247,7 @@ export function CartDrawer() {
         >
           <div>🛒 Items: {totalItems}</div>
           <div>💰 Total: {formatCurrency(totalPrice)}</div>
+          <div>📦 Array length: {items.length}</div>
           <button 
             onClick={() => setIsOpen(true)}
             className="mt-1 bg-yellow-500 text-white px-2 py-1 rounded text-xs"

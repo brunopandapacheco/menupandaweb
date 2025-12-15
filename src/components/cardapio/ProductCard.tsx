@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Heart, ShoppingCart } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { ProductModal } from '@/components/cart/ProductModal'
+import { useCart } from '@/hooks/useCart'
 import { Produto } from '@/types/database'
 
 interface ProductCardProps {
@@ -10,7 +11,7 @@ interface ProductCardProps {
   onToggleFavorite: (productId: string) => void
   backgroundColor: string
   borderColor?: string
-  onAddToCart?: (product: Produto) => void // Nova prop para adicionar ao carrinho
+  onAddToCart?: (product: Produto) => void // Nova prop for adicionar ao carrinho
 }
 
 const categoryIcons = {
@@ -31,6 +32,7 @@ export function ProductCard({
   onAddToCart
 }: ProductCardProps) {
   const [showModal, setShowModal] = useState(false)
+  const { addItem } = useCart()
 
   const getFirstImage = (imagemUrl?: string): string | null => {
     if (!imagemUrl) return null
@@ -41,10 +43,25 @@ export function ProductCard({
   const firstImage = getFirstImage(product.imagem_url)
 
   const handleAddToCart = () => {
+    console.log('🛒 ProductCard: handleAddToCart called for product:', product.nome)
+    
     if (onAddToCart) {
       onAddToCart(product)
     } else {
-      setShowModal(true)
+      // Adicionar directly ao carrinho
+      const cartItem = {
+        id: product.id,
+        name: product.nome,
+        description: product.descricao || '',
+        price: product.preco_normal,
+        imageUrl: product.imagem_url,
+        saleType: product.forma_venda as any,
+        quantity: product.forma_venda === 'kg' ? 0.5 : 1,
+        observations: ''
+      }
+      
+      console.log('🛒 ProductCard: Adding item to cart:', cartItem)
+      addItem(cartItem)
     }
   }
 
@@ -56,7 +73,7 @@ export function ProductCard({
           : 'border border-gray-100'
       }`}>
         <div className="p-3">
-          {/* Imagem em primeiro - quadrada */}
+          {/* Imagem in first - square */}
           <div 
             className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
             style={{ backgroundColor }}
@@ -90,7 +107,7 @@ export function ProductCard({
               </div>
             )}
 
-            {/* Botão de adicionar ao carrinho */}
+            {/* Botão to add to cart */}
             <button
               onClick={handleAddToCart}
               className="absolute bottom-2 right-2 bg-pink-500 hover:bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-colors"
@@ -100,7 +117,7 @@ export function ProductCard({
             </button>
           </div>
           
-          {/* Conteúdo do produto */}
+          {/* Product content */}
           <div className="flex flex-col">
             <div className="flex justify-between items-start mb-1">
               <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
@@ -168,7 +185,7 @@ export function ProductCard({
         </div>
       </div>
 
-      {/* Modal do produto */}
+      {/* Product modal */}
       <ProductModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}

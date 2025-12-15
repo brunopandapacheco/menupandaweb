@@ -19,27 +19,37 @@ export function useCart() {
 
   // Adicionar item ao carrinho
   const addItem = useCallback((newItem: Omit<CartItem, 'id'> & { id: string }) => {
+    console.log('🛒 addItem called with:', newItem)
+    
     setItems(prevItems => {
-      // Verificar se o item já existe (mesmo ID)
+      console.log('🛒 Previous items:', prevItems)
+      
+      // Verificar se the item already exists (same ID)
       const existingItemIndex = prevItems.findIndex(item => item.id === newItem.id)
       
+      let updatedItems: CartItem[]
+      
       if (existingItemIndex >= 0) {
-        // Se existe, atualizar quantidade
-        const updatedItems = [...prevItems]
+        // If exists, update quantity
+        updatedItems = [...prevItems]
         updatedItems[existingItemIndex].quantity += newItem.quantity
-        return updatedItems
+        console.log('🛒 Updated existing item quantity:', updatedItems[existingItemIndex])
       } else {
-        // Se não existe, adicionar novo item com ID único
+        // If doesn't exist, add new item with unique ID
         const itemWithId: CartItem = {
           ...newItem,
-          id: `${newItem.id}_${Date.now()}` // ID único baseado no produto + timestamp
+          id: `${newItem.id}_${Date.now()}` // Unique ID based on product + timestamp
         }
-        return [...prevItems, itemWithId]
+        updatedItems = [...prevItems, itemWithId]
+        console.log('🛒 Added new item:', itemWithId)
       }
+      
+      console.log('🛒 Updated items array:', updatedItems)
+      return updatedItems
     })
   }, [])
 
-  // Atualizar quantidade de um item
+  // Atualizar quantity of an item
   const updateQuantity = useCallback((itemId: string, quantity: number) => {
     if (quantity <= 0) {
       removeItem(itemId)
@@ -55,7 +65,7 @@ export function useCart() {
     )
   }, [])
 
-  // Atualizar observações de um item
+  // Atualizar observations of an item
   const updateObservations = useCallback((itemId: string, observations: string) => {
     setItems(prevItems => 
       prevItems.map(item => 
@@ -66,7 +76,7 @@ export function useCart() {
     )
   }, [])
 
-  // Remover item do carrinho
+  // Remover item from carrinho
   const removeItem = useCallback((itemId: string) => {
     setItems(prevItems => prevItems.filter(item => item.id !== itemId))
   }, [])
