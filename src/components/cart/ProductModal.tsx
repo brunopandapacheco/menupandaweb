@@ -130,7 +130,14 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
               <span className="text-2xl font-bold text-green-600">
                 {formatCurrency(product.preco_normal)}
               </span>
-              <Badge variant="secondary" className="bg-pink-100 text-pink-700 rounded-full">
+              <Badge 
+                variant="secondary" 
+                className="rounded-none font-semibold text-white"
+                style={{
+                  backgroundColor: '#FFCEE4',
+                  boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
+                }}
+              >
                 {product.forma_venda === 'kg' ? 'KG' : 'UNIDADE'}
               </Badge>
               {product.promocao && (
