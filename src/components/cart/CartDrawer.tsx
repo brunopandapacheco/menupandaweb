@@ -71,7 +71,11 @@ export function CartDrawer() {
               zIndex: 9999
             }}
           >
-            <ShoppingCart className="w-6 h-6 text-white" />
+            <img 
+              src="/carrinhoapp.png" 
+              alt="Carrinho de Compras" 
+              className="w-6 h-6 object-contain"
+            />
             {totalItems > 0 && (
               <Badge 
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold"
