@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/hooks/useCart'
-import { Produto } from '@/types/database'
+import type { Produto } from '@/types/database'
 import { formatCurrency } from '@/utils/helpers'
 
 interface ProductModalProps {
@@ -20,12 +20,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   const [observations, setObservations] = useState('')
 
   // Reset state when product changes
-  useState(() => {
+  useEffect(() => {
     if (product) {
       setQuantity(product.forma_venda === 'kg' ? 0.5 : 1)
       setObservations('')
     }
-  })
+  }, [product])
 
   if (!product) return null
 
@@ -134,7 +134,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
                 variant="secondary" 
                 className="rounded-none font-semibold text-white"
                 style={{
-                  backgroundColor: '#FFCEE4',
+                  backgroundColor: '#FF97D6',
                   boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
                 }}
               >
@@ -194,7 +194,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
           <div 
             className="border-2 border-pink-200 rounded-xl p-4"
             style={{
-              backgroundColor: '#FFCEE4'
+              backgroundColor: '#FF97D6'
             }}
           >
             <div className="flex justify-between items-center">
