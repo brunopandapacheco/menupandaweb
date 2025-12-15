@@ -227,16 +227,32 @@ export function CartDrawer() {
         </SheetContent>
       </Sheet>
 
-      {/* Estilos personalizados para esconder o X padrão do sistema */}
+      {/* Estilos personalizados para esconder TODOS os X padrão */}
       <style>{`
-        /* Esconder o botão X padrão do Radix Sheet */
-        [data-state="open"] > button[aria-label="Close"] {
+        /* Esconder TODOS os botões X padrão do Radix Sheet */
+        [data-radix-sheet-content] button {
           display: none !important;
         }
         
-        /* Esconder qualquer botão de fechar padrão */
-        [data-radix-sheet-content] > button:first-child {
+        /* Esconder especificamente botões com aria-label="Close" */
+        button[aria-label="Close"] {
           display: none !important;
+        }
+        
+        /* Esconder botões dentro do SheetContent */
+        [data-radix-sheet-content] > button {
+          display: none !important;
+        }
+        
+        /* Esconder qualquer botão que seja filho direto do SheetContent */
+        [data-radix-sheet-content] > button:first-child,
+        [data-radix-sheet-content] > button:last-child {
+          display: none !important;
+        }
+        
+        /* Garantir que nosso botão X personalizado continue visível */
+        .custom-close-button {
+          display: flex !important;
         }
       `}</style>
 
