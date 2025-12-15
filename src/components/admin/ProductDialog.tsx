@@ -147,7 +147,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
             <Button 
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-3"
+              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3"
             >
               {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
             </Button>
