@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -20,12 +20,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   const [observations, setObservations] = useState('')
 
   // Reset state when product changes
-  useState(() => {
+  useEffect(() => {
     if (product) {
       setQuantity(product.forma_venda === 'kg' ? 0.5 : 1)
       setObservations('')
     }
-  })
+  }, [product])
 
   if (!product) return null
 
@@ -42,6 +42,14 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   }
 
   const handleAddToCart = () => {
+    console.log('🛒 Adicionando ao carrinho:', {
+      id: product.id,
+      name: product.nome,
+      price: product.preco_normal,
+      quantity,
+      observations
+    })
+    
     addItem({
       id: product.id,
       name: product.nome,
@@ -53,6 +61,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
       observations
     })
     
+    console.log('✅ Produto adicionado, fechando modal')
     onClose()
   }
 
@@ -190,9 +199,9 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             />
           </div>
 
-          {/* Preço total com borda */}
+          {/* Preço total com borda e animação */}
           <div 
-            className="border-2 border-pink-200 rounded-xl p-4 animate-pulse"
+            className="border-2 border-pink-200 rounded-xl p-4"
             style={{
               background: 'linear-gradient(135deg, #FF97D6 0%, #FFB3D6 50%, #FF97D6 100%)',
               backgroundSize: '200% 200%',
