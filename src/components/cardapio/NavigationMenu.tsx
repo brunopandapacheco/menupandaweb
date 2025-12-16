@@ -134,9 +134,9 @@ export function NavigationMenu() {
   if (isMobile) {
     return (
       <>
-        {/* Menu de Navegação Fixo na Parte Inferior (Mobile) */}
+        {/* Menu de Navegação Fixo na Parte Inferior (Mobile) - z-index reduzido */}
         <div 
-          className="fixed bottom-0 left-0 right-0 z-40 shadow-lg border-t border-gray-200"
+          className="fixed bottom-0 left-0 right-0 z-30 shadow-lg border-t border-gray-200"
           style={{
             background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
             backgroundSize: '200% 200%',
@@ -347,9 +347,9 @@ export function NavigationMenu() {
   // Layout para desktop: menu fixo na lateral esquerda
   return (
     <>
-      {/* Menu de Navegação Fixo na Lateral Esquerda (Desktop) */}
+      {/* Menu de Navegação Fixo na Lateral Esquerda (Desktop) - z-index reduzido */}
       <div 
-        className="fixed left-0 top-0 bottom-0 z-40 shadow-lg border-r border-gray-200 flex items-center justify-center"
+        className="fixed left-0 top-0 bottom-0 z-30 shadow-lg border-r border-gray-200 flex items-center justify-center"
         style={{
           background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
           backgroundSize: '200% 200%',
