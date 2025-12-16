@@ -71,21 +71,29 @@ export function CartItemComponent({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
-              🧁
+             
+
+🧁
             </div>
           )}
         </div>
 
-        {/* Descrição do produto ao lado da foto */}
+        {/* Descrição do product ao side da foto - CLICABLE */}
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 mb-1">{item.name}</h3>
-          <p className="text-sm text-gray-600 line-clamp-3">{item.description}</p>
+          <p 
+            className="text-sm text-gray-600 line-clamp-3 cursor-pointer hover:text-gray-800 transition-colors"
+            onClick={() => setIsEditingObservations(true)}
+            title="Clicar to edit observações"
+          >
+            {item.description}
+          </p>
         </div>
       </div>
 
-      {/* Parte inferior: Quantidade e Observações */}
+      {/* Part inferior: Quantidade and Observations */}
       <div className="space-y-3">
-        {/* Controle de quantidade */}
+        {/* Controle of quantity */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-gray-700">Quantidade:</span>
@@ -113,21 +121,10 @@ export function CartItemComponent({
           </div>
         </div>
 
-        {/* Observações */}
+        {/* Observations */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">Observações:</span>
-            {!isEditingObservations && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsEditingObservations(true)}
-                className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 h-6 px-2"
-              >
-                <Edit2 className="w-3 h-3 mr-1" />
-                Editar
-              </Button>
-            )}
           </div>
           
           {isEditingObservations ? (
@@ -135,8 +132,9 @@ export function CartItemComponent({
               <Textarea
                 value={tempObservations}
                 onChange={(e) => setTempObservations(e.target.value)}
-                placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
+                placeholder="Ex: Sem coverage of chocolate, write message on cake..."
                 className="min-h-[60px] text-sm w-full"
+                autoFocus
               />
               <div className="flex gap-2">
                 <Button
@@ -158,7 +156,11 @@ export function CartItemComponent({
               </div>
             </div>
           ) : (
-            <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded min-h-[40px] w-full overflow-hidden">
+            <div 
+              className="text-sm text-gray-600 bg-gray-50 p-2 rounded min-h-[40px] w-full overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+              onClick={() => setIsEditingObservations(true)}
+              title="Clicar to edit observações"
+            >
               <p className="line-clamp-3">{item.observations || 'Nenhuma observação'}</p>
             </div>
           )}

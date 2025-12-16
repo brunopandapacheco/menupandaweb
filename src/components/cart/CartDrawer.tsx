@@ -168,17 +168,10 @@ export function CartDrawer() {
                   ))}
                 </div>
 
-                <div className="border-t pt-4 space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-medium">{formatCurrency(totalPrice)}</span>
-                  </div>
-
-                  <div className="border-t pt-3">
-                    <div className="flex justify-between items-center text-lg font-bold">
-                      <span>Total:</span>
-                      <span className="text-green-600">{formatCurrency(totalPrice)}</span>
-                    </div>
+                <div className="border-t pt-4">
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total:</span>
+                    <span className="text-green-600">{formatCurrency(totalPrice)}</span>
                   </div>
                 </div>
 
@@ -240,7 +233,7 @@ export function CartDrawer() {
           display: flex !important;
         }
 
-        /* Animação de gradiente para WhatsApp */
+        /* Animação of gradiente for WhatsApp */
         @keyframes whatsapp-gradient {
           0% {
             background-position: 0% 50%;
@@ -253,7 +246,7 @@ export function CartDrawer() {
           }
         }
 
-        /* Animação de pulsação muito lenta */
+        /* Animação of pulsação very slow */
         @keyframes pulse-slow {
           0%, 100% {
             transform: scale(1);
