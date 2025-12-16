@@ -132,16 +132,16 @@ export function ProductModal({
                 }
               </p>
             </div>
-            {/* BOTÃO X PERSONALIZADO - COMPLETELY CLEAN */}
+            {/* BOTÃO X PERSONALIZADO - QUADRADO ROSA COM X BRANCO */}
             <button
               onClick={onClose}
-              className="h-8 w-8 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-100 transition-all duration-200 flex items-center justify-center"
+              className="h-8 w-8 p-0 transition-all duration-200 flex items-center justify-center"
               style={{
-                backgroundColor: 'transparent',
+                backgroundColor: '#FF97D6',
                 cursor: 'pointer'
               }}
             >
-              <X className="w-4 h-4 text-pink-600" />
+              <X className="w-4 h-4 text-white" />
             </button>
           </div>
         </div>
