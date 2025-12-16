@@ -58,7 +58,11 @@ export function CartItemComponent({
     const quantity = item.saleType === 'kg' ? item.quantity : Math.floor(item.quantity)
     return (
       <>
-        <span style={{ color: '#FF97D6', fontWeight: 'bold' }}>{quantity}x</span> {item.name}
+        <span style={{ 
+          color: '#FF97D6', 
+          fontWeight: 'bold',
+          fontSize: '16px' // 2px maior que o texto normal (14px)
+        }}>{quantity}x</span> {item.name}
       </>
     )
   }
