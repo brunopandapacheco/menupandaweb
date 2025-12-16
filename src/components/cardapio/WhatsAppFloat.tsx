@@ -16,7 +16,7 @@ export function WhatsAppFloat() {
       <div
         className="fixed z-50 cursor-pointer transition-all duration-300 hover:scale-110"
         style={{
-          bottom: isMobile ? '60px' : '20px', // Metade sobre o menu mobile (80px - 20px = 60px)
+          bottom: isMobile ? '70px' : '30px', // Um pouco mais para baixo
           right: '20px',
           width: '56px',
           height: '56px'
@@ -35,9 +35,7 @@ export function WhatsAppFloat() {
             src="/whatsappflutuante.png" 
             alt="WhatsApp"
             className="w-8 h-8 object-contain"
-            style={{
-              filter: 'brightness(0) invert(1)' // Deixa o ícone branco para contrastar com o fundo cinza
-            }}
+            // Removido o filtro para mostrar o ícone original do WhatsApp
           />
         </div>
       </div>
