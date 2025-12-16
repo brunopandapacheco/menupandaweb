@@ -61,7 +61,7 @@ export function CartItemComponent({
         <span style={{ 
           color: '#FF97D6', 
           fontWeight: 'bold',
-          fontSize: '16px' // 2px maior que o texto normal (14px)
+          fontSize: '15px'  // 2px maior que o texto normal (13px)
         }}>{quantity}x</span> {item.name}
       </>
     )
