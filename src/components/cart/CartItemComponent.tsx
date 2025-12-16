@@ -53,10 +53,10 @@ export function CartItemComponent({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3 w-full overflow-hidden">
-      {/* Layout moderno: foto esquerda + informações lado a lado */}
+      {/* Layout moderno: foto maior + informações lado a lado */}
       <div className="flex gap-3 w-full">
-        {/* Foto do produto - menor e mais moderna */}
-        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50">
+        {/* Foto do produto - maior */}
+        <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50">
           {item.imageUrl ? (
             <img 
               src={item.imageUrl} 
@@ -70,14 +70,14 @@ export function CartItemComponent({
           )}
         </div>
 
-        {/* Conteúdo principal - mais compacto */}
+        {/* Conteúdo principal - com quebra de linha no título */}
         <div className="flex-1 min-w-0">
-          {/* Título e preço */}
+          {/* Título e preço - título com quebra de linha */}
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold text-gray-900 text-sm line-clamp-1 flex-1">
+            <h3 className="font-semibold text-gray-900 text-sm leading-tight flex-1 line-clamp-3 pr-2">
               {item.name}
             </h3>
-            <div className="text-right ml-2">
+            <div className="text-right ml-2 flex-shrink-0">
               <span className="text-green-600 font-bold text-sm">
                 {formatCurrency(item.price * item.quantity)}
               </span>
@@ -151,7 +151,7 @@ export function CartItemComponent({
                 onClick={() => setIsEditingObservations(true)}
                 title="Clicar para editar observações"
               >
-                <p className="line-clamp-3">{item.observations || 'Nenhuma observação'}</p>
+                <p className="line-clamp-2">{item.observations || 'Nenhuma observação'}</p>
               </div>
             )}
 
