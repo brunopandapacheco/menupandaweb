@@ -12,20 +12,32 @@ interface ProductModalProps {
   isOpen: boolean
   onClose: () => void
   product: Produto | null
+  initialQuantity?: number
+  initialObservations?: string
+  onSave?: (updatedProduct: any) => void
+  isEditMode?: boolean
 }
 
-export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
+export function ProductModal({ 
+  isOpen, 
+  onClose, 
+  product, 
+  initialQuantity = 1,
+  initialObservations = '',
+  onSave,
+  isEditMode = false
+}: ProductModalProps) {
   const { addItem } = useCart()
-  const [quantity, setQuantity] = useState(1)
-  const [observations, setObservations] = useState('')
+  const [quantity, setQuantity] = useState(initialQuantity)
+  const [observations, setObservations] = useState(initialObservations)
 
   // Reset state when product changes
   useEffect(() => {
     if (product) {
-      setQuantity(product.forma_venda === 'kg' ? 0.5 : 1)
-      setObservations('')
+      setQuantity(initialQuantity)
+      setObservations(initialObservations)
     }
-  }, [product])
+  }, [product, initialQuantity, initialObservations])
 
   if (!product) return null
 
@@ -59,6 +71,15 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
     setTimeout(() => {
       onClose()
     }, 300)
+  }
+
+  const handleSave = () => {
+    if (onSave) {
+      onSave({
+        quantity,
+        observations
+      })
+    }
   }
 
   const formatQuantity = (qty: number, saleType: string) => {
@@ -99,9 +120,14 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
         <DialogHeader className="border-b-2 border-pink-200 pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <DialogTitle className="text-lg font-bold text-pink-800">Adicionar ao Carrinho</DialogTitle>
+              <DialogTitle className="text-lg font-bold text-pink-800">
+                {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
+              </DialogTitle>
               <DialogDescription className="text-sm text-gray-600">
-                Escolha a quantity and adicione observações for the product
+                {isEditMode 
+                  ? 'Altere a quantidade e as observações do produto'
+                  : 'Escolha a quantidade e adicione observações para o produto'
+                }
               </DialogDescription>
             </div>
             <Button
@@ -116,7 +142,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
         </DialogHeader>
 
         <div className="space-y-4 p-4">
-          {/* Imagem do product com borda */}
+          {/* Imagem do produto com borda */}
           <div className="w-full h-40 rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
             {firstImage ? (
               <img 
@@ -131,7 +157,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             )}
           </div>
 
-          {/* Informações do product */}
+          {/* Informações do produto */}
           <div className="space-y-3">
             <h3 className="text-xl font-bold text-gray-900">{product.nome}</h3>
             <p className="text-gray-600 text-sm">{product.descricao}</p>
@@ -158,7 +184,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Controle de quantity with borda */}
+          {/* Controle de quantidade com borda */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Quantidade:
@@ -186,21 +212,21 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Observações with borda */}
+          {/* Observações com borda */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observações (optional):
+              Observações (opcional):
             </label>
             <Textarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              placeholder="Ex: Sem coverage of chocolate, write message on the cake..."
+              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
               rows={3}
               className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
           </div>
 
-          {/* Preço total with borda and animação */}
+          {/* Preço total com borda e animação */}
           <div 
             className="border-2 border-pink-200 rounded-xl p-4"
             style={{
@@ -217,14 +243,38 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Botão of adicionar with borda */}
-          <Button
-            onClick={handleAddToCart}
-            className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
-          >
-            <ShoppingCart className="w-5 h-5 mr-2" />
-            Adicionar ao Carrinho
-          </Button>
+          {/* Botões de ação */}
+          <div className="space-y-3">
+            {isEditMode ? (
+              <Button
+                onClick={handleSave}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl border-2 border-blue-400 shadow-lg"
+              >
+                Salvar Alterações
+              </Button>
+            ) : (
+              <Button
+                onClick={handleAddToCart}
+                className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Adicionar ao Carrinho
+              </Button>
+            )}
+            
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="w-full"
+              style={{
+                borderColor: '#FF99D8',
+                color: '#FF99D8',
+                borderWidth: '2px'
+              }}
+            >
+              Cancelar
+            </Button>
+          </div>
         </div>
       </DialogContent>
       
