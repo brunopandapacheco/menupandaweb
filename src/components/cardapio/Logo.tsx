@@ -105,7 +105,7 @@ export function Logo({
             <div 
               className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white cursor-pointer transition-transform hover:scale-105"
               style={{
-                border: '3px solid white',
+                border: '3px solid ' + (borderColor || '#ec4899'),
                 boxSizing: 'border-box',
                 padding: '3px',
                 animation: 'pulse-slow 5s ease-in-out infinite'
@@ -115,7 +115,7 @@ export function Logo({
               <div 
                 className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-white"
                 style={{
-                  border: '3px solid ' + (borderColor || '#ec4899'),
+                  border: '3px solid white',
                   padding: '2px'
                 }}
               >
@@ -140,7 +140,7 @@ export function Logo({
             <div 
               className="w-40 h-40 rounded-full flex items-center justify-center text-6xl font-bold shadow-lg cursor-pointer transition-transform hover:scale-105"
               style={{ 
-                border: '3px solid white',
+                border: '3px solid ' + (borderColor || '#ec4899'),
                 boxSizing: 'border-box',
                 padding: '3px',
                 backgroundColor: borderColor || '#ec4899',
@@ -152,7 +152,7 @@ export function Logo({
               <div 
                 className="w-full h-full rounded-full flex items-center justify-center"
                 style={{
-                  border: '3px solid ' + (borderColor || '#ec4899'),
+                  border: '3px solid white',
                   padding: '2px'
                 }}
               >
