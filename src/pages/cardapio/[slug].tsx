@@ -180,7 +180,7 @@ export default function CardapioPublico() {
         avaliacaoMedia={configuracoes?.avaliacao_media}
       />
 
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-4 pb-20">
         {/* Banner Publicitário */}
         {designSettings.banner1_url && (
           <BannerAd bannerUrl={designSettings.banner1_url} />

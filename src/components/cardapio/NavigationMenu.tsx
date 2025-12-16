@@ -301,9 +301,6 @@ export function NavigationMenu() {
           </div>
         </div>
 
-        {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na parte inferior */}
-        <div className="h-16"></div>
-
         {/* CSS específico para esconder apenas o botão Close do Radix */}
         <style>{`
           /* Esconder APENAS o botão Close do Radix */
