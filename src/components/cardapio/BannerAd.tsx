@@ -9,7 +9,7 @@ export function BannerAd({ bannerUrl }: BannerAdProps) {
 
   return (
     <div className="mx-4 mb-4">
-      <div className="w-full h-32 rounded-lg overflow-hidden shadow-sm">
+      <div className="w-full h-32 rounded-lg overflow-hidden shadow-lg shadow-black/30">
         <img 
           src={bannerUrl} 
           alt="Banner Publicitário" 
