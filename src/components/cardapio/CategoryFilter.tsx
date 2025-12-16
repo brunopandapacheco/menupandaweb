@@ -86,9 +86,9 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                 height: '80px',
                 borderRadius: '50%',
                 // Fundo rosa pedra
-                backgroundColor: '#fe62a6',
-                // Borda dupla: externa cinza claro, interna branca
-                border: '3px solid #e5e7eb',
+                backgroundColor: isSelected ? '#d1d5db' : '#fe62a6',
+                // Borda dupla: externa #DBDFE4, interna branca
+                border: '3px solid #DBDFE4',
  outline: '3px solid white',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
@@ -103,8 +103,8 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                 e.currentTarget.style.transform = 'scale(1.05)'
               }}
               onMouseOut={(e) => {
-                // Volta para o rosa
-                e.currentTarget.style.backgroundColor = '#fe62a6'
+                // Volta para o rosa ou cinza se estiver selecionado
+                e.currentTarget.style.backgroundColor = isSelected ? '#d1d5db' : '#fe62a6'
                 e.currentTarget.style.transform = 'scale(1)'
               }}
             >
