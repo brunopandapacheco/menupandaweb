@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShoppingCart, MessageCircle, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -18,6 +18,11 @@ export function CartDrawer() {
     clearCart 
   } = useCart()
   const [isOpen, setIsOpen] = useState(false)
+
+  // Force re-render when items change
+  useEffect(() => {
+    console.log('🛒 CartDrawer: Items changed, re-rendering...', items.length)
+  }, [items])
 
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return
@@ -41,7 +46,7 @@ export function CartDrawer() {
 
     message += `*TOTAL DO PEDIDO: ${formatCurrency(totalPrice)}*\n\n`
     message += `📞 *Gostaria of finalizar this pedido!*\n`
-    message += `Por favor, confirmem a disponibilidade and o prazo of delivery.`
+    message += `Por favor, confirmem a disponibilidade and the prazo of delivery.`
 
     // Codificar message for URL
     const encodedMessage = encodeURIComponent(message)

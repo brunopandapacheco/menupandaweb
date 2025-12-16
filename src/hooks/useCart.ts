@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { CartItem, CartState } from '@/types/cart'
 
 export function useCart() {
-  // Inicializar com itens do localStorage se existir
+  // Inicialize with items from localStorage if exist
   const [items, setItems] = useState<CartItem[]>(() => {
     if (typeof window !== 'undefined') {
       const savedCart = localStorage.getItem('pandamenu-cart')
@@ -10,7 +10,7 @@ export function useCart() {
         try {
           return JSON.parse(savedCart)
         } catch (error) {
-          console.error('Erro ao carregar carrinho:', error)
+          console.error('Error loading cart:', error)
           return []
         }
       }
@@ -18,14 +18,15 @@ export function useCart() {
     return []
   })
 
-  // Salvar no localStorage sempre que os itens mudarem
+  // Save to localStorage whenever items change
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('pandamenu-cart', JSON.stringify(items))
+      console.log('🛒 Cart saved to localStorage:', items)
     }
   }, [items])
 
-  // Calcular totais
+  // Calculate totals
   const { totalItems, totalPrice } = useMemo(() => {
     const totalItems = items.reduce((sum, item) => {
       return sum + (item.saleType === 'kg' ? item.quantity : Math.floor(item.quantity))
@@ -38,14 +39,14 @@ export function useCart() {
     return { totalItems, totalPrice }
   }, [items])
 
-  // Adicionar item ao carrinho
+  // Add item to cart
   const addItem = useCallback((newItem: Omit<CartItem, 'id'> & { id: string }) => {
     console.log('🛒 addItem called with:', newItem)
     
     setItems(prevItems => {
       console.log('🛒 Previous items:', prevItems)
       
-      // Verificar se o item já existe (mesmo ID do produto)
+      // Check if item already exists (same product ID)
       const existingItemIndex = prevItems.findIndex(item => 
         item.id.startsWith(newItem.id) && item.name === newItem.name
       )
@@ -53,15 +54,15 @@ export function useCart() {
       let updatedItems: CartItem[]
       
       if (existingItemIndex >= 0) {
-        // Se existe, atualizar quantidade
+        // If exists, update quantity
         updatedItems = [...prevItems]
         updatedItems[existingItemIndex].quantity += newItem.quantity
         console.log('🛒 Updated existing item quantity:', updatedItems[existingItemIndex])
       } else {
-        // Se não existe, adicionar novo item com ID único
+        // If doesn't exist, add new item with unique ID
         const itemWithId: CartItem = {
           ...newItem,
-          id: `${newItem.id}_${Date.now()}` // ID único baseado no produto + timestamp
+          id: `${newItem.id}_${Date.now()}` // Unique ID based on product + timestamp
         }
         updatedItems = [...prevItems, itemWithId]
         console.log('🛒 Added new item:', itemWithId)
@@ -72,7 +73,7 @@ export function useCart() {
     })
   }, [])
 
-  // Atualizar quantidade de um item
+  // Update quantity of an item
   const updateQuantity = useCallback((itemId: string, quantity: number) => {
     if (quantity <= 0) {
       removeItem(itemId)
@@ -88,7 +89,7 @@ export function useCart() {
     )
   }, [])
 
-  // Atualizar observações de um item
+  // Update observations of an item
   const updateObservations = useCallback((itemId: string, observations: string) => {
     setItems(prevItems => 
       prevItems.map(item => 
@@ -99,12 +100,12 @@ export function useCart() {
     )
   }, [])
 
-  // Remover item do carrinho
+  // Remove item from cart
   const removeItem = useCallback((itemId: string) => {
     setItems(prevItems => prevItems.filter(item => item.id !== itemId))
   }, [])
 
-  // Limpar carrinho
+  // Clear cart
   const clearCart = useCallback(() => {
     setItems([])
     if (typeof window !== 'undefined') {
