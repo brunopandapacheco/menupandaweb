@@ -108,6 +108,23 @@ export function CartDrawer() {
   // Validar se items é um array válido
   const validItems = Array.isArray(items) ? items : []
 
+  // Calcular o número de itens para o badge (sempre inteiro)
+  const getDisplayCount = () => {
+    if (validItems.length === 0) return 0
+    
+    // Para produtos por KG, cada item conta como 1 no badge
+    // Para outros produtos, usar Math.floor para arredondar para baixo
+    return validItems.reduce((count, item) => {
+      if (item.saleType === 'kg') {
+        return count + 1 // Cada item por KG conta como 1
+      } else {
+        return count + Math.floor(item.quantity) // Arredondar para baixo
+      }
+    }, 0)
+  }
+
+  const displayCount = getDisplayCount()
+
   return (
     <>
       {/* BOTÃO FLUTUANTE DO CARRINHO - SEMPRE VISÍVEL */}
@@ -130,11 +147,11 @@ export function CartDrawer() {
               alt="Carrinho de Compras" 
               className="w-8 h-8 object-contain"
             />
-            {totalItems > 0 && (
+            {displayCount > 0 && (
               <Badge 
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold"
               >
-                {totalItems}
+                {displayCount}
               </Badge>
             )}
           </Button>
@@ -160,8 +177,8 @@ export function CartDrawer() {
               >
                 <ShoppingCart className="w-5 h-5" />
                 Meu Carrinho
-                {totalItems > 0 && (
-                  <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'itens'}</Badge>
+                {displayCount > 0 && (
+                  <Badge variant="secondary">{displayCount} {displayCount === 1 ? 'item' : 'itens'}</Badge>
                 )}
               </SheetTitle>
               
