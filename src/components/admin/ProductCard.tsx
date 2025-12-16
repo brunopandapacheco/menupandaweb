@@ -55,7 +55,7 @@ export function ProductCard({ product, onEdit }: ProductCardProps) {
 
         {/* Descrição do Produto */}
         {product.descricao && (
-          <p className="text-gray-600 text-sm mb-3 line-clamp-4 flex-1">{product.descricao}</p>
+          <p className="text-gray-600 text-sm mb-3 line-clamp-3 flex-1">{product.descricao}</p>
         )}
 
         {/* Preço - sempre no final */}
