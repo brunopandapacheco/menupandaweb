@@ -22,7 +22,6 @@ export function useCart() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('pandamenu-cart', JSON.stringify(items))
-      console.log('🛒 Cart saved to localStorage:', items)
     }
   }, [items])
 
@@ -41,11 +40,7 @@ export function useCart() {
 
   // Add item to cart
   const addItem = useCallback((newItem: Omit<CartItem, 'id'> & { id: string }) => {
-    console.log('🛒 addItem called with:', newItem)
-    
     setItems(prevItems => {
-      console.log('🛒 Previous items:', prevItems)
-      
       // Check if item already exists (same product ID)
       const existingItemIndex = prevItems.findIndex(item => 
         item.id.startsWith(newItem.id) && item.name === newItem.name
@@ -57,7 +52,6 @@ export function useCart() {
         // If exists, update quantity
         updatedItems = [...prevItems]
         updatedItems[existingItemIndex].quantity += newItem.quantity
-        console.log('🛒 Updated existing item quantity:', updatedItems[existingItemIndex])
       } else {
         // If doesn't exist, add new item with unique ID
         const itemWithId: CartItem = {
@@ -65,10 +59,8 @@ export function useCart() {
           id: `${newItem.id}_${Date.now()}` // Unique ID based on product + timestamp
         }
         updatedItems = [...prevItems, itemWithId]
-        console.log('🛒 Added new item:', itemWithId)
       }
       
-      console.log('🛒 Updated items array:', updatedItems)
       return updatedItems
     })
   }, [])

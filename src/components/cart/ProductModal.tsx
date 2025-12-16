@@ -42,8 +42,6 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
   }
 
   const handleAddToCart = () => {
-    console.log('🛒 ProductModal: Iniciando adição ao carrinho')
-    
     const cartItem = {
       id: product.id,
       name: product.nome,
@@ -55,20 +53,12 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
       observations
     }
     
-    console.log('🛒 ProductModal: Item que será adicionado:', cartItem)
+    addItem(cartItem)
     
-    try {
-      addItem(cartItem)
-      console.log('✅ ProductModal: Item adicionado com sucesso!')
-      
-      // Pequeno delay para garantir que o item foi adicionado
-      setTimeout(() => {
-        console.log('🛒 ProductModal: Fechando modal')
-        onClose()
-      }, 300)
-    } catch (error) {
-      console.error('❌ ProductModal: Erro ao adicionar item:', error)
-    }
+    // Pequeno delay for better UX
+    setTimeout(() => {
+      onClose()
+    }, 300)
   }
 
   const formatQuantity = (qty: number, saleType: string) => {
@@ -111,7 +101,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             <div>
               <DialogTitle className="text-lg font-bold text-pink-800">Adicionar ao Carrinho</DialogTitle>
               <DialogDescription className="text-sm text-gray-600">
-                Escolha a quantidade e adicione observações para o produto
+                Escolha a quantity and adicione observações for the product
               </DialogDescription>
             </div>
             <Button
@@ -126,7 +116,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
         </DialogHeader>
 
         <div className="space-y-4 p-4">
-          {/* Imagem do produto com borda */}
+          {/* Imagem do product com borda */}
           <div className="w-full h-40 rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
             {firstImage ? (
               <img 
@@ -141,7 +131,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             )}
           </div>
 
-          {/* Informações do produto */}
+          {/* Informações do product */}
           <div className="space-y-3">
             <h3 className="text-xl font-bold text-gray-900">{product.nome}</h3>
             <p className="text-gray-600 text-sm">{product.descricao}</p>
@@ -168,7 +158,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Controle de quantidade com borda */}
+          {/* Controle de quantity with borda */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Quantidade:
@@ -196,21 +186,21 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Observações com borda */}
+          {/* Observações with borda */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observações (opcional):
+              Observações (optional):
             </label>
             <Textarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
+              placeholder="Ex: Sem coverage of chocolate, write message on the cake..."
               rows={3}
               className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
           </div>
 
-          {/* Preço total com borda e animação */}
+          {/* Preço total with borda and animação */}
           <div 
             className="border-2 border-pink-200 rounded-xl p-4"
             style={{
@@ -227,7 +217,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
             </div>
           </div>
 
-          {/* Botão de adicionar com borda */}
+          {/* Botão of adicionar with borda */}
           <Button
             onClick={handleAddToCart}
             className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
@@ -238,7 +228,7 @@ export function ProductModal({ isOpen, onClose, product }: ProductModalProps) {
         </div>
       </DialogContent>
       
-      {/* CSS para animação de gradiente */}
+      {/* CSS for animação of gradiente */}
       <style>{`
         @keyframes gradientShift {
           0% {

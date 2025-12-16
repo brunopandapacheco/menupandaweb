@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ShoppingCart, MessageCircle, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -18,11 +18,6 @@ export function CartDrawer() {
     clearCart 
   } = useCart()
   const [isOpen, setIsOpen] = useState(false)
-
-  // Force re-render when items change
-  useEffect(() => {
-    console.log('🛒 CartDrawer: Items changed, re-rendering...', items.length)
-  }, [items])
 
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return
@@ -59,10 +54,6 @@ export function CartDrawer() {
     clearCart()
     setIsOpen(false)
   }
-
-  console.log('🛒 CartDrawer renderizado - Items in carrinho:', totalItems)
-  console.log('🛒 CartDrawer - Items array:', items)
-  console.log('🛒 CartDrawer - Items length:', items.length)
 
   return (
     <>
@@ -154,7 +145,7 @@ export function CartDrawer() {
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Carrinho vazio</h3>
-                <p className="text-gray-600 mb-6">Adicione produtos deliciosos ao seu carrinho!</p>
+                <p className="text-gray-600 mb-6">Adicione products deliciosos ao your carrinho!</p>
                 <Button 
                   onClick={() => setIsOpen(false)}
                   className="bg-pink-500 hover:bg-pink-600"
@@ -244,25 +235,6 @@ export function CartDrawer() {
           display: flex !important;
         }
       `}</style>
-
-      {/* DEBUG BUTTON - REMOVE AFTER */}
-      {process.env.NODE_ENV === 'development' && (
-        <div 
-          className="fixed top-4 left-4 bg-yellow-100 border border-yellow-300 rounded p-2 text-xs z-50"
-          style={{ zIndex: 10000 }}
-        >
-          <div>🛒 Items: {totalItems}</div>
-          <div>💰 Total: {formatCurrency(totalPrice)}</div>
-          <div>📦 Array length: {items.length}</div>
-          <div>📦 Array: {JSON.stringify(items)}</div>
-          <button 
-            onClick={() => setIsOpen(true)}
-            className="mt-1 bg-yellow-500 text-white px-2 py-1 rounded text-xs"
-          >
-            Open Cart
-          </button>
-        </div>
-      )}
     </>
   )
 }
