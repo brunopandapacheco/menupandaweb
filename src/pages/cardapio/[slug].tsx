@@ -9,6 +9,7 @@ import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { CartDrawer } from '@/components/cart/CartDrawer'
+import { NavigationMenu } from '@/components/cardapio/NavigationMenu'
 import { DesignSettings, Configuracoes } from '@/types/database'
 import { Produto } from '@/types/cart'
 
@@ -162,6 +163,9 @@ export default function CardapioPublico() {
 
   return (
     <div className={`min-h-screen cardapio-scrollbar`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
+      {/* Menu de Navegação */}
+      <NavigationMenu />
+      
       <Banner 
         borderColor={designSettings.cor_borda}
         bannerGradient={designSettings.banner_gradient}
