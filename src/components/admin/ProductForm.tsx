@@ -250,29 +250,64 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     if (!pendingCategory) return
 
     try {
-      const { error } = await supabase
+      // 1. Criar a categoria na tabela categorias
+      const { error: categoryError } = await supabase
         .from('categorias')
         .insert({ 
           nome: pendingCategory.name,
           user_id: (await supabase.auth.getUser()).data.user?.id
         })
       
-      if (error) throw error
+      if (categoryError) throw categoryError
       
-      // Atualizar lista de categorias
-      const { data, error: fetchError } = await supabase
+      // 2. Buscar os design_settings atuais do usuário
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+      
+      const { data: designSettings, error: designError } = await supabase
+        .from('design_settings')
+        .select('category_icons')
+        .eq('user_id', user.id)
+        .single()
+      
+      if (designError && designError.code !== 'PGRST116') {
+        throw designError
+      }
+      
+      // 3. Atualizar os category_icons com o novo ícone
+      const currentIcons = designSettings?.category_icons || {}
+      const updatedIcons = {
+        ...currentIcons,
+        [pendingCategory.name]: pendingCategory.icon
+      }
+      
+      const { error: updateError } = await supabase
+        .from('design_settings')
+        .update({ category_icons: updatedIcons })
+        .eq('user_id', user.id)
+      
+      if (updateError) throw updateError
+      
+      console.log('✅ Categoria e ícone criados com sucesso:', {
+        category: pendingCategory.name,
+        icon: pendingCategory.icon
+      })
+      
+      // 4. Atualizar lista de categorias
+      const { data: updatedCategories, error: fetchError } = await supabase
         .from('categorias')
         .select('nome')
         .order('nome')
       
-      if (!fetchError && data) {
-        setCategories(data.map(cat => cat.nome))
+      if (!fetchError && updatedCategories) {
+        setCategories(updatedCategories.map(cat => cat.nome))
       }
       
       setPendingCategory(null)
+      showSuccess('Categoria e ícone salvos com sucesso!')
     } catch (error) {
-      console.error('Error creating category:', error)
-      showError('Erro ao criar a categoria')
+      console.error('Error creating category with icon:', error)
+      showError('Erro ao criar a categoria com ícone')
     }
   }
 
