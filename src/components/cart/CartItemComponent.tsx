@@ -54,16 +54,13 @@ export function CartItemComponent({
     setShowEditModal(false)
   }
 
-  const formatQuantity = (quantity: number, saleType: string) => {
-    if (saleType === 'kg') {
-      return `${quantity}kg`
-    }
-    return `${quantity} ${quantity === 1 ? 'unidade' : 'unidades'}`
-  }
-
   const getQuantityDisplay = () => {
     const quantity = item.saleType === 'kg' ? item.quantity : Math.floor(item.quantity)
-    return `${quantity}x ${item.name}`
+    return (
+      <>
+        <span style={{ color: '#FF97D6', fontWeight: 'bold' }}>{quantity}x</span> {item.name}
+      </>
+    )
   }
 
   return (
@@ -73,7 +70,7 @@ export function CartItemComponent({
         <div className="flex gap-3 w-full">
           {/* Conteúdo principal - esquerda */}
           <div className="flex-1 min-w-0">
-            {/* Título com quantidade + preço */}
+            {/* Título com quantidade destacada + preço */}
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-semibold text-gray-900 text-sm leading-tight flex-1 pr-2">
                 {getQuantityDisplay()}
@@ -82,18 +79,11 @@ export function CartItemComponent({
                 <span className="text-green-600 font-bold text-sm">
                   {formatCurrency(item.price * item.quantity)}
                 </span>
-                <div className="text-xs text-gray-500">
-                  {formatQuantity(item.quantity, item.saleType)}
-                </div>
               </div>
             </div>
 
-            {/* Observações */}
+            {/* Observações - sem a palavra "Obs:" */}
             <div className="mb-2">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-medium text-gray-600">Obs.:</span>
-              </div>
-              
               <div className="text-xs text-gray-500 bg-gray-50 p-1 rounded min-h-[24px]">
                 <p className="line-clamp-2">{item.observations || 'Nenhuma observação'}</p>
               </div>
