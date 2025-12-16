@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/hooks/useCart'
@@ -107,7 +107,7 @@ export function ProductModal({
       )}
       
       <DialogContent 
-        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl z-50"
+        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl z-50 p-0"
         style={{
           position: 'fixed',
           top: '50%',
@@ -117,20 +117,21 @@ export function ProductModal({
           margin: '0'
         }}
       >
-        <DialogHeader className="border-b-2 border-pink-200 pb-4">
+        {/* HEADER PERSONALIZADO - SEM DIALOGHEADER */}
+        <div className="border-b-2 border-pink-200 p-4 pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <DialogTitle className="text-lg font-bold text-pink-800">
+              <h2 className="text-lg font-bold text-pink-800">
                 {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
-              </DialogTitle>
-              <DialogDescription className="text-sm text-gray-600">
+              </h2>
+              <p className="text-sm text-gray-600">
                 {isEditMode 
                   ? 'Altere a quantidade e as observações do produto'
                   : 'Escolha a quantidade e adicione observações para o produto'
                 }
-              </DialogDescription>
+              </p>
             </div>
-            {/* BOTÃO X PERSONALIZADO - SEM O COMPONENTE BUTTON PADRÃO */}
+            {/* BOTÃO X PERSONALIZADO - AGORA SEM CONFLITO */}
             <button
               onClick={onClose}
               className="h-8 w-8 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-100 transition-all duration-200 flex items-center justify-center"
@@ -142,7 +143,7 @@ export function ProductModal({
               <X className="w-4 h-4 text-pink-600" />
             </button>
           </div>
-        </DialogHeader>
+        </div>
 
         <div className="space-y-4 p-4">
           {/* Imagem do product with border */}
