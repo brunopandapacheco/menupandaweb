@@ -1,7 +1,9 @@
-import { ShoppingCart, X } from 'lucide-react'
+import { ShoppingCart, X, User, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { useCart } from '@/hooks/useCart'
 import { CartItemComponent } from '@/components/cart/CartItemComponent'
 import { formatCurrency } from '@/utils/helpers'
@@ -21,6 +23,9 @@ export function NavigationMenu() {
   } = useCart()
   const [isOpen, setIsOpen] = useState(false)
   const [forceUpdate, setForceUpdate] = useState(0)
+  const [showCustomerForm, setShowCustomerForm] = useState(false)
+  const [customerName, setCustomerName] = useState('')
+  const [customerPhone, setCustomerPhone] = useState('')
   const isMobile = useIsMobile()
 
   // Escutar eventos de atualização do carrinho
@@ -67,33 +72,71 @@ export function NavigationMenu() {
   }, [items.length])
 
   const handleWhatsAppOrder = () => {
+    // Validar se há itens no carrinho
+    if (!items || items.length === 0) return
+
+    // Abrir formulário de dados do cliente
+    setShowCustomerForm(true)
+  }
+
+  const sendWhatsAppOrder = () => {
     try {
-      if (!items || items.length === 0) return
+      // Validar dados do cliente
+      if (!customerName.trim()) {
+        alert('Por favor, digite seu nome')
+        return
+      }
 
-      // Formatar mensagem para WhatsApp
-      let message = `
+      if (!customerPhone.trim()) {
+        alert('Por favor, digite seu telefone')
+        return
+      }
 
+      // Obter nome do cardápio do localStorage ou usar padrão
+      const cardapioName = localStorage.getItem('cardapio_nome') || 'Cardápio'
+      
+      // Obter data atual formatada
+      const today = new Date()
+      const dataFormatada = today.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
 
-🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
-      message += `*RESUMO DO PEDIDO:*\n\n`
+      // Formatar mensagem para WhatsApp com o novo formato
+      let message = `Olá! 👋
+
+🧁 NOVO PEDIDO - ${cardapioName.toUpperCase()} 🧁
+
+👤 Cliente: ${customerName.trim()}
+📅 Data do Pedido: ${dataFormatada}
+
+🛒 RESUMO DO PEDIDO:
+
+`
 
       items.forEach((item, index) => {
         if (!item) return
         
-        message += `*${index + 1}. ${item.name || 'Produto'}*\n`
-        message += `   Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}\n`
-        message += `   Preço unitário: ${formatCurrency(item.price || 0)}\n`
-        message += `   Subtotal: ${formatCurrency((item.price || 0) * item.quantity)}\n`
+        message += `${index + 1}️⃣ ${item.name || 'Produto'}
+   - Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}
+   - Preço unitário: ${formatCurrency(item.price || 0)}
+   - Subtotal: ${formatCurrency((item.price || 0) * item.quantity)}`
         
         if (item.observations) {
-          message += `   📝 Observações: ${item.observations}\n`
+          message += `
+   - Observações: ${item.observations}`
         }
-        message += '\n'
+        message += `
+
+`
       })
 
-      message += `*TOTAL DO PEDIDO: ${formatCurrency(totalPrice)}*\n\n`
-      message += `📞 *Gostaria de finalizar este pedido!*\n`
-      message += `Por favor, confirme a disponibilidade e o prazo de entrega.`
+      message += `💰 TOTAL: ${formatCurrency(totalPrice)}
+
+📞 Telefone: ${customerPhone.trim()}
+
+📞 Gostaria de finalizar este pedido!`
 
       // Codificar mensagem para URL
       const encodedMessage = encodeURIComponent(message)
@@ -102,8 +145,11 @@ export function NavigationMenu() {
       // Abrir WhatsApp
       window.open(whatsappUrl, '_blank')
       
-      // Limpar carrinho após enviar
+      // Limpar carrinho e formulário após enviar
       clearCart()
+      setShowCustomerForm(false)
+      setCustomerName('')
+      setCustomerPhone('')
       setIsOpen(false)
     } catch (error) {
       console.error('Error sending WhatsApp order:', error)
@@ -302,6 +348,70 @@ export function NavigationMenu() {
             </div>
           </div>
         </div>
+
+        {/* Formulário de Dados do Cliente */}
+        {showCustomerForm && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Seus Dados</h3>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="customerName" className="text-sm font-medium text-gray-700">
+                    Seu Nome *
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="customerName"
+                      type="text"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      placeholder="Digite seu nome completo"
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
+                    Seu Telefone *
+                  </Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="customerPhone"
+                      type="tel"
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      placeholder="(11) 99999-9999"
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCustomerForm(false)}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={sendWhatsAppOrder}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Enviar Pedido
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CSS específico para esconder apenas o botão Close do Radix */}
         <style>{`
@@ -513,6 +623,70 @@ export function NavigationMenu() {
 
       {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na lateral */}
       <div className="w-20"></div>
+
+      {/* Formulário de Dados do Cliente */}
+      {showCustomerForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Seus Dados</h3>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="customerName" className="text-sm font-medium text-gray-700">
+                  Seu Nome *
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="customerName"
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Digite seu nome completo"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
+                  Seu Telefone *
+                </Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="customerPhone"
+                    type="tel"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    placeholder="(11) 99999-9999"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowCustomerForm(false)}
+                className="flex-1"
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={sendWhatsAppOrder}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Enviar Pedido
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CSS específico para esconder apenas o botão Close do Radix */}
       <style>{`
