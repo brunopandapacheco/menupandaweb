@@ -59,9 +59,9 @@ export function CartItemComponent({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3 w-full overflow-hidden">
-      {/* Parte superior: Foto + Descrição lado a lado */}
+      {/* Parte superior: Foto + Descrição side by side */}
       <div className="flex gap-4 w-full mb-4">
-        {/* Imagem do produto */}
+        {/* Imagem do product */}
         <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50">
           {item.imageUrl ? (
             <img 
@@ -71,21 +71,15 @@ export function CartItemComponent({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
-             
-
-🧁
+              🧁
             </div>
           )}
         </div>
 
-        {/* Descrição do product ao side da foto - CLICABLE */}
+        {/* Descrição do product ao side da foto - NOT CLICABLE */}
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 mb-1">{item.name}</h3>
-          <p 
-            className="text-sm text-gray-600 line-clamp-3 cursor-pointer hover:text-gray-800 transition-colors"
-            onClick={() => setIsEditingObservations(true)}
-            title="Clicar to edit observações"
-          >
+          <p className="text-sm text-gray-600 line-clamp-3">
             {item.description}
           </p>
         </div>
@@ -93,10 +87,9 @@ export function CartItemComponent({
 
       {/* Part inferior: Quantidade and Observations */}
       <div className="space-y-3">
-        {/* Controle of quantity */}
+        {/* Controle of quantity - without "Quantidade:" text */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Quantidade:</span>
             <div className="flex items-center gap-1">
               <Button
                 variant="outline"
