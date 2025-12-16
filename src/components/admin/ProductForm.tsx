@@ -191,6 +191,9 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       icon: selectedIcon
     })
 
+    // Adicionar imediatamente à lista de categorias
+    setCategories(prev => [...prev, trimmedName].sort())
+
     // Atualizar o campo categoria do produto
     handleFieldChange('categoria', trimmedName)
     
@@ -200,7 +203,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     setSelectedIcon('/icons/1.png')
     setShowIconSelector(false)
     
-    showSuccess('Categoria será criada quando o produto for salvo')
+    showSuccess('Categoria criada e selecionada!')
   }
 
   const handleCategorySelect = (value: string) => {
