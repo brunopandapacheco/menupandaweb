@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/hooks/useCart'
@@ -96,18 +95,20 @@ export function ProductModal({
 
   const firstImage = getFirstImage(product.imagem_url)
 
+  if (!isOpen) return null
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      {isOpen && (
-        /* Backdrop with blur - ONLY when modal is open */
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-          style={{ backdropFilter: 'blur(8px)' }}
-        />
-      )}
+    <>
+      {/* Backdrop with blur */}
+      <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+        style={{ backdropFilter: 'blur(8px)' }}
+        onClick={onClose}
+      />
       
-      <DialogContent 
-        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl z-50 p-0"
+      {/* Modal content */}
+      <div 
+        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl z-50 p-0 bg-white"
         style={{
           position: 'fixed',
           top: '50%',
@@ -117,21 +118,21 @@ export function ProductModal({
           margin: '0'
         }}
       >
-        {/* HEADER PERSONALIZADO - SEM DIALOGHEADER */}
+        {/* HEADER PERSONALIZADO - COMPLETELY CUSTOM */}
         <div className="border-b-2 border-pink-200 p-4 pb-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-pink-800">
-                {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
+                {isEditMode ? 'Edit Item' : 'Add to Cart'}
               </h2>
               <p className="text-sm text-gray-600">
                 {isEditMode 
-                  ? 'Altere a quantidade e as observações do produto'
-                  : 'Escolha a quantidade e adicione observações para o produto'
+                  ? 'Change the quantity and observations for the product'
+                  : 'Choose the quantity and add observations for the product'
                 }
               </p>
             </div>
-            {/* BOTÃO X PERSONALIZADO - AGORA SEM CONFLITO */}
+            {/* BOTÃO X PERSONALIZADO - COMPLETELY CLEAN */}
             <button
               onClick={onClose}
               className="h-8 w-8 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-100 transition-all duration-200 flex items-center justify-center"
@@ -178,11 +179,11 @@ export function ProductModal({
                   boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
                 }}
               >
-                {product.forma_venda === 'kg' ? 'KG' : 'UNIDADE'}
+                {product.forma_venda === 'kg' ? 'KG' : 'UNIT'}
               </Badge>
               {product.promocao && (
                 <Badge className="bg-red-500 text-white rounded-full">
-                  PROMOÇÃO
+                  PROMOTION
                 </Badge>
               )}
             </div>
@@ -191,7 +192,7 @@ export function ProductModal({
           {/* Controle of quantity with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quantidade:
+              Quantity:
             </label>
             <div className="flex items-center gap-3">
               <Button
@@ -219,12 +220,12 @@ export function ProductModal({
           {/* Observações with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observações (opcional):
+              Observations (optional):
             </label>
             <Textarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
+              placeholder="Ex: No chocolate coating, write message on cake..."
               rows={3}
               className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
@@ -257,7 +258,7 @@ export function ProductModal({
                 onClick={handleSave}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl border-2 border-blue-400 shadow-lg"
               >
-                Salvar Alterações
+                Save Changes
               </Button>
             ) : (
               <Button
@@ -265,7 +266,7 @@ export function ProductModal({
                 className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
-                Adicionar ao Carrinho
+                Add to Cart
               </Button>
             )}
             
@@ -279,11 +280,11 @@ export function ProductModal({
                 borderWidth: '2px'
               }}
             >
-              Cancelar
+              Cancel
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </>
   )
 }
