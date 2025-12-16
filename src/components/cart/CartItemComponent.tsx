@@ -23,17 +23,22 @@ export function CartItemComponent({
 }: CartItemComponentProps) {
   const [showEditModal, setShowEditModal] = useState(false)
 
+  // Validar se o item é válido
+  if (!item || !item.id) {
+    return null
+  }
+
   // Converter CartItem para Produto para o modal
   const convertToProduct = (): Produto => ({
     id: item.id,
     user_id: '',
-    nome: item.name,
-    descricao: item.description,
-    preco_normal: item.price,
+    nome: item.name || 'Produto',
+    descricao: item.description || '',
+    preco_normal: item.price || 0,
     preco_promocional: undefined,
     imagem_url: item.imageUrl,
     categoria: '',
-    forma_venda: item.saleType,
+    forma_venda: item.saleType || 'unidade',
     disponivel: true,
     promocao: false,
     created_at: '',
@@ -45,13 +50,17 @@ export function CartItemComponent({
   }
 
   const handleModalSave = (updatedProduct: any) => {
-    // Atualizar quantidade e observações do item no carrinho
-    const newQuantity = updatedProduct.quantity || item.quantity
-    const newObservations = updatedProduct.observations || item.observations
-    
-    onUpdateQuantity(item.id, newQuantity)
-    onUpdateObservations(item.id, newObservations)
-    setShowEditModal(false)
+    try {
+      // Atualizar quantidade e observações do item no carrinho
+      const newQuantity = updatedProduct.quantity || item.quantity
+      const newObservations = updatedProduct.observations || item.observations
+      
+      onUpdateQuantity(item.id, newQuantity)
+      onUpdateObservations(item.id, newObservations)
+      setShowEditModal(false)
+    } catch (error) {
+      console.error('Error saving cart item:', error)
+    }
   }
 
   const getQuantityDisplay = () => {
@@ -62,7 +71,7 @@ export function CartItemComponent({
           color: '#FF97D6', 
           fontWeight: 'bold',
           fontSize: '15px'  // 2px maior que o texto normal (13px)
-        }}>{quantity}x</span> {item.name}
+        }}>{quantity}x</span> {item.name || 'Produto'}
       </>
     )
   }
@@ -81,7 +90,7 @@ export function CartItemComponent({
               </h3>
               <div className="text-right ml-2 flex-shrink-0">
                 <span className="text-green-600 font-bold text-sm">
-                  {formatCurrency(item.price * item.quantity)}
+                  {formatCurrency((item.price || 0) * item.quantity)}
                 </span>
               </div>
             </div>
@@ -124,6 +133,9 @@ export function CartItemComponent({
                 src={item.imageUrl} 
                 alt={item.name}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                }}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400">

@@ -38,17 +38,17 @@ export function CartDrawer() {
   useEffect(() => {
     const checkCart = () => {
       if (typeof window !== 'undefined') {
-        const savedCart = localStorage.getItem('pandamenu-cart')
-        if (savedCart) {
-          try {
+        try {
+          const savedCart = localStorage.getItem('pandamenu-cart')
+          if (savedCart) {
             const cartItems = JSON.parse(savedCart)
             // Se houver diferença, forçar atualização
-            if (cartItems.length !== items.length) {
+            if (Array.isArray(cartItems) && cartItems.length !== items.length) {
               setForceUpdate(prev => prev + 1)
             }
-          } catch (error) {
-            console.error('Error checking cart:', error)
           }
+        } catch (error) {
+          console.error('Error checking cart:', error)
         }
       }
     }
@@ -64,40 +64,49 @@ export function CartDrawer() {
   }, [items.length])
 
   const handleWhatsAppOrder = () => {
-    if (items.length === 0) return
+    try {
+      if (!items || items.length === 0) return
 
-    // Formatar mensagem para WhatsApp
-    let message = `
+      // Formatar mensagem para WhatsApp
+      let message = `
 🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
-    message += `*RESUMO DO PEDIDO:*\n\n`
+      message += `*RESUMO DO PEDIDO:*\n\n`
 
-    items.forEach((item, index) => {
-      message += `*${index + 1}. ${item.name}*\n`
-      message += `   Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}\n`
-      message += `   Preço unitário: ${formatCurrency(item.price)}\n`
-      message += `   Subtotal: ${formatCurrency(item.price * item.quantity)}\n`
+      items.forEach((item, index) => {
+        if (!item) return
+        
+        message += `*${index + 1}. ${item.name || 'Produto'}*\n`
+        message += `   Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}\n`
+        message += `   Preço unitário: ${formatCurrency(item.price || 0)}\n`
+        message += `   Subtotal: ${formatCurrency((item.price || 0) * item.quantity)}\n`
+        
+        if (item.observations) {
+          message += `   📝 Observações: ${item.observations}\n`
+        }
+        message += '\n'
+      })
+
+      message += `*TOTAL DO PEDIDO: ${formatCurrency(totalPrice)}*\n\n`
+      message += `📞 *Gostaria de finalizar este pedido!*\n`
+      message += `Por favor, confirme a disponibilidade e o prazo de entrega.`
+
+      // Codificar mensagem para URL
+      const encodedMessage = encodeURIComponent(message)
+      const whatsappUrl = `https://wa.me/5541998843669?text=${encodedMessage}`
+
+      // Abrir WhatsApp
+      window.open(whatsappUrl, '_blank')
       
-      if (item.observations) {
-        message += `   📝 Observações: ${item.observations}\n`
-      }
-      message += '\n'
-    })
-
-    message += `*TOTAL DO PEDIDO: ${formatCurrency(totalPrice)}*\n\n`
-    message += `📞 *Gostaria de finalizar este pedido!*\n`
-    message += `Por favor, confirme a disponibilidade e o prazo de entrega.`
-
-    // Codificar mensagem para URL
-    const encodedMessage = encodeURIComponent(message)
-    const whatsappUrl = `https://wa.me/5541998843669?text=${encodedMessage}`
-
-    // Abrir WhatsApp
-    window.open(whatsappUrl, '_blank')
-    
-    // Limpar carrinho após enviar
-    clearCart()
-    setIsOpen(false)
+      // Limpar carrinho após enviar
+      clearCart()
+      setIsOpen(false)
+    } catch (error) {
+      console.error('Error sending WhatsApp order:', error)
+    }
   }
+
+  // Validar se items é um array válido
+  const validItems = Array.isArray(items) ? items : []
 
   return (
     <>
@@ -185,7 +194,7 @@ export function CartDrawer() {
           </SheetHeader>
 
           <div className="flex-1 py-4 overflow-hidden">
-            {items.length === 0 ? (
+            {validItems.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Carrinho vazio</h3>
@@ -201,14 +210,16 @@ export function CartDrawer() {
               <>
                 {/* Lista de itens */}
                 <div className="space-y-2 mb-6 overflow-x-hidden">
-                  {items.map((item) => (
-                    <CartItemComponent
-                      key={item.id}
-                      item={item}
-                      onUpdateQuantity={updateQuantity}
-                      onUpdateObservations={updateObservations}
-                      onRemove={removeItem}
-                    />
+                  {validItems.map((item) => (
+                    item && (
+                      <CartItemComponent
+                        key={item.id}
+                        item={item}
+                        onUpdateQuantity={updateQuantity}
+                        onUpdateObservations={updateObservations}
+                        onRemove={removeItem}
+                      />
+                    )
                   ))}
                 </div>
 
@@ -248,7 +259,7 @@ export function CartDrawer() {
                       Continuar Comprando
                     </Button>
                     
-                    {items.length > 0 && (
+                    {validItems.length > 0 && (
                       <Button
                         variant="outline"
                         onClick={clearCart}
