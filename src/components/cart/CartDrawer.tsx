@@ -140,7 +140,7 @@ export function CartDrawer() {
             </div>
           </SheetHeader>
 
-          <div className="flex-1 py-4">
+          <div className="flex-1 py-4 overflow-hidden">
             {items.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -156,7 +156,7 @@ export function CartDrawer() {
             ) : (
               <>
                 {/* List of items */}
-                <div className="space-y-2 mb-6">
+                <div className="space-y-2 mb-6 overflow-x-hidden">
                   {items.map((item) => (
                     <CartItemComponent
                       key={item.id}
