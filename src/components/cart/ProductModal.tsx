@@ -121,23 +121,26 @@ export function ProductModal({
           <div className="flex items-center justify-between">
             <div>
               <DialogTitle className="text-lg font-bold text-pink-800">
-                {isEditMode ? 'Edited Item' : 'Adicionar ao Carrinho'}
+                {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
               </DialogTitle>
               <DialogDescription className="text-sm text-gray-600">
                 {isEditMode 
-                  ? 'Altere the quantity and observations of the product'
-                  : 'Escolha the quantity and add observations for the product'
+                  ? 'Altere a quantidade e as observações do produto'
+                  : 'Escolha a quantidade e adicione observações para o produto'
                 }
               </DialogDescription>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
+            {/* BOTÃO X PERSONALIZADO - SEM O COMPONENTE BUTTON PADRÃO */}
+            <button
               onClick={onClose}
-              className="h-8 w-8 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-100"
+              className="h-8 w-8 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-100 transition-all duration-200 flex items-center justify-center"
+              style={{
+                backgroundColor: 'transparent',
+                cursor: 'pointer'
+              }}
             >
               <X className="w-4 h-4 text-pink-600" />
-            </Button>
+            </button>
           </div>
         </DialogHeader>
 
@@ -187,7 +190,7 @@ export function ProductModal({
           {/* Controle of quantity with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quantity:
+              Quantidade:
             </label>
             <div className="flex items-center gap-3">
               <Button
@@ -215,12 +218,12 @@ export function ProductModal({
           {/* Observações with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observations (optional):
+              Observações (opcional):
             </label>
             <Textarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              placeholder="Ex: Sem coverage of chocolate, write message on the cake..."
+              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
               rows={3}
               className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
@@ -253,7 +256,7 @@ export function ProductModal({
                 onClick={handleSave}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl border-2 border-blue-400 shadow-lg"
               >
-                Save Alterations
+                Salvar Alterações
               </Button>
             ) : (
               <Button
@@ -275,7 +278,7 @@ export function ProductModal({
                 borderWidth: '2px'
               }}
             >
-              Cancel
+              Cancelar
             </Button>
           </div>
         </div>
