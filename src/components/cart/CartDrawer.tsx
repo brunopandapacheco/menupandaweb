@@ -191,9 +191,14 @@ export function CartDrawer() {
                 <div className="space-y-3 mt-6">
                   <Button
                     onClick={handleWhatsAppOrder}
-                    className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3"
+                    className="w-full text-white font-semibold py-3 rounded-xl border-2 border-transparent shadow-lg transition-all duration-300"
+                    style={{
+                      background: 'linear-gradient(135deg, #25D366 0%, #128C7E 50%, #075E54 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'whatsapp-gradient 4s ease infinite, pulse-slow 6s ease-in-out infinite',
+                      boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
+                    }}
                   >
-                    <MessageCircle className="w-5 h-5 mr-2" />
                     Finalizar Pedido pelo WhatsApp
                   </Button>
                   
@@ -233,6 +238,31 @@ export function CartDrawer() {
         /* Ensure our custom X button stays visible */
         .custom-close-button {
           display: flex !important;
+        }
+
+        /* Animação de gradiente para WhatsApp */
+        @keyframes whatsapp-gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        /* Animação de pulsação muito lenta */
+        @keyframes pulse-slow {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+          }
+          50% {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+          }
         }
       `}</style>
     </>
