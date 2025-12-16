@@ -72,6 +72,8 @@ export function NavigationMenu() {
 
       // Formatar mensagem para WhatsApp
       let message = `
+
+
 🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
       message += `*RESUMO DO PEDIDO:*\n\n`
 
@@ -147,7 +149,7 @@ export function NavigationMenu() {
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
                   <Button 
-                    className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50"
+                    className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
                   >
                     <ShoppingCart className="w-5 h-5" />
                     <span className="font-medium">Meu Carrinho</span>
@@ -358,7 +360,7 @@ export function NavigationMenu() {
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button 
-              className="flex flex-col items-center gap-1 p-3 rounded-full transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50"
+              className="flex flex-col items-center gap-1 p-3 rounded-full transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
             >
               <ShoppingCart className="w-6 h-6" />
               {displayCount > 0 && (
