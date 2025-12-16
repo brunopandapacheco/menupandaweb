@@ -188,7 +188,7 @@ export function Logo({
             style={{ 
               color: corNome,
               fontFamily: '"Bebas Neue", sans-serif',
-              fontWeight: 500,
+              fontWeight: 700,
               letterSpacing: '0.5px'
             }}
           >
