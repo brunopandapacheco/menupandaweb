@@ -271,7 +271,7 @@ export function Logo({
         </DialogContent>
       </Dialog>
 
-      {/* Estilo da animação de pulsação mais lenta */}
+      {/* Estilo da animação de pulsação mais lenta - sem glow */}
       <style>{`
         @keyframes pulse-slow {
           0%, 100% {
