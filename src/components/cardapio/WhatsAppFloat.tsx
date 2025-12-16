@@ -12,11 +12,11 @@ export function WhatsAppFloat() {
 
   return (
     <>
-      {/* Botão flutuante do WhatsApp - Metade sobre o menu */}
+      {/* Botão flutuante do WhatsApp - Entre o cardápio e o menu */}
       <div
         className="fixed z-50 cursor-pointer transition-all duration-300 hover:scale-110"
         style={{
-          bottom: isMobile ? '70px' : '30px', // Um pouco mais para baixo
+          bottom: isMobile ? '80px' : '40px', // Posicionado entre o cardápio e o menu
           right: '20px',
           width: '56px',
           height: '56px'
@@ -24,18 +24,18 @@ export function WhatsAppFloat() {
         onClick={handleWhatsAppClick}
         title="Fale conosco pelo WhatsApp"
       >
-        {/* Fundo redondo cinza chumbo */}
+        {/* Fundo redondo preto com borda cinza claro */}
         <div 
           className="w-full h-full rounded-full flex items-center justify-center shadow-lg"
           style={{
-            backgroundColor: '#4B4B4B' // Cinza chumbo
+            backgroundColor: '#000000', // Fundo preto
+            border: '3px solid #d3d3d3' // Borda cinza claro padrão
           }}
         >
           <img 
             src="/whatsappflutuante.png" 
             alt="WhatsApp"
-            className="w-8 h-8 object-contain"
-            // Removido o filtro para mostrar o ícone original do WhatsApp
+            className="w-10 h-10 object-contain" // Ícone maior (de 8 para 10)
           />
         </div>
       </div>
