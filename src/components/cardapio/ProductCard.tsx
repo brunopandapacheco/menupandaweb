@@ -127,7 +127,7 @@ export function ProductCard({
                     </span>
                   </div>
                   <div className="flex items-center gap-1 mb-1">
-                    <span className="text-sm font-bold text-green-600">
+                    <span className="text-base font-bold text-green-600">
                       R$ {product.preco_promocional.toFixed(2)}
                     </span>
                     <Badge 
@@ -146,7 +146,7 @@ export function ProductCard({
                 </div>
               ) : (
                 <div className="flex items-center gap-1 mb-2">
-                  <span className="text-sm font-bold text-green-600">
+                  <span className="text-base font-bold text-green-600">
                     R$ {product.preco_normal.toFixed(2)}
                   </span>
                   <Badge 
