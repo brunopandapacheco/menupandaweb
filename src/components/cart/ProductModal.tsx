@@ -234,8 +234,11 @@ export function ProductModal({
             }}
           >
             <div className="flex justify-between items-center">
-              <span className="text-black font-medium">Total:</span>
-              <span className="text-2xl font-bold text-green-600">
+              <span className="text-white font-medium">Total:</span>
+              <span 
+                className="text-2xl font-bold"
+                style={{ color: '#27AE60' }}
+              >
                 {formatCurrency(product.preco_normal * quantity)}
               </span>
             </div>
