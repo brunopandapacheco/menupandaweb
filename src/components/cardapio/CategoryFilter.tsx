@@ -85,25 +85,27 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                border: isSelected ? '2px solid #ec4899' : '2px solid #e5e7eb',
-                backgroundColor: isSelected ? '#fce7f3' : 'white',
+                // Fundo rosa pedra
+                backgroundColor: '#fe62a6',
+                // Borda dupla: externa cinza claro, interna branca
+                border: '3px solid #e5e7eb',
+ outline: '3px solid white',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 padding: '8px',
                 flexShrink: 0, // Não encolher
-                minWidth: '80px' // Garante tamanho mínimo
+                minWidth: '80px', // Garante tamanho mínimo
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)' // Sombra sutil para destacar a borda dupla
               }}
               onMouseOver={(e) => {
-                if (!isSelected) {
-                  e.currentTarget.style.backgroundColor = '#fdf2f8'
-                  e.currentTarget.style.borderColor = '#f9a8d4'
-                }
+                // Hover muda para cinza
+                e.currentTarget.style.backgroundColor = '#d1d5db'
+                e.currentTarget.style.transform = 'scale(1.05)'
               }}
               onMouseOut={(e) => {
-                if (!isSelected) {
-                  e.currentTarget.style.backgroundColor = 'white'
-                  e.currentTarget.style.borderColor = '#e5e7eb'
-                }
+                // Volta para o rosa
+                e.currentTarget.style.backgroundColor = '#fe62a6'
+                e.currentTarget.style.transform = 'scale(1)'
               }}
             >
               {/* Renderiza apenas ícone de imagem */}
