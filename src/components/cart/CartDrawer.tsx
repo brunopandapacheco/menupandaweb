@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShoppingCart, MessageCircle, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -18,6 +18,50 @@ export function CartDrawer() {
     clearCart 
   } = useCart()
   const [isOpen, setIsOpen] = useState(false)
+  const [forceUpdate, setForceUpdate] = useState(0)
+
+  // Escutar eventos de atualização do carrinho
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      // Forçar re-renderização do componente
+      setForceUpdate(prev => prev + 1)
+    }
+
+    window.addEventListener('cartUpdated', handleCartUpdate)
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate)
+    }
+  }, [])
+
+  // Verificar carrinho do localStorage periodicamente (fallback)
+  useEffect(() => {
+    const checkCart = () => {
+      if (typeof window !== 'undefined') {
+        const savedCart = localStorage.getItem('pandamenu-cart')
+        if (savedCart) {
+          try {
+            const cartItems = JSON.parse(savedCart)
+            // Se houver diferença, forçar atualização
+            if (cartItems.length !== items.length) {
+              setForceUpdate(prev => prev + 1)
+            }
+          } catch (error) {
+            console.error('Error checking cart:', error)
+          }
+        }
+      }
+    }
+
+    // Verificar a cada 500ms por 5 segundos após adicionar item
+    const interval = setInterval(checkCart, 500)
+    const timeout = setTimeout(() => clearInterval(interval), 5000)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeout)
+    }
+  }, [items.length])
 
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return

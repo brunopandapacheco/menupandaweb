@@ -64,12 +64,19 @@ export function ProductModal({
       observations
     }
     
+    // Adicionar ao carrinho
     addItem(cartItem)
     
-    // Pequeno delay for better UX
+    // Forçar atualização do localStorage para garantir sincronização
     setTimeout(() => {
-      onClose()
-    }, 300)
+      // Disparar evento customizado para notificar outros componentes
+      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cartItem }))
+      
+      // Fechar modal após pequeno delay
+      setTimeout(() => {
+        onClose()
+      }, 100)
+    }, 50)
   }
 
   const handleSave = () => {
@@ -127,8 +134,8 @@ export function ProductModal({
               </h2>
               <p className="text-sm text-gray-600">
                 {isEditMode 
-                  ? 'Altere a quantity and observations for the product'
-                  : 'Choose the quantity and add observations for the product'
+                  ? 'Altere a quantidade e as observações do produto'
+                  : 'Escolha a quantidade e adicione observações para o produto'
                 }
               </p>
             </div>
@@ -179,11 +186,11 @@ export function ProductModal({
                   boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
                 }}
               >
-                {product.forma_venda === 'kg' ? 'KG' : 'UNIT'}
+                {product.forma_venda === 'kg' ? 'KG' : 'UNIDADE'}
               </Badge>
               {product.promocao && (
                 <Badge className="bg-red-500 text-white rounded-full">
-                  PROMOTION
+                  PROMOÇÃO
                 </Badge>
               )}
             </div>
@@ -192,7 +199,7 @@ export function ProductModal({
           {/* Controle of quantity with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quantity:
+              Quantidade:
             </label>
             <div className="flex items-center gap-3">
               <Button
@@ -220,12 +227,12 @@ export function ProductModal({
           {/* Observações with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observations (optional):
+              Observações (opcional):
             </label>
             <Textarea
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              placeholder="Ex: No chocolate coating, write message on cake..."
+              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
               rows={3}
               className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
@@ -258,7 +265,7 @@ export function ProductModal({
                 onClick={handleSave}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl border-2 border-blue-400 shadow-lg"
               >
-                Save Changes
+                Salvar Alterações
               </Button>
             ) : (
               <Button
@@ -266,7 +273,7 @@ export function ProductModal({
                 className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
-                Add to Cart
+                Adicionar ao Carrinho
               </Button>
             )}
             
@@ -280,7 +287,7 @@ export function ProductModal({
                 borderWidth: '2px'
               }}
             >
-              Cancel
+              Cancelar
             </Button>
           </div>
         </div>

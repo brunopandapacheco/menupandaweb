@@ -22,8 +22,24 @@ export function useCart() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('pandamenu-cart', JSON.stringify(items))
+      // Disparar evento para notificar outros componentes
+      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: items }))
     }
   }, [items])
+
+  // Escutar eventos de atualização do carrinho
+  useEffect(() => {
+    const handleCartUpdate = (event: CustomEvent) => {
+      // Forçar re-renderização quando receber evento de atualização
+      setItems(event.detail || [])
+    }
+
+    window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
+    }
+  }, [])
 
   // Calculate totals
   const { totalItems, totalPrice } = useMemo(() => {
@@ -59,6 +75,11 @@ export function useCart() {
           id: `${newItem.id}_${Date.now()}` // Unique ID based on product + timestamp
         }
         updatedItems = [...prevItems, itemWithId]
+      }
+      
+      // Forçar atualização imediata do localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('pandamenu-cart', JSON.stringify(updatedItems))
       }
       
       return updatedItems
