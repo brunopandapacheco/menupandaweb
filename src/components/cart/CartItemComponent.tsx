@@ -75,21 +75,13 @@ export function CartItemComponent({
           )}
         </div>
 
-        {/* Informações do produto */}
+        {/* Informações do produto - REMOVIDO O BOTÃO DE REMOVER DAQUI */}
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start mb-2">
             <div className="flex-1 min-w-0 pr-2">
               <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
               <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onRemove(item.id)}
-              className="text-red-500 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
           </div>
 
           {/* Preço e tipo de venda */}

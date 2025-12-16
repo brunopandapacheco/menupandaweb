@@ -207,6 +207,11 @@ export function CartDrawer() {
                       variant="outline"
                       onClick={() => setIsOpen(false)}
                       className="flex-1"
+                      style={{
+                        borderColor: '#FF99D8',
+                        color: '#FF99D8',
+                        borderWidth: '2px'
+                      }}
                     >
                       Continuar Comprando
                     </Button>
@@ -215,7 +220,7 @@ export function CartDrawer() {
                       <Button
                         variant="outline"
                         onClick={clearCart}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        className="bg-red-500 hover:bg-red-600 text-white border-2 border-red-500 hover:border-red-600"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
