@@ -64,13 +64,28 @@ export function CartItemComponent({
   }
 
   const getQuantityDisplay = () => {
-    const quantity = item.saleType === 'kg' ? item.quantity : Math.floor(item.quantity)
+    const quantity = item.quantity
+    
+    // Formatar especial para produtos por KG
+    if (item.saleType === 'kg') {
+      return (
+        <>
+          <span style={{ 
+            color: '#FF97D6', 
+            fontWeight: 'bold',
+            fontSize: '15px'
+          }}>{quantity}kg</span> {item.name || 'Produto'}
+        </>
+      )
+    }
+    
+    // Formatar normal para outros tipos
     return (
       <>
         <span style={{ 
           color: '#FF97D6', 
           fontWeight: 'bold',
-          fontSize: '15px'  // 2px maior que o texto normal (13px)
+          fontSize: '15px'
         }}>{quantity}x</span> {item.name || 'Produto'}
       </>
     )
