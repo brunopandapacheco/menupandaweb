@@ -173,11 +173,6 @@ export function CartDrawer() {
                     <span className="text-gray-600">Subtotal:</span>
                     <span className="font-medium">{formatCurrency(totalPrice)}</span>
                   </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Entrega:</span>
-                    <span className="font-medium text-green-600">A combinar</span>
-                  </div>
 
                   <div className="border-t pt-3">
                     <div className="flex justify-between items-center text-lg font-bold">

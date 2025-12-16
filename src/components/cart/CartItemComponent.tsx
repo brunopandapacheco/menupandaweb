@@ -98,7 +98,7 @@ export function CartItemComponent({
               >
                 <Minus className="w-3 h-3" />
               </Button>
-              <span className="text-sm font-medium text-gray-900 min-w-[50px] text-center">
+              <span className="font-medium text-gray-900 min-w-[60px] text-center">
                 {formatQuantity(item.quantity, item.saleType)}
               </span>
               <Button
@@ -111,11 +111,6 @@ export function CartItemComponent({
               </Button>
             </div>
           </div>
-          
-          {/* Subtotal apenas */}
-          <span className="text-sm font-semibold text-green-600">
-            {formatPrice(item.price * item.quantity)}
-          </span>
         </div>
 
         {/* Observações */}
