@@ -22,7 +22,7 @@ export function CartDrawer() {
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return
 
-    // Formatar message for WhatsApp
+    // Formatar mensagem para WhatsApp
     let message = `
 🧁 *NOVO PEDIDO - PANDA MENU* 🧁\n\n`
     message += `*RESUMO DO PEDIDO:*\n\n`
@@ -40,17 +40,17 @@ export function CartDrawer() {
     })
 
     message += `*TOTAL DO PEDIDO: ${formatCurrency(totalPrice)}*\n\n`
-    message += `📞 *Gostaria of finalizar this pedido!*\n`
-    message += `Por favor, confirmem a disponibilidade and the prazo of delivery.`
+    message += `📞 *Gostaria de finalizar este pedido!*\n`
+    message += `Por favor, confirme a disponibilidade e o prazo de entrega.`
 
-    // Codificar message for URL
+    // Codificar mensagem para URL
     const encodedMessage = encodeURIComponent(message)
     const whatsappUrl = `https://wa.me/5541998843669?text=${encodedMessage}`
 
     // Abrir WhatsApp
     window.open(whatsappUrl, '_blank')
     
-    // Limpar carrinho after send
+    // Limpar carrinho após enviar
     clearCart()
     setIsOpen(false)
   }
@@ -74,7 +74,7 @@ export function CartDrawer() {
           >
             <img 
               src="/carrinhoapp.png" 
-              alt="Carrinho of Compras" 
+              alt="Carrinho de Compras" 
               className="w-8 h-8 object-contain"
             />
             {totalItems > 0 && (
@@ -108,11 +108,11 @@ export function CartDrawer() {
                 <ShoppingCart className="w-5 h-5" />
                 Meu Carrinho
                 {totalItems > 0 && (
-                  <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'items'}</Badge>
+                  <Badge variant="secondary">{totalItems} {totalItems === 1 ? 'item' : 'itens'}</Badge>
                 )}
               </SheetTitle>
               
-              {/* Botão X personalizado rosa and larger - using SVG inline */}
+              {/* Botão X personalizado rosa e maior - usando SVG inline */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -145,7 +145,7 @@ export function CartDrawer() {
               <div className="text-center py-12">
                 <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Carrinho vazio</h3>
-                <p className="text-gray-600 mb-6">Adicione products deliciosos ao your carrinho!</p>
+                <p className="text-gray-600 mb-6">Adicione produtos deliciosos ao seu carrinho!</p>
                 <Button 
                   onClick={() => setIsOpen(false)}
                   className="bg-pink-500 hover:bg-pink-600"
@@ -155,7 +155,7 @@ export function CartDrawer() {
               </div>
             ) : (
               <>
-                {/* List of items */}
+                {/* Lista de itens */}
                 <div className="space-y-2 mb-6 overflow-x-hidden">
                   {items.map((item) => (
                     <CartItemComponent
@@ -175,7 +175,7 @@ export function CartDrawer() {
                   </div>
                 </div>
 
-                {/* Action buttons */}
+                {/* Botões de ação */}
                 <div className="space-y-3 mt-6">
                   <Button
                     onClick={handleWhatsAppOrder}
@@ -221,19 +221,19 @@ export function CartDrawer() {
         </SheetContent>
       </Sheet>
 
-      {/* CSS specific to hide only the Close button of Radix */}
+      {/* CSS específico para esconder apenas o botão Close do Radix */}
       <style>{`
-        /* Hide ONLY the Close button of Radix */
+        /* Esconder APENAS o botão Close do Radix */
         button[aria-label="Close"] {
           display: none !important;
         }
         
-        /* Ensure our custom X button stays visible */
+        /* Garantir que nosso botão X personalizado continue visível */
         .custom-close-button {
           display: flex !important;
         }
 
-        /* Animação of gradiente for WhatsApp */
+        /* Animação de gradiente para WhatsApp */
         @keyframes whatsapp-gradient {
           0% {
             background-position: 0% 50%;
@@ -246,7 +246,7 @@ export function CartDrawer() {
           }
         }
 
-        /* Animação of pulsação very slow */
+        /* Animação de pulsação bem lenta */
         @keyframes pulse-slow {
           0%, 100% {
             transform: scale(1);

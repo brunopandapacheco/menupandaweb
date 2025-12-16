@@ -43,8 +43,8 @@ export function ProductCard({
   const firstImage = getFirstImage(product.imagem_url)
 
   const handleAddToCart = () => {
-    console.log('🛒 ProductCard: Opening modal for product:', product.nome)
-    // Abrir modal instead of adding directly
+    console.log('🛒 ProductCard: Abrindo modal para produto:', product.nome)
+    // Abrir modal em vez de adicionar diretamente
     setShowModal(true)
   }
 
@@ -56,7 +56,7 @@ export function ProductCard({
           : 'border border-gray-100'
       }`}>
         <div className="p-3">
-          {/* Imagem in first - square */}
+          {/* Imagem em primeiro lugar - quadrada */}
           <div 
             className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
             style={{ backgroundColor }}
@@ -76,7 +76,7 @@ export function ProductCard({
               </span>
             )}
 
-            {/* PROMOTION RIBBON */}
+            {/* FITA DE PROMOÇÃO */}
             {product.promocao && (
               <div 
                 className="absolute top-3 -right-10 bg-red-500 text-white font-bold px-4 py-1 transform rotate-45 shadow-md z-10"
@@ -90,7 +90,7 @@ export function ProductCard({
               </div>
             )}
 
-            {/* Botão to add to cart - now opens modal */}
+            {/* Botão para adicionar ao carrinho - agora abre modal */}
             <button
               onClick={handleAddToCart}
               className="absolute bottom-2 right-2 bg-pink-500 hover:bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-colors"
@@ -100,7 +100,7 @@ export function ProductCard({
             </button>
           </div>
           
-          {/* Product content */}
+          {/* Conteúdo do produto */}
           <div className="flex flex-col">
             <div className="flex justify-between items-start mb-1">
               <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
@@ -168,7 +168,7 @@ export function ProductCard({
         </div>
       </div>
 
-      {/* Product modal */}
+      {/* Modal do produto */}
       <ProductModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
