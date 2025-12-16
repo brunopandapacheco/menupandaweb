@@ -133,22 +133,24 @@ export function NavigationMenu() {
     return (
       <>
         {/* Menu de Navegação Fixo na Parte Inferior (Mobile) */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white shadow-lg border-t border-gray-200">
+        <div 
+          className="fixed bottom-0 left-0 right-0 z-40 shadow-lg border-t border-gray-200"
+          style={{
+            background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
+            backgroundSize: '200% 200%',
+            animation: 'gradient-x 3s ease infinite'
+          }}
+        >
           <div className="container mx-auto px-4 py-3">
             <div className="flex justify-center">
               {/* Botão Centralizado do Carrinho */}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
                   <Button 
-                    className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-200 hover:scale-105"
-                    style={{
-                      background: 'linear-gradient(135deg, #374151 0%, #111827 50%, #000000 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradient-x 3s ease infinite'
-                    }}
+                    className="flex items-center gap-2 px-6 py-2 rounded-full transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50"
                   >
-                    <ShoppingCart className="w-5 h-5 text-white" />
-                    <span className="text-white font-medium">Meu Carrinho</span>
+                    <ShoppingCart className="w-5 h-5" />
+                    <span className="font-medium">Meu Carrinho</span>
                     {displayCount > 0 && (
                       <Badge 
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold"
@@ -347,18 +349,21 @@ export function NavigationMenu() {
   return (
     <>
       {/* Menu de Navegação Fixo na Lateral Esquerda (Desktop) */}
-      <div className="fixed left-0 top-0 bottom-0 z-40 w-20 bg-white shadow-lg border-r border-gray-200 flex items-center justify-center">
+      <div 
+        className="fixed left-0 top-0 bottom-0 z-40 shadow-lg border-r border-gray-200 flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
+          backgroundSize: '200% 200%',
+          animation: 'gradient-x 3s ease infinite',
+          width: '80px'
+        }}
+      >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button 
-              className="flex flex-col items-center gap-1 p-3 rounded-full transition-all duration-200 hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #374151 0%, #111827 50%, #000000 100%)',
-                backgroundSize: '200% 200%',
-                animation: 'gradient-x 3s ease infinite'
-              }}
+              className="flex flex-col items-center gap-1 p-3 rounded-full transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50"
             >
-              <ShoppingCart className="w-6 h-6 text-white" />
+              <ShoppingCart className="w-6 h-6" />
               {displayCount > 0 && (
                 <Badge 
                   className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
