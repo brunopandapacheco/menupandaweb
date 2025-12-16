@@ -52,7 +52,7 @@ export function ProductCard({
     <>
       <div className={`bg-white rounded-lg overflow-hidden shadow-sm ${
         product.promocao 
-          ? 'border-2 border-dashed border-red-400' 
+          ? 'border-2 border-dashed border-pink-500' 
           : 'border border-gray-100'
       }`}>
         <div className="p-3">
