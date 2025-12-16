@@ -71,6 +71,13 @@ export function NavigationMenu() {
     }
   }, [items.length])
 
+  // Efeito para fechar carrinho quando formulário abrir
+  useEffect(() => {
+    if (showCustomerForm) {
+      setIsOpen(false) // Fecha o carrinho automaticamente
+    }
+  }, [showCustomerForm])
+
   const handleWhatsAppOrder = () => {
     // Validar se há itens no carrinho
     if (!items || items.length === 0) return
@@ -406,7 +413,10 @@ export function NavigationMenu() {
               <div className="flex gap-3 mt-6">
                 <Button
                   variant="outline"
-                  onClick={() => setShowCustomerForm(false)}
+                  onClick={() => {
+                    setShowCustomerForm(false)
+                    setIsOpen(true) // Reabre o carrinho ao cancelar
+                  }}
                   className="flex-1"
                 >
                   Cancelar
@@ -691,7 +701,10 @@ export function NavigationMenu() {
             <div className="flex gap-3 mt-6">
               <Button
                 variant="outline"
-                onClick={() => setShowCustomerForm(false)}
+                onClick={() => {
+                  setShowCustomerForm(false)
+                  setIsOpen(true) // Reabre o carrinho ao cancelar
+                }}
                 className="flex-1"
               >
                 Cancelar
