@@ -12,11 +12,11 @@ export function WhatsAppFloat() {
 
   return (
     <>
-      {/* Botão flutuante do WhatsApp - Sobre o menu de navegação */}
+      {/* Botão flutuante do WhatsApp - Com z-index maior para ficar sobre o menu */}
       <div
-        className="fixed z-50 cursor-pointer transition-all duration-300 hover:scale-110"
+        className="fixed z-[60] cursor-pointer transition-all duration-300 hover:scale-110"
         style={{
-          bottom: isMobile ? '100px' : '60px', // Ajustado para ficar sobre o menu
+          bottom: isMobile ? '80px' : '40px', // Posicionado entre o cardápio e o menu
           right: '20px',
           width: '56px',
           height: '56px'
@@ -35,7 +35,7 @@ export function WhatsAppFloat() {
           <img 
             src="/whatsappflutuante.png" 
             alt="WhatsApp"
-            className="w-10 h-10 object-contain" // Ícone maior
+            className="w-10 h-10 object-contain" // Ícone maior (de 8 para 10)
           />
         </div>
       </div>
