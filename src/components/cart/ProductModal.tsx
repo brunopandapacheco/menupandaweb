@@ -234,7 +234,15 @@ export function ProductModal({
             }}
           >
             <div className="flex justify-between items-center">
-              <span className="text-white font-medium">Total:</span>
+              <span 
+                className="font-medium"
+                style={{ 
+                  color: 'white',
+                  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)'
+                }}
+              >
+                Total:
+              </span>
               <span 
                 className="text-2xl font-bold"
                 style={{ color: '#27AE60' }}
