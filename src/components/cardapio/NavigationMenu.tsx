@@ -349,10 +349,20 @@ export function NavigationMenu() {
           </div>
         </div>
 
-        {/* Formulário de Dados do Cliente */}
+        {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
         {showCustomerForm && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <div 
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+            style={{ 
+              zIndex: 9999, // Z-INDEX MAIOR PARA FICAR NA FRENTE DE TUDO
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            }}
+          >
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Seus Dados</h3>
               
               <div className="space-y-4">
@@ -624,10 +634,20 @@ export function NavigationMenu() {
       {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na lateral */}
       <div className="w-20"></div>
 
-      {/* Formulário de Dados do Cliente */}
+      {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
       {showCustomerForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div 
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+          style={{ 
+            zIndex: 9999, // Z-INDEX MAIOR PARA FICAR NA FRENTE DE TUDO
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Seus Dados</h3>
             
             <div className="space-y-4">
