@@ -58,21 +58,54 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   const [showIconSelector, setShowIconSelector] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
   const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
+  const [loadingCategories, setLoadingCategories] = useState(true)
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data, error } = await supabase
+        setLoadingCategories(true)
+        console.log('🔍 ProductForm: Buscando categorias...')
+        
+        // 1. Buscar categorias da tabela categorias
+        const { data: dbCategories, error: dbError } = await supabase
           .from('categorias')
           .select('nome')
           .order('nome')
         
-        if (error) throw error
+        if (dbError) {
+          console.error('❌ Erro ao buscar categorias do banco:', dbError)
+        }
         
-        const categoryNames = data?.map(cat => cat.nome) || []
-        setCategories(categoryNames)
+        // 2. Buscar categorias dos produtos (para garantir que todas apareçam)
+        const { data: products, error: productsError } = await supabase
+          .from('produtos')
+          .select('categoria')
+          .not('categoria', 'is', null)
+        
+        if (productsError) {
+          console.error('❌ Erro ao buscar categorias dos produtos:', productsError)
+        }
+        
+        // 3. Combinar categorias
+        const dbCategoryNames = dbCategories?.map(cat => cat.nome) || []
+        const productCategories = products?.map(p => p.categoria).filter(Boolean) || []
+        
+        // 4. Remover duplicatas e ordenar alfabeticamente
+        const allCategories = Array.from(new Set([...dbCategoryNames, ...productCategories]))
+          .filter(cat => cat && cat.trim() !== '')
+          .sort()
+        
+        console.log('📋 Categorias carregadas:', {
+          database: dbCategoryNames,
+          products: productCategories,
+          combined: allCategories
+        })
+        
+        setCategories(allCategories)
       } catch (error) {
-        console.error('Error fetching categories:', error)
+        console.error('❌ Erro ao buscar categorias:', error)
+      } finally {
+        setLoadingCategories(false)
       }
     }
 
@@ -324,20 +357,26 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           {!isCreatingNewCategory ? (
             <Select value={product?.categoria || ''} onValueChange={handleCategorySelect}>
               <SelectTrigger className="border-gray-200 focus:border-gray-400 focus:ring-gray-400">
-                <SelectValue placeholder="Selecione uma categoria" />
+                <SelectValue placeholder={loadingCategories ? "Carregando categorias..." : "Selecione uma categoria"} />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-                <SelectItem value="create-new" className="text-pink-600 font-medium">
-                  <div className="flex items-center gap-2">
-                    <Plus className="w-4 h-4" />
-                    Criar nova categoria
-                  </div>
-                </SelectItem>
+                {loadingCategories ? (
+                  <div className="px-2 py-1 text-sm text-gray-500">Carregando categorias...</div>
+                ) : (
+                  <>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="create-new" className="text-pink-600 font-medium">
+                      <div className="flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Criar nova categoria
+                      </div>
+                    </SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
           ) : (
