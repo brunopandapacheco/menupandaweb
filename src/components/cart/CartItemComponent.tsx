@@ -59,7 +59,8 @@ export function CartItemComponent({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3 w-full overflow-hidden">
-      <div className="flex flex-col sm:flex-row gap-4 w-full">
+      {/* Layout Mobile: Foto + Informações lado a lado */}
+      <div className="flex gap-4 w-full">
         {/* Imagem do produto */}
         <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50">
           {item.imageUrl ? (
@@ -75,17 +76,13 @@ export function CartItemComponent({
           )}
         </div>
 
-        {/* Informações do produto - REMOVIDO O BOTÃO DE REMOVER DAQUI */}
+        {/* Informações do produto - Layout Mobile */}
         <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start mb-2">
-            <div className="flex-1 min-w-0 pr-2">
-              <h3 className="font-semibold text-gray-900 truncate">{item.name}</h3>
-              <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
-            </div>
-          </div>
-
-          {/* Preço e tipo de venda */}
-          <div className="flex items-center gap-2 mb-3">
+          {/* Nome do produto */}
+          <h3 className="font-semibold text-gray-900 truncate mb-1">{item.name}</h3>
+          
+          {/* Informações básicas em linha - Mobile */}
+          <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="text-sm font-medium text-gray-700">
               {formatPrice(item.price)}
             </span>
@@ -94,28 +91,28 @@ export function CartItemComponent({
             </span>
           </div>
 
-          {/* Controle de quantidade */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Quantidade:</span>
-            <div className="flex items-center gap-2">
+          {/* Controle de quantidade - Mobile */}
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-medium text-gray-600 whitespace-nowrap">Qtd:</span>
+            <div className="flex items-center gap-1">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={decrementQuantity}
-                className="h-8 w-8 p-0"
+                className="h-6 w-6 p-0"
               >
-                <Minus className="w-3 h-3" />
+                <Minus className="w-2 h-2" />
               </Button>
-              <span className="font-medium text-gray-900 min-w-[60px] text-center">
+              <span className="text-sm font-medium text-gray-900 min-w-[40px] text-center">
                 {formatQuantity(item.quantity, item.saleType)}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={incrementQuantity}
-                className="h-8 w-8 p-0"
+                className="h-6 w-6 p-0"
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-2 h-2" />
               </Button>
             </div>
             <span className="text-sm font-semibold text-green-600 whitespace-nowrap">
@@ -123,57 +120,60 @@ export function CartItemComponent({
             </span>
           </div>
 
-          {/* Observações */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Observações:</span>
-              {!isEditingObservations && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsEditingObservations(true)}
-                  className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 h-6 px-2"
-                >
-                  <Edit2 className="w-3 h-3 mr-1" />
-                  Editar
-                </Button>
-              )}
-            </div>
-            
-            {isEditingObservations ? (
-              <div className="space-y-2">
-                <Textarea
-                  value={tempObservations}
-                  onChange={(e) => setTempObservations(e.target.value)}
-                  placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
-                  className="min-h-[60px] text-sm w-full"
-                />
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    onClick={handleSaveObservations}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <Check className="w-3 h-3 mr-1" />
-                    Salvar
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCancelObservations}
-                  >
-                    <X className="w-3 h-3 mr-1" />
-                    Cancelar
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded min-h-[40px] w-full overflow-hidden">
-                <p className="line-clamp-3">{item.observations || 'Nenhuma observação'}</p>
-              </div>
-            )}
-          </div>
+          {/* Descrição - Mobile */}
+          <p className="text-xs text-gray-600 line-clamp-2 mb-2">{item.description}</p>
         </div>
+      </div>
+
+      {/* Observações - Sempre embaixo */}
+      <div className="mt-3 pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-gray-700">Observações:</span>
+          {!isEditingObservations && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsEditingObservations(true)}
+              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 h-6 px-2"
+            >
+              <Edit2 className="w-3 h-3 mr-1" />
+              Editar
+            </Button>
+          )}
+        </div>
+        
+        {isEditingObservations ? (
+          <div className="space-y-2">
+            <Textarea
+              value={tempObservations}
+              onChange={(e) => setTempObservations(e.target.value)}
+              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
+              className="min-h-[60px] text-sm w-full"
+            />
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                onClick={handleSaveObservations}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Check className="w-3 h-3 mr-1" />
+                Salvar
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCancelObservations}
+              >
+                <X className="w-3 h-3 mr-1" />
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded min-h-[40px] w-full overflow-hidden">
+            <p className="line-clamp-3">{item.observations || 'Nenhuma observação'}</p>
+          </div>
+        )}
       </div>
     </div>
   )
