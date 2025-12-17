@@ -167,13 +167,14 @@ export function Logo({
 
       {/* Container principal */}
       <div 
-        className="relative bg-white rounded-lg shadow-sm p-6 overflow-hidden mx-4"
+        className="relative bg-white rounded-lg p-6 overflow-hidden mx-4"
         style={{ 
           borderColor,
           marginTop: '-100px',
           position: 'relative',
           zIndex: 20,
-          paddingTop: '100px'
+          paddingTop: '100px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)' // Sombra mais forte embaixo e nas laterais
         }}
       >
         {/* Nome e descrição */}
