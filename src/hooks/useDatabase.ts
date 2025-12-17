@@ -26,40 +26,15 @@ export function useDatabase() {
 
     console.log('👤 Carregando dados para usuário:', user.id)
 
-    // SEMPRE buscar do banco primeiro para garantir o código correto
+    // 🎯 USANDO A NOVA FUNÇÃO - SÓ GERA CÓDIGO SE NÃO EXISTIR
     setLoading(true)
     
     try {
-      console.log('🔍 Buscando dados do banco (ignorando cache para garantir código)...')
+      console.log('🔒 Garantindo design settings com código permanente...')
       
-      // BUSCAR DIRETO DO BANCO - SEMPRE!
-      let designData = null
-      try {
-        designData = await supabaseService.getDesignSettings(user.id)
-        console.log('📋 Design settings encontrados:', designData)
-      } catch (error) {
-        console.log('⚠️ Design settings não encontrados, será criado novo')
-      }
-
-      // Se não existir, criar com código fixo
-      if (!designData) {
-        console.log('📝 Criando design settings padrão para novo usuário')
-        designData = await supabaseService.createDefaultDesignSettings(user.id)
-        console.log('✅ Design settings criados com código:', designData.codigo)
-      } else {
-        // IMPORTANTE: Se existir mas não tiver código, gerar UM código
-        if (!designData.codigo) {
-          console.log('⚠️ Design settings sem código, gerando novo...')
-          const code = supabaseService.generateUniqueCode()
-          const updatedDesign = await supabaseService.updateDesignSettings(user.id, { codigo: code })
-          if (updatedDesign) {
-            designData = updatedDesign
-            console.log('✅ Código gerado e salvo:', code)
-          }
-        } else {
-          console.log('✅ Código existente mantido:', designData.codigo)
-        }
-      }
+      // 🆕 FUNÇÃO NOVA - Garante código permanente
+      let designData = await supabaseService.ensureDesignSettingsWithCode(user.id)
+      console.log('📋 Design settings garantidos:', designData.codigo)
 
       // Buscar outros dados
       const [configData, productsData] = await Promise.all([
@@ -69,7 +44,7 @@ export function useDatabase() {
 
       // Atualizar cache
       if (designData) {
-        console.log('💾 Atualizando cache designSettings com código:', designData.codigo)
+        console.log('💾 Atualizando cache designSettings com código permanente:', designData.codigo)
         updateCache('designSettings', designData)
       }
       if (configData) {

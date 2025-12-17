@@ -108,12 +108,35 @@ export class SupabaseService {
     }
   }
 
-  async createDefaultDesignSettings(userId: string) {
+  // 🆕 FUNÇÃO SEPARADA - SÓ GERA CÓDIGO SE NÃO EXISTIR
+  async ensureDesignSettingsWithCode(userId: string) {
     try {
-      console.log('📝 Criando design settings padrão para userId:', userId)
+      console.log('🔒 Garantindo design settings com código para userId:', userId)
       
+      // 1️⃣ PRIMEIRO: Verificar se já existe
+      let designData = await this.getDesignSettings(userId)
+      
+      if (designData) {
+        console.log('✅ Design settings já existem:', designData.codigo)
+        
+        // 2️⃣ Se existe mas não tem código (caso raro), gerar UM código
+        if (!designData.codigo) {
+          console.log('⚠️ Design settings sem código, gerando novo...')
+          const codigo = this.generateUniqueCode()
+          const updatedDesign = await this.updateDesignSettings(userId, { codigo })
+          if (updatedDesign) {
+            designData = updatedDesign
+            console.log('✅ Código gerado e salvo:', codigo)
+          }
+        }
+        
+        return designData
+      }
+      
+      // 3️⃣ Se não existe, criar com código
+      console.log('📝 Criando design settings pela primeira vez...')
       const codigo = this.generateUniqueCode()
-      console.log('🔑 Código único gerado para novo usuário:', codigo)
+      console.log('🔑 Código único gerado:', codigo)
       
       const { data, error } = await supabase
         .from('design_settings')
@@ -129,22 +152,28 @@ export class SupabaseService {
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
           categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-          codigo: codigo // Código gerado UMA VEZ
+          codigo: codigo // 🎯 CÓDIGO GERADO APENAS UMA VEZ
         })
         .select()
         .single()
 
       if (error) {
-        console.error('❌ Erro ao criar design settings padrão:', error)
+        console.error('❌ Erro ao criar design settings:', error)
         throw error
       }
       
-      console.log('✅ Design settings padrão criados com código fixo:', data)
+      console.log('✅ Design settings criados com código permanente:', data)
       return data
     } catch (error) {
-      console.error('❌ Erro em createDefaultDesignSettings:', error)
+      console.error('❌ Erro em ensureDesignSettingsWithCode:', error)
       throw error
     }
+  }
+
+  // 🗑️ REMOVENDO createDefaultDesignSettings (não será mais usada)
+  async createDefaultDesignSettings(userId: string) {
+    console.log('⚠️ createDefaultDesignSettings está obsoleto. Use ensureDesignSettingsWithCode()')
+    return this.ensureDesignSettingsWithCode(userId)
   }
 
   generateUniqueCode(): string {
