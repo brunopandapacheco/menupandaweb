@@ -21,7 +21,6 @@ const diasSemana = [
 ]
 
 export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: WorkingHoursSettingsProps) {
-  const [statusManual, setStatusManual] = useState<'auto' | 'aberto' | 'fechado'>('auto')
   const [horarioAbertura, setHorarioAbertura] = useState('08:00')
   const [horarioFechamento, setHorarioFechamento] = useState('18:00')
   const [diasFuncionamento, setDiasFuncionamento] = useState<string[]>(['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'])
@@ -34,7 +33,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
 
   useEffect(() => {
     if (configuracoes) {
-      setStatusManual(configuracoes.status_manual || 'auto')
       setHorarioAbertura(configuracoes.horario_abertura || '08:00')
       setHorarioFechamento(configuracoes.horario_fechamento || '18:00')
       setDiasFuncionamento(configuracoes.dias_funcionamento || ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'])
@@ -49,7 +47,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
 
   const handleSave = async () => {
     const config = {
-      status_manual: statusManual,
+      status_manual: 'auto', // Sempre automático
       horario_abertura: horarioAbertura,
       horario_fechamento: horarioFechamento,
       dias_funcionamento: diasFuncionamento,
@@ -78,9 +76,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
   }
 
   const getStatusAtual = () => {
-    if (statusManual === 'aberto') return 'aberto'
-    if (statusManual === 'fechado') return 'fechado'
-    
     const agora = new Date()
     const diaSemana = agora.getDay()
     const horaAtual = agora.getHours() * 60 + agora.getMinutes()
@@ -123,7 +118,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
 
   return (
     <div className="space-y-6">
-      {/* Card de Status Manual */}
+      {/* Card de Status Atual */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -154,39 +149,9 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
             </div>
           </div>
 
-          {/* Controle Manual */}
-          <div className="space-y-4">
-            <Label className="text-base font-semibold">Controle Manual</Label>
-            <div className="grid grid-cols-3 gap-2">
-              <Button
-                variant={statusManual === 'auto' ? 'default' : 'outline'}
-                onClick={() => setStatusManual('auto')}
-                className="w-full"
-              >
-                Automático
-              </Button>
-              <Button
-                variant={statusManual === 'aberto' ? 'default' : 'outline'}
-                onClick={() => setStatusManual('aberto')}
-                className="w-full bg-green-600 hover:bg-green-700"
-              >
-                Forçar Aberto
-              </Button>
-              <Button
-                variant={statusManual === 'fechado' ? 'default' : 'outline'}
-                onClick={() => setStatusManual('fechado')}
-                className="w-full bg-red-600 hover:bg-red-700"
-              >
-                Forçar Fechado
-              </Button>
-            </div>
+          <div className="text-center">
             <p className="text-sm text-gray-600">
-              {statusManual === 'auto' 
-                ? 'O status será definido automaticamente baseado nos horários configurados'
-                : statusManual === 'aberto'
-                ? 'A loja aparecerá como "Aberto Agora" independentemente do horário'
-                : 'A loja aparecerá como "Fechado Agora" independentemente do horário'
-              }
+              O status é definido automaticamente baseado nos horários configurados abaixo
             </p>
           </div>
         </CardContent>
