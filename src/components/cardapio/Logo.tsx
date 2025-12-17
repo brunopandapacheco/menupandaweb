@@ -34,11 +34,20 @@ export function Logo({
 }: LogoProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [showLocationDialog, setShowLocationDialog] = useState(false)
+  const [imageError, setImageError] = useState(false)
+
+  // Adicionar timestamp para evitar cache
+  const getLogoUrlWithTimestamp = (url?: string) => {
+    if (!url) return url
+    const separator = url.includes('?') ? '&' : '?'
+    return `${url}${separator}t=${Date.now()}`
+  }
 
   const handleLogoSave = (croppedImage: string) => {
     if (onLogoChange) {
       onLogoChange(croppedImage)
     }
+    setImageError(false) // Resetar erro ao salvar nova logo
   }
 
   const renderStars = (rating: number) => {
@@ -88,6 +97,8 @@ export function Logo({
     return endereco && (endereco.rua || endereco.numero || endereco.complemento)
   }
 
+  const logoUrlWithTimestamp = getLogoUrlWithTimestamp(logoUrl)
+
   return (
     <div className="relative">
       {/* Logo circular posicionada fora do container para ficar sobre o banner */}
@@ -101,7 +112,7 @@ export function Logo({
         }}
       >
         <div className="relative group">
-          {logoUrl ? (
+          {logoUrl && !imageError ? (
             <div 
               className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white cursor-pointer transition-transform hover:scale-105"
               style={{
@@ -119,9 +130,17 @@ export function Logo({
                 }}
               >
                 <img 
-                  src={logoUrl} 
+                  src={logoUrlWithTimestamp} 
                   alt="Logo" 
                   className="w-full h-full object-contain rounded-full"
+                  onError={() => {
+                    console.error('❌ Erro ao carregar logo:', logoUrl)
+                    setImageError(true)
+                  }}
+                  onLoad={() => {
+                    console.log('✅ Logo carregada com sucesso:', logoUrl)
+                    setImageError(false)
+                  }}
                 />
               </div>
               
@@ -174,7 +193,7 @@ export function Logo({
           position: 'relative',
           zIndex: 20,
           paddingTop: '100px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)' // Sombra mais forte embaixo e nas laterais
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)'
         }}
       >
         {/* Nome e descrição */}

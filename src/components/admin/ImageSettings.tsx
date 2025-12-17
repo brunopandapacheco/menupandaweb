@@ -33,6 +33,8 @@ export function ImageSettings({
     const file = event.target.files?.[0]
     if (!file) return
 
+    console.log('📁 Arquivo selecionado:', file.name, file.type, file.size)
+
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
       return
@@ -62,15 +64,18 @@ export function ImageSettings({
     setUploadingBanner(true)
 
     try {
+      console.log('📤 Fazendo upload do banner...')
       const fileName = `banner-${Date.now()}.${file.name.split('.').pop()}`
       const url = await supabaseService.uploadImage(file, 'images', fileName)
       
       if (!url) throw new Error('Falha no upload da imagem para o storage')
 
+      console.log('✅ Banner uploadado:', url)
       await onSaveBanner(url)
       onBannerUrlChange(url)
       showSuccess('🖼️ Banner atualizado com sucesso!')
     } catch (error: any) {
+      console.error('❌ Erro no upload do banner:', error)
       showError(error.message || 'Erro ao fazer upload do banner')
     } finally {
       setUploadingBanner(false)
@@ -84,16 +89,19 @@ export function ImageSettings({
     setShowLogoCropper(false)
 
     try {
+      console.log('📤 Fazendo upload da logo...')
       const fileName = `logo-${Date.now()}.jpg`
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
       const url = await supabaseService.uploadImage(file, 'logos', fileName)
 
       if (!url) throw new Error('Falha no upload da imagem')
 
+      console.log('✅ Logo uploadada:', url)
       await onSaveLogo(url)
       onLogoUrlChange(url)
       showSuccess('🖼️ Logo atualizada com sucesso!')
     } catch (error: any) {
+      console.error('❌ Erro no upload da logo:', error)
       showError(error.message || 'Erro ao fazer upload da logo')
     } finally {
       setUploadingLogo(false)
@@ -120,7 +128,18 @@ export function ImageSettings({
             <div className="relative">
               {logoUrl ? (
                 <div className="w-48 h-48 rounded-full border-4 border-gray-200 overflow-hidden shadow-xl">
-                  <img src={logoUrl} alt="Logo da loja" className="w-full h-full object-cover" />
+                  <img 
+                    src={`${logoUrl}?t=${Date.now()}`} 
+                    alt="Logo da loja" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('❌ Erro ao carregar logo no preview:', logoUrl)
+                      e.currentTarget.style.display = 'none'
+                    }}
+                    onLoad={() => {
+                      console.log('✅ Logo carregada no preview:', logoUrl)
+                    }}
+                  />
                 </div>
               ) : (
                 <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
@@ -173,7 +192,18 @@ export function ImageSettings({
             <div className="relative w-full max-w-md">
               {bannerUrl ? (
                 <div className="w-full h-32 border-2 border-gray-200 rounded-lg overflow-hidden shadow-md">
-                  <img src={bannerUrl} alt="Banner do cardápio" className="w-full h-full object-cover" />
+                  <img 
+                    src={`${bannerUrl}?t=${Date.now()}`} 
+                    alt="Banner do cardápio" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('❌ Erro ao carregar banner no preview:', bannerUrl)
+                      e.currentTarget.style.display = 'none'
+                    }}
+                    onLoad={() => {
+                      console.log('✅ Banner carregado no preview:', bannerUrl)
+                    }}
+                  />
                 </div>
               ) : (
                 <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
