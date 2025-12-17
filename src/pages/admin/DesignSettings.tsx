@@ -283,7 +283,7 @@ export default function DesignSettings() {
                   </div>
                   <button 
                     onClick={saveWhatsApp}
-                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-green-500 via-green-600 to-green-700 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
                   >
                     <MessageCircle className="w-4 h-4 inline mr-2" />
                     Salvar WhatsApp
