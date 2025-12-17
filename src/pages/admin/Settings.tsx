@@ -161,7 +161,7 @@ export default function Settings() {
             </CardContent>
           </Card>
 
-          {/* WhatsApp para Pedidos */}
+          {/* WhatsApp para Pedidos - AGORA LOGO APÓS A DESCRIÇÃO */}
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
