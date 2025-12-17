@@ -11,6 +11,24 @@ const gradientBackgrounds = [
   { name: 'Dourado Quente', gradient: '#F5C542' }
 ]
 
+// Função para formatar o número do WhatsApp
+const formatWhatsApp = (value: string): string => {
+  // Remove todos os caracteres não numéricos
+  const numbers = value.replace(/\D/g, '')
+  
+  // Se não tiver números, retorna vazio
+  if (numbers.length === 0) return ''
+  
+  // Aplica a máscara (XX) XXXXX-XXXX
+  if (numbers.length <= 2) {
+    return `(${numbers}`
+  } else if (numbers.length <= 7) {
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`
+  } else {
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`
+  }
+}
+
 export default function DesignSettings() {
   const { designSettings, configuracoes, saveDesignSettings, saveConfiguracoes, loading } = useDatabase()
   const [activeTab, setActiveTab] = useState('cores')
@@ -101,6 +119,12 @@ export default function DesignSettings() {
   const saveCategories = async () => {
     const success = await saveDesignSettings({ categorias: mainCategories })
     success ? showSuccess('Categorias salvas com sucesso!') : showError('Erro ao salvar categorias')
+  }
+
+  // Handler para o input do WhatsApp com formatação automática
+  const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatWhatsApp(e.target.value)
+    setWhatsapp(formattedValue)
   }
 
   // Mostrar loading apenas na primeira carga
@@ -248,12 +272,12 @@ export default function DesignSettings() {
                     </label>
                     <input
                       value={whatsapp}
-                      onChange={(e) => setWhatsapp(e.target.value)}
-                      placeholder="(11) 99999-9999"
+                      onChange={handleWhatsAppChange}
+                      placeholder="Digite apenas os números"
                       className="w-full p-3 border border-gray-300 rounded-lg"
                     />
                     <p className="text-xs text-gray-500 mt-2">
-                      Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+                      Digite apenas os números: 4199291790 → (41) 99291-790
                     </p>
                     <p className="text-xs text-black bg-pink-100 p-2 rounded mt-2">
                       💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
