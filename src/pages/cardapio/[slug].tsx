@@ -23,11 +23,41 @@ export default function CardapioPublico() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
+  const [lastUpdate, setLastUpdate] = useState(Date.now()) // NOVO: Controle de atualização
 
   useEffect(() => {
     if (slug) {
       console.log('🔍 Carregando cardápio para código:', slug)
       loadData(slug)
+    }
+  }, [slug])
+
+  // NOVO: Listener para atualizações do painel
+  useEffect(() => {
+    const handleConfigUpdate = () => {
+      console.log('🔄 Recebido evento de atualização de configurações')
+      setLastUpdate(Date.now()) // Força reload
+      if (slug) {
+        loadData(slug) // Recarrega dados
+      }
+    }
+
+    // Escutar eventos do localStorage (quando o painel salva)
+    window.addEventListener('configUpdated', handleConfigUpdate)
+    
+    // Também escutar mudanças no storage diretamente
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'pandamenu-config-updated') {
+        console.log('🔄 Storage change detectado, recarregando...')
+        handleConfigUpdate()
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('configUpdated', handleConfigUpdate)
+      window.removeEventListener('storage', handleStorageChange)
     }
   }, [slug])
 
