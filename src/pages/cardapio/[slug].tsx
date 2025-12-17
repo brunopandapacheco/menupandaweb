@@ -163,15 +163,20 @@ export default function CardapioPublico() {
   }
 
   return (
-    <div className={`min-h-screen cardapio-scrollbar`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
+    <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
+      {/* Status Button - z-index mais baixo, aparece só com scroll */}
       <StatusButton configuracoes={configuracoes} />
+      
+      {/* Navigation Menu - z-index médio, sempre visível */}
       <NavigationMenu />
       
+      {/* Banner - z-index baixo */}
       <Banner 
         borderColor={designSettings.cor_borda}
         bannerGradient={designSettings.banner_gradient}
       />
       
+      {/* Logo - z-index médio para ficar sobre o banner */}
       <Logo 
         logoUrl={designSettings.logo_url}
         borderColor={designSettings.cor_borda}

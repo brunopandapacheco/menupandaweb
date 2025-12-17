@@ -9,6 +9,7 @@ interface StatusButtonProps {
 export function StatusButton({ configuracoes, className = '' }: StatusButtonProps) {
   const [status, setStatus] = useState<'aberto' | 'fechado'>('fechado')
   const [loading, setLoading] = useState(true)
+  const [shouldShow, setShouldShow] = useState(false)
 
   useEffect(() => {
     if (!configuracoes) {
@@ -89,13 +90,27 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
     return () => clearInterval(interval)
   }, [configuracoes])
 
-  if (loading) {
+  // Verificar se deve mostrar o botão baseado no scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      // Mostrar apenas se tiver scroll suficiente (mais de 100px)
+      setShouldShow(scrollY > 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Verificar inicialmente
+    
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  if (loading || !shouldShow) {
     return null
   }
 
   return (
     <div 
-      className={`fixed top-4 left-4 z-40 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 transition-all duration-300 ${className}`}
+      className="fixed top-4 left-4 z-40 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 transition-all duration-300"
       style={{
         backgroundColor: status === 'aberto' ? '#10b981' : '#ef4444',
         color: 'white'
