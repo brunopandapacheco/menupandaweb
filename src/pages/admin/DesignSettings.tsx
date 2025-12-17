@@ -239,7 +239,6 @@ export default function DesignSettings() {
               {/* WhatsApp para Pedidos */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
-                  <MessageCircle className="w-6 h-6 inline mr-2" />
                   WhatsApp para Pedidos
                 </h3>
                 <div className="space-y-4">
