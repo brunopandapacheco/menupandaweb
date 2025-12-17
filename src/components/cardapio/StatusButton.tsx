@@ -33,19 +33,19 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
         diaNome: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][diaSemana]
       })
 
-      // Se status manual estiver definido, usa ele
-      if (configuracoes.status_manual === 'aberto') {
-        console.log('✅ Status manual: ABERTO')
-        setStatus('aberto')
-        setLoading(false)
-        return
-      }
-      if (configuracoes.status_manual === 'fechado') {
-        console.log('❌ Status manual: FECHADO')
-        setStatus('fechado')
-        setLoading(false)
-        return
-      }
+      // REMOVIDO: Verificação de status manual - agora usa apenas horários automáticos
+      // if (configuracoes.status_manual === 'aberto') {
+      //   console.log('✅ Status manual: ABERTO')
+      //   setStatus('aberto')
+      //   setLoading(false)
+      //   return
+      // }
+      // if (configuracoes.status_manual === 'fechado') {
+      //   console.log('❌ Status manual: FECHADO')
+      //   setStatus('fechado')
+      //   setLoading(false)
+      //   return
+      // }
 
       // Verificar se é dia de funcionamento
       const diasFuncionamento = configuracoes.dias_funcionamento || ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta']
