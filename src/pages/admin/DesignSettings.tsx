@@ -5,6 +5,7 @@ import { showSuccess, showError } from '@/utils/toast'
 import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
+import { WorkingHoursSettings } from '@/components/admin/WorkingHoursSettings'
 import { MessageCircle } from 'lucide-react'
 
 const gradientBackgrounds = [
@@ -102,7 +103,7 @@ export default function DesignSettings() {
     // Validar formato do telefone
     const phoneRegex = /^\(\d{2}\)\s\d{8,9}$/
     if (!phoneRegex.test(whatsapp)) {
-      showError('Formato de telefone inválido. Use o formato: (11) 999999999')
+      showError('Formato de telefone inválido. Use o formato: (11) 99999-9999')
       return
     }
 
@@ -146,7 +147,7 @@ export default function DesignSettings() {
 
         {/* NAV BAR AGORA 100% FIXA - SEM DEGRADE */}
         <TabsList
-          className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
+          className="grid w-full grid-cols-4 h-auto p-1 rounded-xl shadow-md"
           style={{
             background: '#ec4899'
           }}
@@ -187,6 +188,18 @@ export default function DesignSettings() {
             "
           >
             Configuração
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="funcionamento"
+            className="
+              rounded-lg font-[650] py-3 transition-all duration-200
+              text-white
+              hover:bg-[#1A1A1A] hover:text-white
+              data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
+            "
+          >
+            Funcionamento
           </TabsTrigger>
         </TabsList>
 
@@ -258,26 +271,24 @@ export default function DesignSettings() {
                 </div>
               </div>
 
-              {/* WhatsApp para Pedidos */}
+              {/* WhatsApp para Pedidos - AGORA LOGO APÓS A DESCRIÇÃO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
                   WhatsApp para Pedidos
                 </h3>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Número do WhatsApp
-                    </label>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Número do WhatsApp</label>
                     <input
                       value={whatsapp}
                       onChange={handleWhatsAppChange}
-                      placeholder="Digite apenas os números"
-                      className="w-full p-3 border border-gray-300 rounded-lg"
+                      placeholder="(11) 99999-9999"
+                      className="w-full"
                     />
-                    <p className="text-xs text-gray-500 mt-2">
-                      Digite apenas os números: 4199291790 → (41) 99291790
+                    <p className="text-xs text-gray-500">
+                      Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
                     </p>
-                    <p className="text-xs text-black bg-pink-100 p-2 rounded mt-2">
+                    <p className="text-xs text-black bg-pink-100 p-2 rounded">
                       💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
                     </p>
                   </div>
@@ -299,6 +310,13 @@ export default function DesignSettings() {
               onSaveCategories={saveCategories}
             />
           </div>
+        </TabsContent>
+
+        <TabsContent value="funcionamento">
+          <WorkingHoursSettings
+            configuracoes={configuracoes}
+            onSaveConfiguracoes={saveConfiguracoes}
+          />
         </TabsContent>
 
       </Tabs>

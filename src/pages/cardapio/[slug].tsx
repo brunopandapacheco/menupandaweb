@@ -9,6 +9,7 @@ import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { NavigationMenu } from '@/components/cardapio/NavigationMenu'
+import { StatusButton } from '@/components/cardapio/StatusButton'
 import { DesignSettings, Configuracoes } from '@/types/database'
 import { Produto } from '@/types/cart'
 
@@ -172,6 +173,9 @@ export default function CardapioPublico() {
 
   return (
     <div className={`min-h-screen cardapio-scrollbar`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
+      {/* Botão de Status de Funcionamento */}
+      <StatusButton configuracoes={configuracoes} />
+      
       {/* Menu de Navegação */}
       <NavigationMenu />
       
