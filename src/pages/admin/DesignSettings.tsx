@@ -255,7 +255,7 @@ export default function DesignSettings() {
                     <p className="text-xs text-gray-500 mt-2">
                       Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
                     </p>
-                    <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded mt-2">
+                    <p className="text-xs text-black bg-pink-100 p-2 rounded mt-2">
                       💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
                     </p>
                   </div>
