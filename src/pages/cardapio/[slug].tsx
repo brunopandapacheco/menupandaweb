@@ -57,6 +57,16 @@ export default function CardapioPublico() {
       setConfiguracoes(configData)
       setProdutos(productsData || [])
       
+      // Salvar nome da loja no localStorage para usar no WhatsApp
+      if (designData?.nome_loja) {
+        localStorage.setItem('cardapio_nome', designData.nome_loja)
+      }
+      
+      // Salvar telefone configurado no localStorage para usar no WhatsApp
+      if (configData?.telefone) {
+        localStorage.setItem('cardapio_whatsapp', configData.telefone)
+      }
+      
       // Debug detalhado dos produtos
       console.log('📦 Produtos carregados:', productsData?.length || 0)
       productsData?.forEach((produto, index) => {

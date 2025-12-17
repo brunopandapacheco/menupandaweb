@@ -3,8 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Type, Phone } from 'lucide-react'
-import { showSuccess } from '@/utils/toast'
+import { Type, Phone, MessageCircle } from 'lucide-react'
+import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 
 export default function Settings() {
@@ -70,6 +70,22 @@ export default function Settings() {
     
     if (success) {
       showSuccess('Descrição salva com sucesso!')
+    }
+  }
+
+  const handleSaveWhatsApp = async () => {
+    // Validar formato do telefone
+    const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/
+    if (!phoneRegex.test(settings.telefone)) {
+      showError('Formato de telefone inválido. Use o formato: (11) 99999-9999')
+      return
+    }
+
+    const success = await saveConfiguracoes({ telefone: settings.telefone })
+    if (success) {
+      showSuccess('WhatsApp salvo com sucesso!')
+    } else {
+      showError('Erro ao salvar WhatsApp')
     }
   }
 
@@ -145,29 +161,36 @@ export default function Settings() {
             </CardContent>
           </Card>
 
-          {/* WhatsApp */}
+          {/* WhatsApp para Pedidos */}
           <Card className="border-0 shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-[650]" style={{ color: '#4A3531' }}>
-                <Phone className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5" />
                 WhatsApp para Pedidos
               </CardTitle>
+              <CardDescription className="text-sm">
+                Configure o número de WhatsApp que receberá os pedidos do seu cardápio
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="telefone" className="text-sm font-medium">Telefone</Label>
+                <Label htmlFor="whatsapp" className="text-sm font-medium">Número do WhatsApp</Label>
                 <Input
-                  id="telefone"
+                  id="whatsapp"
                   value={settings.telefone}
                   onChange={(e) => setSettings(prev => ({ ...prev, telefone: e.target.value }))}
                   placeholder="(11) 99999-9999"
                   className="w-full"
                 />
                 <p className="text-xs text-gray-500">
-                  Este número será usado para receber os pedidos do carrinho
+                  Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+                </p>
+                <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
+                  💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
                 </p>
               </div>
-              <Button onClick={handleSave} className="w-full font-[650]" size="lg">
+              <Button onClick={handleSaveWhatsApp} className="w-full font-[650] bg-green-600 hover:bg-green-700" size="lg">
+                <MessageCircle className="w-4 h-4 mr-2" />
                 Salvar WhatsApp
               </Button>
             </CardContent>

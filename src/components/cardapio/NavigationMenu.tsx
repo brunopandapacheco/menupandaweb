@@ -102,6 +102,13 @@ export function NavigationMenu() {
       // Obter nome do cardápio do localStorage ou usar padrão
       const cardapioName = localStorage.getItem('cardapio_nome') || 'Cardápio'
       
+      // Obter WhatsApp configurado do localStorage ou usar padrão
+      const configuredWhatsApp = localStorage.getItem('cardapio_whatsapp')
+      const whatsappNumber = configuredWhatsApp || '41998843669' // Padrão se não configurado
+      
+      // Limpar o número para usar no WhatsApp (remover caracteres especiais)
+      const cleanNumber = whatsappNumber.replace(/\D/g, '')
+      
       // Obter data atual formatada
       const today = new Date()
       const dataFormatada = today.toLocaleDateString('pt-BR', {
@@ -147,7 +154,7 @@ export function NavigationMenu() {
 
       // Codificar mensagem para URL
       const encodedMessage = encodeURIComponent(message)
-      const whatsappUrl = `https://wa.me/5541998843669?text=${encodedMessage}`
+      const whatsappUrl = `https://wa.me/55${cleanNumber}?text=${encodedMessage}`
 
       // Abrir WhatsApp
       window.open(whatsappUrl, '_blank')
