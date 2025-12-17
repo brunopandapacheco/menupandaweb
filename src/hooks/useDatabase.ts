@@ -32,6 +32,7 @@ export function useDatabase() {
       isCacheValid('produtos')
 
     if (hasValidCache) {
+      console.log('📦 Usando cache válido')
       setLoading(false)
       return
     }
@@ -39,50 +40,46 @@ export function useDatabase() {
     setLoading(true)
     
     try {
-      const promises = []
+      console.log('🔍 Buscando dados do banco...')
       
-      if (!isCacheValid('designSettings') || forceRefresh) {
-        console.log('🔍 Buscando design settings...')
-        promises.push(supabaseService.getDesignSettings(user.id))
-      } else {
-        promises.push(Promise.resolve(getCache('designSettings')))
-      }
-      
-      if (!isCacheValid('configuracoes') || forceRefresh) {
-        console.log('🔍 Buscando configurações...')
-        promises.push(supabaseService.getConfiguracoes(user.id))
-      } else {
-        promises.push(Promise.resolve(getCache('configuracoes')))
-      }
-      
-      if (!isCacheValid('produtos') || forceRefresh) {
-        console.log('🔍 Buscando produtos...')
-        promises.push(supabaseService.getProducts(user.id))
-      } else {
-        promises.push(Promise.resolve(getCache('produtos')))
+      // PRIMEIRO: Buscar design settings existentes
+      let designData = null
+      try {
+        designData = await supabaseService.getDesignSettings(user.id)
+        console.log('📋 Design settings encontrados:', designData)
+      } catch (error) {
+        console.log('⚠️ Design settings não encontrados, será criado novo')
       }
 
-      let [designData, configData, productsData] = await Promise.all(promises)
-
+      // Se não existir, criar com código fixo
       if (!designData) {
         console.log('📝 Criando design settings padrão para novo usuário')
         designData = await supabaseService.createDefaultDesignSettings(user.id)
-      }
-
-      // NÃO gerar novo código se já existir
-      if (designData && !designData.codigo) {
-        console.log('⚠️ Design settings sem código, gerando novo...')
-        const code = supabaseService.generateUniqueCode()
-        const updatedDesign = await supabaseService.updateDesignSettings(user.id, { codigo: code })
-        if (updatedDesign) {
-          designData = updatedDesign
+        console.log('✅ Design settings criados com código:', designData.codigo)
+      } else {
+        // Se existir mas não tiver código, gerar UM código
+        if (!designData.codigo) {
+          console.log('⚠️ Design settings sem código, gerando novo...')
+          const code = supabaseService.generateUniqueCode()
+          const updatedDesign = await supabaseService.updateDesignSettings(user.id, { codigo: code })
+          if (updatedDesign) {
+            designData = updatedDesign
+            console.log('✅ Código gerado e salvo:', code)
+          }
+        } else {
+          console.log('✅ Código existente mantido:', designData.codigo)
         }
-      } else if (designData && designData.codigo) {
-        console.log('✅ Código existente mantido:', designData.codigo)
       }
 
+      // Buscar outros dados
+      const [configData, productsData] = await Promise.all([
+        supabaseService.getConfiguracoes(user.id),
+        supabaseService.getProducts(user.id)
+      ])
+
+      // Atualizar cache
       if (designData) {
-        console.log('💾 Atualizando cache designSettings')
+        console.log('💾 Atualizando cache designSettings com código:', designData.codigo)
         updateCache('designSettings', designData)
       }
       if (configData) {
@@ -108,10 +105,11 @@ export function useDatabase() {
     }
     
     console.log('💾 Salvando design settings para usuário:', user.id)
+    console.log('📝 Settings recebidos:', settings)
     
     // NÃO permitir alterar o código após criação
     if (settings.codigo) {
-      console.log('⚠️ Tentativa de alterar código bloqueada')
+      console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
       delete settings.codigo
     }
     

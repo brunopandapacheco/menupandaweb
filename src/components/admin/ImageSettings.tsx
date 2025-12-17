@@ -56,7 +56,7 @@ export function ImageSettings({
     if (!file) return
 
     console.log('📁 Banner selecionado:', file.name, file.type, file.size)
-    console.log('👤 Usuário atual:', user?.id)
+    console.log('👤 Usuário logado:', user?.id)
 
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
