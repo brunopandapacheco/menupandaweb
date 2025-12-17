@@ -23,18 +23,6 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
       const minutoAtual = agora.getMinutes()
       const tempoAtual = horaAtual * 60 + minutoAtual
 
-      // Se status manual estiver definido, usa ele
-      if (configuracoes.status_manual === 'aberto') {
-        setStatus('aberto')
-        setLoading(false)
-        return
-      }
-      if (configuracoes.status_manual === 'fechado') {
-        setStatus('fechado')
-        setLoading(false)
-        return
-      }
-
       // Verificar se é dia de funcionamento
       const diasFuncionamento = configuracoes.dias_funcionamento || ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta']
       const nomesDias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']

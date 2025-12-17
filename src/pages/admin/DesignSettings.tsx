@@ -31,6 +31,7 @@ const formatWhatsApp = (value: string): string => {
 export default function DesignSettings() {
   const { designSettings, configuracoes, saveDesignSettings, saveConfiguracoes, loading } = useDatabase()
   const [activeTab, setActiveTab] = useState('cores')
+  const [configSubTab, setConfigSubTab] = useState('geral') // Sub-abas dentro de Configuração
   
   // Estados
   const [bannerGradient, setBannerGradient] = useState(gradientBackgrounds[0].gradient)
@@ -145,15 +146,13 @@ export default function DesignSettings() {
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
 
-        {/* NAV BAR AGORA 100% FIXA - SEM DEGRADE */}
+        {/* NAV BAR COM APENAS 3 ABAS */}
         <TabsList
-          className="grid w-full grid-cols-4 h-auto p-1 rounded-xl shadow-md"
+          className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
           style={{
             background: '#ec4899'
           }}
         >
-
-          {/* TEXTOS + HOVER + ATIVO */}
           <TabsTrigger
             value="cores"
             className="
@@ -189,18 +188,6 @@ export default function DesignSettings() {
           >
             Configuração
           </TabsTrigger>
-
-          <TabsTrigger
-            value="funcionamento"
-            className="
-              rounded-lg font-[650] py-3 transition-all duration-200
-              text-white
-              hover:bg-[#1A1A1A] hover:text-white
-              data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
-            "
-          >
-            Funcionamento
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="cores">
@@ -228,95 +215,124 @@ export default function DesignSettings() {
         </TabsContent>
 
         <TabsContent value="configuracao">
-          <div className="space-y-8">
-            {/* Card 1: Nome da Loja + Descrição da Loja */}
-            <div className="space-y-8">
-              {/* Nome da Loja */}
-              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
-                <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Nome da Loja</h3>
-                <div className="space-y-4">
-                  <input
-                    value={nomeLoja}
-                    onChange={(e) => setNomeLoja(e.target.value)}
-                    placeholder="Nome da sua confeitaria"
-                    className="w-full p-3 border border-gray-300 rounded-lg"
-                  />
-                  <button 
-                    onClick={saveConfig}
-                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
-                  >
-                    Salvar Nome
-                  </button>
-                </div>
-              </div>
+          <div className="space-y-6">
+            {/* SUB-ABAS DENTRO DE CONFIGURAÇÃO */}
+            <Tabs value={configSubTab} onValueChange={setConfigSubTab} className="space-y-6">
+              <TabsList className="grid w-full grid-cols-3 h-auto p-1 rounded-lg bg-gray-100">
+                <TabsTrigger 
+                  value="geral"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                >
+                  Geral
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="funcionamento"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                >
+                  Funcionamento
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="categorias"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                >
+                  Categorias
+                </TabsTrigger>
+              </TabsList>
 
-              {/* Descrição da Loja */}
-              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
-                <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Descrição da Loja</h3>
-                <div className="space-y-4">
-                  <textarea
-                    value={descricaoLoja}
-                    onChange={(e) => setDescricaoLoja(e.target.value)}
-                    placeholder="Descreva sua confeitaria..."
-                    rows={8}
-                    maxLength={300}
-                    className="w-full p-3 border border-gray-300 rounded-lg resize-none"
-                  />
-                  <button 
-                    onClick={saveConfig}
-                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
-                  >
-                    Salvar Descrição
-                  </button>
-                </div>
-              </div>
+              <TabsContent value="geral">
+                <div className="space-y-8">
+                  {/* Card 1: Nome da Loja + Descrição da Loja */}
+                  <div className="space-y-8">
+                    {/* Nome da Loja */}
+                    <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                      <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Nome da Loja</h3>
+                      <div className="space-y-4">
+                        <input
+                          value={nomeLoja}
+                          onChange={(e) => setNomeLoja(e.target.value)}
+                          placeholder="Nome da sua confeitaria"
+                          className="w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        <button 
+                          onClick={saveConfig}
+                          className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                        >
+                          Salvar Nome
+                        </button>
+                      </div>
+                    </div>
 
-              {/* WhatsApp para Pedidos - AGORA LOGO APÓS A DESCRIÇÃO */}
-              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
-                <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
-                  WhatsApp para Pedidos
-                </h3>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Número do WhatsApp</label>
-                    <input
-                      value={whatsapp}
-                      onChange={handleWhatsAppChange}
-                      placeholder="(11) 99999-9999"
-                      className="w-full"
-                    />
-                    <p className="text-xs text-gray-500">
-                      Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
-                    </p>
-                    <p className="text-xs text-black bg-pink-100 p-2 rounded">
-                      💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
-                    </p>
+                    {/* Descrição da Loja */}
+                    <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                      <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Descrição da Loja</h3>
+                      <div className="space-y-4">
+                        <textarea
+                          value={descricaoLoja}
+                          onChange={(e) => setDescricaoLoja(e.target.value)}
+                          placeholder="Descreva sua confeitaria..."
+                          rows={8}
+                          maxLength={300}
+                          className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+                        />
+                        <button 
+                          onClick={saveConfig}
+                          className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                        >
+                          Salvar Descrição
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* WhatsApp para Pedidos */}
+                    <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                      <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
+                        WhatsApp para Pedidos
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700">Número do WhatsApp</label>
+                          <input
+                            value={whatsapp}
+                            onChange={handleWhatsAppChange}
+                            placeholder="(11) 99999-9999"
+                            className="w-full"
+                          />
+                          <p className="text-xs text-gray-500">
+                            Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+                          </p>
+                          <p className="text-xs text-black bg-pink-100 p-2 rounded">
+                            💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
+                          </p>
+                        </div>
+                        <button 
+                          onClick={saveWhatsApp}
+                          className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                        >
+                          <MessageCircle className="w-4 h-4 inline mr-2" />
+                          Salvar WhatsApp
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <button 
-                    onClick={saveWhatsApp}
-                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
-                  >
-                    <MessageCircle className="w-4 h-4 inline mr-2" />
-                    Salvar WhatsApp
-                  </button>
                 </div>
-              </div>
-            </div>
+              </TabsContent>
 
-            {/* Card 2: Gerenciar Categorias */}
-            <CategorySettings
-              mainCategories={mainCategories}
-              onMainCategoriesChange={setMainCategories}
-              onSaveCategories={saveCategories}
-            />
+              <TabsContent value="funcionamento">
+                <WorkingHoursSettings
+                  configuracoes={configuracoes}
+                  onSaveConfiguracoes={saveConfiguracoes}
+                />
+              </TabsContent>
+
+              <TabsContent value="categorias">
+                <CategorySettings
+                  mainCategories={mainCategories}
+                  onMainCategoriesChange={setMainCategories}
+                  onSaveCategories={saveCategories}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
-        </TabsContent>
-
-        <TabsContent value="funcionamento">
-          <WorkingHoursSettings
-            configuracoes={configuracoes}
-            onSaveConfiguracoes={saveConfiguracoes}
-          />
         </TabsContent>
 
       </Tabs>

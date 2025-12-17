@@ -88,18 +88,21 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
     let horaFecha = 0
     
     if (diaSemana === 0 && abreDomingo) {
+      // Domingo
       abreHoje = true
       const [horaAbreStr, minutoAbreStr] = horarioDomingoAbre.split(':')
       const [horaFechaStr, minutoFechaStr] = horarioDomingoFecha.split(':')
       horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
       horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
     } else if (diaSemana === 6 && abreSabado) {
+      // Sábado
       abreHoje = true
       const [horaAbreStr, minutoAbreStr] = horarioSabadoAbre.split(':')
       const [horaFechaStr, minutoFechaStr] = horarioSabadoFecha.split(':')
       horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
       horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
     } else if (diasFuncionamento.includes(diaAtual)) {
+      // Dias de semana
       abreHoje = true
       const [horaAbreStr, minutoAbreStr] = horarioAbertura.split(':')
       const [horaFechaStr, minutoFechaStr] = horarioFechamento.split(':')
