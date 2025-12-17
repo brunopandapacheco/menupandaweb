@@ -73,6 +73,7 @@ export function ImageSettings({
       console.log('📤 Fazendo upload do banner...')
       console.log('👤 Usuário logado:', user?.id)
       
+      // Nome do arquivo COM user_id para garantir unicidade
       const fileName = `banner-${user?.id}-${Date.now()}.${file.name.split('.').pop()}`
       console.log('📝 Nome do arquivo:', fileName)
       
@@ -106,9 +107,10 @@ export function ImageSettings({
 
     try {
       console.log('📤 Fazendo upload da logo...')
-      console.log('👤 Usuário logado:', user.id)
+      console.log('👤 Usuário logado:', user?.id)
       
-      const fileName = `logo-${user.id}-${Date.now()}.jpg`
+      // Nome do arquivo COM user_id para garantir unicidade
+      const fileName = `logo-${user?.id}-${Date.now()}.jpg`
       console.log('📝 Nome do arquivo:', fileName)
       
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })

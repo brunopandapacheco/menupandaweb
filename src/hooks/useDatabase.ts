@@ -26,23 +26,13 @@ export function useDatabase() {
 
     console.log('👤 Carregando dados para usuário:', user.id)
 
-    const hasValidCache = !forceRefresh && 
-      isCacheValid('designSettings') && 
-      isCacheValid('configuracoes') && 
-      isCacheValid('produtos')
-
-    if (hasValidCache) {
-      console.log('📦 Usando cache válido')
-      setLoading(false)
-      return
-    }
-
+    // SEMPRE buscar do banco primeiro para garantir o código correto
     setLoading(true)
     
     try {
-      console.log('🔍 Buscando dados do banco...')
+      console.log('🔍 Buscando dados do banco (ignorando cache para garantir código)...')
       
-      // PRIMEIRO: Buscar design settings existentes
+      // BUSCAR DIRETO DO BANCO - SEMPRE!
       let designData = null
       try {
         designData = await supabaseService.getDesignSettings(user.id)
@@ -57,7 +47,7 @@ export function useDatabase() {
         designData = await supabaseService.createDefaultDesignSettings(user.id)
         console.log('✅ Design settings criados com código:', designData.codigo)
       } else {
-        // Se existir mas não tiver código, gerar UM código
+        // IMPORTANTE: Se existir mas não tiver código, gerar UM código
         if (!designData.codigo) {
           console.log('⚠️ Design settings sem código, gerando novo...')
           const code = supabaseService.generateUniqueCode()
@@ -107,7 +97,7 @@ export function useDatabase() {
     console.log('💾 Salvando design settings para usuário:', user.id)
     console.log('📝 Settings recebidos:', settings)
     
-    // NÃO permitir alterar o código após criação
+    // NUNCA permitir alterar o código após criação
     if (settings.codigo) {
       console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
       delete settings.codigo

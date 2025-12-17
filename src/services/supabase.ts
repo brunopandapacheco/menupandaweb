@@ -17,7 +17,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     flowType: 'pkce',
     storage: window.localStorage,
     storageKey: 'supabase.auth.token',
-    debug: true // Ativar debug para ver erros detalhados
+    debug: true
   }
 })
 
@@ -45,7 +45,6 @@ export class SupabaseService {
         .getPublicUrl(fileName)
 
       console.log('✅ Upload realizado:', publicUrl)
-      console.log('🔗 URL pública:', publicUrl)
       return publicUrl
     } catch (error) {
       console.error('❌ Erro em uploadImage:', error)
@@ -57,9 +56,10 @@ export class SupabaseService {
     try {
       console.log('📝 Atualizando design settings para userId:', userId, settings)
       
-      // NÃO gerar novo código se já existir
+      // PROTEÇÃO MÁXIMA: NUNCA permitir alterar o código
       if (settings.codigo) {
-        console.log('⚠️ Código já existe, mantendo:', settings.codigo)
+        console.log('🚫 BLOQUEADO: Tentativa de alterar código para:', settings.codigo)
+        delete settings.codigo // Remove completamente
       }
       
       const { data, error } = await supabase
@@ -77,7 +77,7 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Design settings atualizados:', data)
+      console.log('✅ Design settings atualizados (código protegido):', data)
       return data
     } catch (error) {
       console.error('❌ Erro em updateDesignSettings:', error)
@@ -148,7 +148,7 @@ export class SupabaseService {
   }
 
   generateUniqueCode(): string {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789' // Mudado para minúsculas
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
     let result = ''
     for (let i = 0; i < 5; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length))
@@ -157,7 +157,6 @@ export class SupabaseService {
     return result
   }
 
-  // Outros métodos existentes...
   async getConfiguracoes(userId: string) {
     try {
       console.log('🔍 Buscando configurações para userId:', userId)
