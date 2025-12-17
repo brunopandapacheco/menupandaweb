@@ -134,7 +134,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
           textAlign: 'center', 
           marginTop: '8px',
           fontSize: '12px',
-          color: '#9ca3af'
+          color: '#374151' // Cor mais escura (cinza escuro)
         }}>
           ← Arraste para ver mais categorias →
         </div>
