@@ -20,29 +20,26 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoes: Getting config for user:', userId)
       
-      // ✅ CORREÇÃO: Adicionar .single() e ORDER BY para pegar apenas o mais recente
+      // 🔙 VOLTANDO TEMPORARIAMENTE: Sem .single() por enquanto
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
         .eq('user_id', userId)
         .order('updated_at', { ascending: false })
         .limit(1)
-        .single() // Garante que retorna apenas UM registro
       
-      if (error) {
-        console.log('⚠️ getConfiguracoes error:', error)
-        
-        // Se não encontrar, criar configurações padrão
-        if (error.code === 'PGRST116') {
-          console.log('📝 No config found, creating default...')
-          return this.createDefaultConfiguracoes(userId)
-        }
-        
-        throw error
+      if (error) throw error
+      
+      // Pega o primeiro item do array
+      const config = data && data.length > 0 ? data[0] : null
+      
+      if (!config) {
+        console.log('📝 No config found, creating default...')
+        return this.createDefaultConfiguracoes(userId)
       }
       
-      console.log('✅ getConfiguracoes success (registro único):', data)
-      return data
+      console.log('✅ getConfiguracoes success:', config)
+      return config
     } catch (error) {
       console.error('❌ Error in getConfiguracoes:', error)
       throw error
@@ -145,10 +142,13 @@ export class SupabaseService {
         .eq('user_id', designData.user_id)
         .order('updated_at', { ascending: false })
         .limit(1)
-        .single()
-
-      if (error && error.code !== 'PGRST116') throw error
-      return data
+      
+      if (error) throw error
+      
+      // Pega o primeiro item do array
+      const config = data && data.length > 0 ? data[0] : null
+      
+      return config
     } catch (error) {
       console.error('❌ Error getting config by slug:', error)
       throw error
