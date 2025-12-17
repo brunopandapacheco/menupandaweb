@@ -14,7 +14,12 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
   const [copied, setCopied] = useState(false)
 
   const getCardapioUrl = () => {
+    console.log('🔍 PreviewActions: designSettings recebidos:', designSettings)
+    console.log('🔍 PreviewActions: código:', designSettings?.codigo)
+    
     if (!designSettings?.codigo) {
+      console.error('❌ PreviewActions: Código não encontrado em designSettings')
+      console.error('❌ PreviewActions: designSettings completo:', JSON.stringify(designSettings, null, 2))
       showError('Código da loja não encontrado. Verifique suas configurações.')
       return null
     }
@@ -22,9 +27,9 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
     // Corrigindo o domínio para usar o ambiente atual
     const currentDomain = window.location.origin
     const url = `${currentDomain}/cardapio/${designSettings.codigo.toLowerCase()}` // Forçar minúsculas
-    console.log('🔗 Generated URL:', url)
-    console.log('🌐 Current domain:', currentDomain)
-    console.log('🔑 Código:', designSettings.codigo)
+    console.log('🔗 PreviewActions: Generated URL:', url)
+    console.log('🌐 PreviewActions: Current domain:', currentDomain)
+    console.log('🔑 PreviewActions: Código usado:', designSettings.codigo)
     return url
   }
 
@@ -32,13 +37,13 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
     const url = getCardapioUrl()
     if (!url) return
     
-    console.log('📋 Copiando URL:', url)
+    console.log('📋 PreviewActions: Copiando URL:', url)
     
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
-      console.log('✅ URL copiada para área de transferência:', url)
+      console.log('✅ PreviewActions: URL copiada para área de transferência:', url)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
       const textArea = document.createElement('textarea')
@@ -49,7 +54,7 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
       document.body.removeChild(textArea)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
-      console.log('✅ URL copiada via fallback:', url)
+      console.log('✅ PreviewActions: URL copiada via fallback:', url)
       setTimeout(() => setCopied(false), 2000)
     }
   }
