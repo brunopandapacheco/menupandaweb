@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Star, MapPin, Info } from 'lucide-react'
 import { LogoEditor } from './LogoEditor'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { StatusButton } from './StatusButton'
 
 interface LogoProps {
   logoUrl?: string
@@ -19,6 +20,7 @@ interface LogoProps {
     numero: string
     complemento: string
   }
+  configuracoes?: any // Adicionando configuracoes para o StatusButton
 }
 
 export function Logo({ 
@@ -30,7 +32,8 @@ export function Logo({
   avaliacaoMedia = 4.9,
   isEditable = false,
   onLogoChange,
-  endereco
+  endereco,
+  configuracoes // Adicionando configuracoes
 }: LogoProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [showLocationDialog, setShowLocationDialog] = useState(false)
@@ -238,6 +241,13 @@ export function Logo({
                   <Info className="w-3 h-3 text-gray-600" />
                 </button>
               )}
+            </div>
+          )}
+
+          {/* BOTÃO DE STATUS AQUI - ABAIXO DA DESCRIÇÃO */}
+          {configuracoes && (
+            <div className="mt-4 flex justify-center">
+              <StatusButton configuracoes={configuracoes} />
             </div>
           )}
         </div>

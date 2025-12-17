@@ -9,7 +9,6 @@ import { ProductList } from '@/components/cardapio/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
 import { NavigationMenu } from '@/components/cardapio/NavigationMenu'
-import { StatusButton } from '@/components/cardapio/StatusButton'
 import { DesignSettings, Configuracoes } from '@/types/database'
 import { Produto } from '@/types/cart'
 
@@ -164,9 +163,6 @@ export default function CardapioPublico() {
 
   return (
     <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
-      {/* Status Button - z-index mais baixo, aparece só com scroll */}
-      <StatusButton configuracoes={configuracoes} />
-      
       {/* Navigation Menu - z-index médio, sempre visível */}
       <NavigationMenu />
       
@@ -184,6 +180,7 @@ export default function CardapioPublico() {
         storeDescription={designSettings.descricao_loja}
         corNome={designSettings.cor_nome}
         avaliacaoMedia={configuracoes?.avaliacao_media}
+        configuracoes={configuracoes} // Passando configuracoes para o Logo
       />
 
       <div className="container mx-auto px-4 py-4 pb-20">
