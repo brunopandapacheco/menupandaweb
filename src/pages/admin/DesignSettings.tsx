@@ -19,13 +19,11 @@ const formatWhatsApp = (value: string): string => {
   // Se não tiver números, retorna vazio
   if (numbers.length === 0) return ''
   
-  // Aplica a máscara (XX) XXXXX-XXXX
+  // Aplica a máscara (XX) XXXXXXXXX
   if (numbers.length <= 2) {
     return `(${numbers}`
-  } else if (numbers.length <= 7) {
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`
   } else {
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 11)}`
   }
 }
 
@@ -42,7 +40,7 @@ export default function DesignSettings() {
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
-  const [whatsapp, setWhatsapp] = useState('(11) 99999-9999')
+  const [whatsapp, setWhatsapp] = useState('(11) 999999999')
   
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
@@ -102,9 +100,9 @@ export default function DesignSettings() {
 
   const saveWhatsApp = async () => {
     // Validar formato do telefone
-    const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/
+    const phoneRegex = /^\(\d{2}\)\s\d{8,9}$/
     if (!phoneRegex.test(whatsapp)) {
-      showError('Formato de telefone inválido. Use o formato: (11) 99999-9999')
+      showError('Formato de telefone inválido. Use o formato: (11) 999999999')
       return
     }
 
@@ -277,7 +275,7 @@ export default function DesignSettings() {
                       className="w-full p-3 border border-gray-300 rounded-lg"
                     />
                     <p className="text-xs text-gray-500 mt-2">
-                      Digite apenas os números: 4199291790 → (41) 99291-790
+                      Digite apenas os números: 4199291790 → (41) 99291790
                     </p>
                     <p className="text-xs text-black bg-pink-100 p-2 rounded mt-2">
                       💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
