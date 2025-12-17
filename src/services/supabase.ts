@@ -460,17 +460,23 @@ export class SupabaseService {
   }
 
   generateUniqueCode(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789' // Mudado para minúsculas
     let result = ''
     for (let i = 0; i < 5; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length))
     }
+    console.log('🔑 Código gerado:', result)
     return result
   }
 
   async updateDesignSettings(userId: string, settings: any) {
     try {
       console.log('📝 Atualizando design settings para userId:', userId, settings)
+      
+      // NÃO gerar novo código se já existir
+      if (settings.codigo) {
+        console.log('⚠️ Código já existe, mantendo:', settings.codigo)
+      }
       
       const { data, error } = await supabase
         .from('design_settings')
@@ -499,6 +505,9 @@ export class SupabaseService {
     try {
       console.log('📝 Criando design settings padrão para userId:', userId)
       
+      const codigo = this.generateUniqueCode()
+      console.log('🔑 Código único gerado para novo usuário:', codigo)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .insert({
@@ -513,7 +522,7 @@ export class SupabaseService {
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
           categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-          codigo: this.generateUniqueCode()
+          codigo: codigo // Código gerado UMA VEZ
         })
         .select()
         .single()
@@ -523,7 +532,7 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Design settings padrão criados:', data)
+      console.log('✅ Design settings padrão criados com código fixo:', data)
       return data
     } catch (error) {
       console.error('❌ Erro em createDefaultDesignSettings:', error)

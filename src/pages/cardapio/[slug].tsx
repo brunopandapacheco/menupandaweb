@@ -26,7 +26,10 @@ export default function CardapioPublico() {
 
   useEffect(() => {
     if (slug) {
-      loadData(slug)
+      // Forçar minúsculas no código
+      const codigoLower = slug.toLowerCase()
+      console.log('🔍 Buscando cardápio pelo código (convertido para minúsculas):', codigoLower)
+      loadData(codigoLower)
     }
   }, [slug])
 
@@ -34,7 +37,8 @@ export default function CardapioPublico() {
     const handleConfigUpdate = () => {
       setLastUpdate(Date.now())
       if (slug) {
-        loadData(slug)
+        const codigoLower = slug.toLowerCase()
+        loadData(codigoLower)
       }
     }
 

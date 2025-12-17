@@ -59,15 +59,20 @@ export function useDatabase() {
       let [designData, configData, productsData] = await Promise.all(promises)
 
       if (!designData) {
+        console.log('📝 Criando design settings padrão para novo usuário')
         designData = await supabaseService.createDefaultDesignSettings(user.id)
       }
 
+      // NÃO gerar novo código se já existir
       if (designData && !designData.codigo) {
+        console.log('⚠️ Design settings sem código, gerando novo...')
         const code = supabaseService.generateUniqueCode()
         const updatedDesign = await supabaseService.updateDesignSettings(user.id, { codigo: code })
         if (updatedDesign) {
           designData = updatedDesign
         }
+      } else if (designData && designData.codigo) {
+        console.log('✅ Código existente mantido:', designData.codigo)
       }
 
       if (designData) updateCache('designSettings', designData)
@@ -84,6 +89,12 @@ export function useDatabase() {
   const saveDesignSettings = async (settings: Partial<DesignSettings>) => {
     if (!user) {
       return false
+    }
+    
+    // NÃO permitir alterar o código após criação
+    if (settings.codigo) {
+      console.log('⚠️ Tentativa de alterar código bloqueada')
+      delete settings.codigo
     }
     
     const success = await supabaseService.updateDesignSettings(user.id, settings)

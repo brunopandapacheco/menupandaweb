@@ -12,62 +12,20 @@ interface PreviewActionsProps {
 
 export function PreviewActions({ designSettings, onRefresh, showButton }: PreviewActionsProps) {
   const [copied, setCopied] = useState(false)
-  const [generatingCode, setGeneratingCode] = useState(false)
 
   const getCardapioUrl = () => {
     if (!designSettings?.codigo) {
-      showError('Código da loja não encontrado. Gerando um novo código...')
-      generateNewCode()
+      showError('Código da loja não encontrado. Verifique suas configurações.')
       return null
     }
     
     // Corrigindo o domínio para usar o ambiente atual
     const currentDomain = window.location.origin
-    const url = `${currentDomain}/cardapio/${designSettings.codigo}`
+    const url = `${currentDomain}/cardapio/${designSettings.codigo.toLowerCase()}` // Forçar minúsculas
     console.log('🔗 Generated URL:', url)
     console.log('🌐 Current domain:', currentDomain)
     console.log('🔑 Código:', designSettings.codigo)
     return url
-  }
-
-  const generateNewCode = async () => {
-    setGeneratingCode(true)
-    const toastId = showLoading('Gerando novo código...')
-
-    try {
-      await onRefresh()
-      
-      if (designSettings?.codigo) {
-        dismissToast(String(toastId))
-        showSuccess(`Código gerado: ${designSettings.codigo}`)
-        return
-      }
-
-      const { supabaseService } = await import('@/services/supabase')
-      const newCode = supabaseService.generateUniqueCode()
-      
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        throw new Error('Usuário não autenticado')
-      }
-      
-      const success = await supabaseService.updateDesignSettings(user.id, { codigo: newCode })
-      
-      if (success) {
-        dismissToast(String(toastId))
-        showSuccess(`Novo código gerado: ${newCode}`)
-        await onRefresh()
-      } else {
-        dismissToast(String(toastId))
-        showError('Erro ao gerar código. Tente novamente.')
-      }
-    } catch (error) {
-      console.error('❌ Erro ao gerar código:', error)
-      dismissToast(String(toastId))
-      showError('Erro ao gerar código. Tente novamente.')
-    } finally {
-      setGeneratingCode(false)
-    }
   }
 
   const copyLink = async () => {
