@@ -9,6 +9,7 @@ import { CacheProvider } from "@/hooks/useCache";
 import Login from "./pages/Login";
 import AdminLayout from "./pages/admin/AdminLayout";
 import CardapioPublico from "./pages/cardapio/[slug]";
+import Cadastro from "./pages/cardapio/Cadastro";
 import NotFound from "./pages/NotFound";
 import { EnvironmentError } from "./components/EnvironmentError";
 import { ErrorBoundary } from "./pages/ErrorBoundary";
@@ -75,6 +76,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/cardapio/cadastro" element={<Cadastro />} />
                 <Route path="/admin" element={<AdminLayout />} />
                 {/* ROTA DO CARDÁPIO PÚBLICO */}
                 <Route path="/cardapio/:slug" element={<CardapioPublico />} />
