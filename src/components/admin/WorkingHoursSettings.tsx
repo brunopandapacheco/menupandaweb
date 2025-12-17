@@ -33,6 +33,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
 
   useEffect(() => {
     if (configuracoes) {
+      console.log('📋 Carregando configurações de funcionamento:', configuracoes)
       setHorarioAbertura(configuracoes.horario_abertura || '08:00')
       setHorarioFechamento(configuracoes.horario_fechamento || '18:00')
       setDiasFuncionamento(configuracoes.dias_funcionamento || ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'])
@@ -47,7 +48,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
 
   const handleSave = async () => {
     const config = {
-      status_manual: 'auto', // Sempre automático
       horario_abertura: horarioAbertura,
       horario_fechamento: horarioFechamento,
       dias_funcionamento: diasFuncionamento,
@@ -59,11 +59,15 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
       horario_domingo_fecha: horarioDomingoFecha
     }
 
+    console.log('💾 Salvando configurações de funcionamento:', config)
+
     const success = await onSaveConfiguracoes(config)
     if (success) {
       showSuccess('Configurações de funcionamento salvas!')
+      console.log('✅ Configurações salvas com sucesso')
     } else {
       showError('Erro ao salvar configurações')
+      console.log('❌ Erro ao salvar configurações')
     }
   }
 
