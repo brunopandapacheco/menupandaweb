@@ -19,6 +19,14 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
     const verificarStatus = () => {
       console.log('🕐 Verificando status com configurações:', configuracoes)
       
+      // ✅ VALIDAÇÃO 1: Se não tem horário configurado → FECHADO
+      if (!configuracoes.horario_abertura || !configuracoes.horario_fechamento) {
+        console.log('❌ Sem horário configurado → FECHADO')
+        setStatus('fechado')
+        setLoading(false)
+        return
+      }
+      
       const agora = new Date()
       const diaSemana = agora.getDay() // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
       const horaAtual = agora.getHours()
@@ -63,8 +71,15 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
         // Domingo
         console.log('🟦 Verificando domingo...')
         abreHoje = true
-        const [horaAbreStr, minutoAbreStr] = (configuracoes.horario_domingo_abre || '08:00').split(':')
-        const [horaFechaStr, minutoFechaStr] = (configuracoes.horario_domingo_fecha || '18:00').split(':')
+        // ✅ VALIDAÇÃO 2: Se não tem horário de domingo → FECHADO
+        if (!configuracoes.horario_domingo_abre || !configuracoes.horario_domingo_fecha) {
+          console.log('❌ Sem horário de domingo configurado → FECHADO')
+          setStatus('fechado')
+          setLoading(false)
+          return
+        }
+        const [horaAbreStr, minutoAbreStr] = configuracoes.horario_domingo_abre.split(':')
+        const [horaFechaStr, minutoFechaStr] = configuracoes.horario_domingo_fecha.split(':')
         horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
         horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
         console.log('🕐 Horário domingo:', { abre: configuracoes.horario_domingo_abre, fecha: configuracoes.horario_domingo_fecha, horaAbre, horaFecha })
@@ -72,8 +87,15 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
         // Sábado
         console.log('🟨 Verificando sábado...')
         abreHoje = true
-        const [horaAbreStr, minutoAbreStr] = (configuracoes.horario_sabado_abre || '08:00').split(':')
-        const [horaFechaStr, minutoFechaStr] = (configuracoes.horario_sabado_fecha || '18:00').split(':')
+        // ✅ VALIDAÇÃO 3: Se não tem horário de sábado → FECHADO
+        if (!configuracoes.horario_sabado_abre || !configuracoes.horario_sabado_fecha) {
+          console.log('❌ Sem horário de sábado configurado → FECHADO')
+          setStatus('fechado')
+          setLoading(false)
+          return
+        }
+        const [horaAbreStr, minutoAbreStr] = configuracoes.horario_sabado_abre.split(':')
+        const [horaFechaStr, minutoFechaStr] = configuracoes.horario_sabado_fecha.split(':')
         horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
         horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
         console.log('🕐 Horário sábado:', { abre: configuracoes.horario_sabado_abre, fecha: configuracoes.horario_sabado_fecha, horaAbre, horaFecha })
@@ -81,22 +103,32 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
         // Dias de semana
         console.log('🟩 Verificando dia de semana...')
         abreHoje = true
-        const [horaAbreStr, minutoAbreStr] = (configuracoes.horario_abertura || '08:00').split(':')
-        const [horaFechaStr, minutoFechaStr] = (configuracoes.horario_fechamento || '18:00').split(':')
+        const [horaAbreStr, minutoAbreStr] = configuracoes.horario_abertura.split(':')
+        const [horaFechaStr, minutoFechaStr] = configuracoes.horario_fechamento.split(':')
         horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
         horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
         console.log('🕐 Horário semana:', { abre: configuracoes.horario_abertura, fecha: configuracoes.horario_fechamento, horaAbre, horaFecha })
       }
 
-      console.log('🔍 Verificação final:', {
+      // ✅ VALIDAÇÃO 4: Se não abre hoje → FECHADO
+      if (!abreHoje) {
+        console.log('❌ Não abre hoje → FECHADO')
+        setStatus('fechado')
+        setLoading(false)
+        return
+      }
+
+      // ✅ VALIDAÇÃO 5: Log de sanity check antes da decisão final
+      console.log('🧠 STATUS FINAL DECISÃO:', {
         abreHoje,
-        tempoAtual,
         horaAbre,
         horaFecha,
+        tempoAtual,
         dentroDoHorario: tempoAtual >= horaAbre && tempoAtual <= horaFecha
       })
 
-      if (abreHoje && tempoAtual >= horaAbre && tempoAtual <= horaFecha) {
+      // Decisão final
+      if (tempoAtual >= horaAbre && tempoAtual <= horaFecha) {
         console.log('✅ Status final: ABERTO')
         setStatus('aberto')
       } else {
