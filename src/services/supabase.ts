@@ -20,7 +20,6 @@ export class SupabaseService {
     try {
       console.log('🔍 getConfiguracoes: Getting config for user:', userId)
       
-      // 🔙 VOLTANDO TEMPORARIAMENTE: Sem .single() por enquanto
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
@@ -30,7 +29,6 @@ export class SupabaseService {
       
       if (error) throw error
       
-      // Pega o primeiro item do array
       const config = data && data.length > 0 ? data[0] : null
       
       if (!config) {
@@ -112,14 +110,26 @@ export class SupabaseService {
 
   async getDesignSettingsBySlug(slug: string) {
     try {
+      console.log('🔍 getDesignSettingsBySlug: Getting design for slug:', slug)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
         .eq('slug', slug)
-        .single()
-
+        .order('updated_at', { ascending: false })
+        .limit(1)
+      
       if (error) throw error
-      return data
+      
+      const designData = data && data.length > 0 ? data[0] : null
+      
+      if (!designData) {
+        console.log('❌ No design settings found for slug:', slug)
+        throw new Error('Design settings not found')
+      }
+      
+      console.log('✅ getDesignSettingsBySlug success:', designData)
+      return designData
     } catch (error) {
       console.error('❌ Error getting design settings by slug:', error)
       throw error
@@ -132,20 +142,22 @@ export class SupabaseService {
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
-        .single()
-
-      if (!designData) throw new Error('Design settings not found')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+      
+      const design = designData && designData.length > 0 ? designData[0] : null
+      
+      if (!design) throw new Error('Design settings not found')
 
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
-        .eq('user_id', designData.user_id)
+        .eq('user_id', design.user_id)
         .order('updated_at', { ascending: false })
         .limit(1)
       
       if (error) throw error
       
-      // Pega o primeiro item do array
       const config = data && data.length > 0 ? data[0] : null
       
       return config
@@ -178,14 +190,17 @@ export class SupabaseService {
         .from('design_settings')
         .select('user_id')
         .eq('slug', slug)
-        .single()
-
-      if (!designData) throw new Error('Design settings not found')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+      
+      const design = designData && designData.length > 0 ? designData[0] : null
+      
+      if (!design) throw new Error('Design settings not found')
 
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
-        .eq('user_id', designData.user_id)
+        .eq('user_id', design.user_id)
         .eq('disponivel', true)
         .order('created_at', { ascending: false })
 
