@@ -34,8 +34,14 @@ const App = () => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
   
+  // DEBUG: Mostrar valores no console
+  console.log('🔍 Verificação de ambiente:');
+  console.log('VITE_SUPABASE_URL:', supabaseUrl);
+  console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Presente' : 'Ausente');
+  
   // Se não tiver as variáveis, mostra erro
   if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('❌ Variáveis de ambiente ausentes!');
     return <EnvironmentError />;
   }
 

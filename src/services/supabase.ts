@@ -1,7 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://kpagoniatllxztgoyhin.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYWdvbmlhdGxseHp0Z295aGluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNjU5OTIsImV4cCI6MjA3ODc0MTk5Mn0.XZbJUFfVHgoAqLY3AvOEjgxs9UNMnBhxaBJG_oA3RM4'
+// Usando variáveis de ambiente
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+// Verificação das variáveis
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Variáveis de ambiente do Supabase não configuradas')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -11,13 +17,15 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     flowType: 'pkce',
     storage: window.localStorage,
     storageKey: 'supabase.auth.token',
-    debug: false
+    debug: true // Ativar debug para ver erros detalhados
   }
 })
 
 export class SupabaseService {
   async getConfiguracoes(userId: string) {
     try {
+      console.log('🔍 Buscando configurações para userId:', userId)
+      
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
@@ -25,23 +33,30 @@ export class SupabaseService {
         .order('updated_at', { ascending: false })
         .limit(1)
       
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao buscar configurações:', error)
+        throw error
+      }
       
       const config = data && data.length > 0 ? data[0] : null
       
       if (!config) {
+        console.log('📝 Criando configurações padrão para userId:', userId)
         return this.createDefaultConfiguracoes(userId)
       }
       
+      console.log('✅ Configurações encontradas:', config)
       return config
     } catch (error) {
-      console.error('Error in getConfiguracoes:', error)
+      console.error('❌ Erro em getConfiguracoes:', error)
       throw error
     }
   }
 
   async createDefaultConfiguracoes(userId: string) {
     try {
+      console.log('📝 Criando configurações padrão para userId:', userId)
+      
       const { data, error } = await supabase
         .from('configuracoes')
         .insert({
@@ -60,16 +75,23 @@ export class SupabaseService {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao criar configurações padrão:', error)
+        throw error
+      }
+      
+      console.log('✅ Configurações padrão criadas:', data)
       return data
     } catch (error) {
-      console.error('Error creating default config:', error)
+      console.error('❌ Erro em createDefaultConfiguracoes:', error)
       throw error
     }
   }
 
   async updateConfiguracoes(userId: string, config: any) {
     try {
+      console.log('📝 Atualizando configurações para userId:', userId, config)
+      
       const { data, error } = await supabase
         .from('configuracoes')
         .upsert({
@@ -80,32 +102,46 @@ export class SupabaseService {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao atualizar configurações:', error)
+        throw error
+      }
+      
+      console.log('✅ Configurações atualizadas:', data)
       return data
     } catch (error) {
-      console.error('Error updating config:', error)
+      console.error('❌ Erro em updateConfiguracoes:', error)
       throw error
     }
   }
 
   async getDesignSettings(userId: string) {
     try {
+      console.log('🔍 Buscando design settings para userId:', userId)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
         .eq('user_id', userId)
         .single()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ Erro ao buscar design settings:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings encontrados:', data)
       return data
     } catch (error) {
-      console.error('Error getting design settings:', error)
+      console.error('❌ Erro em getDesignSettings:', error)
       throw error
     }
   }
 
   async getDesignSettingsBySlug(slug: string) {
     try {
+      console.log('🔍 Buscando design settings por slug:', slug)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -113,7 +149,10 @@ export class SupabaseService {
         .order('updated_at', { ascending: false })
         .limit(1)
       
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao buscar design settings por slug:', error)
+        throw error
+      }
       
       const designData = data && data.length > 0 ? data[0] : null
       
@@ -121,15 +160,18 @@ export class SupabaseService {
         throw new Error('Design settings not found')
       }
       
+      console.log('✅ Design settings encontrados por slug:', designData)
       return designData
     } catch (error) {
-      console.error('Error getting design settings by slug:', error)
+      console.error('❌ Erro em getDesignSettingsBySlug:', error)
       throw error
     }
   }
 
   async getConfiguracoesBySlug(slug: string) {
     try {
+      console.log('🔍 Buscando configurações por slug:', slug)
+      
       const { data: designData } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -148,19 +190,25 @@ export class SupabaseService {
         .order('updated_at', { ascending: false })
         .limit(1)
       
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao buscar configurações por slug:', error)
+        throw error
+      }
       
       const config = data && data.length > 0 ? data[0] : null
       
+      console.log('✅ Configurações encontradas por slug:', config)
       return config
     } catch (error) {
-      console.error('Error getting config by slug:', error)
+      console.error('❌ Erro em getConfiguracoesBySlug:', error)
       throw error
     }
   }
 
   async getProducts(userId: string) {
     try {
+      console.log('🔍 Buscando produtos para userId:', userId)
+      
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
@@ -168,16 +216,23 @@ export class SupabaseService {
         .eq('disponivel', true)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao buscar produtos:', error)
+        throw error
+      }
+      
+      console.log('✅ Produtos encontrados:', data?.length || 0)
       return data || []
     } catch (error) {
-      console.error('Error getting products:', error)
+      console.error('❌ Erro em getProducts:', error)
       throw error
     }
   }
 
   async getProductsBySlug(slug: string) {
     try {
+      console.log('🔍 Buscando produtos por slug:', slug)
+      
       const { data: designData } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -196,16 +251,23 @@ export class SupabaseService {
         .eq('disponivel', true)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao buscar produtos por slug:', error)
+        throw error
+      }
+      
+      console.log('✅ Produtos encontrados por slug:', data?.length || 0)
       return data || []
     } catch (error) {
-      console.error('Error getting products by slug:', error)
+      console.error('❌ Erro em getProductsBySlug:', error)
       throw error
     }
   }
 
   async createProduct(userId: string, product: any) {
     try {
+      console.log('📝 Criando produto para userId:', userId, product)
+      
       const { data, error } = await supabase
         .from('produtos')
         .insert({
@@ -217,16 +279,23 @@ export class SupabaseService {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao criar produto:', error)
+        throw error
+      }
+      
+      console.log('✅ Produto criado:', data)
       return data
     } catch (error) {
-      console.error('Error creating product:', error)
+      console.error('❌ Erro em createProduct:', error)
       throw error
     }
   }
 
   async updateProduct(productId: string, product: any) {
     try {
+      console.log('📝 Atualizando produto:', productId, product)
+      
       const { data, error } = await supabase
         .from('produtos')
         .update({
@@ -237,44 +306,62 @@ export class SupabaseService {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao atualizar produto:', error)
+        throw error
+      }
+      
+      console.log('✅ Produto atualizado:', data)
       return data
     } catch (error) {
-      console.error('Error updating product:', error)
+      console.error('❌ Erro em updateProduct:', error)
       throw error
     }
   }
 
   async deleteProduct(productId: string) {
     try {
+      console.log('🗑️ Excluindo produto:', productId)
+      
       const { error } = await supabase
         .from('produtos')
         .delete()
         .eq('id', productId)
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao excluir produto:', error)
+        throw error
+      }
+      
+      console.log('✅ Produto excluído com sucesso')
       return true
     } catch (error) {
-      console.error('Error deleting product:', error)
+      console.error('❌ Erro em deleteProduct:', error)
       throw error
     }
   }
 
   async uploadImage(file: File, bucket: string, fileName: string) {
     try {
+      console.log('📤 Fazendo upload da imagem:', fileName)
+      
       const { data, error } = await supabase.storage
         .from(bucket)
         .upload(fileName, file)
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro no upload da imagem:', error)
+        throw error
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from(bucket)
         .getPublicUrl(fileName)
 
+      console.log('✅ Upload realizado:', publicUrl)
       return publicUrl
     } catch (error) {
-      console.error('Error uploading image:', error)
+      console.error('❌ Erro em uploadImage:', error)
       throw error
     }
   }
@@ -290,6 +377,8 @@ export class SupabaseService {
 
   async updateDesignSettings(userId: string, settings: any) {
     try {
+      console.log('📝 Atualizando design settings para userId:', userId, settings)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .upsert({
@@ -300,16 +389,23 @@ export class SupabaseService {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao atualizar design settings:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings atualizados:', data)
       return data
     } catch (error) {
-      console.error('Error updating design settings:', error)
+      console.error('❌ Erro em updateDesignSettings:', error)
       throw error
     }
   }
 
   async createDefaultDesignSettings(userId: string) {
     try {
+      console.log('📝 Criando design settings padrão para userId:', userId)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .insert({
@@ -329,10 +425,15 @@ export class SupabaseService {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro ao criar design settings padrão:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings padrão criados:', data)
       return data
     } catch (error) {
-      console.error('Error creating default design settings:', error)
+      console.error('❌ Erro em createDefaultDesignSettings:', error)
       throw error
     }
   }
