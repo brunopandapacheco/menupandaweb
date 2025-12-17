@@ -19,9 +19,12 @@ export function useDatabase() {
 
   const loadData = async (forceRefresh = false) => {
     if (!user) {
+      console.error('❌ Usuário não encontrado em loadData')
       setLoading(false)
       return
     }
+
+    console.log('👤 Carregando dados para usuário:', user.id)
 
     const hasValidCache = !forceRefresh && 
       isCacheValid('designSettings') && 
@@ -39,18 +42,21 @@ export function useDatabase() {
       const promises = []
       
       if (!isCacheValid('designSettings') || forceRefresh) {
+        console.log('🔍 Buscando design settings...')
         promises.push(supabaseService.getDesignSettings(user.id))
       } else {
         promises.push(Promise.resolve(getCache('designSettings')))
       }
       
       if (!isCacheValid('configuracoes') || forceRefresh) {
+        console.log('🔍 Buscando configurações...')
         promises.push(supabaseService.getConfiguracoes(user.id))
       } else {
         promises.push(Promise.resolve(getCache('configuracoes')))
       }
       
       if (!isCacheValid('produtos') || forceRefresh) {
+        console.log('🔍 Buscando produtos...')
         promises.push(supabaseService.getProducts(user.id))
       } else {
         promises.push(Promise.resolve(getCache('produtos')))
@@ -75,12 +81,21 @@ export function useDatabase() {
         console.log('✅ Código existente mantido:', designData.codigo)
       }
 
-      if (designData) updateCache('designSettings', designData)
-      if (configData) updateCache('configuracoes', configData)
-      if (productsData) updateCache('produtos', productsData || [])
+      if (designData) {
+        console.log('💾 Atualizando cache designSettings')
+        updateCache('designSettings', designData)
+      }
+      if (configData) {
+        console.log('💾 Atualizando cache configuracoes')
+        updateCache('configuracoes', configData)
+      }
+      if (productsData) {
+        console.log('💾 Atualizando cache produtos')
+        updateCache('produtos', productsData || [])
+      }
       
     } catch (error) {
-      console.error('Error loading data:', error)
+      console.error('❌ Error loading data:', error)
     } finally {
       setLoading(false)
     }
@@ -88,8 +103,11 @@ export function useDatabase() {
 
   const saveDesignSettings = async (settings: Partial<DesignSettings>) => {
     if (!user) {
+      console.error('❌ Usuário não encontrado em saveDesignSettings')
       return false
     }
+    
+    console.log('💾 Salvando design settings para usuário:', user.id)
     
     // NÃO permitir alterar o código após criação
     if (settings.codigo) {
@@ -103,6 +121,7 @@ export function useDatabase() {
       const currentSettings = getCache('designSettings')
       const updatedSettings = { ...currentSettings, ...settings }
       updateCache('designSettings', updatedSettings)
+      console.log('✅ Design settings salvos no cache')
     }
     
     return success
@@ -110,8 +129,11 @@ export function useDatabase() {
 
   const saveConfiguracoes = async (config: Partial<Configuracoes>) => {
     if (!user) {
+      console.error('❌ Usuário não encontrado em saveConfiguracoes')
       return false
     }
+    
+    console.log('💾 Salvando configurações para usuário:', user.id)
     
     const success = await supabaseService.updateConfiguracoes(user.id, config)
     
@@ -119,6 +141,7 @@ export function useDatabase() {
       const currentConfig = getCache('configuracoes')
       const updatedConfig = { ...currentConfig, ...config }
       updateCache('configuracoes', updatedConfig)
+      console.log('✅ Configurações salvas no cache')
     }
     
     return success
@@ -126,14 +149,18 @@ export function useDatabase() {
 
   const addProduto = async (product: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
     if (!user) {
+      console.error('❌ Usuário não encontrado em addProduto')
       return null
     }
+    
+    console.log('💾 Adicionando produto para usuário:', user.id)
     
     const result = await supabaseService.createProduct(user.id, product)
     
     if (result) {
       const currentProducts = getCache('produtos') || []
       updateCache('produtos', [result, ...currentProducts])
+      console.log('✅ Produto adicionado ao cache')
     }
     
     return result
@@ -141,8 +168,11 @@ export function useDatabase() {
 
   const editProduto = async (id: string, product: Partial<Produto>) => {
     if (!user) {
+      console.error('❌ Usuário não encontrado em editProduto')
       return false
     }
+    
+    console.log('💾 Editando produto:', id, 'para usuário:', user.id)
     
     const success = await supabaseService.updateProduct(id, product)
     
@@ -152,6 +182,7 @@ export function useDatabase() {
         p.id === id ? { ...p, ...product } : p
       )
       updateCache('produtos', updatedProducts)
+      console.log('✅ Produto editado no cache')
     }
     
     return success
@@ -159,8 +190,11 @@ export function useDatabase() {
 
   const removeProduto = async (id: string) => {
     if (!user) {
+      console.error('❌ Usuário não encontrado em removeProduto')
       return false
     }
+    
+    console.log('💾 Removendo produto:', id, 'para usuário:', user.id)
     
     const success = await supabaseService.deleteProduct(id)
     
@@ -168,6 +202,7 @@ export function useDatabase() {
       const currentProducts = getCache('produtos') || []
       const updatedProducts = currentProducts.filter(p => p.id !== id)
       updateCache('produtos', updatedProducts)
+      console.log('✅ Produto removido do cache')
     }
     
     return success

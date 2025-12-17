@@ -5,6 +5,7 @@ import { Image as ImageIcon } from 'lucide-react'
 import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabaseService } from '@/services/supabase'
+import { useAuth } from '@/hooks/useAuth'
 
 interface ImageSettingsProps {
   logoUrl: string
@@ -23,6 +24,7 @@ export function ImageSettings({
   onBannerUrlChange,
   onSaveBanner
 }: ImageSettingsProps) {
+  const { user } = useAuth()
   const [uploadingLogo, setUploadingLogo] = useState(false)
   const [uploadingBanner, setUploadingBanner] = useState(false)
   const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null)
@@ -34,6 +36,7 @@ export function ImageSettings({
     if (!file) return
 
     console.log('📁 Arquivo selecionado:', file.name, file.type, file.size)
+    console.log('👤 Usuário atual:', user?.id)
 
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
@@ -52,6 +55,9 @@ export function ImageSettings({
     const file = event.target.files?.[0]
     if (!file) return
 
+    console.log('📁 Banner selecionado:', file.name, file.type, file.size)
+    console.log('👤 Usuário atual:', user?.id)
+
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
       return
@@ -65,12 +71,18 @@ export function ImageSettings({
 
     try {
       console.log('📤 Fazendo upload do banner...')
-      const fileName = `banner-${Date.now()}.${file.name.split('.').pop()}`
+      console.log('👤 Usuário logado:', user?.id)
+      
+      const fileName = `banner-${user?.id}-${Date.now()}.${file.name.split('.').pop()}`
+      console.log('📝 Nome do arquivo:', fileName)
+      
       const url = await supabaseService.uploadImage(file, 'images', fileName)
       
       if (!url) throw new Error('Falha no upload da imagem para o storage')
 
       console.log('✅ Banner uploadado:', url)
+      console.log('💾 Salvando no banco de dados...')
+      
       await onSaveBanner(url)
       onBannerUrlChange(url)
       showSuccess('🖼️ Banner atualizado com sucesso!')
@@ -83,20 +95,30 @@ export function ImageSettings({
   }
 
   const handleLogoCropComplete = async (croppedBlob: Blob) => {
-    if (!selectedLogoFile) return
+    if (!selectedLogoFile || !user) {
+      console.error('❌ Arquivo ou usuário não encontrado')
+      showError('Erro: usuário não autenticado')
+      return
+    }
 
     setUploadingLogo(true)
     setShowLogoCropper(false)
 
     try {
       console.log('📤 Fazendo upload da logo...')
-      const fileName = `logo-${Date.now()}.jpg`
+      console.log('👤 Usuário logado:', user.id)
+      
+      const fileName = `logo-${user.id}-${Date.now()}.jpg`
+      console.log('📝 Nome do arquivo:', fileName)
+      
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
       const url = await supabaseService.uploadImage(file, 'logos', fileName)
 
       if (!url) throw new Error('Falha no upload da imagem')
 
       console.log('✅ Logo uploadada:', url)
+      console.log('💾 Salvando no banco de dados...')
+      
       await onSaveLogo(url)
       onLogoUrlChange(url)
       showSuccess('🖼️ Logo atualizada com sucesso!')

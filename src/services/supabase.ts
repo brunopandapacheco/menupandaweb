@@ -22,6 +22,142 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 export class SupabaseService {
+  async uploadImage(file: File, bucket: string, fileName: string) {
+    try {
+      console.log('📤 Fazendo upload da imagem:', fileName)
+      console.log('📦 Bucket:', bucket)
+      console.log('📁 File:', file.name, file.size, file.type)
+      
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        })
+
+      if (error) {
+        console.error('❌ Erro no upload da imagem:', error)
+        throw error
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(fileName)
+
+      console.log('✅ Upload realizado:', publicUrl)
+      console.log('🔗 URL pública:', publicUrl)
+      return publicUrl
+    } catch (error) {
+      console.error('❌ Erro em uploadImage:', error)
+      throw error
+    }
+  }
+
+  async updateDesignSettings(userId: string, settings: any) {
+    try {
+      console.log('📝 Atualizando design settings para userId:', userId, settings)
+      
+      // NÃO gerar novo código se já existir
+      if (settings.codigo) {
+        console.log('⚠️ Código já existe, mantendo:', settings.codigo)
+      }
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .upsert({
+          user_id: userId,
+          ...settings,
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ Erro ao atualizar design settings:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings atualizados:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Erro em updateDesignSettings:', error)
+      throw error
+    }
+  }
+
+  async getDesignSettings(userId: string) {
+    try {
+      console.log('🔍 Buscando design settings para userId:', userId)
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .single()
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ Erro ao buscar design settings:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings encontrados:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Erro em getDesignSettings:', error)
+      throw error
+    }
+  }
+
+  async createDefaultDesignSettings(userId: string) {
+    try {
+      console.log('📝 Criando design settings padrão para userId:', userId)
+      
+      const codigo = this.generateUniqueCode()
+      console.log('🔑 Código único gerado para novo usuário:', codigo)
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .insert({
+          user_id: userId,
+          nome_loja: 'Minha Confeitaria',
+          slug: `minha-confeitaria-${Date.now()}`,
+          cor_borda: '#ec4899',
+          cor_background: '#fef2f2',
+          cor_nome: '#be185d',
+          background_topo_color: '#fce7f3',
+          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+          banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+          descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+          codigo: codigo // Código gerado UMA VEZ
+        })
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ Erro ao criar design settings padrão:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings padrão criados com código fixo:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Erro em createDefaultDesignSettings:', error)
+      throw error
+    }
+  }
+
+  generateUniqueCode(): string {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789' // Mudado para minúsculas
+    let result = ''
+    for (let i = 0; i < 5; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    console.log('🔑 Código gerado:', result)
+    return result
+  }
+
+  // Outros métodos existentes...
   async getConfiguracoes(userId: string) {
     try {
       console.log('🔍 Buscando configurações para userId:', userId)
@@ -115,25 +251,103 @@ export class SupabaseService {
     }
   }
 
-  async getDesignSettings(userId: string) {
+  async getProducts(userId: string) {
     try {
-      console.log('🔍 Buscando design settings para userId:', userId)
+      console.log('🔍 Buscando produtos para userId:', userId)
       
       const { data, error } = await supabase
-        .from('design_settings')
+        .from('produtos')
         .select('*')
         .eq('user_id', userId)
-        .single()
+        .eq('disponivel', true)
+        .order('created_at', { ascending: false })
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('❌ Erro ao buscar design settings:', error)
+      if (error) {
+        console.error('❌ Erro ao buscar produtos:', error)
         throw error
       }
       
-      console.log('✅ Design settings encontrados:', data)
+      console.log('✅ Produtos encontrados:', data?.length || 0)
+      return data || []
+    } catch (error) {
+      console.error('❌ Erro em getProducts:', error)
+      throw error
+    }
+  }
+
+  async createProduct(userId: string, product: any) {
+    try {
+      console.log('📝 Criando produto para userId:', userId, product)
+      
+      const { data, error } = await supabase
+        .from('produtos')
+        .insert({
+          user_id: userId,
+          ...product,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ Erro ao criar produto:', error)
+        throw error
+      }
+      
+      console.log('✅ Produto criado:', data)
       return data
     } catch (error) {
-      console.error('❌ Erro em getDesignSettings:', error)
+      console.error('❌ Erro em createProduct:', error)
+      throw error
+    }
+  }
+
+  async updateProduct(productId: string, product: any) {
+    try {
+      console.log('📝 Atualizando produto:', productId, product)
+      
+      const { data, error } = await supabase
+        .from('produtos')
+        .update({
+          ...product,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', productId)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ Erro ao atualizar produto:', error)
+        throw error
+      }
+      
+      console.log('✅ Produto atualizado:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Erro em updateProduct:', error)
+      throw error
+    }
+  }
+
+  async deleteProduct(productId: string) {
+    try {
+      console.log('🗑️ Excluindo produto:', productId)
+      
+      const { error } = await supabase
+        .from('produtos')
+        .delete()
+        .eq('id', productId)
+
+      if (error) {
+        console.error('❌ Erro ao excluir produto:', error)
+        throw error
+      }
+      
+      console.log('✅ Produto excluído com sucesso')
+      return true
+    } catch (error) {
+      console.error('❌ Erro em deleteProduct:', error)
       throw error
     }
   }
@@ -264,30 +478,6 @@ export class SupabaseService {
     }
   }
 
-  async getProducts(userId: string) {
-    try {
-      console.log('🔍 Buscando produtos para userId:', userId)
-      
-      const { data, error } = await supabase
-        .from('produtos')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('disponivel', true)
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        console.error('❌ Erro ao buscar produtos:', error)
-        throw error
-      }
-      
-      console.log('✅ Produtos encontrados:', data?.length || 0)
-      return data || []
-    } catch (error) {
-      console.error('❌ Erro em getProducts:', error)
-      throw error
-    }
-  }
-
   async getProductsBySlug(slug: string) {
     try {
       console.log('🔍 Buscando produtos por slug:', slug)
@@ -353,189 +543,6 @@ export class SupabaseService {
       return data || []
     } catch (error) {
       console.error('❌ Erro em getProductsByCodigo:', error)
-      throw error
-    }
-  }
-
-  async createProduct(userId: string, product: any) {
-    try {
-      console.log('📝 Criando produto para userId:', userId, product)
-      
-      const { data, error } = await supabase
-        .from('produtos')
-        .insert({
-          user_id: userId,
-          ...product,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single()
-
-      if (error) {
-        console.error('❌ Erro ao criar produto:', error)
-        throw error
-      }
-      
-      console.log('✅ Produto criado:', data)
-      return data
-    } catch (error) {
-      console.error('❌ Erro em createProduct:', error)
-      throw error
-    }
-  }
-
-  async updateProduct(productId: string, product: any) {
-    try {
-      console.log('📝 Atualizando produto:', productId, product)
-      
-      const { data, error } = await supabase
-        .from('produtos')
-        .update({
-          ...product,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', productId)
-        .select()
-        .single()
-
-      if (error) {
-        console.error('❌ Erro ao atualizar produto:', error)
-        throw error
-      }
-      
-      console.log('✅ Produto atualizado:', data)
-      return data
-    } catch (error) {
-      console.error('❌ Erro em updateProduct:', error)
-      throw error
-    }
-  }
-
-  async deleteProduct(productId: string) {
-    try {
-      console.log('🗑️ Excluindo produto:', productId)
-      
-      const { error } = await supabase
-        .from('produtos')
-        .delete()
-        .eq('id', productId)
-
-      if (error) {
-        console.error('❌ Erro ao excluir produto:', error)
-        throw error
-      }
-      
-      console.log('✅ Produto excluído com sucesso')
-      return true
-    } catch (error) {
-      console.error('❌ Erro em deleteProduct:', error)
-      throw error
-    }
-  }
-
-  async uploadImage(file: File, bucket: string, fileName: string) {
-    try {
-      console.log('📤 Fazendo upload da imagem:', fileName)
-      
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, file)
-
-      if (error) {
-        console.error('❌ Erro no upload da imagem:', error)
-        throw error
-      }
-
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName)
-
-      console.log('✅ Upload realizado:', publicUrl)
-      return publicUrl
-    } catch (error) {
-      console.error('❌ Erro em uploadImage:', error)
-      throw error
-    }
-  }
-
-  generateUniqueCode(): string {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789' // Mudado para minúsculas
-    let result = ''
-    for (let i = 0; i < 5; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-    console.log('🔑 Código gerado:', result)
-    return result
-  }
-
-  async updateDesignSettings(userId: string, settings: any) {
-    try {
-      console.log('📝 Atualizando design settings para userId:', userId, settings)
-      
-      // NÃO gerar novo código se já existir
-      if (settings.codigo) {
-        console.log('⚠️ Código já existe, mantendo:', settings.codigo)
-      }
-      
-      const { data, error } = await supabase
-        .from('design_settings')
-        .upsert({
-          user_id: userId,
-          ...settings,
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single()
-
-      if (error) {
-        console.error('❌ Erro ao atualizar design settings:', error)
-        throw error
-      }
-      
-      console.log('✅ Design settings atualizados:', data)
-      return data
-    } catch (error) {
-      console.error('❌ Erro em updateDesignSettings:', error)
-      throw error
-    }
-  }
-
-  async createDefaultDesignSettings(userId: string) {
-    try {
-      console.log('📝 Criando design settings padrão para userId:', userId)
-      
-      const codigo = this.generateUniqueCode()
-      console.log('🔑 Código único gerado para novo usuário:', codigo)
-      
-      const { data, error } = await supabase
-        .from('design_settings')
-        .insert({
-          user_id: userId,
-          nome_loja: 'Minha Confeitaria',
-          slug: `minha-confeitaria-${Date.now()}`,
-          cor_borda: '#ec4899',
-          cor_background: '#fef2f2',
-          cor_nome: '#be185d',
-          background_topo_color: '#fce7f3',
-          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-          banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
-          descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-          codigo: codigo // Código gerado UMA VEZ
-        })
-        .select()
-        .single()
-
-      if (error) {
-        console.error('❌ Erro ao criar design settings padrão:', error)
-        throw error
-      }
-      
-      console.log('✅ Design settings padrão criados com código fixo:', data)
-      return data
-    } catch (error) {
-      console.error('❌ Erro em createDefaultDesignSettings:', error)
       throw error
     }
   }
