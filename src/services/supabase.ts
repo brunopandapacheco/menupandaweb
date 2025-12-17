@@ -168,6 +168,29 @@ export class SupabaseService {
     }
   }
 
+  async getDesignSettingsByCodigo(codigo: string) {
+    try {
+      console.log('🔍 Buscando design settings por código:', codigo)
+      
+      const { data, error } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('codigo', codigo)
+        .single()
+
+      if (error) {
+        console.error('❌ Erro ao buscar design settings por código:', error)
+        throw error
+      }
+      
+      console.log('✅ Design settings encontrados por código:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Erro em getDesignSettingsByCodigo:', error)
+      throw error
+    }
+  }
+
   async getConfiguracoesBySlug(slug: string) {
     try {
       console.log('🔍 Buscando configurações por slug:', slug)
@@ -201,6 +224,42 @@ export class SupabaseService {
       return config
     } catch (error) {
       console.error('❌ Erro em getConfiguracoesBySlug:', error)
+      throw error
+    }
+  }
+
+  async getConfiguracoesByCodigo(codigo: string) {
+    try {
+      console.log('🔍 Buscando configurações por código:', codigo)
+      
+      const { data: designData } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('codigo', codigo)
+        .single()
+      
+      if (!designData) {
+        throw new Error('Design settings not found')
+      }
+
+      const { data, error } = await supabase
+        .from('configuracoes')
+        .select('*')
+        .eq('user_id', designData.user_id)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+      
+      if (error) {
+        console.error('❌ Erro ao buscar configurações por código:', error)
+        throw error
+      }
+      
+      const config = data && data.length > 0 ? data[0] : null
+      
+      console.log('✅ Configurações encontradas por código:', config)
+      return config
+    } catch (error) {
+      console.error('❌ Erro em getConfiguracoesByCodigo:', error)
       throw error
     }
   }
@@ -260,6 +319,40 @@ export class SupabaseService {
       return data || []
     } catch (error) {
       console.error('❌ Erro em getProductsBySlug:', error)
+      throw error
+    }
+  }
+
+  async getProductsByCodigo(codigo: string) {
+    try {
+      console.log('🔍 Buscando produtos por código:', codigo)
+      
+      const { data: designData } = await supabase
+        .from('design_settings')
+        .select('user_id')
+        .eq('codigo', codigo)
+        .single()
+      
+      if (!designData) {
+        throw new Error('Design settings not found')
+      }
+
+      const { data, error } = await supabase
+        .from('produtos')
+        .select('*')
+        .eq('user_id', designData.user_id)
+        .eq('disponivel', true)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('❌ Erro ao buscar produtos por código:', error)
+        throw error
+      }
+      
+      console.log('✅ Produtos encontrados por código:', data?.length || 0)
+      return data || []
+    } catch (error) {
+      console.error('❌ Erro em getProductsByCodigo:', error)
       throw error
     }
   }

@@ -60,10 +60,12 @@ export default function CardapioPublico() {
       setLoading(true)
       setError(null)
       
+      console.log('🔍 Buscando cardápio pelo código:', codigo)
+      
       const [designData, configData, productsData] = await Promise.all([
-        supabaseService.getDesignSettingsBySlug(codigo),
-        supabaseService.getConfiguracoesBySlug(codigo),
-        supabaseService.getProductsBySlug(codigo)
+        supabaseService.getDesignSettingsByCodigo(codigo),
+        supabaseService.getConfiguracoesByCodigo(codigo),
+        supabaseService.getProductsByCodigo(codigo)
       ])
 
       if (!designData) {
@@ -146,7 +148,7 @@ export default function CardapioPublico() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Cardápio não encontrado</h1>
-          <p className="text-gray-600 mb-4">{error || 'Verifique o URL e tente novamente.'}</p>
+          <p className="text-gray-600 mb-4">{error || 'Verifique o código e tente novamente.'}</p>
           <div className="bg-gray-100 p-4 rounded-lg max-w-md">
             <p className="text-sm text-gray-600">
               <strong>Código buscado:</strong> {slug}
