@@ -5,6 +5,7 @@ import { showSuccess, showError } from '@/utils/toast'
 import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
+import { MessageCircle } from 'lucide-react'
 
 const gradientBackgrounds = [
   { name: 'Dourado Quente', gradient: '#F5C542' }
@@ -23,6 +24,7 @@ export default function DesignSettings() {
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
+  const [whatsapp, setWhatsapp] = useState('(11) 99999-9999')
   
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
@@ -38,6 +40,12 @@ export default function DesignSettings() {
       if (designSettings.categorias) setMainCategories(designSettings.categorias)
     }
   }, [designSettings])
+
+  useEffect(() => {
+    if (configuracoes) {
+      if (configuracoes.telefone) setWhatsapp(configuracoes.telefone)
+    }
+  }, [configuracoes])
 
   const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
     setBannerGradient(gradient.gradient)
@@ -72,6 +80,22 @@ export default function DesignSettings() {
 
     const success = await saveDesignSettings(settingsToUpdate)
     success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar configurações')
+  }
+
+  const saveWhatsApp = async () => {
+    // Validar formato do telefone
+    const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/
+    if (!phoneRegex.test(whatsapp)) {
+      showError('Formato de telefone inválido. Use o formato: (11) 99999-9999')
+      return
+    }
+
+    const success = await saveConfiguracoes({ telefone: whatsapp })
+    if (success) {
+      showSuccess('WhatsApp salvo com sucesso!')
+    } else {
+      showError('Erro ao salvar WhatsApp')
+    }
   }
 
   const saveCategories = async () => {
@@ -208,6 +232,40 @@ export default function DesignSettings() {
                     className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
                   >
                     Salvar Descrição
+                  </button>
+                </div>
+              </div>
+
+              {/* WhatsApp para Pedidos */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
+                  <MessageCircle className="w-6 h-6 inline mr-2" />
+                  WhatsApp para Pedidos
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Número do WhatsApp
+                    </label>
+                    <input
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      placeholder="(11) 99999-9999"
+                      className="w-full p-3 border border-gray-300 rounded-lg"
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+                    </p>
+                    <p className="text-xs text-blue-600 bg-blue-50 p-2 rounded mt-2">
+                      💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
+                    </p>
+                  </div>
+                  <button 
+                    onClick={saveWhatsApp}
+                    className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-green-500 via-green-600 to-green-700 shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                  >
+                    <MessageCircle className="w-4 h-4 inline mr-2" />
+                    Salvar WhatsApp
                   </button>
                 </div>
               </div>
