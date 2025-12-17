@@ -23,32 +23,26 @@ export default function CardapioPublico() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
-  const [lastUpdate, setLastUpdate] = useState(Date.now()) // NOVO: Controle de atualização
+  const [lastUpdate, setLastUpdate] = useState(Date.now())
 
   useEffect(() => {
     if (slug) {
-      console.log('🔍 Carregando cardápio para código:', slug)
       loadData(slug)
     }
   }, [slug])
 
-  // NOVO: Listener para atualizações do painel
   useEffect(() => {
     const handleConfigUpdate = () => {
-      console.log('🔄 Recebido evento de atualização de configurações')
-      setLastUpdate(Date.now()) // Força reload
+      setLastUpdate(Date.now())
       if (slug) {
-        loadData(slug) // Recarrega dados
+        loadData(slug)
       }
     }
 
-    // Escutar eventos do localStorage (quando o painel salva)
     window.addEventListener('configUpdated', handleConfigUpdate)
     
-    // Também escutar mudanças no storage diretamente
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'pandamenu-config-updated') {
-        console.log('🔄 Storage change detectado, recarregando...')
         handleConfigUpdate()
       }
     }
@@ -63,7 +57,6 @@ export default function CardapioPublico() {
 
   const loadData = async (codigo: string) => {
     try {
-      console.log('🔍 Carregando cardápio para código:', codigo)
       setLoading(true)
       setError(null)
       
@@ -72,12 +65,6 @@ export default function CardapioPublico() {
         supabaseService.getConfiguracoesBySlug(codigo),
         supabaseService.getProductsBySlug(codigo)
       ])
-
-      console.log('📊 Dados carregados:', {
-        designData: !!designData,
-        configData: !!configData,
-        productsCount: productsData?.length || 0
-      })
 
       if (!designData) {
         setError('Cardápio não encontrado')
@@ -88,32 +75,12 @@ export default function CardapioPublico() {
       setConfiguracoes(configData)
       setProdutos(productsData || [])
       
-      // Salvar nome da loja no localStorage para usar no WhatsApp
       if (designData?.nome_loja) {
         localStorage.setItem('cardapio_nome', designData.nome_loja)
       }
       
-      // Salvar telefone configurado no localStorage para usar no WhatsApp
       if (configData?.telefone) {
         localStorage.setItem('cardapio_whatsapp', configData.telefone)
-      }
-      
-      // Debug detalhado dos produtos
-      console.log('📦 Produtos carregados:', productsData?.length || 0)
-      productsData?.forEach((produto, index) => {
-        console.log(`📦 Produto ${index + 1}:`, {
-          nome: produto.nome,
-          imagem_url: produto.imagem_url,
-          categoria: produto.categoria,
-          preco: produto.preco_normal
-        })
-      })
-
-      // Debug dos ícones personalizados
-      if (designData?.category_icons) {
-        console.log('🎨 Category icons loaded from database:', designData.category_icons)
-      } else {
-        console.log('📁 No custom category icons found, using defaults')
       }
     } catch (error: any) {
       console.error('Error loading data:', error)
@@ -138,21 +105,14 @@ export default function CardapioPublico() {
     )
   }
 
-  // Obter categorias na ordem que foram cadastradas nos produtos
   const getCategories = () => {
-    // Sempre incluir "Todos" primeiro
     const categories = [{ name: 'Todos', icon: '/icons/TODOS.png' }]
     
-    // Obter categorias únicas dos produtos na ordem de criação
     const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
       .filter(cat => cat && cat.trim() !== '')
-      .sort() // Ordenar alfabeticamente
+      .sort()
     
-    console.log('📋 Categorias dos produtos (ordem alfabética):', productCategories)
-    
-    // Adicionar categorias na ordem que aparecem nos produtos
     productCategories.forEach(category => {
-      // Mapear para ícones conhecidos ou usar emoji padrão
       const iconMap: { [key: string]: string } = {
         'Bolos': '/icons/Bolos.png',
         'Doces': '/icons/Doces.png',
@@ -165,7 +125,6 @@ export default function CardapioPublico() {
       })
     })
     
-    console.log('📋 Categorias finais:', categories)
     return categories
   }
 
@@ -203,10 +162,7 @@ export default function CardapioPublico() {
 
   return (
     <div className={`min-h-screen cardapio-scrollbar`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
-      {/* Botão de Status de Funcionamento */}
       <StatusButton configuracoes={configuracoes} />
-      
-      {/* Menu de Navegação */}
       <NavigationMenu />
       
       <Banner 
@@ -224,7 +180,6 @@ export default function CardapioPublico() {
       />
 
       <div className="container mx-auto px-4 py-4 pb-20">
-        {/* Banner Publicitário */}
         {designSettings.banner1_url && (
           <BannerAd bannerUrl={designSettings.banner1_url} />
         )}

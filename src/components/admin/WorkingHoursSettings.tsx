@@ -21,7 +21,6 @@ const diasSemana = [
 ]
 
 export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: WorkingHoursSettingsProps) {
-  // REMOVIDO: Valores padrão do useState - agora começa vazio
   const [horarioAbertura, setHorarioAbertura] = useState('')
   const [horarioFechamento, setHorarioFechamento] = useState('')
   const [diasFuncionamento, setDiasFuncionamento] = useState<string[]>([])
@@ -31,13 +30,10 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
   const [abreDomingo, setAbreDomingo] = useState(false)
   const [horarioDomingoAbre, setHorarioDomingoAbre] = useState('')
   const [horarioDomingoFecha, setHorarioDomingoFecha] = useState('')
-  const [isLoaded, setIsLoaded] = useState(false) // NOVO: Controle de carregamento
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    console.log('📋 WorkingHoursSettings: Carregando configurações:', configuracoes)
-    
     if (configuracoes) {
-      // SÓ atualiza os estados se tiver configurações reais
       setHorarioAbertura(configuracoes.horario_abertura || '08:00')
       setHorarioFechamento(configuracoes.horario_fechamento || '18:00')
       setDiasFuncionamento(configuracoes.dias_funcionamento || ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'])
@@ -47,28 +43,13 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
       setAbreDomingo(configuracoes.abre_domingo || false)
       setHorarioDomingoAbre(configuracoes.horario_domingo_abre || '08:00')
       setHorarioDomingoFecha(configuracoes.horario_domingo_fecha || '18:00')
-      setIsLoaded(true) // Marca como carregado
-      
-      console.log('✅ WorkingHoursSettings: Configurações carregadas com sucesso')
+      setIsLoaded(true)
     } else {
-      console.log('⚠️ WorkingHoursSettings: Nenhuma configuração encontrada')
-      setIsLoaded(true) // Mesmo sem configurações, marca como carregado para não ficar em loading infinito
+      setIsLoaded(true)
     }
   }, [configuracoes])
 
   const handleSave = async () => {
-    console.log('💾 WorkingHoursSettings: Salvando configurações:', {
-      horarioAbertura,
-      horarioFechamento,
-      diasFuncionamento,
-      abreSabado,
-      horarioSabadoAbre,
-      horarioSabadoFecha,
-      abreDomingo,
-      horarioDomingoAbre,
-      horarioDomingoFecha
-    })
-
     const config = {
       horario_abertura: horarioAbertura,
       horario_fechamento: horarioFechamento,
@@ -84,10 +65,8 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
     const success = await onSaveConfiguracoes(config)
     if (success) {
       showSuccess('Configurações de funcionamento salvas!')
-      console.log('✅ WorkingHoursSettings: Configurações salvas com sucesso')
     } else {
       showError('Erro ao salvar configurações')
-      console.log('❌ WorkingHoursSettings: Erro ao salvar configurações')
     }
   }
 
@@ -100,7 +79,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
   }
 
   const getStatusAtual = () => {
-    if (!isLoaded) return 'carregando' // NOVO: Status de carregamento
+    if (!isLoaded) return 'carregando'
     
     const agora = new Date()
     const diaSemana = agora.getDay()
@@ -108,87 +87,43 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
     const minutoAtual = agora.getMinutes()
     const tempoAtual = horaAtual * 60 + minutoAtual
 
-    console.log('🕐 Verificando status com configurações atuais:', {
-      diaSemana,
-      horaAtual,
-      minutoAtual,
-      tempoAtual,
-      diaNome: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][diaSemana],
-      horarioAbertura,
-      horarioFechamento
-    })
-
-    // Se status manual estiver definido, usa ele
-    if (configuracoes?.status_manual === 'aberto') {
-      console.log('✅ Status manual: ABERTO')
-      return 'aberto'
-    }
-    if (configuracoes?.status_manual === 'fechado') {
-      console.log('❌ Status manual: FECHADO')
-      return 'fechado'
-    }
-
-    // Verificar se é dia de funcionamento
     const diasFuncionamento = configuracoes?.dias_funcionamento || ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta']
     const nomesDias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
     const diaAtual = nomesDias[diaSemana]
-
-    console.log('📋 Dias de funcionamento:', diasFuncionamento)
-    console.log('📅 Dia atual:', diaAtual)
 
     let abreHoje = false
     let horaAbre = 0
     let horaFecha = 0
 
     if (diaSemana === 0 && abreDomingo) {
-      // Domingo
-      console.log('🟦 Verificando domingo...')
       abreHoje = true
       const [horaAbreStr, minutoAbreStr] = (horarioDomingoAbre || '08:00').split(':')
       const [horaFechaStr, minutoFechaStr] = (horarioDomingoFecha || '18:00').split(':')
       horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
       horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
-      console.log('🕐 Horário domingo:', { abre: horarioDomingoAbre, fecha: horarioDomingoFecha, horaAbre, horaFecha })
     } else if (diaSemana === 6 && abreSabado) {
-      // Sábado
-      console.log('🟨 Verificando sábado...')
       abreHoje = true
       const [horaAbreStr, minutoAbreStr] = (horarioSabadoAbre || '08:00').split(':')
       const [horaFechaStr, minutoFechaStr] = (horarioSabadoFecha || '18:00').split(':')
       horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
       horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
-      console.log('🕐 Horário sábado:', { abre: horarioSabadoAbre, fecha: horarioSabadoFecha, horaAbre, horaFecha })
     } else if (diasFuncionamento.includes(diaAtual)) {
-      // Dias de semana
-      console.log('🟩 Verificando dia de semana...')
       abreHoje = true
       const [horaAbreStr, minutoAbreStr] = (horarioAbertura || '08:00').split(':')
       const [horaFechaStr, minutoFechaStr] = (horarioFechamento || '18:00').split(':')
       horaAbre = parseInt(horaAbreStr) * 60 + parseInt(minutoAbreStr)
       horaFecha = parseInt(horaFechaStr) * 60 + parseInt(minutoFechaStr)
-      console.log('🕐 Horário semana:', { abre: horarioAbertura, fecha: horarioFechamento, horaAbre, horaFecha })
     }
 
-    console.log('🔍 Verificação final:', {
-      abreHoje,
-      tempoAtual,
-      horaAbre,
-      horaFecha,
-      dentroDoHorario: tempoAtual >= horaAbre && tempoAtual <= horaFecha
-    })
-
     if (abreHoje && tempoAtual >= horaAbre && tempoAtual <= horaFecha) {
-      console.log('✅ Status final: ABERTO')
       return 'aberto'
     } else {
-      console.log('❌ Status final: FECHADO')
       return 'fechado'
     }
   }
 
   const statusAtual = getStatusAtual()
 
-  // NOVO: Mostra loading enquanto carrega as configurações
   if (!isLoaded) {
     return (
       <div className="space-y-6">
@@ -204,11 +139,8 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
     )
   }
 
-  console.log('🎯 Renderizando WorkingHoursSettings com status:', statusAtual)
-
   return (
     <div className="space-y-6">
-      {/* Card de Status Atual */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -220,7 +152,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Status Atual Preview */}
           <div className="flex items-center justify-center p-4 rounded-lg bg-gray-50">
             <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${
               statusAtual === 'aberto' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -247,7 +178,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
         </CardContent>
       </Card>
 
-      {/* Dias de Semana */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -295,7 +225,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
         </CardContent>
       </Card>
 
-      {/* Fim de Semana */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -304,7 +233,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Sábado */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-base font-semibold">Sábado</Label>
@@ -335,7 +263,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
             )}
           </div>
 
-          {/* Domingo */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-base font-semibold">Domingo</Label>
@@ -368,7 +295,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
         </CardContent>
       </Card>
 
-      {/* Botão Salvar */}
       <div className="flex justify-center">
         <Button
           onClick={handleSave}

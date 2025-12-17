@@ -18,8 +18,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 export class SupabaseService {
   async getConfiguracoes(userId: string) {
     try {
-      console.log('🔍 getConfiguracoes: Getting config for user:', userId)
-      
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
@@ -32,14 +30,12 @@ export class SupabaseService {
       const config = data && data.length > 0 ? data[0] : null
       
       if (!config) {
-        console.log('📝 No config found, creating default...')
         return this.createDefaultConfiguracoes(userId)
       }
       
-      console.log('✅ getConfiguracoes success:', config)
       return config
     } catch (error) {
-      console.error('❌ Error in getConfiguracoes:', error)
+      console.error('Error in getConfiguracoes:', error)
       throw error
     }
   }
@@ -67,7 +63,7 @@ export class SupabaseService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('❌ Error creating default config:', error)
+      console.error('Error creating default config:', error)
       throw error
     }
   }
@@ -87,7 +83,7 @@ export class SupabaseService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('❌ Error updating config:', error)
+      console.error('Error updating config:', error)
       throw error
     }
   }
@@ -103,15 +99,13 @@ export class SupabaseService {
       if (error && error.code !== 'PGRST116') throw error
       return data
     } catch (error) {
-      console.error('❌ Error getting design settings:', error)
+      console.error('Error getting design settings:', error)
       throw error
     }
   }
 
   async getDesignSettingsBySlug(slug: string) {
     try {
-      console.log('🔍 getDesignSettingsBySlug: Getting design for slug:', slug)
-      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -124,14 +118,12 @@ export class SupabaseService {
       const designData = data && data.length > 0 ? data[0] : null
       
       if (!designData) {
-        console.log('❌ No design settings found for slug:', slug)
         throw new Error('Design settings not found')
       }
       
-      console.log('✅ getDesignSettingsBySlug success:', designData)
       return designData
     } catch (error) {
-      console.error('❌ Error getting design settings by slug:', error)
+      console.error('Error getting design settings by slug:', error)
       throw error
     }
   }
@@ -162,7 +154,7 @@ export class SupabaseService {
       
       return config
     } catch (error) {
-      console.error('❌ Error getting config by slug:', error)
+      console.error('Error getting config by slug:', error)
       throw error
     }
   }
@@ -179,7 +171,7 @@ export class SupabaseService {
       if (error) throw error
       return data || []
     } catch (error) {
-      console.error('❌ Error getting products:', error)
+      console.error('Error getting products:', error)
       throw error
     }
   }
@@ -207,7 +199,7 @@ export class SupabaseService {
       if (error) throw error
       return data || []
     } catch (error) {
-      console.error('❌ Error getting products by slug:', error)
+      console.error('Error getting products by slug:', error)
       throw error
     }
   }
@@ -228,7 +220,7 @@ export class SupabaseService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('❌ Error creating product:', error)
+      console.error('Error creating product:', error)
       throw error
     }
   }
@@ -248,7 +240,7 @@ export class SupabaseService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('❌ Error updating product:', error)
+      console.error('Error updating product:', error)
       throw error
     }
   }
@@ -263,7 +255,7 @@ export class SupabaseService {
       if (error) throw error
       return true
     } catch (error) {
-      console.error('❌ Error deleting product:', error)
+      console.error('Error deleting product:', error)
       throw error
     }
   }
@@ -282,7 +274,7 @@ export class SupabaseService {
 
       return publicUrl
     } catch (error) {
-      console.error('❌ Error uploading image:', error)
+      console.error('Error uploading image:', error)
       throw error
     }
   }
@@ -311,7 +303,7 @@ export class SupabaseService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('❌ Error updating design settings:', error)
+      console.error('Error updating design settings:', error)
       throw error
     }
   }
@@ -340,7 +332,7 @@ export class SupabaseService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('❌ Error creating default design settings:', error)
+      console.error('Error creating default design settings:', error)
       throw error
     }
   }

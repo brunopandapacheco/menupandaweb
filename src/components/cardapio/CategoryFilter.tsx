@@ -9,11 +9,10 @@ interface CategoryFilterProps {
   categories: Category[]
   selectedCategory: string | null
   onCategorySelect: (category: string | null) => void
-  categoryIcons?: { [key: string]: string } // Adicionado para receber os ícones personalizados
+  categoryIcons?: { [key: string]: string }
 }
 
 export function CategoryFilter({ categories, selectedCategory, onCategorySelect, categoryIcons = {} }: CategoryFilterProps) {
-  // Mapeamento de categorias para ícones (baseado nos seus arquivos)
   const categoryIconMap: { [key: string]: string } = {
     'Bolos': '/icons/1.png',
     'Doces': '/icons/2.png',
@@ -24,10 +23,9 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
     'Pipoca': '/icons/7.png',
     'Pudim': '/icons/8.png',
     'Trufas': '/icons/9.png',
-    'Todos': '/icons/TODOS.png' // Ícone fixo para "Todos"
+    'Todos': '/icons/TODOS.png'
   }
 
-  // A lista de categorias já vem na ordem correta do componente pai
   const allCategories = categories
 
   return (
@@ -38,10 +36,10 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
           gap: '8px', 
           padding: '4px 0',
           justifyContent: 'flex-start',
-          overflowX: 'auto', // Habilita scroll horizontal
-          scrollbarWidth: 'none', // Esconde scrollbar no Firefox
-          msOverflowStyle: 'none', // Esconde scrollbar no IE/Edge
-          WebkitScrollbar: { display: 'none' } // Esconde scrollbar no Chrome/Safari
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          WebkitScrollbar: { display: 'none' }
         } as React.CSSProperties}
       >
         {allCategories.map((category) => {
@@ -49,28 +47,19 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
             ? selectedCategory === null 
             : selectedCategory === category.name
 
-          // Determinar qual ícone usar - prioridade para ícones personalizados
           let iconToUse: string
           
-          // Para a categoria "Todos", SEMPRE usar o ícone fixo
           if (category.name === 'Todos') {
             iconToUse = '/icons/TODOS.png'
-            console.log(`🔒 Using FIXED icon for "Todos":`, iconToUse)
           }
-          // 1. Primeiro verificar se há um ícone personalizado salvo (para outras categorias)
           else if (categoryIcons[category.name]) {
             iconToUse = categoryIcons[category.name]
-            console.log(`🎨 Using custom icon for ${category.name}:`, iconToUse)
           }
-          // 2. Depois verificar o mapeamento padrão
           else if (categoryIconMap[category.name]) {
             iconToUse = categoryIconMap[category.name]
-            console.log(`📁 Using default icon for ${category.name}:`, iconToUse)
           }
-          // 3. Por último, usar ícone padrão
           else {
             iconToUse = '/icons/1.png'
-            console.log(`📁 Using fallback icon for ${category.name}:`, iconToUse)
           }
 
           return (
@@ -85,30 +74,25 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                 width: '80px',
                 height: '80px',
                 borderRadius: '50%',
-                // Fundo rosa pedra
                 backgroundColor: isSelected ? '#2E2E2E' : '#fe62a6',
-                // Borda dupla: externa #DBDFE4, interna branca
                 border: '3px solid #DBDFE4',
                 outline: '3px solid white',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 padding: '8px',
-                flexShrink: 0, // Não encolher
-                minWidth: '80px', // Garante tamanho mínimo
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)' // Sombra sutil para destacar a borda dupla
+                flexShrink: 0,
+                minWidth: '80px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
               onMouseOver={(e) => {
-                // Hover muda para cinza escuro
                 e.currentTarget.style.backgroundColor = '#2E2E2E'
                 e.currentTarget.style.transform = 'scale(1.05)'
               }}
               onMouseOut={(e) => {
-                // Volta para o rosa ou cinza escuro se estiver selecionado
                 e.currentTarget.style.backgroundColor = isSelected ? '#2E2E2E' : '#fe62a6'
                 e.currentTarget.style.transform = 'scale(1)'
               }}
             >
-              {/* Renderiza apenas ícone de imagem */}
               <img 
                 src={iconToUse} 
                 alt={category.name}
@@ -118,9 +102,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
                   objectFit: 'contain'
                 }}
                 onError={(e) => {
-                  // Se a imagem não carregar, mostrar ícone padrão
-                  console.error(`Failed to load icon: ${iconToUse}`)
-                  e.currentTarget.src = '/icons/1.png' // Usa ícone padrão
+                  e.currentTarget.src = '/icons/1.png'
                 }}
               />
             </button>
@@ -128,13 +110,12 @@ export function CategoryFilter({ categories, selectedCategory, onCategorySelect,
         })}
       </div>
       
-      {/* Indicador de scroll */}
       {allCategories.length > 4 && (
         <div style={{ 
           textAlign: 'center', 
           marginTop: '8px',
           fontSize: '12px',
-          color: '#374151' // Cor mais escura (cinza escuro)
+          color: '#374151'
         }}>
           ← Arraste para ver mais categorias →
         </div>

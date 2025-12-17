@@ -23,12 +23,10 @@ export function CartItemComponent({
 }: CartItemComponentProps) {
   const [showEditModal, setShowEditModal] = useState(false)
 
-  // Validar se o item é válido
   if (!item || !item.id) {
     return null
   }
 
-  // Converter CartItem para Produto para o modal
   const convertToProduct = (): Produto => ({
     id: item.id,
     user_id: '',
@@ -51,7 +49,6 @@ export function CartItemComponent({
 
   const handleModalSave = (updatedProduct: any) => {
     try {
-      // Atualizar quantidade e observações do item no carrinho
       const newQuantity = updatedProduct.quantity || item.quantity
       const newObservations = updatedProduct.observations || item.observations
       
@@ -66,7 +63,6 @@ export function CartItemComponent({
   const getQuantityDisplay = () => {
     const quantity = item.quantity
     
-    // Formatar especial para produtos por KG
     if (item.saleType === 'kg') {
       return (
         <>
@@ -79,7 +75,6 @@ export function CartItemComponent({
       )
     }
     
-    // Formatar normal para outros tipos
     return (
       <>
         <span style={{ 
@@ -94,11 +89,8 @@ export function CartItemComponent({
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3 w-full overflow-hidden">
-        {/* Layout: conteúdo esquerda + foto direita */}
         <div className="flex gap-3 w-full">
-          {/* Conteúdo principal - esquerda */}
           <div className="flex-1 min-w-0">
-            {/* Título com quantidade destacada + preço */}
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-semibold text-gray-900 text-sm leading-tight flex-1 pr-2">
                 {getQuantityDisplay()}
@@ -110,14 +102,12 @@ export function CartItemComponent({
               </div>
             </div>
 
-            {/* Observações - sem a palavra "Obs:" */}
             <div className="mb-2">
               <div className="text-xs text-gray-500 bg-gray-50 p-1 rounded min-h-[24px]">
                 <p className="line-clamp-2">{item.observations || 'Nenhuma observação'}</p>
               </div>
             </div>
 
-            {/* Botões de ação */}
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -141,7 +131,6 @@ export function CartItemComponent({
             </div>
           </div>
 
-          {/* Foto do produto - direita */}
           <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50">
             {item.imageUrl ? (
               <img 
@@ -161,7 +150,6 @@ export function CartItemComponent({
         </div>
       </div>
 
-      {/* Modal de edição do produto */}
       <ProductModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}

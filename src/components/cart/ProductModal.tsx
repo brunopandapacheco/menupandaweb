@@ -30,7 +30,6 @@ export function ProductModal({
   const [quantity, setQuantity] = useState(initialQuantity)
   const [observations, setObservations] = useState(initialObservations)
 
-  // Reset state when product changes
   useEffect(() => {
     if (product) {
       setQuantity(initialQuantity)
@@ -64,15 +63,11 @@ export function ProductModal({
       observations
     }
     
-    // Adicionar ao carrinho
     addItem(cartItem)
     
-    // Forçar atualização do localStorage para garantir sincronização
     setTimeout(() => {
-      // Disparar evento customizado para notificar outros componentes
       window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cartItem }))
       
-      // Fechar modal após pequeno delay
       setTimeout(() => {
         onClose()
       }, 100)
@@ -106,14 +101,12 @@ export function ProductModal({
 
   return (
     <>
-      {/* Backdrop with blur */}
       <div 
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
         style={{ backdropFilter: 'blur(8px)' }}
         onClick={onClose}
       />
       
-      {/* Modal content */}
       <div 
         className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl z-50 p-0 bg-white"
         style={{
@@ -125,7 +118,6 @@ export function ProductModal({
           margin: '0'
         }}
       >
-        {/* HEADER PERSONALIZADO - COMPLETELY CUSTOM */}
         <div className="border-b-2 border-pink-200 p-4 pb-4">
           <div className="flex items-center justify-between">
             <div>
@@ -139,7 +131,6 @@ export function ProductModal({
                 }
               </p>
             </div>
-            {/* BOTÃO X PERSONALIZADO - QUADRADO ROSA COM X BRANCO */}
             <button
               onClick={onClose}
               className="h-10 w-10 p-0 transition-all duration-200 flex items-center justify-center"
@@ -154,7 +145,6 @@ export function ProductModal({
         </div>
 
         <div className="space-y-4 p-4">
-          {/* Imagem do product with border */}
           <div className="w-full h-40 rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
             {firstImage ? (
               <img 
@@ -169,7 +159,6 @@ export function ProductModal({
             )}
           </div>
 
-          {/* Informações do product */}
           <div className="space-y-3">
             <h3 className="text-xl font-bold text-gray-900">{product.nome}</h3>
             <p className="text-gray-600 text-sm">{product.descricao}</p>
@@ -186,7 +175,7 @@ export function ProductModal({
                   boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
                 }}
               >
-                {product.forma_venda === 'kg' ? 'KG' : 'UNIDADE'}
+                {product.forma_venda}
               </Badge>
               {product.promocao && (
                 <Badge className="bg-red-500 text-white rounded-full">
@@ -196,7 +185,6 @@ export function ProductModal({
             </div>
           </div>
 
-          {/* Controle of quantity with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Quantidade:
@@ -224,7 +212,6 @@ export function ProductModal({
             </div>
           </div>
 
-          {/* Observações with border */}
           <div className="border-2 border-pink-200 rounded-xl p-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Observações (opcional):
@@ -238,7 +225,6 @@ export function ProductModal({
             />
           </div>
 
-          {/* Preço total with cor fixa */}
           <div 
             className="border-2 border-pink-200 rounded-xl p-4"
             style={{
@@ -258,7 +244,6 @@ export function ProductModal({
             </div>
           </div>
 
-          {/* Botões of action */}
           <div className="space-y-3">
             {isEditMode ? (
               <Button

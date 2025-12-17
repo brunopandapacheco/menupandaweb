@@ -64,46 +64,35 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     const fetchCategories = async () => {
       try {
         setLoadingCategories(true)
-        console.log('🔍 ProductForm: Buscando categorias...')
         
-        // 1. Buscar categorias da tabela categorias
         const { data: dbCategories, error: dbError } = await supabase
           .from('categorias')
           .select('nome')
           .order('nome')
         
         if (dbError) {
-          console.error('❌ Erro ao buscar categorias do banco:', dbError)
+          console.error('Error loading categories from database:', dbError)
         }
         
-        // 2. Buscar categorias dos produtos (para garantir que todas apareçam)
         const { data: products, error: productsError } = await supabase
           .from('produtos')
           .select('categoria')
           .not('categoria', 'is', null)
         
         if (productsError) {
-          console.error('❌ Erro ao buscar categorias dos produtos:', productsError)
+          console.error('Error loading categories from products:', productsError)
         }
         
-        // 3. Combinar categorias
         const dbCategoryNames = dbCategories?.map(cat => cat.nome) || []
         const productCategories = products?.map(p => p.categoria).filter(Boolean) || []
         
-        // 4. Remover duplicatas e ordenar alfabeticamente
         const allCategories = Array.from(new Set([...dbCategoryNames, ...productCategories]))
           .filter(cat => cat && cat.trim() !== '')
           .sort()
         
-        console.log('📋 Categorias carregadas:', {
-          database: dbCategoryNames,
-          products: productCategories,
-          combined: allCategories
-        })
-        
         setCategories(allCategories)
       } catch (error) {
-        console.error('❌ Erro ao buscar categorias:', error)
+        console.error('Error fetching categories:', error)
       } finally {
         setLoadingCategories(false)
       }
@@ -178,30 +167,26 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
     const trimmedName = newCategoryName.trim()
     
-    // Verificar se categoria já existe
     const exists = await checkCategoryExists(trimmedName)
     if (exists) {
       showError('Já existe uma categoria com este nome')
       return
     }
 
-    // Salvar categoria pendente para criar só quando o produto for salvo
     setPendingCategory({
       name: trimmedName,
       icon: selectedIcon
     })
 
-    // Adicionar imediatamente à lista de categorias
     setCategories(prev => [...prev, trimmedName].sort())
 
-    // Atualizar o campo categoria do produto
     handleFieldChange('categoria', trimmedName)
     
-    // Reset form de criação
     setNewCategoryName('')
     setIsCreatingNewCategory(false)
     setSelectedIcon('/icons/1.png')
     setShowIconSelector(false)
+    setPendingCategory(null)
     
     showSuccess('Categoria criada e selecionada!')
   }
@@ -220,11 +205,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   }
 
   const formatCurrency = (value: string) => {
-    // Remove tudo que não é número
     const numbers = value.replace(/\D/g, '')
-    // Converte para centavos
     const cents = parseInt(numbers) || 0
-    // Formata como moeda brasileira
     return (cents / 100).toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -245,12 +227,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     })
   }
 
-  // Função para criar a categoria pendente quando o produto for salvo
   const createPendingCategory = async () => {
     if (!pendingCategory) return
 
     try {
-      // 1. Criar a categoria na tabela categorias
       const { error: categoryError } = await supabase
         .from('categorias')
         .insert({ 
@@ -260,7 +240,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       
       if (categoryError) throw categoryError
       
-      // 2. Buscar os design_settings atuais do usuário
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Usuário não autenticado')
       
@@ -274,7 +253,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         throw designError
       }
       
-      // 3. Atualizar os category_icons com o novo ícone
       const currentIcons = designSettings?.category_icons || {}
       const updatedIcons = {
         ...currentIcons,
@@ -288,12 +266,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       
       if (updateError) throw updateError
       
-      console.log('✅ Categoria e ícone criados com sucesso:', {
-        category: pendingCategory.name,
-        icon: pendingCategory.icon
-      })
-      
-      // 4. Atualizar lista de categorias
       const { data: updatedCategories, error: fetchError } = await supabase
         .from('categorias')
         .select('nome')
@@ -311,10 +283,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     }
   }
 
-  // Expor função para o ProductDialog usar
   useEffect(() => {
     if (product?.id && pendingCategory) {
-      // Se o produto já tem ID, criar a categoria imediatamente
       createPendingCategory()
     }
   }, [product?.id])
