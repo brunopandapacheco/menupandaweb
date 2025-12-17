@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase'
 import { supabaseService } from '@/services/supabase'
 import { showSuccess, showError } from '@/utils/toast'
 import { validateEmail } from '@/utils/helpers'
-import { Eye, EyeOff, Store, Mail, Lock, User, CheckCircle } from 'lucide-react'
+import { Eye, EyeOff, Store, Mail, Lock, User, CheckCircle, AlertTriangle } from 'lucide-react'
 
 export default function Cadastro() {
   const navigate = useNavigate()
@@ -17,13 +17,14 @@ export default function Cadastro() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [step, setStep] = useState(1)
   const [success, setSuccess] = useState(false)
+  const [debugInfo, setDebugInfo] = useState('')
   
   // Dados do formulário
   const [formData, setFormData] = useState({
-    nomeLoja: '',
-    email: '',
-    senha: '',
-    confirmarSenha: '',
+    nomeLoja: 'Teste Loja', // Valor padrão para teste
+    email: 'teste@exemplo.com', // Valor padrão para teste
+    senha: '123456', // Valor padrão para teste
+    confirmarSenha: '123456', // Valor padrão para teste
     telefone: '(11) 99999-9999'
   })
 
@@ -80,8 +81,17 @@ export default function Cadastro() {
     if (!validateStep2()) return
 
     setLoading(true)
+    setDebugInfo('Iniciando cadastro...')
     
     try {
+      // DEBUG: Mostrar informações
+      console.log('🔍 DEBUG - Iniciando cadastro:')
+      console.log('Email:', formData.email)
+      console.log('Senha length:', formData.senha.length)
+      console.log('URL Supabase:', import.meta.env.VITE_SUPABASE_URL)
+      
+      setDebugInfo(`Tentando criar usuário: ${formData.email}`)
+
       // 1. Criar usuário no Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
@@ -96,20 +106,32 @@ export default function Cadastro() {
         }
       })
 
+      console.log('🔍 DEBUG - Resposta do Supabase:')
+      console.log('AuthData:', authData)
+      console.log('AuthError:', authError)
+
       if (authError) {
+        console.error('❌ Erro detalhado:', authError)
+        setDebugInfo(`Erro: ${authError.message}`)
+        
         if (authError.message.includes('User already registered')) {
           showError('Este email já está cadastrado. Tente fazer login.')
+        } else if (authError.message.includes('500')) {
+          showError('Erro interno do servidor. Tente novamente em alguns minutos.')
         } else {
-          showError(authError.message)
+          showError(`Erro ao criar usuário: ${authError.message}`)
         }
         return
       }
 
       if (!authData.user) {
+        setDebugInfo('Usuário não criado - data.user é null')
         showError('Erro ao criar usuário. Tente novamente.')
         return
       }
 
+      setDebugInfo('Usuário criado com sucesso! Configurando dados...')
+      
       // 2. Criar configurações padrão
       await supabaseService.createDefaultConfiguracoes(authData.user.id)
 
@@ -132,8 +154,9 @@ export default function Cadastro() {
       }, 3000)
 
     } catch (error: any) {
-      console.error('Erro no cadastro:', error)
-      showError('Erro ao realizar cadastro. Tente novamente.')
+      console.error('❌ Erro completo no cadastro:', error)
+      setDebugInfo(`Erro catch: ${error.message}`)
+      showError(`Erro ao realizar cadastro: ${error.message}`)
     } finally {
       setLoading(false)
     }
@@ -171,6 +194,17 @@ export default function Cadastro() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Criar Cardápio</h1>
           <p className="text-gray-600">Cadastre sua loja e comece a vender</p>
         </div>
+
+        {/* Debug Info */}
+        {debugInfo && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <AlertTriangle className="w-4 h-4 text-yellow-600" />
+              <span className="text-sm font-medium text-yellow-800">Debug Info:</span>
+            </div>
+            <p className="text-xs text-yellow-700">{debugInfo}</p>
+          </div>
+        )}
 
         <Card className="shadow-xl border-0">
           <CardHeader className="text-center pb-4">
