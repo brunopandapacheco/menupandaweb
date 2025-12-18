@@ -93,7 +93,7 @@ export class SupabaseService {
 
   async getDesignSettings(userId: string) {
     try {
-      console.log('🔍 Buscando design settings para userId:', userId)
+      console.log('SupabaseService: getDesignSettings called for userId:', userId) // Novo log
       
       const { data, error } = await supabase
         .from('design_settings')
@@ -117,7 +117,7 @@ export class SupabaseService {
   // 🎯 FUNÇÃO PRINCIPAL - GARANTE CÓDIGO PERMANENTE BASEADO NO USER_ID
   async ensureDesignSettingsWithCode(userId: string) {
     try {
-      console.log('🔒 Garantindo design settings com código permanente para userId:', userId)
+      console.log('SupabaseService: ensureDesignSettingsWithCode called for userId:', userId); // Novo log
       
       // 1️⃣ Gerar código permanente baseado no user_id
       const codigoPermanente = this.generateCodeFromUserId(userId)
@@ -202,7 +202,7 @@ export class SupabaseService {
 
   async getConfiguracoes(userId: string) {
     try {
-      console.log('🔍 Buscando configurações para userId:', userId)
+      console.log('SupabaseService: getConfiguracoes called for userId:', userId) // Novo log
       
       const { data, error } = await supabase
         .from('configuracoes')
@@ -295,13 +295,13 @@ export class SupabaseService {
 
   async getProducts(userId: string) {
     try {
-      console.log('🔍 Buscando produtos para userId:', userId)
+      console.log('SupabaseService: getProducts called for userId:', userId) // Novo log
       
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
         .eq('user_id', userId)
-        // .eq('disponivel', true) // FILTRO TEMPORARIAMENTE REMOVIDO PARA DEBUG
+        .eq('disponivel', true) // FILTRO REATIVADO
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -557,7 +557,7 @@ export class SupabaseService {
 
   async getProductsByCodigo(codigo: string) {
     try {
-      console.log('🔍 Buscando produtos por código:', codigo)
+      console.log('SupabaseService: getProductsByCodigo called for code:', codigo) // Novo log
       
       const { data: designData } = await supabase
         .from('design_settings')

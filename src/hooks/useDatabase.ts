@@ -11,8 +11,10 @@ export function useDatabase() {
 
   useEffect(() => {
     if (user) {
+      console.log('useDatabase: User detected, loading data for ID:', user.id); // Novo log
       loadData()
     } else {
+      console.log('useDatabase: No user detected or user logged out.'); // Novo log
       setLoading(false)
     }
   }, [user])
@@ -44,6 +46,8 @@ export function useDatabase() {
 
       // NOVO LOG: Verificando os produtos recebidos
       console.log('📦 Produtos recebidos do SupabaseService:', productsData);
+      console.log('⚙️ Configurações recebidas do SupabaseService:', configData); // Novo log
+      console.log('🎨 Design Settings recebidos do SupabaseService:', designData); // Novo log
 
       // Atualizar cache
       if (designData) {
