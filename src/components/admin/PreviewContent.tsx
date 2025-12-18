@@ -31,12 +31,22 @@ export function PreviewContent({
   onCategorySelect,
   onToggleFavorite
 }: PreviewContentProps) {
+  // Adicionando logs para depuração
+  console.log('--- PreviewContent.tsx RENDER ---');
+  console.log('Props - Design Settings (PreviewContent.tsx):', designSettings);
+  console.log('Props - Configuracoes (PreviewContent.tsx):', configuracoes);
+  console.log('Props - Produtos (PreviewContent.tsx):', produtos);
+  console.log('Props - Selected Category (PreviewContent.tsx):', selectedCategory);
+  console.log('Props - Search Term (PreviewContent.tsx):', searchTerm);
+
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
     return matchesSearch && matchesCategory
   })
+
+  console.log('Filtered Products Count (PreviewContent.tsx):', filteredProducts.length);
 
   const getCategories = () => {
     const categories = [{ name: 'Todos', icon: '/icons/TODOS.png' }]
@@ -45,7 +55,7 @@ export function PreviewContent({
       .filter((cat): cat is string => cat && typeof cat === 'string' && cat.trim() !== '')
       .sort()
     
-    console.log('📋 Categorias dos produtos (ordem alfabética):', productCategories)
+    console.log('📋 Categorias dos produtos (ordem alfabética - PreviewContent.tsx):', productCategories)
     
     productCategories.forEach(category => {
       const iconMap: { [key: string]: string } = {
@@ -60,11 +70,13 @@ export function PreviewContent({
       })
     })
     
-    console.log('📋 Categorias finais:', categories)
+    console.log('📋 Categorias finais (PreviewContent.tsx):', categories)
     return categories
   }
 
   const categories = getCategories()
+  console.log('Final Categories for Filter (PreviewContent.tsx):', categories);
+
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
@@ -80,6 +92,7 @@ export function PreviewContent({
         storeDescription={designSettings?.descricao_loja}
         corNome={designSettings?.cor_nome}
         avaliacaoMedia={configuracoes?.avaliacao_media}
+        configuracoes={configuracoes} // Passando configuracoes para o StatusButton dentro do Logo
       />
 
       <div className="container mx-auto px-4 py-4">

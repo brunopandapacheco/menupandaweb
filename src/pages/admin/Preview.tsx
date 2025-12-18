@@ -18,6 +18,16 @@ export default function Preview() {
     toggleFavorite
   } = usePreviewState()
 
+  // Adicionando logs para depuração
+  console.log('--- Preview.tsx RENDER ---');
+  console.log('Device:', device);
+  console.log('Loading:', loading);
+  console.log('Design Settings (Preview.tsx):', designSettings);
+  console.log('Configuracoes (Preview.tsx):', configuracoes);
+  console.log('Produtos (Preview.tsx):', produtos);
+  console.log('Selected Category (Preview.tsx):', selectedCategory);
+  console.log('Search Term (Preview.tsx):', searchTerm);
+
   // Show loading only on initial load
   if (loading && !designSettings) {
     return <PreviewLoading />
