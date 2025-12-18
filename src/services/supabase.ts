@@ -52,9 +52,9 @@ export class SupabaseService {
 
       console.log('✅ Upload realizado:', publicUrl)
       return publicUrl
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em uploadImage:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido no upload da imagem'); // Garante que seja um objeto Error
     }
   }
 
@@ -85,9 +85,9 @@ export class SupabaseService {
       
       console.log('✅ Design settings atualizados (código protegido):', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em updateDesignSettings:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao atualizar design settings');
     }
   }
 
@@ -108,9 +108,9 @@ export class SupabaseService {
       
       console.log('✅ Design settings encontrados:', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getDesignSettings:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar design settings');
     }
   }
 
@@ -148,14 +148,14 @@ export class SupabaseService {
 
       if (error) {
         console.error('❌ Erro ao upsert design settings:', error);
-        throw error;
+        throw error; // This throws a SupabasePostgrestError
       }
       
       console.log('✅ Design settings upserted com código permanente:', data);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em ensureDesignSettingsWithCode:', error);
-      throw error;
+      throw new Error(error.message || 'Erro desconhecido ao garantir design settings com código');
     }
   }
 
@@ -207,9 +207,9 @@ export class SupabaseService {
       
       console.log('✅ Configurações encontradas:', config)
       return config
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getConfiguracoes:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar configurações');
     }
   }
 
@@ -248,9 +248,9 @@ export class SupabaseService {
       
       console.log('✅ Configurações padrão upserted:', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em createDefaultConfiguracoes:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao criar configurações padrão');
     }
   }
 
@@ -275,9 +275,9 @@ export class SupabaseService {
       
       console.log('✅ Configurações atualizadas:', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em updateConfiguracoes:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao atualizar configurações');
     }
   }
 
@@ -299,9 +299,9 @@ export class SupabaseService {
       
       console.log('✅ Produtos encontrados:', data?.length || 0, data)
       return data || []
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getProducts:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar produtos');
     }
   }
 
@@ -327,9 +327,9 @@ export class SupabaseService {
       
       console.log('✅ Produto criado:', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro ao criar produto:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao criar produto');
     }
   }
 
@@ -354,9 +354,9 @@ export class SupabaseService {
       
       console.log('✅ Produto atualizado:', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em updateProduct:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao atualizar produto');
     }
   }
 
@@ -376,9 +376,9 @@ export class SupabaseService {
       
       console.log('✅ Produto excluído com sucesso')
       return true
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em deleteProduct:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao excluir produto');
     }
   }
 
@@ -406,9 +406,9 @@ export class SupabaseService {
       
       console.log('✅ Design settings encontrados por slug:', designData)
       return designData
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getDesignSettingsBySlug:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar design settings por slug');
     }
   }
 
@@ -429,9 +429,9 @@ export class SupabaseService {
       
       console.log('✅ Design settings encontrados por código:', data)
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getDesignSettingsByCodigo:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar design settings por código');
     }
   }
 
@@ -466,9 +466,9 @@ export class SupabaseService {
       
       console.log('✅ Configurações encontradas por slug:', config)
       return config
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getConfiguracoesBySlug:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar configurações por slug');
     }
   }
 
@@ -502,9 +502,9 @@ export class SupabaseService {
       
       console.log('✅ Configurações encontradas por código:', config)
       return config
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getConfiguracoesByCodigo:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar configurações por código');
     }
   }
 
@@ -537,9 +537,9 @@ export class SupabaseService {
       
       console.log('✅ Produtos encontrados por slug:', data?.length || 0)
       return data || []
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getProductsBySlug:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar produtos por slug');
     }
   }
 
@@ -571,9 +571,9 @@ export class SupabaseService {
       
       console.log('✅ Produtos encontrados por código:', data?.length || 0)
       return data || []
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Erro em getProductsByCodigo:', error)
-      throw error
+      throw new Error(error.message || 'Erro desconhecido ao buscar produtos por código');
     }
   }
 }
