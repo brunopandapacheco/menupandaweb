@@ -39,6 +39,19 @@ export function PreviewContent({
   console.log('Props - Selected Category (PreviewContent.tsx):', selectedCategory);
   console.log('Props - Search Term (PreviewContent.tsx):', searchTerm);
 
+  // VERIFICAÇÃO EXPLÍCITA: Se designSettings for nulo, mostre um estado vazio ou carregando
+  if (!designSettings) {
+    console.log('PreviewContent: designSettings é nulo ou indefinido, exibindo EmptyState.');
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+          <p className="mt-4 text-gray-600">Carregando prévia...</p>
+        </div>
+      </div>
+    );
+  }
+
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
@@ -92,7 +105,7 @@ export function PreviewContent({
         storeDescription={designSettings?.descricao_loja}
         corNome={designSettings?.cor_nome}
         avaliacaoMedia={configuracoes?.avaliacao_media}
-        configuracoes={configuracoes} // Passando configuracoes para o StatusButton dentro do Logo
+        configuracoes={configuracoes}
       />
 
       <div className="container mx-auto px-4 py-4">

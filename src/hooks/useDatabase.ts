@@ -11,10 +11,10 @@ export function useDatabase() {
 
   useEffect(() => {
     if (user) {
-      console.log('useDatabase: User detected, loading data for ID:', user.id); // Novo log
+      console.log('useDatabase: User detected, loading data for ID:', user.id);
       loadData()
     } else {
-      console.log('useDatabase: No user detected or user logged out.'); // Novo log
+      console.log('useDatabase: No user detected or user logged out.');
       setLoading(false)
     }
   }, [user])
@@ -28,38 +28,34 @@ export function useDatabase() {
 
     console.log('👤 Carregando dados para usuário:', user.id)
 
-    // 🎯 USANDO A NOVA FUNÇÃO - SÓ GERA CÓDIGO SE NÃO EXISTIR
     setLoading(true)
     
     try {
       console.log('🔒 Garantindo design settings com código permanente...')
       
-      // 🆕 FUNÇÃO NOVA - Garante código permanente
       let designData = await supabaseService.ensureDesignSettingsWithCode(user.id)
-      console.log('📋 Design settings garantidos:', designData.codigo)
+      console.log('📋 Design settings garantidos:', designData?.codigo, designData) // Log completo do designData
 
-      // Buscar outros dados
       const [configData, productsData] = await Promise.all([
         supabaseService.getConfiguracoes(user.id),
-        supabaseService.getProducts(user.id) // <--- Esta é a chamada para buscar produtos
+        supabaseService.getProducts(user.id)
       ])
 
-      // NOVO LOG: Verificando os produtos recebidos
       console.log('📦 Produtos recebidos do SupabaseService:', productsData);
-      console.log('⚙️ Configurações recebidas do SupabaseService:', configData); // Novo log
-      console.log('🎨 Design Settings recebidos do SupabaseService:', designData); // Novo log
+      console.log('⚙️ Configurações recebidas do SupabaseService:', configData);
+      console.log('🎨 Design Settings recebidos do SupabaseService:', designData);
 
       // Atualizar cache
       if (designData) {
-        console.log('💾 Atualizando cache designSettings com código permanente:', designData.codigo)
+        console.log('💾 Atualizando cache designSettings com código permanente:', designData.codigo, designData)
         updateCache('designSettings', designData)
       }
       if (configData) {
-        console.log('💾 Atualizando cache configuracoes')
+        console.log('💾 Atualizando cache configuracoes:', configData)
         updateCache('configuracoes', configData)
       }
       if (productsData) {
-        console.log('💾 Atualizando cache produtos')
+        console.log('💾 Atualizando cache produtos:', productsData)
         updateCache('produtos', productsData || [])
       }
       
@@ -79,7 +75,6 @@ export function useDatabase() {
     console.log('💾 Salvando design settings para usuário:', user.id)
     console.log('📝 Settings recebidos:', settings)
     
-    // NUNCA permitir alterar o código após criação
     if (settings.codigo) {
       console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
       delete settings.codigo
