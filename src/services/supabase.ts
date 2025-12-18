@@ -70,11 +70,11 @@ export class SupabaseService {
       
       const { data, error } = await supabase
         .from('design_settings')
-        .upsert({
-          user_id: userId,
+        .update({
           ...settings,
           updated_at: new Date().toISOString()
         })
+        .eq('user_id', userId)
         .select()
         .single()
 
@@ -121,10 +121,20 @@ export class SupabaseService {
       const codigoPermanente = this.generateCodeFromUserId(userId);
       console.log('🔑 Código permanente gerado do user_id:', codigoPermanente);
 
-      const defaultSettings = {
-        user_id: userId,
+      // Tenta buscar as configurações de design existentes
+      const { data: existingSettings, error: fetchError } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 means "No rows found"
+        console.error('❌ Erro ao buscar design settings existentes:', fetchError);
+        throw fetchError;
+      }
+
+      const baseSettings = {
         nome_loja: 'Minha Confeitaria',
-        slug: `minha-confeitaria-${Date.now()}`, // Slug deve ser único na criação
         cor_borda: '#ec4899',
         cor_background: '#fef2f2',
         cor_nome: '#be185d',
@@ -137,22 +147,58 @@ export class SupabaseService {
         updated_at: new Date().toISOString()
       };
 
-      const { data, error } = await supabase
-        .from('design_settings')
-        .upsert(defaultSettings, {
-          onConflict: 'user_id', // Usa user_id como alvo de conflito
-          ignoreDuplicates: false // Garante que ele atualize se existir
-        })
-        .select()
-        .single();
+      let resultData;
+      if (existingSettings) {
+        // Se as configurações existirem, atualiza-as
+        console.log('🔄 Configurações de design existentes encontradas, atualizando para userId:', userId);
+        const updatePayload = {
+          ...baseSettings,
+          // Manter o slug existente se já houver um. Gerar um novo se estiver faltando.
+          slug: existingSettings.slug || `minha-confeitaria-${Date.now()}`, 
+          codigo: codigoPermanente, // Garante que o código seja o permanente
+          nome_loja: existingSettings.nome_loja, // Manter o nome da loja existente
+          descricao_loja: existingSettings.descricao_loja, // Manter a descrição da loja existente
+          logo_url: existingSettings.logo_url, // Manter a logo existente
+          banner1_url: existingSettings.banner1_url, // Manter o banner existente
+          category_icons: existingSettings.category_icons // Manter os ícones de categoria existentes
+        };
 
-      if (error) {
-        console.error('❌ Erro ao upsert design settings:', error);
-        throw error; // This throws a SupabasePostgrestError
+        const { data, error } = await supabase
+          .from('design_settings')
+          .update(updatePayload)
+          .eq('user_id', userId)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('❌ Erro ao atualizar design settings:', error);
+          throw error;
+        }
+        resultData = data;
+      } else {
+        // Se não existirem configurações, insere novas
+        console.log('➕ Nenhuma configuração de design existente encontrada, inserindo nova para userId:', userId);
+        const insertPayload = {
+          user_id: userId,
+          ...baseSettings,
+          slug: `minha-confeitaria-${Date.now()}`, // Gera um slug único na primeira inserção
+        };
+
+        const { data, error } = await supabase
+          .from('design_settings')
+          .insert(insertPayload)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('❌ Erro ao inserir design settings:', error);
+          throw error;
+        }
+        resultData = data;
       }
       
-      console.log('✅ Design settings upserted com código permanente:', data);
-      return data;
+      console.log('✅ Design settings garantidos:', resultData);
+      return resultData;
     } catch (error: any) {
       console.error('❌ Erro em ensureDesignSettingsWithCode:', error);
       throw new Error(error.message || 'Erro desconhecido ao garantir design settings com código');
@@ -215,7 +261,7 @@ export class SupabaseService {
 
   async createDefaultConfiguracoes(userId: string) {
     try {
-      console.log('📝 Upserting configurações padrão para userId:', userId)
+      console.log('📝 Ensuring configurações padrão for userId:', userId)
       
       const defaultConfigs = {
         user_id: userId,
@@ -232,22 +278,58 @@ export class SupabaseService {
         updated_at: new Date().toISOString()
       };
 
-      const { data, error } = await supabase
+      // Tenta buscar as configurações existentes
+      const { data: existingConfigs, error: fetchError } = await supabase
         .from('configuracoes')
-        .upsert(defaultConfigs, {
-          onConflict: 'user_id', // Usa user_id como alvo de conflito
-          ignoreDuplicates: false
-        })
-        .select()
-        .single()
+        .select('*')
+        .eq('user_id', userId)
+        .single();
 
-      if (error) {
-        console.error('❌ Erro ao upsert configurações padrão:', error)
-        throw error
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('❌ Erro ao buscar configurações existentes:', fetchError);
+        throw fetchError;
+      }
+
+      let resultData;
+      if (existingConfigs) {
+        // Se as configurações existirem, atualiza-as
+        console.log('🔄 Configurações existentes encontradas, atualizando para userId:', userId);
+        const updatePayload = {
+          ...defaultConfigs,
+          // Manter o telefone existente se já houver um
+          telefone: existingConfigs.telefone || defaultConfigs.telefone,
+        };
+
+        const { data, error } = await supabase
+          .from('configuracoes')
+          .update(updatePayload)
+          .eq('user_id', userId)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('❌ Erro ao atualizar configurações:', error);
+          throw error;
+        }
+        resultData = data;
+      } else {
+        // Se não existirem configurações, insere novas
+        console.log('➕ Nenhuma configuração existente encontrada, inserindo nova para userId:', userId);
+        const { data, error } = await supabase
+          .from('configuracoes')
+          .insert(defaultConfigs)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('❌ Erro ao inserir configurações:', error);
+          throw error;
+        }
+        resultData = data;
       }
       
-      console.log('✅ Configurações padrão upserted:', data)
-      return data
+      console.log('✅ Configurações padrão garantidas:', resultData);
+      return resultData;
     } catch (error: any) {
       console.error('❌ Erro em createDefaultConfiguracoes:', error)
       throw new Error(error.message || 'Erro desconhecido ao criar configurações padrão');
