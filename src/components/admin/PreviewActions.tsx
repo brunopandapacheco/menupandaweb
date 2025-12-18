@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Share2, Copy, Check } from 'lucide-react'
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/hooks/useAuth'
 
 interface PreviewActionsProps {
   designSettings: any
@@ -11,25 +11,36 @@ interface PreviewActionsProps {
 }
 
 export function PreviewActions({ designSettings, onRefresh, showButton }: PreviewActionsProps) {
+  const { user } = useAuth()
   const [copied, setCopied] = useState(false)
 
+  // 🎯 FUNÇÃO PARA GERAR CÓDIGO PERMANENTE DO USER_ID
+  const getCodigoPermanente = (userId: string): string => {
+    // Pega os últimos 5 caracteres do UUID
+    return userId.slice(-5).toLowerCase()
+  }
+
   const getCardapioUrl = () => {
+    console.log('🔍 PreviewActions: user recebido:', user?.id)
     console.log('🔍 PreviewActions: designSettings recebidos:', designSettings)
-    console.log('🔍 PreviewActions: código:', designSettings?.codigo)
     
-    if (!designSettings?.codigo) {
-      console.error('❌ PreviewActions: Código não encontrado em designSettings')
-      console.error('❌ PreviewActions: designSettings completo:', JSON.stringify(designSettings, null, 2))
-      showError('Código da loja não encontrado. Verifique suas configurações.')
+    if (!user?.id) {
+      console.error('❌ PreviewActions: Usuário não encontrado')
+      showError('Usuário não autenticado')
       return null
     }
     
+    // 🎯 USA O CÓDIGO PERMANENTE BASEADO NO USER_ID
+    const codigoPermanente = getCodigoPermanente(user.id)
+    console.log('🔑 PreviewActions: Código permanente gerado:', codigoPermanente)
+    
     // Corrigindo o domínio para usar o ambiente atual
     const currentDomain = window.location.origin
-    const url = `${currentDomain}/cardapio/${designSettings.codigo.toLowerCase()}` // Forçar minúsculas
+    const url = `${currentDomain}/cardapio/${codigoPermanente}`
     console.log('🔗 PreviewActions: Generated URL:', url)
     console.log('🌐 PreviewActions: Current domain:', currentDomain)
-    console.log('🔑 PreviewActions: Código usado:', designSettings.codigo)
+    console.log('👤 PreviewActions: User ID:', user.id)
+    console.log('🔑 PreviewActions: Código permanente:', codigoPermanente)
     return url
   }
 

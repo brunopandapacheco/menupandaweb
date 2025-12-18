@@ -22,6 +22,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 export class SupabaseService {
+  // 🎯 FUNÇÃO PARA GERAR CÓDIGO PERMANENTE DO USER_ID
+  private generateCodeFromUserId(userId: string): string {
+    // Pega os últimos 5 caracteres do UUID
+    return userId.slice(-5).toLowerCase()
+  }
+
   async uploadImage(file: File, bucket: string, fileName: string) {
     try {
       console.log('📤 Fazendo upload da imagem:', fileName)
@@ -56,7 +62,7 @@ export class SupabaseService {
     try {
       console.log('📝 Atualizando design settings para userId:', userId, settings)
       
-      // PROTEÇÃO MÁXIMA: NUNCA permitir alterar o código
+      // 🚫 NUNCA permitir alterar o código - ele é baseado no user_id
       if (settings.codigo) {
         console.log('🚫 BLOQUEADO: Tentativa de alterar código para:', settings.codigo)
         delete settings.codigo // Remove completamente
@@ -108,35 +114,36 @@ export class SupabaseService {
     }
   }
 
-  // 🆕 FUNÇÃO SEPARADA - SÓ GERA CÓDIGO SE NÃO EXISTIR
+  // 🎯 FUNÇÃO PRINCIPAL - GARANTE CÓDIGO PERMANENTE BASEADO NO USER_ID
   async ensureDesignSettingsWithCode(userId: string) {
     try {
-      console.log('🔒 Garantindo design settings com código para userId:', userId)
+      console.log('🔒 Garantindo design settings com código permanente para userId:', userId)
       
-      // 1️⃣ PRIMEIRO: Verificar se já existe
+      // 1️⃣ Gerar código permanente baseado no user_id
+      const codigoPermanente = this.generateCodeFromUserId(userId)
+      console.log('🔑 Código permanente gerado do user_id:', codigoPermanente)
+      
+      // 2️⃣ Verificar se já existe
       let designData = await this.getDesignSettings(userId)
       
       if (designData) {
-        console.log('✅ Design settings já existem:', designData.codigo)
+        console.log('✅ Design settings já existem, código:', designData.codigo)
         
-        // 2️⃣ Se existe mas não tem código (caso raro), gerar UM código
-        if (!designData.codigo) {
-          console.log('⚠️ Design settings sem código, gerando novo...')
-          const codigo = this.generateUniqueCode()
-          const updatedDesign = await this.updateDesignSettings(userId, { codigo })
+        // 3️⃣ Se existe mas o código está diferente (caso raro), atualiza
+        if (designData.codigo !== codigoPermanente) {
+          console.log('⚠️ Código incorreto detectado, atualizando para:', codigoPermanente)
+          const updatedDesign = await this.updateDesignSettings(userId, { codigo: codigoPermanente })
           if (updatedDesign) {
             designData = updatedDesign
-            console.log('✅ Código gerado e salvo:', codigo)
+            console.log('✅ Código permanente corrigido:', codigoPermanente)
           }
         }
         
         return designData
       }
       
-      // 3️⃣ Se não existe, criar com código
-      console.log('📝 Criando design settings pela primeira vez...')
-      const codigo = this.generateUniqueCode()
-      console.log('🔑 Código único gerado:', codigo)
+      // 4️⃣ Se não existe, criar com código permanente
+      console.log('📝 Criando design settings pela primeira vez com código permanente...')
       
       const { data, error } = await supabase
         .from('design_settings')
@@ -150,9 +157,9 @@ export class SupabaseService {
           background_topo_color: '#fce7f3',
           texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
           banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgadinhos', 'Pipoca', 'Tortas'],
+          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgados', 'Pipoca', 'Tortas'],
           descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-          codigo: codigo // 🎯 CÓDIGO GERADO APENAS UMA VEZ
+          codigo: codigoPermanente // 🎯 CÓDIGO PERMANENTE BASEADO NO USER_ID
         })
         .select()
         .single()
@@ -170,19 +177,26 @@ export class SupabaseService {
     }
   }
 
-  // 🗑️ REMOVENDO createDefaultDesignSettings (não será mais usada)
+  // 🗑️ REMOVENDO FUNÇÃO ANTIGA
   async createDefaultDesignSettings(userId: string) {
     console.log('⚠️ createDefaultDesignSettings está obsoleto. Use ensureDesignSettingsWithCode()')
     return this.ensureDesignSettingsWithCode(userId)
   }
 
+  // 🎯 FUNÇÃO PARA OBTER CÓDIGO PERMANENTE
+  getCodigoPermanente(userId: string): string {
+    return this.generateCodeFromUserId(userId)
+  }
+
   generateUniqueCode(): string {
+    // ⚠️ ESTA FUNÇÃO NÃO SERÁ MAIS USADA
+    console.log('⚠️ generateUniqueCode() está obsoleto. Use generateCodeFromUserId()')
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
     let result = ''
     for (let i = 0; i < 5; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    console.log('🔑 Código gerado:', result)
+    console.log('🔑 Código gerado (obsoleto):', result)
     return result
   }
 
