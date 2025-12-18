@@ -3,6 +3,7 @@ import { Share2, Copy, Check } from 'lucide-react'
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
+import { Button } from '@/components/ui/button' // Adicionado: Importação do componente Button
 
 interface PreviewActionsProps {
   designSettings: any
