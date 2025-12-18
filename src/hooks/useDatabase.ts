@@ -39,8 +39,11 @@ export function useDatabase() {
       // Buscar outros dados
       const [configData, productsData] = await Promise.all([
         supabaseService.getConfiguracoes(user.id),
-        supabaseService.getProducts(user.id)
+        supabaseService.getProducts(user.id) // <--- Esta é a chamada para buscar produtos
       ])
+
+      // NOVO LOG: Verificando os produtos recebidos
+      console.log('📦 Produtos recebidos do SupabaseService:', productsData);
 
       // Atualizar cache
       if (designData) {

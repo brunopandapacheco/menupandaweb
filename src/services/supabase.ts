@@ -301,7 +301,7 @@ export class SupabaseService {
         .from('produtos')
         .select('*')
         .eq('user_id', userId)
-        .eq('disponivel', true)
+        // .eq('disponivel', true) // FILTRO TEMPORARIAMENTE REMOVIDO PARA DEBUG
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -309,7 +309,7 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produtos encontrados:', data?.length || 0)
+      console.log('✅ Produtos encontrados:', data?.length || 0, data) // Adicionado 'data' ao log
       return data || []
     } catch (error) {
       console.error('❌ Erro em getProducts:', error)
@@ -340,7 +340,7 @@ export class SupabaseService {
       console.log('✅ Produto criado:', data)
       return data
     } catch (error) {
-      console.error('❌ Erro em createProduct:', error)
+      console.error('❌ Erro ao criar produto:', error)
       throw error
     }
   }
