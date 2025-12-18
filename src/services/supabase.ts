@@ -93,7 +93,7 @@ export class SupabaseService {
 
   async getDesignSettings(userId: string) {
     try {
-      console.log('SupabaseService: getDesignSettings called for userId:', userId) // Novo log
+      console.log('SupabaseService: getDesignSettings called for userId:', userId)
       
       const { data, error } = await supabase
         .from('design_settings')
@@ -101,7 +101,7 @@ export class SupabaseService {
         .eq('user_id', userId)
         .single()
 
-      if (error && error.code !== 'PGRST116') {
+      if (error && error.code !== 'PGRST116') { // PGRST116 é "No rows found"
         console.error('❌ Erro ao buscar design settings:', error)
         throw error
       }
@@ -117,63 +117,45 @@ export class SupabaseService {
   // 🎯 FUNÇÃO PRINCIPAL - GARANTE CÓDIGO PERMANENTE BASEADO NO USER_ID
   async ensureDesignSettingsWithCode(userId: string) {
     try {
-      console.log('SupabaseService: ensureDesignSettingsWithCode called for userId:', userId); // Novo log
-      
-      // 1️⃣ Gerar código permanente baseado no user_id
-      const codigoPermanente = this.generateCodeFromUserId(userId)
-      console.log('🔑 Código permanente gerado do user_id:', codigoPermanente)
-      
-      // 2️⃣ Verificar se já existe
-      let designData = await this.getDesignSettings(userId)
-      
-      if (designData) {
-        console.log('✅ Design settings já existem, código:', designData.codigo)
-        
-        // 3️⃣ Se existe mas o código está diferente (caso raro), atualiza
-        if (designData.codigo !== codigoPermanente) {
-          console.log('⚠️ Código incorreto detectado, atualizando para:', codigoPermanente)
-          const updatedDesign = await this.updateDesignSettings(userId, { codigo: codigoPermanente })
-          if (updatedDesign) {
-            designData = updatedDesign
-            console.log('✅ Código permanente corrigido:', codigoPermanente)
-          }
-        }
-        
-        return designData
-      }
-      
-      // 4️⃣ Se não existe, criar com código permanente
-      console.log('📝 Criando design settings pela primeira vez com código permanente...')
-      
+      console.log('SupabaseService: ensureDesignSettingsWithCode called for userId:', userId);
+      const codigoPermanente = this.generateCodeFromUserId(userId);
+      console.log('🔑 Código permanente gerado do user_id:', codigoPermanente);
+
+      const defaultSettings = {
+        user_id: userId,
+        nome_loja: 'Minha Confeitaria',
+        slug: `minha-confeitaria-${Date.now()}`, // Slug deve ser único na criação
+        cor_borda: '#ec4899',
+        cor_background: '#fef2f2',
+        cor_nome: '#be185d',
+        background_topo_color: '#fce7f3',
+        texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
+        banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+        categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgados', 'Pipoca', 'Tortas'],
+        descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
+        codigo: codigoPermanente, // Sempre define o código permanente
+        updated_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('design_settings')
-        .insert({
-          user_id: userId,
-          nome_loja: 'Minha Confeitaria',
-          slug: `minha-confeitaria-${Date.now()}`,
-          cor_borda: '#ec4899',
-          cor_background: '#fef2f2',
-          cor_nome: '#be185d',
-          background_topo_color: '#fce7f3',
-          texto_rodape: 'Faça seu pedido! 📞 (11) 99999-9999',
-          banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-          categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgados', 'Pipoca', 'Tortas'],
-          descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-          codigo: codigoPermanente // 🎯 CÓDIGO PERMANENTE BASEADO NO USER_ID
+        .upsert(defaultSettings, {
+          onConflict: 'user_id', // Usa user_id como alvo de conflito
+          ignoreDuplicates: false // Garante que ele atualize se existir
         })
         .select()
-        .single()
+        .single();
 
       if (error) {
-        console.error('❌ Erro ao criar design settings:', error)
-        throw error
+        console.error('❌ Erro ao upsert design settings:', error);
+        throw error;
       }
       
-      console.log('✅ Design settings criados com código permanente:', data)
-      return data
+      console.log('✅ Design settings upserted com código permanente:', data);
+      return data;
     } catch (error) {
-      console.error('❌ Erro em ensureDesignSettingsWithCode:', error)
-      throw error
+      console.error('❌ Erro em ensureDesignSettingsWithCode:', error);
+      throw error;
     }
   }
 
@@ -202,7 +184,7 @@ export class SupabaseService {
 
   async getConfiguracoes(userId: string) {
     try {
-      console.log('SupabaseService: getConfiguracoes called for userId:', userId) // Novo log
+      console.log('SupabaseService: getConfiguracoes called for userId:', userId)
       
       const { data, error } = await supabase
         .from('configuracoes')
@@ -219,8 +201,8 @@ export class SupabaseService {
       const config = data && data.length > 0 ? data[0] : null
       
       if (!config) {
-        console.log('📝 Criando configurações padrão para userId:', userId)
-        return this.createDefaultConfiguracoes(userId)
+        console.log('📝 Configurações não encontradas, criando padrão para userId:', userId)
+        return this.createDefaultConfiguracoes(userId) // Isso agora usará upsert
       }
       
       console.log('✅ Configurações encontradas:', config)
@@ -233,32 +215,38 @@ export class SupabaseService {
 
   async createDefaultConfiguracoes(userId: string) {
     try {
-      console.log('📝 Criando configurações padrão para userId:', userId)
+      console.log('📝 Upserting configurações padrão para userId:', userId)
       
+      const defaultConfigs = {
+        user_id: userId,
+        telefone: '(11) 99999-9999',
+        horario_abertura: '08:00',
+        horario_fechamento: '18:00',
+        dias_funcionamento: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'],
+        abre_sabado: true,
+        horario_sabado_abre: '08:00',
+        horario_sabado_fecha: '18:00',
+        abre_domingo: false,
+        horario_domingo_abre: '08:00',
+        horario_domingo_fecha: '18:00',
+        updated_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('configuracoes')
-        .insert({
-          user_id: userId,
-          telefone: '(11) 99999-9999',
-          horario_abertura: '08:00',
-          horario_fechamento: '18:00',
-          dias_funcionamento: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'],
-          abre_sabado: true,
-          horario_sabado_abre: '08:00',
-          horario_sabado_fecha: '18:00',
-          abre_domingo: false,
-          horario_domingo_abre: '08:00',
-          horario_domingo_fecha: '18:00'
+        .upsert(defaultConfigs, {
+          onConflict: 'user_id', // Usa user_id como alvo de conflito
+          ignoreDuplicates: false
         })
         .select()
         .single()
 
       if (error) {
-        console.error('❌ Erro ao criar configurações padrão:', error)
+        console.error('❌ Erro ao upsert configurações padrão:', error)
         throw error
       }
       
-      console.log('✅ Configurações padrão criadas:', data)
+      console.log('✅ Configurações padrão upserted:', data)
       return data
     } catch (error) {
       console.error('❌ Erro em createDefaultConfiguracoes:', error)
@@ -295,13 +283,13 @@ export class SupabaseService {
 
   async getProducts(userId: string) {
     try {
-      console.log('SupabaseService: getProducts called for userId:', userId) // Novo log
+      console.log('SupabaseService: getProducts called for userId:', userId)
       
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
         .eq('user_id', userId)
-        .eq('disponivel', true) // FILTRO REATIVADO
+        .eq('disponivel', true)
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -309,7 +297,7 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produtos encontrados:', data?.length || 0, data) // Adicionado 'data' ao log
+      console.log('✅ Produtos encontrados:', data?.length || 0, data)
       return data || []
     } catch (error) {
       console.error('❌ Erro em getProducts:', error)
@@ -557,7 +545,7 @@ export class SupabaseService {
 
   async getProductsByCodigo(codigo: string) {
     try {
-      console.log('SupabaseService: getProductsByCodigo called for code:', codigo) // Novo log
+      console.log('SupabaseService: getProductsByCodigo called for code:', codigo)
       
       const { data: designData } = await supabase
         .from('design_settings')
