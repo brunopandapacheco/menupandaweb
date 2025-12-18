@@ -270,8 +270,8 @@ export default function DesignSettings() {
                           value={descricaoLoja}
                           onChange={(e) => setDescricaoLoja(e.target.value)}
                           placeholder="Descreva sua confeitaria..."
-                          rows={8}
-                          maxLength={300}
+                          rows={3}
+                          maxLength={200} {/* Adicionado o limite de 200 caracteres aqui */}
                           className="w-full p-3 border border-gray-300 rounded-lg resize-none"
                         />
                         <button 
