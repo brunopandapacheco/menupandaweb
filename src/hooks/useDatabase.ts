@@ -62,16 +62,21 @@ export function useDatabase() {
       console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
       delete settings.codigo
     }
+
+    console.log('🔍 [saveDesignSettings] Enviando para Supabase:', settings); // Log do payload
     
-    const success = await supabaseService.updateDesignSettings(user.id, settings)
+    const result = await supabaseService.updateDesignSettings(user.id, settings)
     
-    if (success) {
+    if (result) {
+      console.log('✅ [saveDesignSettings] Sucesso ao salvar design settings:', result); // Log da resposta
       const currentSettings = getCache('designSettings')
       const updatedSettings = { ...currentSettings, ...settings }
       updateCache('designSettings', updatedSettings)
+      return true; // Retorna true em caso de sucesso
+    } else {
+      console.error('❌ [saveDesignSettings] Erro ao salvar design settings. Resultado:', result); // Log do erro
+      return false; // Retorna false em caso de falha
     }
-    
-    return success
   }
 
   const saveConfiguracoes = async (config: Partial<Configuracoes>) => {

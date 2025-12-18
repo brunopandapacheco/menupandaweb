@@ -53,6 +53,8 @@ export class SupabaseService {
 
   async updateDesignSettings(userId: string, settings: any) {
     try {
+      console.log('🔍 [SupabaseService.updateDesignSettings] Payload recebido:', settings); // Log do payload
+      
       // 🚫 NUNCA permitir alterar o código - ele é baseado no user_id
       if (settings.codigo) {
         console.log('🚫 BLOQUEADO: Tentativa de alterar código para:', settings.codigo)
@@ -70,13 +72,14 @@ export class SupabaseService {
         .single()
 
       if (error) {
-        console.error('❌ Erro ao atualizar design settings:', error)
+        console.error('❌ [SupabaseService.updateDesignSettings] Erro ao atualizar design settings:', error)
         throw error
       }
       
+      console.log('✅ [SupabaseService.updateDesignSettings] Design settings atualizados:', data) // Log da resposta
       return data
     } catch (error: any) {
-      console.error('❌ Erro em updateDesignSettings:', error)
+      console.error('❌ [SupabaseService.updateDesignSettings] Erro em updateDesignSettings:', error)
       throw new Error(error.message || 'Erro desconhecido ao atualizar design settings');
     }
   }
