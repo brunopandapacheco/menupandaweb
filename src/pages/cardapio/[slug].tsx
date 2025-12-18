@@ -26,9 +26,7 @@ export default function CardapioPublico() {
 
   useEffect(() => {
     if (slug) {
-      // Forçar minúsculas no código
       const codigoLower = slug.toLowerCase()
-      console.log('🔍 Buscando cardápio pelo código (convertido para minúsculas):', codigoLower)
       loadData(codigoLower)
     }
   }, [slug])
@@ -62,8 +60,6 @@ export default function CardapioPublico() {
     try {
       setLoading(true)
       setError(null)
-      
-      console.log('🔍 Buscando cardápio pelo código:', codigo)
       
       const [designData, configData, productsData] = await Promise.all([
         supabaseService.getDesignSettingsByCodigo(codigo),

@@ -22,18 +22,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 export class SupabaseService {
-  // 🎯 FUNÇÃO PARA GERAR CÓDIGO PERMANENTE DO USER_ID
   private generateCodeFromUserId(userId: string): string {
-    // Pega os últimos 5 caracteres do UUID
     return userId.slice(-5).toLowerCase()
   }
 
   async uploadImage(file: File, bucket: string, fileName: string) {
     try {
-      console.log('📤 Fazendo upload da imagem:', fileName)
-      console.log('📦 Bucket:', bucket)
-      console.log('📁 File:', file.name, file.size, file.type)
-      
       const { data, error } = await supabase.storage
         .from(bucket)
         .upload(fileName, file, {
@@ -50,18 +44,15 @@ export class SupabaseService {
         .from(bucket)
         .getPublicUrl(fileName)
 
-      console.log('✅ Upload realizado:', publicUrl)
       return publicUrl
     } catch (error: any) {
       console.error('❌ Erro em uploadImage:', error)
-      throw new Error(error.message || 'Erro desconhecido no upload da imagem'); // Garante que seja um objeto Error
+      throw new Error(error.message || 'Erro desconhecido no upload da imagem');
     }
   }
 
   async updateDesignSettings(userId: string, settings: any) {
     try {
-      console.log('📝 Atualizando design settings para userId:', userId, settings)
-      
       // 🚫 NUNCA permitir alterar o código - ele é baseado no user_id
       if (settings.codigo) {
         console.log('🚫 BLOQUEADO: Tentativa de alterar código para:', settings.codigo)
@@ -83,7 +74,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Design settings atualizados (código protegido):', data)
       return data
     } catch (error: any) {
       console.error('❌ Erro em updateDesignSettings:', error)
@@ -93,8 +83,6 @@ export class SupabaseService {
 
   async getDesignSettings(userId: string) {
     try {
-      console.log('SupabaseService: getDesignSettings called for userId:', userId)
-      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -106,7 +94,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Design settings encontrados:', data)
       return data
     } catch (error: any) {
       console.error('❌ Erro em getDesignSettings:', error)
@@ -114,21 +101,17 @@ export class SupabaseService {
     }
   }
 
-  // 🎯 FUNÇÃO PRINCIPAL - GARANTE CÓDIGO PERMANENTE BASEADO NO USER_ID
   async ensureDesignSettingsWithCode(userId: string) {
     try {
-      console.log('SupabaseService: ensureDesignSettingsWithCode called for userId:', userId);
       const codigoPermanente = this.generateCodeFromUserId(userId);
-      console.log('🔑 Código permanente gerado do user_id:', codigoPermanente);
 
-      // Tenta buscar as configurações de design existentes
       const { data: existingSettings, error: fetchError } = await supabase
         .from('design_settings')
         .select('*')
         .eq('user_id', userId)
         .single();
 
-      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 means "No rows found"
+      if (fetchError && fetchError.code !== 'PGRST116') {
         console.error('❌ Erro ao buscar design settings existentes:', fetchError);
         throw fetchError;
       }
@@ -143,24 +126,21 @@ export class SupabaseService {
         banner_gradient: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
         categorias: ['Bolos', 'Doces', 'Brigadeiros', 'Cookies', 'Salgados', 'Pipoca', 'Tortas'],
         descricao_loja: 'Há mais de 20 anos transformando momentos especiais em doces inesquecíveis. Feito com amor e os melhores ingredientes.',
-        codigo: codigoPermanente, // Sempre define o código permanente
+        codigo: codigoPermanente,
         updated_at: new Date().toISOString()
       };
 
       let resultData;
       if (existingSettings) {
-        // Se as configurações existirem, atualiza-as
-        console.log('🔄 Configurações de design existentes encontradas, atualizando para userId:', userId);
         const updatePayload = {
           ...baseSettings,
-          // Manter o slug existente se já houver um. Gerar um novo se estiver faltando.
           slug: existingSettings.slug || `minha-confeitaria-${Date.now()}`, 
-          codigo: codigoPermanente, // Garante que o código seja o permanente
-          nome_loja: existingSettings.nome_loja, // Manter o nome da loja existente
-          descricao_loja: existingSettings.descricao_loja, // Manter a descrição da loja existente
-          logo_url: existingSettings.logo_url, // Manter a logo existente
-          banner1_url: existingSettings.banner1_url, // Manter o banner existente
-          category_icons: existingSettings.category_icons // Manter os ícones de categoria existentes
+          codigo: codigoPermanente,
+          nome_loja: existingSettings.nome_loja,
+          descricao_loja: existingSettings.descricao_loja,
+          logo_url: existingSettings.logo_url,
+          banner1_url: existingSettings.banner1_url,
+          category_icons: existingSettings.category_icons
         };
 
         const { data, error } = await supabase
@@ -176,12 +156,10 @@ export class SupabaseService {
         }
         resultData = data;
       } else {
-        // Se não existirem configurações, insere novas
-        console.log('➕ Nenhuma configuração de design existente encontrada, inserindo nova para userId:', userId);
         const insertPayload = {
           user_id: userId,
           ...baseSettings,
-          slug: `minha-confeitaria-${Date.now()}`, // Gera um slug único na primeira inserção
+          slug: `minha-confeitaria-${Date.now()}`,
         };
 
         const { data, error } = await supabase
@@ -197,7 +175,6 @@ export class SupabaseService {
         resultData = data;
       }
       
-      console.log('✅ Design settings garantidos:', resultData);
       return resultData;
     } catch (error: any) {
       console.error('❌ Erro em ensureDesignSettingsWithCode:', error);
@@ -205,33 +182,25 @@ export class SupabaseService {
     }
   }
 
-  // 🗑️ REMOVENDO FUNÇÃO ANTIGA
   async createDefaultDesignSettings(userId: string) {
-    console.log('⚠️ createDefaultDesignSettings está obsoleto. Use ensureDesignSettingsWithCode()')
     return this.ensureDesignSettingsWithCode(userId)
   }
 
-  // 🎯 FUNÇÃO PARA OBTER CÓDIGO PERMANENTE
   getCodigoPermanente(userId: string): string {
     return this.generateCodeFromUserId(userId)
   }
 
   generateUniqueCode(): string {
-    // ⚠️ ESTA FUNÇÃO NÃO SERÁ MAIS USADA
-    console.log('⚠️ generateUniqueCode() está obsoleto. Use generateCodeFromUserId()')
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
     let result = ''
     for (let i = 0; i < 5; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    console.log('🔑 Código gerado (obsoleto):', result)
     return result
   }
 
   async getConfiguracoes(userId: string) {
     try {
-      console.log('SupabaseService: getConfiguracoes called for userId:', userId)
-      
       const { data, error } = await supabase
         .from('configuracoes')
         .select('*')
@@ -247,11 +216,9 @@ export class SupabaseService {
       const config = data && data.length > 0 ? data[0] : null
       
       if (!config) {
-        console.log('📝 Configurações não encontradas, criando padrão para userId:', userId)
-        return this.createDefaultConfiguracoes(userId) // Isso agora usará upsert
+        return this.createDefaultConfiguracoes(userId)
       }
       
-      console.log('✅ Configurações encontradas:', config)
       return config
     } catch (error: any) {
       console.error('❌ Erro em getConfiguracoes:', error)
@@ -261,8 +228,6 @@ export class SupabaseService {
 
   async createDefaultConfiguracoes(userId: string) {
     try {
-      console.log('📝 Ensuring configurações padrão for userId:', userId)
-      
       const defaultConfigs = {
         user_id: userId,
         telefone: '(11) 99999-9999',
@@ -278,7 +243,6 @@ export class SupabaseService {
         updated_at: new Date().toISOString()
       };
 
-      // Tenta buscar as configurações existentes
       const { data: existingConfigs, error: fetchError } = await supabase
         .from('configuracoes')
         .select('*')
@@ -292,11 +256,8 @@ export class SupabaseService {
 
       let resultData;
       if (existingConfigs) {
-        // Se as configurações existirem, atualiza-as
-        console.log('🔄 Configurações existentes encontradas, atualizando para userId:', userId);
         const updatePayload = {
           ...defaultConfigs,
-          // Manter o telefone existente se já houver um
           telefone: existingConfigs.telefone || defaultConfigs.telefone,
         };
 
@@ -313,8 +274,6 @@ export class SupabaseService {
         }
         resultData = data;
       } else {
-        // Se não existirem configurações, insere novas
-        console.log('➕ Nenhuma configuração existente encontrada, inserindo nova para userId:', userId);
         const { data, error } = await supabase
           .from('configuracoes')
           .insert(defaultConfigs)
@@ -328,7 +287,6 @@ export class SupabaseService {
         resultData = data;
       }
       
-      console.log('✅ Configurações padrão garantidas:', resultData);
       return resultData;
     } catch (error: any) {
       console.error('❌ Erro em createDefaultConfiguracoes:', error)
@@ -338,8 +296,6 @@ export class SupabaseService {
 
   async updateConfiguracoes(userId: string, config: any) {
     try {
-      console.log('📝 Atualizando configurações para userId:', userId, config)
-      
       const { data, error } = await supabase
         .from('configuracoes')
         .upsert({
@@ -355,7 +311,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Configurações atualizadas:', data)
       return data
     } catch (error: any) {
       console.error('❌ Erro em updateConfiguracoes:', error)
@@ -365,8 +320,6 @@ export class SupabaseService {
 
   async getProducts(userId: string) {
     try {
-      console.log('SupabaseService: getProducts called for userId:', userId)
-      
       const { data, error } = await supabase
         .from('produtos')
         .select('*')
@@ -379,7 +332,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produtos encontrados:', data?.length || 0, data)
       return data || []
     } catch (error: any) {
       console.error('❌ Erro em getProducts:', error)
@@ -389,8 +341,6 @@ export class SupabaseService {
 
   async createProduct(userId: string, product: any) {
     try {
-      console.log('📝 Criando produto para userId:', userId, product)
-      
       const { data, error } = await supabase
         .from('produtos')
         .insert({
@@ -407,7 +357,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produto criado:', data)
       return data
     } catch (error: any) {
       console.error('❌ Erro ao criar produto:', error)
@@ -417,8 +366,6 @@ export class SupabaseService {
 
   async updateProduct(productId: string, product: any) {
     try {
-      console.log('📝 Atualizando produto:', productId, product)
-      
       const { data, error } = await supabase
         .from('produtos')
         .update({
@@ -434,7 +381,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produto atualizado:', data)
       return data
     } catch (error: any) {
       console.error('❌ Erro em updateProduct:', error)
@@ -444,8 +390,6 @@ export class SupabaseService {
 
   async deleteProduct(productId: string) {
     try {
-      console.log('🗑️ Excluindo produto:', productId)
-      
       const { error } = await supabase
         .from('produtos')
         .delete()
@@ -456,7 +400,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produto excluído com sucesso')
       return true
     } catch (error: any) {
       console.error('❌ Erro em deleteProduct:', error)
@@ -466,8 +409,6 @@ export class SupabaseService {
 
   async getDesignSettingsBySlug(slug: string) {
     try {
-      console.log('🔍 Buscando design settings por slug:', slug)
-      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -486,7 +427,6 @@ export class SupabaseService {
         throw new Error('Design settings not found')
       }
       
-      console.log('✅ Design settings encontrados por slug:', designData)
       return designData
     } catch (error: any) {
       console.error('❌ Erro em getDesignSettingsBySlug:', error)
@@ -496,8 +436,6 @@ export class SupabaseService {
 
   async getDesignSettingsByCodigo(codigo: string) {
     try {
-      console.log('🔍 Buscando design settings por código:', codigo)
-      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -509,7 +447,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Design settings encontrados por código:', data)
       return data
     } catch (error: any) {
       console.error('❌ Erro em getDesignSettingsByCodigo:', error)
@@ -519,8 +456,6 @@ export class SupabaseService {
 
   async getConfiguracoesBySlug(slug: string) {
     try {
-      console.log('🔍 Buscando configurações por slug:', slug)
-      
       const { data: designData } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -546,7 +481,6 @@ export class SupabaseService {
       
       const config = data && data.length > 0 ? data[0] : null
       
-      console.log('✅ Configurações encontradas por slug:', config)
       return config
     } catch (error: any) {
       console.error('❌ Erro em getConfiguracoesBySlug:', error)
@@ -556,8 +490,6 @@ export class SupabaseService {
 
   async getConfiguracoesByCodigo(codigo: string) {
     try {
-      console.log('🔍 Buscando configurações por código:', codigo)
-      
       const { data: designData } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -582,7 +514,6 @@ export class SupabaseService {
       
       const config = data && data.length > 0 ? data[0] : null
       
-      console.log('✅ Configurações encontradas por código:', config)
       return config
     } catch (error: any) {
       console.error('❌ Erro em getConfiguracoesByCodigo:', error)
@@ -592,8 +523,6 @@ export class SupabaseService {
 
   async getProductsBySlug(slug: string) {
     try {
-      console.log('🔍 Buscando produtos por slug:', slug)
-      
       const { data: designData } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -617,7 +546,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produtos encontrados por slug:', data?.length || 0)
       return data || []
     } catch (error: any) {
       console.error('❌ Erro em getProductsBySlug:', error)
@@ -627,8 +555,6 @@ export class SupabaseService {
 
   async getProductsByCodigo(codigo: string) {
     try {
-      console.log('SupabaseService: getProductsByCodigo called for code:', codigo)
-      
       const { data: designData } = await supabase
         .from('design_settings')
         .select('user_id')
@@ -651,7 +577,6 @@ export class SupabaseService {
         throw error
       }
       
-      console.log('✅ Produtos encontrados por código:', data?.length || 0)
       return data || []
     } catch (error: any) {
       console.error('❌ Erro em getProductsByCodigo:', error)

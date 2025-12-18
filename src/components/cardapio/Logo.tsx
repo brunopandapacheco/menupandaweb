@@ -20,7 +20,7 @@ interface LogoProps {
     numero: string
     complemento: string
   }
-  configuracoes?: any // Adicionando configuracoes para o StatusButton
+  configuracoes?: any
 }
 
 export function Logo({ 
@@ -33,13 +33,12 @@ export function Logo({
   isEditable = false,
   onLogoChange,
   endereco,
-  configuracoes // Adicionando configuracoes
+  configuracoes
 }: LogoProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [showLocationDialog, setShowLocationDialog] = useState(false)
   const [imageError, setImageError] = useState(false)
 
-  // Adicionar timestamp para evitar cache
   const getLogoUrlWithTimestamp = (url?: string) => {
     if (!url) return url
     const separator = url.includes('?') ? '&' : '?'
@@ -50,7 +49,7 @@ export function Logo({
     if (onLogoChange) {
       onLogoChange(croppedImage)
     }
-    setImageError(false) // Resetar erro ao salvar nova logo
+    setImageError(false)
   }
 
   const renderStars = (rating: number) => {
@@ -104,7 +103,6 @@ export function Logo({
 
   return (
     <div className="relative">
-      {/* Logo circular posicionada fora do container para ficar sobre o banner */}
       <div 
         className="absolute"
         style={{
@@ -137,17 +135,14 @@ export function Logo({
                   alt="Logo" 
                   className="w-full h-full object-contain rounded-full"
                   onError={() => {
-                    console.error('❌ Erro ao carregar logo:', logoUrl)
                     setImageError(true)
                   }}
                   onLoad={() => {
-                    console.log('✅ Logo carregada com sucesso:', logoUrl)
                     setImageError(false)
                   }}
                 />
               </div>
               
-              {/* Edit button overlay */}
               {isEditable && (
                 <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <Info className="w-6 h-6 text-white" />
@@ -176,7 +171,6 @@ export function Logo({
                 {storeName?.charAt(0) || 'L'}
               </div>
               
-              {/* Edit button overlay */}
               {isEditable && (
                 <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <Info className="w-6 h-6 text-white" />
@@ -187,7 +181,6 @@ export function Logo({
         </div>
       </div>
 
-      {/* Container principal */}
       <div 
         className="relative bg-white rounded-lg p-6 overflow-hidden mx-4"
         style={{ 
@@ -199,7 +192,6 @@ export function Logo({
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)'
         }}
       >
-        {/* Nome e descrição */}
         <div className="text-center mt-8 mb-4">
           <h1 
             className="text-2xl mb-2 font-semibold"
@@ -213,7 +205,6 @@ export function Logo({
             {storeName}
           </h1>
           
-          {/* Avaliação com estrelas */}
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="flex items-center gap-1">
               {renderStars(avaliacaoMedia)}
@@ -227,7 +218,6 @@ export function Logo({
             {storeDescription}
           </p>
 
-          {/* Localização da Loja */}
           {formatLocation() && (
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
               <MapPin className="w-4 h-4" />
@@ -244,7 +234,6 @@ export function Logo({
             </div>
           )}
 
-          {/* BOTÃO DE STATUS AQUI - ABAIXO DA DESCRIÇÃO */}
           {configuracoes && (
             <div className="mt-4 flex justify-center">
               <StatusButton configuracoes={configuracoes} />
@@ -253,7 +242,6 @@ export function Logo({
         </div>
       </div>
 
-      {/* Logo Editor Modal */}
       <LogoEditor
         isOpen={showEditor}
         onClose={() => setShowEditor(false)}
@@ -262,7 +250,6 @@ export function Logo({
         initialImage={logoUrl}
       />
 
-      {/* Dialog de Endereço Completo */}
       <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>

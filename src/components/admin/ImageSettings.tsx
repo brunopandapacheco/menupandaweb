@@ -35,9 +35,6 @@ export function ImageSettings({
     const file = event.target.files?.[0]
     if (!file) return
 
-    console.log('📁 Arquivo selecionado:', file.name, file.type, file.size)
-    console.log('👤 Usuário atual:', user?.id)
-
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
       return
@@ -55,9 +52,6 @@ export function ImageSettings({
     const file = event.target.files?.[0]
     if (!file) return
 
-    console.log('📁 Banner selecionado:', file.name, file.type, file.size)
-    console.log('👤 Usuário logado:', user?.id)
-
     if (!file.type.startsWith('image/')) {
       showError('Arquivo não é uma imagem')
       return
@@ -70,20 +64,12 @@ export function ImageSettings({
     setUploadingBanner(true)
 
     try {
-      console.log('📤 Fazendo upload do banner...')
-      console.log('👤 Usuário logado:', user?.id)
-      
-      // Nome do arquivo COM user_id para garantir unicidade
       const fileName = `banner-${user?.id}-${Date.now()}.${file.name.split('.').pop()}`
-      console.log('📝 Nome do arquivo:', fileName)
       
       const url = await supabaseService.uploadImage(file, 'images', fileName)
       
       if (!url) throw new Error('Falha no upload da imagem para o storage')
 
-      console.log('✅ Banner uploadado:', url)
-      console.log('💾 Salvando no banco de dados...')
-      
       await onSaveBanner(url)
       onBannerUrlChange(url)
       showSuccess('🖼️ Banner atualizado com sucesso!')
@@ -97,7 +83,6 @@ export function ImageSettings({
 
   const handleLogoCropComplete = async (croppedBlob: Blob) => {
     if (!selectedLogoFile || !user) {
-      console.error('❌ Arquivo ou usuário não encontrado')
       showError('Erro: usuário não autenticado')
       return
     }
@@ -106,21 +91,13 @@ export function ImageSettings({
     setShowLogoCropper(false)
 
     try {
-      console.log('📤 Fazendo upload da logo...')
-      console.log('👤 Usuário logado:', user?.id)
-      
-      // Nome do arquivo COM user_id para garantir unicidade
       const fileName = `logo-${user?.id}-${Date.now()}.jpg`
-      console.log('📝 Nome do arquivo:', fileName)
       
       const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
       const url = await supabaseService.uploadImage(file, 'logos', fileName)
 
       if (!url) throw new Error('Falha no upload da imagem')
 
-      console.log('✅ Logo uploadada:', url)
-      console.log('💾 Salvando no banco de dados...')
-      
       await onSaveLogo(url)
       onLogoUrlChange(url)
       showSuccess('🖼️ Logo atualizada com sucesso!')
@@ -141,7 +118,6 @@ export function ImageSettings({
   return (
     <div className="space-y-6">
       
-      {/* Card da Logo */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Logo da Loja</CardTitle>
@@ -157,11 +133,7 @@ export function ImageSettings({
                     alt="Logo da loja" 
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      console.error('❌ Erro ao carregar logo no preview:', logoUrl)
                       e.currentTarget.style.display = 'none'
-                    }}
-                    onLoad={() => {
-                      console.log('✅ Logo carregada no preview:', logoUrl)
                     }}
                   />
                 </div>
@@ -176,7 +148,6 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Rosa (Logo) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -205,7 +176,6 @@ export function ImageSettings({
         </CardContent>
       </Card>
 
-      {/* Card do Banner */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</CardTitle>
@@ -221,11 +191,7 @@ export function ImageSettings({
                     alt="Banner do cardápio" 
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      console.error('❌ Erro ao carregar banner no preview:', bannerUrl)
                       e.currentTarget.style.display = 'none'
-                    }}
-                    onLoad={() => {
-                      console.log('✅ Banner carregado no preview:', bannerUrl)
                     }}
                   />
                 </div>
@@ -240,7 +206,6 @@ export function ImageSettings({
             </div>
           </div>
 
-          {/* Botão Rosa (Banner) */}
           <div className="flex justify-center">
             <input
               type="file"
@@ -269,7 +234,6 @@ export function ImageSettings({
         </CardContent>
       </Card>
 
-      {/* Modal de Crop */}
       {showLogoCropper && selectedLogoFile && (
         <LogoCropper
           imageFile={selectedLogoFile}

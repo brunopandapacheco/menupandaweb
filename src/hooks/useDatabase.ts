@@ -11,10 +11,8 @@ export function useDatabase() {
 
   useEffect(() => {
     if (user) {
-      console.log('useDatabase: User detected, loading data for ID:', user.id);
       loadData()
     } else {
-      console.log('useDatabase: No user detected or user logged out.');
       setLoading(false)
     }
   }, [user])
@@ -26,36 +24,24 @@ export function useDatabase() {
       return
     }
 
-    console.log('👤 Carregando dados para usuário:', user.id)
-
     setLoading(true)
     
     try {
-      console.log('🔒 Garantindo design settings com código permanente...')
-      
       let designData = await supabaseService.ensureDesignSettingsWithCode(user.id)
-      console.log('📋 Design settings garantidos:', designData?.codigo, designData) // Log completo do designData
 
       const [configData, productsData] = await Promise.all([
         supabaseService.getConfiguracoes(user.id),
         supabaseService.getProducts(user.id)
       ])
 
-      console.log('📦 Produtos recebidos do SupabaseService:', productsData);
-      console.log('⚙️ Configurações recebidas do SupabaseService:', configData);
-      console.log('🎨 Design Settings recebidos do SupabaseService:', designData);
-
       // Atualizar cache
       if (designData) {
-        console.log('💾 Atualizando cache designSettings com código permanente:', designData.codigo, designData)
         updateCache('designSettings', designData)
       }
       if (configData) {
-        console.log('💾 Atualizando cache configuracoes:', configData)
         updateCache('configuracoes', configData)
       }
       if (productsData) {
-        console.log('💾 Atualizando cache produtos:', productsData)
         updateCache('produtos', productsData || [])
       }
       
@@ -72,9 +58,6 @@ export function useDatabase() {
       return false
     }
     
-    console.log('💾 Salvando design settings para usuário:', user.id)
-    console.log('📝 Settings recebidos:', settings)
-    
     if (settings.codigo) {
       console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
       delete settings.codigo
@@ -86,7 +69,6 @@ export function useDatabase() {
       const currentSettings = getCache('designSettings')
       const updatedSettings = { ...currentSettings, ...settings }
       updateCache('designSettings', updatedSettings)
-      console.log('✅ Design settings salvos no cache')
     }
     
     return success
@@ -98,15 +80,12 @@ export function useDatabase() {
       return false
     }
     
-    console.log('💾 Salvando configurações para usuário:', user.id)
-    
     const success = await supabaseService.updateConfiguracoes(user.id, config)
     
     if (success) {
       const currentConfig = getCache('configuracoes')
       const updatedConfig = { ...currentConfig, ...config }
       updateCache('configuracoes', updatedConfig)
-      console.log('✅ Configurações salvas no cache')
     }
     
     return success
@@ -118,14 +97,11 @@ export function useDatabase() {
       return null
     }
     
-    console.log('💾 Adicionando produto para usuário:', user.id)
-    
     const result = await supabaseService.createProduct(user.id, product)
     
     if (result) {
       const currentProducts = getCache('produtos') || []
       updateCache('produtos', [result, ...currentProducts])
-      console.log('✅ Produto adicionado ao cache')
     }
     
     return result
@@ -137,8 +113,6 @@ export function useDatabase() {
       return false
     }
     
-    console.log('💾 Editando produto:', id, 'para usuário:', user.id)
-    
     const success = await supabaseService.updateProduct(id, product)
     
     if (success) {
@@ -147,7 +121,6 @@ export function useDatabase() {
         p.id === id ? { ...p, ...product } : p
       )
       updateCache('produtos', updatedProducts)
-      console.log('✅ Produto editado no cache')
     }
     
     return success
@@ -159,15 +132,12 @@ export function useDatabase() {
       return false
     }
     
-    console.log('💾 Removendo produto:', id, 'para usuário:', user.id)
-    
     const success = await supabaseService.deleteProduct(id)
     
     if (success) {
       const currentProducts = getCache('produtos') || []
       const updatedProducts = currentProducts.filter(p => p.id !== id)
       updateCache('produtos', updatedProducts)
-      console.log('✅ Produto removido do cache')
     }
     
     return success

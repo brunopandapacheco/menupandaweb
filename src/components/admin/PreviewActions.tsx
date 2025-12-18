@@ -3,7 +3,7 @@ import { Share2, Copy, Check } from 'lucide-react'
 import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
-import { Button } from '@/components/ui/button' // Adicionado: Importação do componente Button
+import { Button } from '@/components/ui/button'
 
 interface PreviewActionsProps {
   designSettings: any
@@ -15,33 +15,19 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
   const { user } = useAuth()
   const [copied, setCopied] = useState(false)
 
-  // 🎯 FUNÇÃO PARA GERAR CÓDIGO PERMANENTE DO USER_ID
   const getCodigoPermanente = (userId: string): string => {
-    // Pega os últimos 5 caracteres do UUID
     return userId.slice(-5).toLowerCase()
   }
 
   const getCardapioUrl = () => {
-    console.log('🔍 PreviewActions: user recebido:', user?.id)
-    console.log('🔍 PreviewActions: designSettings recebidos:', designSettings)
-    
     if (!user?.id) {
-      console.error('❌ PreviewActions: Usuário não encontrado')
       showError('Usuário não autenticado')
       return null
     }
     
-    // 🎯 USA O CÓDIGO PERMANENTE BASEADO NO USER_ID
     const codigoPermanente = getCodigoPermanente(user.id)
-    console.log('🔑 PreviewActions: Código permanente gerado:', codigoPermanente)
-    
-    // Corrigindo o domínio para usar o ambiente atual
     const currentDomain = window.location.origin
     const url = `${currentDomain}/cardapio/${codigoPermanente}`
-    console.log('🔗 PreviewActions: Generated URL:', url)
-    console.log('🌐 PreviewActions: Current domain:', currentDomain)
-    console.log('👤 PreviewActions: User ID:', user.id)
-    console.log('🔑 PreviewActions: Código permanente:', codigoPermanente)
     return url
   }
 
@@ -49,13 +35,10 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
     const url = getCardapioUrl()
     if (!url) return
     
-    console.log('📋 PreviewActions: Copiando URL:', url)
-    
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
-      console.log('✅ PreviewActions: URL copiada para área de transferência:', url)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
       const textArea = document.createElement('textarea')
@@ -66,7 +49,6 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
       document.body.removeChild(textArea)
       setCopied(true)
       showSuccess('Link copiado com sucesso!')
-      console.log('✅ PreviewActions: URL copiada via fallback:', url)
       setTimeout(() => setCopied(false), 2000)
     }
   }

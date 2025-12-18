@@ -31,17 +31,7 @@ export function PreviewContent({
   onCategorySelect,
   onToggleFavorite
 }: PreviewContentProps) {
-  // Adicionando logs para depuração
-  console.log('--- PreviewContent.tsx RENDER ---');
-  console.log('Props - Design Settings (PreviewContent.tsx):', designSettings);
-  console.log('Props - Configuracoes (PreviewContent.tsx):', configuracoes);
-  console.log('Props - Produtos (PreviewContent.tsx):', produtos);
-  console.log('Props - Selected Category (PreviewContent.tsx):', selectedCategory);
-  console.log('Props - Search Term (PreviewContent.tsx):', searchTerm);
-
-  // VERIFICAÇÃO EXPLÍCITA: Se designSettings for nulo, mostre um estado vazio ou carregando
   if (!designSettings) {
-    console.log('PreviewContent: designSettings é nulo ou indefinido, exibindo EmptyState.');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -59,16 +49,12 @@ export function PreviewContent({
     return matchesSearch && matchesCategory
   })
 
-  console.log('Filtered Products Count (PreviewContent.tsx):', filteredProducts.length);
-
   const getCategories = () => {
     const categories = [{ name: 'Todos', icon: '/icons/TODOS.png' }]
     
     const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
       .filter((cat): cat is string => cat && typeof cat === 'string' && cat.trim() !== '')
       .sort()
-    
-    console.log('📋 Categorias dos produtos (ordem alfabética - PreviewContent.tsx):', productCategories)
     
     productCategories.forEach(category => {
       const iconMap: { [key: string]: string } = {
@@ -83,13 +69,10 @@ export function PreviewContent({
       })
     })
     
-    console.log('📋 Categorias finais (PreviewContent.tsx):', categories)
     return categories
   }
 
   const categories = getCategories()
-  console.log('Final Categories for Filter (PreviewContent.tsx):', categories);
-
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
