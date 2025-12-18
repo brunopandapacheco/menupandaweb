@@ -309,13 +309,14 @@ export class SupabaseService {
 
   async updateConfiguracoes(userId: string, config: any) {
     try {
+      // Usar upsert com onConflict para garantir que ele atualize se existir, ou insira se não
       const { data, error } = await supabase
         .from('configuracoes')
         .upsert({
           user_id: userId,
           ...config,
           updated_at: new Date().toISOString()
-        })
+        }, { onConflict: 'user_id' }) // Especifica a coluna de conflito
         .select()
         .single()
 
