@@ -135,16 +135,23 @@ export class SupabaseService {
 
       let resultData;
       if (existingSettings) {
+        // Lógica de mesclagem: Começa com os padrões base, depois sobrepõe com as configurações existentes.
+        // Isso garante que os valores modificados pelo usuário (como banner_gradient) tenham precedência,
+        // enquanto ainda fornece padrões para quaisquer campos ausentes.
         const updatePayload = {
-          ...baseSettings,
-          slug: existingSettings.slug || `minha-confeitaria-${Date.now()}`, 
-          codigo: codigoPermanente,
-          nome_loja: existingSettings.nome_loja,
-          descricao_loja: existingSettings.descricao_loja,
-          logo_url: existingSettings.logo_url,
-          banner1_url: existingSettings.banner1_url,
-          category_icons: existingSettings.category_icons
+          ...baseSettings, // Aplica todos os padrões
+          ...existingSettings, // Sobrepõe com as configurações existentes do usuário (estas devem prevalecer)
+          codigo: codigoPermanente, // Garante que o código seja sempre o correto
+          updated_at: new Date().toISOString() // Sempre atualiza o timestamp
         };
+
+        // Garante explicitamente que 'slug' seja definido se estiver faltando, mas não sobrescreve se já existir
+        if (!updatePayload.slug) {
+          updatePayload.slug = `minha-confeitaria-${Date.now()}`;
+        }
+
+        console.log('🔍 [SupabaseService.ensureDesignSettingsWithCode] Existing settings:', existingSettings);
+        console.log('🔍 [SupabaseService.ensureDesignSettingsWithCode] Final update payload:', updatePayload);
 
         const { data, error } = await supabase
           .from('design_settings')
@@ -164,6 +171,8 @@ export class SupabaseService {
           ...baseSettings,
           slug: `minha-confeitaria-${Date.now()}`,
         };
+
+        console.log('🔍 [SupabaseService.ensureDesignSettingsWithCode] Inserting new settings:', insertPayload);
 
         const { data, error } = await supabase
           .from('design_settings')
@@ -261,7 +270,8 @@ export class SupabaseService {
       if (existingConfigs) {
         const updatePayload = {
           ...defaultConfigs,
-          telefone: existingConfigs.telefone || defaultConfigs.telefone,
+          ...existingConfigs, // Garante que as configurações existentes prevaleçam
+          updated_at: new Date().toISOString()
         };
 
         const { data, error } = await supabase

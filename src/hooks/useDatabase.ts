@@ -27,6 +27,8 @@ export function useDatabase() {
     setLoading(true)
     
     try {
+      // Sempre busca as configurações de design mais recentes para garantir o estado mais atualizado,
+      // pois ensureDesignSettingsWithCode também lida com a criação/definição de padrões.
       let designData = await supabaseService.ensureDesignSettingsWithCode(user.id)
 
       const [configData, productsData] = await Promise.all([
@@ -34,7 +36,7 @@ export function useDatabase() {
         supabaseService.getProducts(user.id)
       ])
 
-      // Atualizar cache
+      // Atualiza o cache com os dados mais recentes
       if (designData) {
         updateCache('designSettings', designData)
       }
@@ -63,19 +65,19 @@ export function useDatabase() {
       delete settings.codigo
     }
 
-    console.log('🔍 [saveDesignSettings] Enviando para Supabase:', settings); // Log do payload
+    console.log('🔍 [saveDesignSettings] Enviando para Supabase:', settings);
     
     const result = await supabaseService.updateDesignSettings(user.id, settings)
     
     if (result) {
-      console.log('✅ [saveDesignSettings] Sucesso ao salvar design settings:', result); // Log da resposta
+      console.log('✅ [saveDesignSettings] Sucesso ao salvar design settings:', result);
       const currentSettings = getCache('designSettings')
       const updatedSettings = { ...currentSettings, ...settings }
       updateCache('designSettings', updatedSettings)
-      return true; // Retorna true em caso de sucesso
+      return true;
     } else {
-      console.error('❌ [saveDesignSettings] Erro ao salvar design settings. Resultado:', result); // Log do erro
-      return false; // Retorna false em caso de falha
+      console.error('❌ [saveDesignSettings] Erro ao salvar design settings. Resultado:', result);
+      return false;
     }
   }
 
@@ -148,9 +150,13 @@ export function useDatabase() {
     return success
   }
 
+  // Adiciona um log aqui para ver quais designSettings estão sendo retornados pelo hook
+  const currentDesignSettings = getCache('designSettings');
+  console.log('🔍 [useDatabase] Retornando designSettings do cache:', currentDesignSettings);
+
   return {
     loading,
-    designSettings: getCache('designSettings'),
+    designSettings: currentDesignSettings,
     configuracoes: getCache('configuracoes'),
     produtos: getCache('produtos'),
     saveDesignSettings,

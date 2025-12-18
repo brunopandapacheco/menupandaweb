@@ -31,6 +31,9 @@ export function PreviewContent({
   onCategorySelect,
   onToggleFavorite
 }: PreviewContentProps) {
+  // Adiciona um log aqui para ver quais designSettings estão sendo usados
+  console.log('🔍 [PreviewContent] Current designSettings:', designSettings);
+
   if (!designSettings) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
