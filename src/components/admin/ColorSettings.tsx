@@ -181,10 +181,11 @@ export function ColorSettings({
           <div className="pt-4 flex justify-center">
             <Button 
               onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white animate-gradient-pulse"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                boxShadow: '0 10px 25px -5px rgba(209, 27, 112, 0.3), 0 10px 10px -5px rgba(209, 27, 112, 0.2)'
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
               }}
             >
               Aplicar Cor da Borda
@@ -275,10 +276,11 @@ export function ColorSettings({
           <div className="pt-4 flex justify-center">
             <Button 
               onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white animate-gradient-pulse"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                boxShadow: '0 10px 25px -5px rgba(209, 27, 112, 0.3), 0 10px 10px -5px rgba(209, 27, 112, 0.2)'
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
               }}
             >
               Aplicar Cor do Nome
@@ -286,6 +288,20 @@ export function ColorSettings({
           </div>
         </CardContent>
       </Card>
+
+      <style>{`
+        @keyframes gradientShift {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   )
 }
