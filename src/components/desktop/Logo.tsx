@@ -59,14 +59,14 @@ export function DesktopLogo({
 
     for (let i = 0; i < fullStars; i++) {
       stars.push(
-        <Star key={`full-${i}`} size={14} fill="#fbbf24" color="#fbbf24" />
+        <Star key={`full-${i}`} size={20} fill="#fbbf24" color="#fbbf24" />
       )
     }
 
     if (hasHalfStar) {
       stars.push(
         <div key="half" style={{ position: 'relative', display: 'inline-block' }}>
-          <Star size={14} color="#d1d5db" />
+          <Star size={20} color="#d1d5db" />
           <div style={{ 
             position: 'absolute', 
             top: 0, 
@@ -74,7 +74,7 @@ export function DesktopLogo({
             width: '50%', 
             overflow: 'hidden' 
           }}>
-            <Star size={14} fill="#fbbf24" color="#fbbf24" />
+            <Star size={20} fill="#fbbf24" color="#fbbf24" />
           </div>
         </div>
       )
@@ -83,7 +83,7 @@ export function DesktopLogo({
     const emptyStars = 5 - Math.ceil(rating)
     for (let i = 0; i < emptyStars; i++) {
       stars.push(
-        <Star key={`empty-${i}`} size={14} color="#d1d5db" />
+        <Star key={`empty-${i}`} size={20} color="#d1d5db" />
       )
     }
 
@@ -106,7 +106,7 @@ export function DesktopLogo({
       <div 
         className="absolute"
         style={{
-          top: '-50px',
+          top: '-70px',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 50,
@@ -115,19 +115,19 @@ export function DesktopLogo({
         <div className="relative group">
           {logoUrl && !imageError ? (
             <div 
-              className="w-40 h-40 rounded-full overflow-hidden shadow-lg flex items-center justify-center bg-white cursor-pointer transition-transform hover:scale-105"
+              className="w-56 h-56 rounded-full overflow-hidden shadow-xl flex items-center justify-center bg-white cursor-pointer transition-transform hover:scale-105"
               style={{
-                border: '3px solid ' + (borderColor || '#ec4899'),
+                border: '4px solid ' + (borderColor || '#ec4899'),
                 boxSizing: 'border-box',
-                padding: '3px'
+                padding: '4px'
               }}
               onClick={() => isEditable && setShowEditor(true)}
             >
               <div 
                 className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-white"
                 style={{
-                  border: '3px solid white',
-                  padding: '2px'
+                  border: '4px solid white',
+                  padding: '3px'
                 }}
               >
                 <img 
@@ -145,17 +145,17 @@ export function DesktopLogo({
               
               {isEditable && (
                 <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Info className="w-6 h-6 text-white" />
+                  <Info className="w-8 h-8 text-white" />
                 </div>
               )}
             </div>
           ) : (
             <div 
-              className="w-40 h-40 rounded-full flex items-center justify-center text-6xl font-bold shadow-lg cursor-pointer transition-transform hover:scale-105"
+              className="w-56 h-56 rounded-full flex items-center justify-center text-8xl font-bold shadow-xl cursor-pointer transition-transform hover:scale-105"
               style={{ 
-                border: '3px solid ' + (borderColor || '#ec4899'),
+                border: '4px solid ' + (borderColor || '#ec4899'),
                 boxSizing: 'border-box',
-                padding: '3px',
+                padding: '4px',
                 backgroundColor: borderColor || '#ec4899',
                 color: 'white'
               }}
@@ -164,8 +164,8 @@ export function DesktopLogo({
               <div 
                 className="w-full h-full rounded-full flex items-center justify-center"
                 style={{
-                  border: '3px solid white',
-                  padding: '2px'
+                  border: '4px solid white',
+                  padding: '3px'
                 }}
               >
                 {storeName?.charAt(0) || 'L'}
@@ -173,7 +173,7 @@ export function DesktopLogo({
               
               {isEditable && (
                 <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Info className="w-6 h-6 text-white" />
+                  <Info className="w-8 h-8 text-white" />
                 </div>
               )}
             </div>
@@ -182,20 +182,20 @@ export function DesktopLogo({
       </div>
 
       <div 
-        className="relative bg-white rounded-lg p-6 overflow-hidden mx-auto"
+        className="relative bg-white rounded-lg p-8 overflow-hidden mx-auto"
         style={{ 
           borderColor,
-          marginTop: '-100px',
+          marginTop: '-140px',
           position: 'relative',
           zIndex: 20,
-          paddingTop: '100px',
+          paddingTop: '140px',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)',
-          maxWidth: '600px'
+          maxWidth: '700px'
         }}
       >
-        <div className="text-center mt-8 mb-4">
+        <div className="text-center mt-12 mb-6">
           <h1 
-            className="text-2xl mb-2 font-semibold"
+            className="text-4xl mb-4 font-semibold"
             style={{ 
               color: corNome,
               fontFamily: '"Bebas Neue", sans-serif',
@@ -206,37 +206,37 @@ export function DesktopLogo({
             {storeName}
           </h1>
           
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex items-center gap-2">
               {renderStars(avaliacaoMedia)}
             </div>
-            <span className="text-sm font-semibold text-gray-700">
+            <span className="text-lg font-semibold text-gray-700">
               {avaliacaoMedia}/5.0
             </span>
           </div>
           
-          <p className="text-gray-600 text-sm mb-3">
+          <p className="text-gray-600 text-lg mb-4">
             {storeDescription}
           </p>
 
           {formatLocation() && (
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-              <MapPin className="w-4 h-4" />
+            <div className="flex items-center justify-center gap-3 text-lg text-gray-600">
+              <MapPin className="w-5 h-5" />
               <span>{formatLocation()}</span>
               {hasCompleteAddress() && (
                 <button
                   onClick={() => setShowLocationDialog(true)}
-                  className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
+                  className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
                   title="Ver endereço completo"
                 >
-                  <Info className="w-3 h-3 text-gray-600" />
+                  <Info className="w-4 h-4 text-gray-600" />
                 </button>
               )}
             </div>
           )}
 
           {configuracoes && (
-            <div className="mt-4 flex justify-center">
+            <div className="mt-6 flex justify-center">
               <StatusButton configuracoes={configuracoes} />
             </div>
           )}
