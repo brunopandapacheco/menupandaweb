@@ -31,6 +31,8 @@ const saleTypes = [
   { value: 'outros', label: '📌 Outros' }
 ]
 
+// Lista de ícones disponíveis na pasta public/icons
+// Apenas os ícones que realmente existem na pasta
 const availableIcons = [
   { name: '1', path: '/icons/1.png' },
   { name: '2', path: '/icons/2.png' },
@@ -48,6 +50,12 @@ const availableIcons = [
   { name: '14', path: '/icons/14.png' },
   { name: '15', path: '/icons/15.png' },
   { name: '16', path: '/icons/16.png' },
+  { name: '17', path: '/icons/17.png' },
+  { name: '18', path: '/icons/18.png' },
+  { name: '19', path: '/icons/19.png' },
+  { name: '20', path: '/icons/20.png' },
+  { name: '21', path: '/icons/21.png' },
+  { name: '22', path: '/icons/22.png' },
   { name: 'TODOS', path: '/icons/TODOS.png' }
 ]
 
@@ -173,20 +181,23 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       return
     }
 
+    // Prepara a categoria pendente com o ícone selecionado
     setPendingCategory({
       name: trimmedName,
-      icon: selectedIcon
+      icon: selectedIcon // Usa o ícone selecionado pelo usuário
     })
 
+    // Adiciona à lista de categorias localmente
     setCategories(prev => [...prev, trimmedName].sort())
 
+    // Define a categoria no produto
     handleFieldChange('categoria', trimmedName)
     
+    // Limpa o formulário
     setNewCategoryName('')
     setIsCreatingNewCategory(false)
     setSelectedIcon('/icons/1.png')
     setShowIconSelector(false)
-    setPendingCategory(null)
     
     showSuccess('Categoria criada e selecionada!')
   }
@@ -227,10 +238,12 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     })
   }
 
+  // Função para criar a categoria no banco e salvar o ícone
   const createPendingCategory = async () => {
     if (!pendingCategory) return
 
     try {
+      // 1. Criar a categoria no banco de dados
       const { error: categoryError } = await supabase
         .from('categorias')
         .insert({ 
@@ -240,6 +253,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       
       if (categoryError) throw categoryError
       
+      // 2. Obter os design settings atuais
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Usuário não autenticado')
       
@@ -253,10 +267,11 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
         throw designError
       }
       
+      // 3. Atualizar os ícones das categorias
       const currentIcons = designSettings?.category_icons || {}
       const updatedIcons = {
         ...currentIcons,
-        [pendingCategory.name]: pendingCategory.icon
+        [pendingCategory.name]: pendingCategory.icon // Salva o ícone selecionado
       }
       
       const { error: updateError } = await supabase
@@ -266,6 +281,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       
       if (updateError) throw updateError
       
+      // 4. Atualizar a lista de categorias
       const { data: updatedCategories, error: fetchError } = await supabase
         .from('categorias')
         .select('nome')
@@ -283,6 +299,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     }
   }
 
+  // Efeito para criar a categoria pendente quando o produto for salvo
   useEffect(() => {
     if (product?.id && pendingCategory) {
       createPendingCategory()
@@ -420,6 +437,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
               {showIconSelector && (
                 <div className="border-2 border-pink-200 rounded-lg p-3 bg-pink-50 max-h-80 overflow-y-auto">
+                  <h4 className="text-sm font-semibold text-pink-800 mb-3">Escolha um ícone para a categoria</h4>
                   <div className="grid grid-cols-4 gap-2">
                     {availableIcons.map((icon) => (
                       <button
@@ -437,7 +455,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                           src={icon.path} 
                           alt={`Ícone ${icon.name}`}
                           className="w-16 h-16 object-contain mx-auto"
-                          onError={(e) => e.currentTarget.src = '/icons/1.png'}
+                          onError={(e) => {
+                            // Se o ícone não carregar, usa um fallback
+                            e.currentTarget.src = '/icons/1.png'
+                          }}
                         />
                       </button>
                     ))}
