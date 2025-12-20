@@ -73,14 +73,17 @@ export function ColorSettings({
 
   const handleBorderClick = (color: string) => {
     onCorBordaChange(color) // Aplica imediatamente
+    setCustomBorderColor(color) // Atualiza o estado local também
   }
 
   const handleNameClick = (color: string) => {
     onCorNomeChange(color) // Aplica imediatamente
+    setCustomNameColor(color) // Atualiza o estado local também
   }
 
   const handleBackgroundClick = (gradient: string) => {
     onBannerGradientChange(gradient) // Aplica imediatamente
+    setCustomBackgroundGradient(gradient) // Atualiza o estado local também
   }
 
   const handleSaveColors = () => {
