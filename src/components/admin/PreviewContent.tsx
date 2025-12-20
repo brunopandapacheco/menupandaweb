@@ -1,12 +1,25 @@
 import { useState, useEffect } from 'react'
 import { Banner } from '@/components/cardapio/Banner'
+import { DesktopBanner } from '@/components/desktop/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
+import { DesktopBannerAd } from '@/components/desktop/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
+import { DesktopLogo } from '@/components/desktop/Logo'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
+import { DesktopCategoryFilter } from '@/components/desktop/CategoryFilter'
 import { ProductList } from '@/components/cardapio/ProductList'
+import { DesktopProductList } from '@/components/desktop/ProductList'
 import { Footer } from '@/components/cardapio/Footer'
+import { DesktopFooter } from '@/components/desktop/Footer'
 import { EmptyState } from '@/components/cardapio/EmptyState'
-import { Produto } from '@/types/database'
+import { DesktopEmptyState } from '@/components/desktop/EmptyState'
+import { NavigationMenu } from '@/components/cardapio/NavigationMenu'
+import { DesktopNavigationMenu } from '@/components/desktop/NavigationMenu'
+import { WhatsAppFloat } from '@/components/cardapio/WhatsAppFloat'
+import { DesktopWhatsAppFloat } from '@/components/desktop/WhatsAppFloat'
+import { DesignSettings, Configuracoes } from '@/types/database'
+import { Produto } from '@/types/cart'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 interface PreviewContentProps {
   designSettings: any
@@ -31,6 +44,8 @@ export function PreviewContent({
   onCategorySelect,
   onToggleFavorite
 }: PreviewContentProps) {
+  const device = useDeviceDetection()
+
   // Adiciona um log aqui para ver quais designSettings estão sendo usados
   console.log('🔍 [PreviewContent] Current designSettings:', designSettings);
 
@@ -77,14 +92,30 @@ export function PreviewContent({
 
   const categories = getCategories()
 
+  // Componentes específicos para desktop
+  const BannerComponent = device === 'desktop' ? DesktopBanner : Banner
+  const LogoComponent = device === 'desktop' ? DesktopLogo : Logo
+  const CategoryFilterComponent = device === 'desktop' ? DesktopCategoryFilter : CategoryFilter
+  const ProductListComponent = device === 'desktop' ? DesktopProductList : ProductList
+  const FooterComponent = device === 'desktop' ? DesktopFooter : Footer
+  const EmptyStateComponent = device === 'desktop' ? DesktopEmptyState : EmptyState
+  const NavigationMenuComponent = device === 'desktop' ? DesktopNavigationMenu : NavigationMenu
+  const WhatsAppFloatComponent = device === 'desktop' ? DesktopWhatsAppFloat : WhatsAppFloat
+  const BannerAdComponent = device === 'desktop' ? DesktopBannerAd : BannerAd
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: designSettings?.cor_background || '#ffffff' }}>
-      <Banner 
+    <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings?.cor_background || '#fef2f2' }}>
+      {/* Navigation Menu - z-index médio, sempre visível */}
+      <NavigationMenuComponent />
+      
+      {/* Banner - z-index baixo */}
+      <BannerComponent 
         borderColor={designSettings?.cor_borda}
         bannerGradient={designSettings?.banner_gradient}
       />
       
-      <Logo 
+      {/* Logo - z-index médio para ficar sobre o banner */}
+      <LogoComponent 
         logoUrl={designSettings?.logo_url}
         borderColor={designSettings?.cor_borda}
         storeName={designSettings?.nome_loja}
@@ -94,20 +125,20 @@ export function PreviewContent({
         configuracoes={configuracoes}
       />
 
-      <div className="container mx-auto px-4 py-4">
-        {designSettings?.banner1_url && (
-          <BannerAd bannerUrl={designSettings.banner1_url} />
+      <div className={`container mx-auto px-4 py-4 ${device === 'desktop' ? 'pb-20' : 'pb-20'}`}>
+        {designSettings.banner1_url && (
+          <BannerAdComponent bannerUrl={designSettings.banner1_url} />
         )}
         
-        <CategoryFilter 
+        <CategoryFilterComponent 
           categories={categories}
           selectedCategory={selectedCategory}
           onCategorySelect={onCategorySelect}
-          categoryIcons={designSettings?.category_icons || {}}
+          categoryIcons={designSettings.category_icons || {}}
         />
 
         {filteredProducts.length > 0 ? (
-          <ProductList 
+          <ProductListComponent 
             produtos={filteredProducts}
             favorites={favorites}
             onToggleFavorite={onToggleFavorite}
@@ -118,13 +149,16 @@ export function PreviewContent({
             onSearchChange={onSearchChange}
           />
         ) : (
-          <EmptyState />
+          <EmptyStateComponent />
         )}
       </div>
 
-      <Footer 
+      <FooterComponent 
         textoRodape={designSettings?.texto_rodape} 
       />
+
+      {/* WhatsApp Float - sempre visível */}
+      <WhatsAppFloatComponent />
     </div>
   )
 }
