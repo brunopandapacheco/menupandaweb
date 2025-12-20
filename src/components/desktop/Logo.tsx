@@ -103,16 +103,6 @@ export function DesktopLogo({
 
   return (
     <div className="relative">
-      {/* Status Button no Canto Superior Esquerdo */}
-      {configuracoes && (
-        <div 
-          className="absolute top-4 left-4 z-50"
-          style={{ zIndex: 100 }}
-        >
-          <StatusButton configuracoes={configuracoes} />
-        </div>
-      )}
-
       <div 
         className="absolute"
         style={{
@@ -242,6 +232,12 @@ export function DesktopLogo({
                   <Info className="w-4 h-4 text-gray-600" />
                 </button>
               )}
+            </div>
+          )}
+
+          {configuracoes && (
+            <div className="mt-6 flex justify-center">
+              <StatusButton configuracoes={configuracoes} />
             </div>
           )}
         </div>
