@@ -14,7 +14,8 @@ export function DesktopBanner({
       className="w-full"
       style={{ 
         position: 'relative', 
-        height: '280px', // Maior para desktop
+        height: '320px', // Altura maior para desktop
+        width: '100%', // Garante 100% da largura
         overflow: 'hidden',
         backgroundImage: bannerGradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
         backgroundSize: '200% 200%',
