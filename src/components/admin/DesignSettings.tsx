@@ -55,6 +55,9 @@ export default function DesignSettings() {
   const [customBorderColor, setCustomBorderColor] = useState('#F5C542')
   const [customNameColor, setCustomNameColor] = useState('#FCEBB3')
   
+  // 🟢 SOLUÇÃO: Estado para controlar inicialização
+  const [initialized, setInitialized] = useState(false)
+  
   const [nomeLoja, setNomeLoja] = useState('')
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
@@ -64,8 +67,9 @@ export default function DesignSettings() {
   const [mainCategories, setMainCategories] = useState<string[]>([])
   const device = useDeviceDetection()
 
+  // 🟢 CORREÇÃO: Inicializar estado APENAS UMA VEZ
   useEffect(() => {
-    if (designSettings) {
+    if (designSettings && !initialized) {
       if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient)
       if (designSettings.cor_borda) {
         setCorBorda(designSettings.cor_borda)
@@ -80,8 +84,11 @@ export default function DesignSettings() {
       if (designSettings.logo_url) setLogoUrl(designSettings.logo_url)
       if (designSettings.banner1_url) setBannerUrl(designSettings.banner1_url)
       if (designSettings.categorias) setMainCategories(designSettings.categorias)
+      
+      // Marcar como inicializado
+      setInitialized(true)
     }
-  }, [designSettings])
+  }, [designSettings, initialized])
 
   useEffect(() => {
     if (configuracoes) {
@@ -500,14 +507,161 @@ export default function DesignSettings() {
           </TabsContent>
 
           <TabsContent value="imagens">
-            <ImageSettings
-              logoUrl={logoUrl}
-              onLogoUrlChange={setLogoUrl}
-              onSaveLogo={saveLogoOnly}
-              bannerUrl={bannerUrl}
-              onBannerUrlChange={setBannerUrl}
-              onSaveBanner={saveBannerOnly}
-            />
+            {/* Layout side-by-side para desktop - logo e banner lado a lado */}
+            <div className="grid grid-cols-2 gap-8">
+              {/* Card da Logo */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <div className="text-center pb-4">
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Logo da Loja</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-center">
+                    <div className="relative group">
+                      {logoUrl ? (
+                        <div 
+                          className="w-48 h-48 rounded-full overflow-hidden shadow-xl flex items-center justify-center bg-white cursor-pointer transition-transform hover:scale-105"
+                          style={{
+                            border: '4px solid ' + (corBorda || '#ec4899'),
+                            boxSizing: 'border-box',
+                            padding: '4px'
+                          }}
+                        >
+                          <div 
+                            className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-white"
+                            style={{
+                              border: '4px solid white',
+                              padding: '3px'
+                            }}
+                          >
+                            <img 
+                              src={`${logoUrl}?t=${Date.now()}`} 
+                              alt="Logo da loja" 
+                              className="w-full h-full object-cover rounded-full"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div 
+                          className="w-48 h-48 rounded-full flex items-center justify-center text-8xl font-bold shadow-xl cursor-pointer transition-transform hover:scale-105"
+                          style={{ 
+                            border: '4px solid ' + (corBorda || '#ec4899'),
+                            boxSizing: 'border-box',
+                            padding: '4px',
+                            backgroundColor: corBorda || '#ec4899',
+                            color: 'white'
+                          }}
+                        >
+                          <div 
+                            className="w-full h-full rounded-full flex items-center justify-center"
+                            style={{
+                              border: '4px solid white',
+                              padding: '3px'
+                            }}
+                          >
+                            {nomeLoja?.charAt(0) || 'L'}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          // Aqui você pode implementar o upload da logo
+                          console.log('Upload logo:', file)
+                        }
+                      }}
+                      className="hidden"
+                      id="logo-upload-desktop"
+                    />
+                    <Button
+                      asChild
+                      size="lg"
+                      className="px-8 py-3 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                        backgroundSize: '200% 200%',
+                        animation: 'gradientShift 3s ease infinite'
+                      }}
+                    >
+                      <label htmlFor="logo-upload-desktop" className="cursor-pointer">
+                        Selecionar Logo
+                      </label>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card do Banner */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <div className="text-center pb-4">
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-center">
+                    <div className="relative w-full max-w-md">
+                      {bannerUrl ? (
+                        <div className="w-full h-32 border-2 border-gray-200 rounded-lg overflow-hidden shadow-md">
+                          <img 
+                            src={`${bannerUrl}?t=${Date.now()}`} 
+                            alt="Banner do cardápio" 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none'
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+                          <div className="text-center">
+                            <div className="text-4xl text-gray-400 mb-2">🖼️</div>
+                            <p className="text-sm text-gray-500">Nenhum banner</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          // Aqui você pode implementar o upload do banner
+                          console.log('Upload banner:', file)
+                        }
+                      }}
+                      className="hidden"
+                      id="banner-upload-desktop"
+                    />
+                    <Button
+                      asChild
+                      size="lg"
+                      className="px-8 py-3 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                        backgroundSize: '200% 200%',
+                        animation: 'gradientShift 3s ease infinite'
+                      }}
+                    >
+                      <label htmlFor="banner-upload-desktop" className="cursor-pointer">
+                        Selecionar Banner
+                      </label>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="configuracao">
