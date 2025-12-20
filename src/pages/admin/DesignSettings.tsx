@@ -142,7 +142,7 @@ export default function DesignSettings() {
   return (
     <div
       className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen pb-24"
-      style={{ backgroundColor: '#111111' }} 
+      style={{ backgroundColor: '#f5f5f5' }} 
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
 
