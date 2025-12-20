@@ -88,23 +88,6 @@ export function ColorSettings({
 
   const handleSaveColors = () => {
     onSaveColors()
-    showSuccess('Cores salvas com sucesso!')
-  }
-
-  // Funções para salvar cores individuais
-  const saveCorBorda = () => {
-    onSaveColors()
-    showSuccess('Cor da borda salva com sucesso!')
-  }
-
-  const saveCorNome = () => {
-    onSaveColors()
-    showSuccess('Cor do nome salva com sucesso!')
-  }
-
-  const saveBackground = () => {
-    onSaveColors()
-    showSuccess('Background salvo com sucesso!')
   }
 
   return (
