@@ -563,12 +563,6 @@ export default function DesignSettings() {
                             placeholder="Nome da sua confeitaria"
                             className="w-full p-3 border border-gray-300 rounded-lg"
                           />
-                          <button 
-                            onClick={saveConfig}
-                            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
-                          >
-                            Salvar Nome
-                          </button>
                         </div>
                       </div>
 
@@ -580,16 +574,10 @@ export default function DesignSettings() {
                             value={descricaoLoja}
                             onChange={(e) => setDescricaoLoja(e.target.value)}
                             placeholder="Descreva sua confeitaria..."
-                            rows={3}
+                            rows={6}
                             maxLength={200}
                             className="w-full p-3 border border-gray-300 rounded-lg resize-none"
                           />
-                          <button 
-                            onClick={saveConfig}
-                            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
-                          >
-                            Salvar Descrição
-                          </button>
                         </div>
                       </div>
 
@@ -614,14 +602,30 @@ export default function DesignSettings() {
                               💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
                             </p>
                           </div>
-                          <button 
-                            onClick={saveWhatsApp}
-                            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
-                          >
-                            Salvar WhatsApp
-                          </button>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Botões alinhados horizontalmente */}
+                    <div className="grid grid-cols-3 gap-6">
+                      <button 
+                        onClick={saveConfig}
+                        className="py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                      >
+                        Salvar Nome
+                      </button>
+                      <button 
+                        onClick={saveConfig}
+                        className="py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                      >
+                        Salvar Descrição
+                      </button>
+                      <button 
+                        onClick={saveWhatsApp}
+                        className="py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                      >
+                        Salvar WhatsApp
+                      </button>
                     </div>
                   </div>
                 </TabsContent>
