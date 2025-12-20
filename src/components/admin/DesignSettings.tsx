@@ -26,9 +26,11 @@ const gradientBackgrounds = [
 // Função para formatar o número do WhatsApp
 const formatWhatsApp = (value: string): string => {
   // Remove todos os caracteres não numéricos
-  const numbers = value.replace(/\D/g, '')  
+  const numbers = value.replace(/\D/g, '')
+  
   // Se não tiver números, retorna vazio
-  if (numbers.length === 0) return ''  
+  if (numbers.length === 0) return ''
+  
   // Aplica a máscara (XX) XXXXXXXXX
   if (numbers.length <= 2) {
     return `(${numbers}`
@@ -42,7 +44,7 @@ export default function DesignSettings() {
   const [activeTab, setActiveTab] = useState('cores')
   const [configSubTab, setConfigSubTab] = useState('geral') // Sub-abas dentro de Configuração
   
-  // Estados
+  // Estados - compartilhados entre desktop e mobile
   const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
   const [corBorda, setCorBorda] = useState('#F5C542')
   const [corNome, setCorNome] = useState('#FCEBB3')
@@ -87,6 +89,27 @@ export default function DesignSettings() {
     }
   }, [configuracoes])
 
+  // Função unificada para salvar cores - garante sincronização
+  const saveAllColors = async () => {
+    try {
+      const success = await saveDesignSettings({
+        banner_gradient: bannerGradient,
+        cor_borda: corBorda,
+        cor_nome: corNome
+      })
+      
+      if (success) {
+        showSuccess('Cores salvas com sucesso!')
+      } else {
+        showError('Erro ao salvar as cores')
+      }
+    } catch (error) {
+      console.error('Erro ao salvar cores:', error)
+      showError('Erro ao salvar as cores')
+    }
+  }
+
+  // Funções individuais para salvar cores
   const saveCorNome = async () => {
     const success = await saveDesignSettings({ cor_nome: corNome })
     success ? showSuccess('Cor do nome salva com sucesso!') : showError('Erro ao salvar cor do nome')
@@ -153,35 +176,30 @@ export default function DesignSettings() {
     setWhatsapp(formattedValue)
   }
 
-  // Handlers para personalização de cores
+  // Handlers para personalização de cores - atualizam ambos os estados
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
-    setCorBorda(color)
+    setCorBorda(color) // Atualiza o estado principal também
   }
 
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
-    setCorNome(color)
+    setCorNome(color) // Atualiza o estado principal também
   }
 
-  // Função para salvar todas as cores de uma vez
-  const saveAllColors = async () => {
-    try {
-      const success = await saveDesignSettings({
-        banner_gradient: bannerGradient,
-        cor_borda: corBorda,
-        cor_nome: corNome
-      })
-      
-      if (success) {
-        showSuccess('Todas as cores salvas com sucesso!')
-      } else {
-        showError('Erro ao salvar as cores')
-      }
-    } catch (error) {
-      console.error('Erro ao salvar cores:', error)
-      showError('Erro ao salvar as cores')
-    }
+  // Handlers para cliques nas cores - atualizam ambos os estados
+  const handleBorderClick = (color: string) => {
+    setCorBorda(color) // Atualiza o estado principal
+    setCustomBorderColor(color) // Atualiza o estado local também
+  }
+
+  const handleNameClick = (color: string) => {
+    setCorNome(color) // Atualiza o estado principal
+    setCustomNameColor(color) // Atualiza o estado local também
+  }
+
+  const handleBackgroundClick = (gradient: string) => {
+    setBannerGradient(gradient) // Atualiza o estado principal
   }
 
   // Mostrar loading apenas na primeira carga
@@ -271,7 +289,7 @@ export default function DesignSettings() {
                     ].map((color) => (
                       <button
                         key={color.value}
-                        onClick={() => setCorNome(color.value)}
+                        onClick={() => handleNameClick(color.value)}
                         className={
                           'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                           (corNome === color.value 
@@ -361,7 +379,7 @@ export default function DesignSettings() {
                     ].map((color) => (
                       <button
                         key={color.value}
-                        onClick={() => setCorBorda(color.value)}
+                        onClick={() => handleBorderClick(color.value)}
                         className={
                           'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                           (corBorda === color.value 
@@ -442,7 +460,7 @@ export default function DesignSettings() {
                     {gradientBackgrounds.map((gradient, index) => (
                       <button
                         key={index}
-                        onClick={() => setBannerGradient(gradient.gradient)}
+                        onClick={() => handleBackgroundClick(gradient.gradient)}
                         className={
                           'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                           (bannerGradient === gradient.gradient 
@@ -689,11 +707,11 @@ export default function DesignSettings() {
             bannerGradient={bannerGradient}
             corBorda={corBorda}
             corNome={corNome}
-            onBannerGradientChange={setBannerGradient}
-            onCorBordaChange={setCorBorda}
-            onCorNomeChange={setCorNome}
+            onBannerGradientChange={handleBackgroundClick}
+            onCorBordaChange={handleBorderClick}
+            onCorNomeChange={handleNameClick}
             onSaveColors={saveAllColors}
-            onApplyGradient={(gradient: any) => setBannerGradient(gradient.gradient)}
+            onApplyGradient={(gradient: any) => handleBackgroundClick(gradient.gradient)}
           />
         </TabsContent>
 
