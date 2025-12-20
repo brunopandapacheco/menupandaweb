@@ -16,19 +16,19 @@ const predefinedColors = [
 ]
 
 const gradientBackgrounds = [
-  // Rosa
+  // 3 tons de rosa
   { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
   
-  // Roxo
+  // 1 ton de marrom
+  { name: 'Marrom Elegante', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%)' },
+  
+  // 1 ton de roxo escuro
   { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
   
-  // Amarelo
-  { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
-  
-  // Cinza
-  { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
+  // 1 caixa para personalizar (será implementado no picker)
+  { name: 'Personalizado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -54,8 +54,10 @@ export function ColorSettings({
 }: ColorSettingsProps) {
   const [showCustomBorderPicker, setShowCustomBorderPicker] = useState(false)
   const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
+  const [showCustomBackgroundPicker, setShowCustomBackgroundPicker] = useState(false)
   const [customBorderColor, setCustomBorderColor] = useState(corBorda)
   const [customNameColor, setCustomNameColor] = useState(corNome)
+  const [customBackgroundGradient, setCustomBackgroundGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
   const [selectedBorder, setSelectedBorder] = useState<string | null>(null)
   const [selectedName, setSelectedName] = useState<string | null>(null)
   const [selectedBackground, setSelectedBackground] = useState<string | null>(null)
@@ -66,6 +68,10 @@ export function ColorSettings({
 
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
+  }
+
+  const handleCustomBackgroundGradient = (gradient: string) => {
+    setCustomBackgroundGradient(gradient)
   }
 
   const handleBorderClick = (color: string) => {
@@ -309,7 +315,15 @@ export function ColorSettings({
               <div 
                 key={index} 
                 className="cursor-pointer transition-all"
-                onClick={() => handleBackgroundClick(gradient.gradient)}
+                onClick={() => {
+                  if (index === 5) {
+                    // Último item (Personalizado) - abre o picker
+                    setShowCustomBackgroundPicker(!showCustomBackgroundPicker)
+                  } else {
+                    // Demais itens - seleciona o gradiente
+                    handleBackgroundClick(gradient.gradient)
+                  }
+                }}
               >
                 <div 
                   className={
@@ -318,12 +332,50 @@ export function ColorSettings({
                       ? 'ring-4 ring-pink-500 ring-offset-2' 
                       : '')
                   }
-                  style={{ background: gradient.gradient }}
-                />
-                <p className="text-xs text-center text-gray-600">{gradient.name}</p>
+                  style={{ 
+                    background: index === 5 ? customBackgroundGradient : gradient.gradient,
+                    position: 'relative'
+                  }}
+                >
+                  {index === 5 && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Palette className="w-6 h-6 text-white drop-shadow-lg" />
+                    </div>
+                  )}
+                </div>
+                {index !== 5 && (
+                  <p className="text-xs text-center text-gray-600">{gradient.name}</p>
+                )}
               </div>
             ))}
           </div>
+          
+          {/* Picker de gradiente personalizado */}
+          {showCustomBackgroundPicker && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium text-gray-700">Gradiente Personalizado:</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={customBackgroundGradient}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        // Validação básica de CSS gradient
+                        if (value.includes('linear-gradient') || value.includes('radial-gradient')) {
+                          handleCustomBackgroundGradient(value)
+                        }
+                      }}
+                      placeholder="linear-gradient(...)"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-full"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500">Digite um gradiente CSS (ex: linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%))</p>
+              </div>
+            </div>
+          )}
           
           {/* Botão para aplicar background selecionado */}
           {selectedBackground && (
