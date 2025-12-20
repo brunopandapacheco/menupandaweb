@@ -122,12 +122,12 @@ export function ImageSettings({
     return (
       <div className="grid grid-cols-2 gap-8">
         {/* Card da Logo - Esquerda */}
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg flex flex-col">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Logo da Loja</CardTitle>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="flex-1 flex flex-col justify-between space-y-6">
             <div className="flex justify-center">
               <div className="relative">
                 {logoUrl ? (
@@ -185,12 +185,12 @@ export function ImageSettings({
         </Card>
 
         {/* Card do Banner - Direita */}
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg flex flex-col">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</CardTitle>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="flex-1 flex flex-col justify-between space-y-6">
             <div className="flex justify-center">
               <div className="relative w-full max-w-md">
                 {bannerUrl ? (
