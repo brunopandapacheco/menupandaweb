@@ -10,9 +10,17 @@ import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Button } from '@/components/ui/button'
 
 const gradientBackgrounds = [
+  // Rosa - 9 cores agora
   { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Claro', gradient: 'linear-gradient(135deg, #FFE4E1 0%, #FFC0CB 50%, #FFD1DC 100%)' },
+  { name: 'Rosa Intenso', gradient: 'linear-gradient(135deg, #C71585 0%, #FF1493 50%, #FF69B4 100%)' },
+  { name: 'Rosa Pastel', gradient: 'linear-gradient(135deg, #F8BBD0 0%, #FFC0CB 50%, #FFD1DC 100%)' },
+  { name: 'Rosa Neon', gradient: 'linear-gradient(135deg, #FF006E 0%, #FF1493 50%, #FF69B4 100%)' },
+  { name: 'Rosa Pêssego', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFC0CB 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Magenta', gradient: 'linear-gradient(135deg, #FF00FF 0%, #FF1493 50%, #FF69B4 100%)' },
+  // Outras cores mantidas
   { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
   { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
   { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
@@ -72,13 +80,19 @@ export default function DesignSettings() {
     }
   }, [configuracoes])
 
-  const saveColors = async () => {
-    const success = await saveDesignSettings({ 
-      cor_borda: corBorda, 
-      cor_nome: corNome,
-      banner_gradient: bannerGradient
-    })
-    success ? showSuccess('Cores salvas com sucesso!') : showError('Erro ao salvar cores')
+  const saveCorNome = async () => {
+    const success = await saveDesignSettings({ cor_nome: corNome })
+    success ? showSuccess('Cor do nome salva com sucesso!') : showError('Erro ao salvar cor do nome')
+  }
+
+  const saveCorBorda = async () => {
+    const success = await saveDesignSettings({ cor_borda: corBorda })
+    success ? showSuccess('Cor da borda salva com sucesso!') : showError('Erro ao salvar cor da borda')
+  }
+
+  const saveBackground = async () => {
+    const success = await saveDesignSettings({ banner_gradient: bannerGradient })
+    success ? showSuccess('Background salvo com sucesso!') : showError('Erro ao salvar background')
   }
 
   const saveLogoOnly = async (url: string) => {
@@ -198,7 +212,7 @@ export default function DesignSettings() {
           </TabsList>
 
           <TabsContent value="cores">
-            {/* Layout horizontal para desktop - 3 cards lado a lado com NOVA ORDEM */}
+            {/* Layout horizontal para desktop - NOVA ORDEM: Cor do Nome, Cor da Borda, Background */}
             <div className="grid grid-cols-3 gap-6">
               {/* Card da Cor do Nome - AGORA EM PRIMEIRO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
@@ -238,10 +252,23 @@ export default function DesignSettings() {
                       </button>
                     ))}
                   </div>
+                  
+                  {/* Botão individual para salvar Cor do Nome */}
+                  <Button 
+                    onClick={saveCorNome}
+                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientShift 3s ease infinite'
+                    }}
+                  >
+                    Salvar Cor do Nome
+                  </Button>
                 </div>
               </div>
 
-              {/* Card da Cor da Borda - AGORA EM SEGUNDO */}
+              {/* Card da Cor da Borda - EM SEGUNDO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
                   <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor da Borda</h3>
@@ -279,10 +306,23 @@ export default function DesignSettings() {
                       </button>
                     ))}
                   </div>
+                  
+                  {/* Botão individual para salvar Cor da Borda */}
+                  <Button 
+                    onClick={saveCorBorda}
+                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientShift 3s ease infinite'
+                    }}
+                  >
+                    Salvar Cor da Borda
+                  </Button>
                 </div>
               </div>
 
-              {/* Card do Background - AGORA EM TERCEIRO COM VISUAL AJUSTADO */}
+              {/* Card do Background - AGORA EM TERCEIRO COM VISUAL AJUSTADO E 12 CORES */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
                   <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</h3>
@@ -311,9 +351,9 @@ export default function DesignSettings() {
                     ))}
                   </div>
                   
-                  {/* Botão único de salvar */}
+                  {/* Botão individual para salvar Background */}
                   <Button 
-                    onClick={saveColors}
+                    onClick={saveBackground}
                     className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
                     style={{ 
                       background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
@@ -321,7 +361,7 @@ export default function DesignSettings() {
                       animation: 'gradientShift 3s ease infinite'
                     }}
                   >
-                    Salvar Cores
+                    Salvar Background
                   </Button>
                 </div>
               </div>
@@ -479,7 +519,7 @@ export default function DesignSettings() {
     )
   }
 
-  // Layout original para mobile/tablet
+  // Layout original para mobile/tablet - MANTIDO IGUAL
   return (
     <div
       className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen pb-24"
@@ -539,7 +579,7 @@ export default function DesignSettings() {
             onBannerGradientChange={setBannerGradient}
             onCorBordaChange={setCorBorda}
             onCorNomeChange={setCorNome}
-            onSaveColors={saveColors}
+            onSaveColors={() => {}} // Função vazia para mobile
             onApplyGradient={(gradient: any) => setBannerGradient(gradient.gradient)}
           />
         </TabsContent>
