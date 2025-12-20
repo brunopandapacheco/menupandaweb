@@ -219,24 +219,28 @@ export default function DesignSettings() {
             {/* SUB-ABAS DENTRO DE CONFIGURAÇÃO */}
             <Tabs value={configSubTab} onValueChange={setConfigSubTab} className="space-y-6">
               <TabsList 
-                className="grid w-full grid-cols-3 h-auto p-1 rounded-lg shadow-sm"
-                style={{ backgroundColor: '#fef3c7' }}
+                className="grid w-full grid-cols-3 h-auto p-1 rounded-lg shadow-sm animate-pulse"
+                style={{
+                  background: 'linear-gradient(135deg, #ECC440 0%, #FFFA8A 25%, #DDAC17 50%, #FFFF95 75%, #ECC440 100%)',
+                  backgroundSize: '200% 200%',
+                  animation: 'goldGradient 3s ease infinite'
+                }}
               >
                 <TabsTrigger 
                   value="geral"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 text-pink-600 hover:bg-white hover:text-pink-600 data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-gray-600 hover:bg-white hover:text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm"
                 >
                   Geral
                 </TabsTrigger>
                 <TabsTrigger 
                   value="funcionamento"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 text-pink-600 hover:bg-white hover:text-pink-600 data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-gray-600 hover:bg-white hover:text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm"
                 >
                   Funcionamento
                 </TabsTrigger>
                 <TabsTrigger 
                   value="categorias"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 text-pink-600 hover:bg-white hover:text-pink-600 data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-gray-600 hover:bg-white hover:text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm"
                 >
                   Categorias
                 </TabsTrigger>
@@ -339,6 +343,14 @@ export default function DesignSettings() {
         </TabsContent>
 
       </Tabs>
+
+      <style>{`
+        @keyframes goldGradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </div>
   )
 }
