@@ -165,30 +165,29 @@ export function DesktopNavigationMenu() {
 
   const displayCount = getDisplayCount()
 
-  // Layout para desktop: menu fixo na lateral direita com mais destaque
+  // Layout para desktop: menu fixo na lateral esquerda com ícone maior e redondo
   return (
     <>
       <div 
-        className="fixed right-0 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl border-l border-gray-200 flex items-center justify-center"
+        className="fixed left-0 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl border-r border-gray-200 flex items-center justify-center"
         style={{
           background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
           backgroundSize: '200% 200%',
           animation: 'gradient-x 3s ease infinite',
-          width: '100px',
-          borderRadius: '20px 0 0 20px',
-          boxShadow: '-4px 0 20px rgba(236, 72, 153, 0.3)'
+          width: '120px', // Aumentado de 80px para 120px
+          borderRadius: '0 20px 20px 0' // Adicionado borda arredondada
         }}
       >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button 
-              className="flex flex-col items-center gap-2 p-4 rounded-l-2xl transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
+              className="flex flex-col items-center gap-3 p-6 rounded-l-2xl transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
             >
-              <ShoppingCart className="w-8 h-8" />
-              <span className="font-semibold text-sm">Carrinho</span>
+              <ShoppingCart className="w-10 h-10" /> {/* Aumentado de w-6 h-6 para w-10 h-10 */}
+              <span className="font-semibold text-base">Carrinho</span> {/* Aumentado de text-sm para text-base */}
               {displayCount > 0 && (
                 <Badge 
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold" {/* Aumentado de w-5 h-5 para w-8 h-8 */}
                 >
                   {displayCount}
                 </Badge>
@@ -332,7 +331,7 @@ export function DesktopNavigationMenu() {
       </div>
 
       {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na lateral */}
-      <div className="w-24"></div>
+      <div className="w-32"></div> {/* Aumentado de w-20 para w-32 */}
 
       {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
       {showCustomerForm && (
