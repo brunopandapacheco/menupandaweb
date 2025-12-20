@@ -223,7 +223,7 @@ export default function DesignSettings() {
                 style={{
                   background: 'linear-gradient(135deg, #ECC440 0%, #FFFA8A 25%, #DDAC17 50%, #FFFF95 75%, #ECC440 100%)',
                   backgroundSize: '200% 200%',
-                  animation: 'goldGradient 3s ease infinite'
+                  animation: 'goldGradient 8s ease infinite'
                 }}
               >
                 <TabsTrigger 
