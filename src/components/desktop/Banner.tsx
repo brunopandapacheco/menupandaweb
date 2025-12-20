@@ -16,18 +16,12 @@ export function DesktopBanner({
 
   return (
     <div 
-      className="w-full"
-      style={{ 
-        position: 'relative', 
+      className="w-full relative overflow-hidden"
+      style={{
         height: '320px',
-        width: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
-        marginRight: 'calc(-50vw + 50%)',
-        overflow: 'hidden',
         backgroundImage: bannerGradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
         backgroundSize: '200% 200%',
         animation: 'gradient-x 3s ease infinite',
-        zIndex: 1 // Z-INDEX BAIXO PARA FICAR ATRÁS DO MENU
       }} 
     >
       {/* Conteúdo do Banner */}
