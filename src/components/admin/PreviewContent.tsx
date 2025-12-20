@@ -19,7 +19,6 @@ import { WhatsAppFloat } from '@/components/cardapio/WhatsAppFloat'
 import { DesktopWhatsAppFloat } from '@/components/desktop/WhatsAppFloat'
 import { DesignSettings, Configuracoes } from '@/types/database'
 import { Produto } from '@/types/cart'
-import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 interface PreviewContentProps {
   designSettings: any
@@ -62,7 +61,7 @@ export function PreviewContent({
 
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+                       product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
     return matchesSearch && matchesCategory
   })
