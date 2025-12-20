@@ -10,7 +10,7 @@ import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Button } from '@/components/ui/button'
 
 const gradientBackgrounds = [
-  // Rosa - 9 cores agora
+  // Apenas cores rosa - 9 opções
   { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
   { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
@@ -18,12 +18,8 @@ const gradientBackgrounds = [
   { name: 'Rosa Intenso', gradient: 'linear-gradient(135deg, #C71585 0%, #FF1493 50%, #FF69B4 100%)' },
   { name: 'Rosa Pastel', gradient: 'linear-gradient(135deg, #F8BBD0 0%, #FFC0CB 50%, #FFD1DC 100%)' },
   { name: 'Rosa Neon', gradient: 'linear-gradient(135deg, #FF006E 0%, #FF1493 50%, #FF69B4 100%)' },
-  { name: 'Rosa Pêssego', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFC0CB 50%, #FFB6C1 100%)' },
-  { name: 'Rosa Magenta', gradient: 'linear-gradient(135deg, #FF00FF 0%, #FF1493 50%, #FF69B4 100%)' },
-  // Outras cores mantidas
-  { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
-  { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
-  { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
+  { name: 'Rosa Pêssego', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFC0CB 50%, #FFD1DC 100%)' },
+  { name: 'Rosa Magenta', gradient: 'linear-gradient(135deg, #FF00FF 0%, #FF1493 50%, #FF69B4 100%)' }
 ]
 
 // Função para formatar o número do WhatsApp
@@ -167,7 +163,7 @@ export default function DesignSettings() {
       >
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
 
-          {/* NAV BAR COM APENAS 3 ABAS */}
+          {/* NAV BAR COM ABAS 3 ABAS */}
           <TabsList
             className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
             style={{
@@ -212,9 +208,9 @@ export default function DesignSettings() {
           </TabsList>
 
           <TabsContent value="cores">
-            {/* Layout horizontal para desktop - NOVA ORDEM: Cor do Nome, Cor da Borda, Background */}
+            {/* Layout horizontal para desktop - 3 cards alinhados */}
             <div className="grid grid-cols-3 gap-6">
-              {/* Card da Cor do Nome - AGORA EM PRIMEIRO */}
+              {/* Card da Cor do Nome */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
                   <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor do Nome</h3>
@@ -268,7 +264,7 @@ export default function DesignSettings() {
                 </div>
               </div>
 
-              {/* Card da Cor da Borda - EM SEGUNDO */}
+              {/* Card da Cor da Borda */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
                   <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor da Borda</h3>
@@ -322,7 +318,7 @@ export default function DesignSettings() {
                 </div>
               </div>
 
-              {/* Card do Background - AGORA EM TERCEIRO COM VISUAL AJUSTADO E 12 CORES */}
+              {/* Card do Background - AGORA EM TERCEIRO COM 9 CORES ROSA */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
                   <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</h3>
@@ -527,7 +523,7 @@ export default function DesignSettings() {
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
 
-        {/* NAV BAR COM APENAS 3 ABAS */}
+        {/* NAV BAR COM ABAS 3 ABAS */}
         <TabsList
           className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
           style={{
