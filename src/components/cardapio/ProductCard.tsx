@@ -89,15 +89,6 @@ export function ProductCard({
                 PROMOÇÃO
               </div>
             )}
-
-            {/* Botão para adicionar ao carrinho - agora abre modal */}
-            <button
-              onClick={handleAddToCart}
-              className="absolute bottom-2 right-2 bg-pink-500 hover:bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-colors"
-              title="Adicionar ao carrinho"
-            >
-              <ShoppingCart className="w-4 h-4" />
-            </button>
           </div>
           
           {/* Conteúdo do produto */}
