@@ -68,7 +68,7 @@ export function IconSelectorModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-bold text-gray-900">
