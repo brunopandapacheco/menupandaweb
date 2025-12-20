@@ -161,8 +161,12 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#ec4899', color: 'white' }}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}
               disabled={uploadingLogo}
             >
               <label 
@@ -219,8 +223,12 @@ export function ImageSettings({
             <Button
               asChild
               size="lg"
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg"
-              style={{ backgroundColor: '#ec4899', color: 'white' }}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}
               disabled={uploadingBanner}
             >
               <label 
@@ -242,6 +250,20 @@ export function ImageSettings({
           circularCrop={true}
         />
       )}
+
+      <style>{`
+        @keyframes gradientShift {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   )
 }
