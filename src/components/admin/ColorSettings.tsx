@@ -16,16 +16,22 @@ const predefinedColors = [
 ]
 
 const gradientBackgrounds = [
-  // 3 tons de rosa
-  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
-  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
-  // 1 ton de marrom
-  { name: 'Marrom Elegante', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%)' },
-  // 1 ton de roxo escuro
-  { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
-  // 1 caixa para personalizar
-  { name: 'Personalizado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' }
+  // 3 tons de rosa claro
+  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 50%, #FFD1DC 100%)' },
+  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFE4E1 0%, #FFC0CB 50%, #FFD1DC 100%)' },
+  { name: 'Rosa Claro', gradient: 'linear-gradient(135deg, #FFF0F5 0%, #FFC0CB 50%, #FFE4E1 100%)' },
+  // 1 tom de marrom claro
+  { name: 'Marrom Claro', gradient: 'linear-gradient(135deg, #F5DEB3 0%, #DEB887 50%, #D2691E 100%)' },
+  // 1 tom de marrom escuro
+  { name: 'Marrom Escuro', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%)' },
+  // 1 tom de roxo
+  { name: 'Roxo Elegante', gradient: 'linear-gradient(135deg, #9370DB 0%, #8A2BE2 50%, #DDA0DD 100%)' },
+  // 1 tom de cinza
+  { name: 'Cinza Suave', gradient: 'linear-gradient(135deg, #D3D3D3 0%, #E8E8E8 50%, #F5F5F5 100%)' },
+  // 1 tom de laranja
+  { name: 'Laranja Vibrante', gradient: 'linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FF7F50 100%)' },
+  // 1 tom de verde
+  { name: 'Verde Fresco', gradient: 'linear-gradient(135deg, #90EE90 0%, #98FB98 50%, #8FBC8F 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -51,10 +57,8 @@ export function ColorSettings({
 }: ColorSettingsProps) {
   const [showCustomBorderPicker, setShowCustomBorderPicker] = useState(false)
   const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
-  const [showCustomBackgroundPicker, setShowCustomBackgroundPicker] = useState(false)
   const [customBorderColor, setCustomBorderColor] = useState(corBorda)
   const [customNameColor, setCustomNameColor] = useState(corNome)
-  const [customBackgroundGradient, setCustomBackgroundGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
 
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
@@ -78,7 +82,6 @@ export function ColorSettings({
 
   const handleBackgroundClick = (gradient: string) => {
     onBannerGradientChange(gradient) // Aplica imediatamente
-    setCustomBackgroundGradient(gradient) // Atualiza o estado local também
   }
 
   const handleSaveColors = () => {
@@ -260,15 +263,7 @@ export function ColorSettings({
               <div 
                 key={index} 
                 className="cursor-pointer transition-all"
-                onClick={() => {
-                  if (index === 5) {
-                    // Último item (Personalizado) - abre o picker
-                    setShowCustomBackgroundPicker(!showCustomBackgroundPicker)
-                  } else {
-                    // Demais itens - seleciona o gradiente
-                    handleBackgroundClick(gradient.gradient)
-                  }
-                }}
+                onClick={() => handleBackgroundClick(gradient.gradient)}
               >
                 <div 
                   className={
@@ -278,49 +273,20 @@ export function ColorSettings({
                       : '')
                   }
                   style={{ 
-                    background: index === 5 ? customBackgroundGradient : gradient.gradient,
+                    background: gradient.gradient,
                     position: 'relative'
                   }}
                 >
-                  {index === 5 && (
+                  {bannerGradient === gradient.gradient && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Palette className="w-6 h-6 text-white drop-shadow-lg" />
+                      <CheckCircle className="w-6 h-6 text-white drop-shadow-lg" />
                     </div>
                   )}
                 </div>
-                {index !== 5 && (
-                  <p className="text-xs text-center text-gray-600">{gradient.name}</p>
-                )}
+                <p className="text-xs text-center text-gray-600">{gradient.name}</p>
               </div>
             ))}
           </div>
-          
-          {/* Picker de gradiente personalizado */}
-          {showCustomBackgroundPicker && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <label className="text-sm font-medium text-gray-700">Gradiente Personalizado:</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={customBackgroundGradient}
-                      onChange={(e) => {
-                        const value = e.target.value
-                        // Validação básica de CSS gradient
-                        if (value.includes('linear-gradient') || value.includes('radial-gradient')) {
-                          handleBackgroundClick(value)
-                        }
-                      }}
-                      placeholder="linear-gradient(...)"
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-full"
-                    />
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500">Digite um gradiente CSS (ex: linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%))</p>
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
 
