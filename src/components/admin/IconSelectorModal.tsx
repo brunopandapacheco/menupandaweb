@@ -90,7 +90,7 @@ export function IconSelectorModal({
           <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-2">Ícone selecionado:</p>
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center">
                 <img 
                   src={tempSelectedIcon} 
                   alt="Ícone selecionado"
@@ -99,9 +99,6 @@ export function IconSelectorModal({
                     e.currentTarget.src = '/icons/1.png'
                   }}
                 />
-                <span className="text-sm font-medium text-gray-700">
-                  {availableIcons.find(icon => icon.path === tempSelectedIcon)?.name || 'Padrão'}
-                </span>
               </div>
             </div>
           </div>
