@@ -159,7 +159,14 @@ export function ProductCard({
             {/* Botão Adicionar ao carrinho abaixo do preço */}
             <button
               onClick={handleAddToCart}
-              className="w-full py-2 px-3 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-xs font-medium transition-colors text-center whitespace-nowrap"
+              className="w-full py-2 px-3 rounded-lg text-white text-xs font-medium transition-colors text-center whitespace-nowrap overflow-hidden"
+              style={{ backgroundColor: '#FF4F97' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#E64280'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#FF4F97'
+              }}
             >
               Adicionar ao carrinho
             </button>
