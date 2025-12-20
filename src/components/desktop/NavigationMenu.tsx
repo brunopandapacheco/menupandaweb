@@ -169,7 +169,7 @@ export function DesktopNavigationMenu() {
   return (
     <>
       <div 
-        className="fixed right-8 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl flex items-center justify-center"
+        className="fixed right-8 top-1/2 transform -translate-y-1/2 z-30 flex items-center justify-center"
         style={{
           width: '80px',
           height: '80px'
@@ -178,13 +178,25 @@ export function DesktopNavigationMenu() {
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button 
-              className="relative w-20 h-20 rounded-full border-4 border-gray-300 bg-white hover:bg-gray-50 transition-all duration-200 hover:scale-105 shadow-lg"
+              className="relative w-20 h-20 rounded-full border-4 border-gray-300 bg-gray-800 hover:bg-gray-700 transition-all duration-200 hover:scale-105 shadow-lg animate-pulse-slow"
               style={{
-                border: '4px solid #e5e7eb',
-                backgroundColor: '#ffffff'
+                border: '4px solid #374151',
+                backgroundColor: '#1f2937'
               }}
             >
-              <ShoppingCart className="w-8 h-8 text-gray-700" />
+              <img 
+                src="/carrinhoapp.png" 
+                alt="Carrinho" 
+                className="w-10 h-10 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                  // Fallback para ícone do lucide se a imagem não carregar
+                  const parent = e.currentTarget.parentElement
+                  if (parent) {
+                    parent.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L6 9l3 7m0 0l3-7-3 7m-3 7v10a2 2 0 002 2h10a2 2 0 002-2V9l-3-7m-6 0l3 7m6 0l3-7"/></svg>'
+                  }
+                }}
+              />
               {displayCount > 0 && (
                 <Badge 
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold border-2 border-white"
@@ -431,11 +443,11 @@ export function DesktopNavigationMenu() {
         @keyframes pulse-slow {
           0%, 100% {
             transform: scale(1);
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 15px rgba(31, 41, 55, 0.3);
           }
           50% {
-            transform: scale(1.02);
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(31, 41, 55, 0.4);
           }
         }
       `}</style>
