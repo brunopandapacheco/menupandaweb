@@ -5,6 +5,7 @@ import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Banner } from '@/components/cardapio/Banner'
 import { DesktopBanner } from '@/components/desktop/Banner'
 import { BannerAd } from '@/components/cardapio/BannerAd'
+import { DesktopBannerAd } from '@/components/desktop/BannerAd'
 import { Logo } from '@/components/cardapio/Logo'
 import { DesktopLogo } from '@/components/desktop/Logo'
 import { CategoryFilter } from '@/components/cardapio/CategoryFilter'
@@ -151,6 +152,7 @@ export default function CardapioPublico() {
   const EmptyStateComponent = device === 'desktop' ? DesktopEmptyState : EmptyState
   const NavigationMenuComponent = device === 'desktop' ? DesktopNavigationMenu : NavigationMenu
   const WhatsAppFloatComponent = device === 'desktop' ? DesktopWhatsAppFloat : WhatsAppFloat
+  const BannerAdComponent = device === 'desktop' ? DesktopBannerAd : BannerAd
 
   if (loading) {
     return (
@@ -206,7 +208,7 @@ export default function CardapioPublico() {
 
       <div className={`container mx-auto px-4 py-4 ${device === 'desktop' ? 'pb-20' : 'pb-20'}`}>
         {designSettings.banner1_url && (
-          <BannerAd bannerUrl={designSettings.banner1_url} />
+          <BannerAdComponent bannerUrl={designSettings.banner1_url} />
         )}
         
         <CategoryFilterComponent 
