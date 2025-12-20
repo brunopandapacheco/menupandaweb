@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Heart, ShoppingCart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { ProductModal } from '@/components/cart/ProductModal'
 import { useCart } from '@/hooks/useCart'
@@ -159,9 +159,8 @@ export function ProductCard({
             {/* Botão Adicionar ao carrinho abaixo do preço */}
             <button
               onClick={handleAddToCart}
-              className="w-full py-2 px-3 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1"
+              className="w-full py-2 px-3 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-xs font-medium transition-colors text-center whitespace-nowrap"
             >
-              <ShoppingCart className="w-3 h-3" />
               Adicionar ao carrinho
             </button>
           </div>
