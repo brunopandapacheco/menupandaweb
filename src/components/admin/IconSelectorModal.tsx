@@ -68,7 +68,7 @@ export function IconSelectorModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl">
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[85vh] overflow-y-auto rounded-2xl mx-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-bold text-gray-900">
@@ -78,7 +78,7 @@ export function IconSelectorModal({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-8 w-8 p-0 rounded-full hover:bg-gray-100"
+              className="h-8 w-8 p-0 rounded-full hover:bg-gray-100 flex-shrink-0"
             >
               <X className="w-4 h-4" />
             </Button>
@@ -108,7 +108,7 @@ export function IconSelectorModal({
             <h4 className="text-sm font-semibold text-gray-800 mb-4 text-center">
               Clique em um ícone para selecionar
             </h4>
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 max-h-96 overflow-y-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 max-h-96 overflow-y-auto">
               {availableIcons.map((icon) => (
                 <button
                   key={icon.path}
