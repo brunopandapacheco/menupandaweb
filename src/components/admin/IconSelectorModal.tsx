@@ -70,19 +70,9 @@ export function IconSelectorModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-[95vw] max-h-[85vh] overflow-y-auto rounded-2xl mx-auto">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold text-gray-900">
-              Escolher Ícone para Categoria
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0 rounded-full hover:bg-gray-100 flex-shrink-0"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-xl font-bold text-gray-900 pr-8">
+            Escolher Ícone para Categoria
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
