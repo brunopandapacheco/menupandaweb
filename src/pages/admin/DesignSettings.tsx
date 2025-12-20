@@ -249,8 +249,7 @@ export default function DesignSettings() {
                       { name: 'Amarelo', value: '#eab308' },
                       { name: 'Verde', value: '#10b981' },
                       { name: 'Azul', value: '#3b82f6' },
-                      { name: 'Roxo', value: '#8b5cf6' },
-                      { name: 'Preto', value: '#000000' }
+                      { name: 'Roxo', value: '#8b5cf6' }
                     ].map((color) => (
                       <button
                         key={color.value}
@@ -353,8 +352,7 @@ export default function DesignSettings() {
                       { name: 'Amarelo', value: '#eab308' },
                       { name: 'Verde', value: '#10b981' },
                       { name: 'Azul', value: '#3b82f6' },
-                      { name: 'Roxo', value: '#8b5cf6' },
-                      { name: 'Preto', value: '#000000' }
+                      { name: 'Roxo', value: '#8b5cf6' }
                     ].map((color) => (
                       <button
                         key={color.value}
