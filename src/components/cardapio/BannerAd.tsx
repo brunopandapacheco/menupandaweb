@@ -13,7 +13,7 @@ export function BannerAd({ bannerUrl }: BannerAdProps) {
         <img 
           src={bannerUrl} 
           alt="Banner Publicitário" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           onError={(e) => {
             e.currentTarget.style.display = 'none'
           }}
