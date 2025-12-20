@@ -228,19 +228,19 @@ export default function DesignSettings() {
               >
                 <TabsTrigger 
                   value="geral"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 text-gray-600 hover:bg-white hover:text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-black hover:bg-white hover:text-black data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
                 >
                   Geral
                 </TabsTrigger>
                 <TabsTrigger 
                   value="funcionamento"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 text-gray-600 hover:bg-white hover:text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-black hover:bg-white hover:text-black data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
                 >
                   Funcionamento
                 </TabsTrigger>
                 <TabsTrigger 
                   value="categorias"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 text-gray-600 hover:bg-white hover:text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-black hover:bg-white hover:text-black data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
                 >
                   Categorias
                 </TabsTrigger>
