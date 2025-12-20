@@ -19,6 +19,7 @@ import { WhatsAppFloat } from '@/components/cardapio/WhatsAppFloat'
 import { DesktopWhatsAppFloat } from '@/components/desktop/WhatsAppFloat'
 import { DesignSettings, Configuracoes } from '@/types/database'
 import { Produto } from '@/types/cart'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 interface PreviewContentProps {
   designSettings: any
