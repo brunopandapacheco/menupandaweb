@@ -95,10 +95,17 @@ export function StatusButton({ configuracoes, className = '' }: StatusButtonProp
 
   return (
     <div 
-      className="inline-flex items-center gap-2 px-4 py-2 rounded-full shadow-md transition-all duration-300"
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full shadow-lg transition-all duration-300 ${
+        status === 'aberto' 
+          ? 'animate-pulse-green' 
+          : 'animate-pulse-red'
+      }`}
       style={{
         backgroundColor: status === 'aberto' ? '#10b981' : '#ef4444',
-        color: 'white'
+        color: 'white',
+        boxShadow: status === 'aberto' 
+          ? '0 4px 15px rgba(16, 185, 129, 0.3)' 
+          : '0 4px 15px rgba(239, 68, 68, 0.3)'
       }}
     >
       {status === 'aberto' ? (
