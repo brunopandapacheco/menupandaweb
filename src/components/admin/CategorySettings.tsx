@@ -233,6 +233,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   }
 
   const getCategoryIcon = (category: string) => {
+    // Sempre retorna o ícone TODOS.png para a categoria "Todos"
     if (category === 'Todos') {
       return '/icons/TODOS.png'
     }
@@ -300,10 +301,12 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                           onError={(e) => e.currentTarget.src = '/icons/1.png'}
                         />
                         
+                        {/* Botão de editar ícone - só aparece se não for a categoria "Todos" */}
                         {!isTodos && (
                           <button
                             onClick={() => handleOpenIconModal(category)}
                             className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hover:bg-purple-700"
+                            title="Alterar ícone"
                           >
                             <Edit2 className="w-2 h-2" />
                           </button>
