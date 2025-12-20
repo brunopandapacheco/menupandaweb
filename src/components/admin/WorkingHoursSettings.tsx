@@ -186,7 +186,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Horário de Abertura</Label>
+              <Label>Abertura</Label>
               <Input
                 type="time"
                 value={horarioAbertura}
@@ -194,7 +194,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
               />
             </div>
             <div className="space-y-2">
-              <Label>Horário de Fechamento</Label>
+              <Label>Fechamento</Label>
               <Input
                 type="time"
                 value={horarioFechamento}
