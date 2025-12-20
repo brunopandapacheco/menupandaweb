@@ -108,7 +108,7 @@ export function IconSelectorModal({
             <h4 className="text-sm font-semibold text-gray-800 mb-4 text-center">
               Clique em um ícone para selecionar
             </h4>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 max-h-96 overflow-y-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-pink-100">
               {availableIcons.map((icon) => (
                 <button
                   key={icon.path}
