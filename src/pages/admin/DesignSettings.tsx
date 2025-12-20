@@ -6,6 +6,8 @@ import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
 import { WorkingHoursSettings } from '@/components/admin/WorkingHoursSettings'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
+import { Button } from '@/components/ui/button'
 
 const gradientBackgrounds = [
   { name: 'Dourado Quente', gradient: '#F5C542' }
@@ -44,6 +46,7 @@ export default function DesignSettings() {
   const [whatsapp, setWhatsapp] = useState('(11) 999999999')
   
   const [mainCategories, setMainCategories] = useState<string[]>([])
+  const device = useDeviceDetection()
 
   useEffect(() => {
     if (designSettings) {
@@ -138,6 +141,354 @@ export default function DesignSettings() {
     )
   }
 
+  // Layout específico para desktop
+  if (device === 'desktop') {
+    return (
+      <div
+        className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen pb-24"
+        style={{ backgroundColor: '#f5f5f5' }} 
+      >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 relative z-10">
+
+          {/* NAV BAR COM APENAS 3 ABAS */}
+          <TabsList
+            className="grid w-full grid-cols-3 h-auto p-1 rounded-xl shadow-md"
+            style={{
+              background: '#ec4899'
+            }}
+          >
+            <TabsTrigger
+              value="cores"
+              className="
+                rounded-lg font-[650] py-3 transition-all duration-200
+                text-white
+                hover:bg-[#1A1A1A] hover:text-white
+                data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
+              "
+            >
+              Cores
+            </TabsTrigger>
+
+            <TabsTrigger
+              value="imagens"
+              className="
+                rounded-lg font-[650] py-3 transition-all duration-200
+                text-white
+                hover:bg-[#1A1A1A] hover:text-white
+                data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
+              "
+            >
+              Imagens
+            </TabsTrigger>
+
+            <TabsTrigger
+              value="configuracao"
+              className="
+                rounded-lg font-[650] py-3 transition-all duration-200
+                text-white
+                hover:bg-[#1A1A1A] hover:text-white
+                data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-md
+              "
+            >
+              Configuração
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="cores">
+            {/* Layout horizontal para desktop - 3 cards lado a lado */}
+            <div className="grid grid-cols-3 gap-6">
+              {/* Card do Background */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <div className="text-center pb-4">
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</h3>
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+                    { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+                    { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+                    { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
+                    { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
+                    { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
+                  ].map((gradient, index) => (
+                    <div key={index} className="cursor-pointer hover:shadow-lg transition-all">
+                      <div 
+                        className="w-full h-20 rounded-lg mb-3 shadow-sm"
+                        style={{ background: gradient.gradient }}
+                      />
+                      <Button 
+                        size="sm" 
+                        className="w-full font-[650] text-xs"
+                        style={{ backgroundColor: '#111111', color: 'white' }}
+                        onClick={() => applyGradient(gradient)}
+                      >
+                        Aplicar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Card da Cor da Borda */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <div className="text-center pb-4">
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor da Borda</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { name: 'Rosa', value: '#ec4899' },
+                      { name: 'Rosa Escuro', value: '#be185d' },
+                      { name: 'Vermelho', value: '#ef4444' },
+                      { name: 'Laranja', value: '#f97316' },
+                      { name: 'Amarelo', value: '#eab308' },
+                      { name: 'Verde', value: '#10b981' },
+                      { name: 'Azul', value: '#3b82f6' },
+                      { name: 'Roxo', value: '#8b5cf6' },
+                      { name: 'Preto', value: '#000000' }
+                    ].map((color) => (
+                      <button
+                        key={color.value}
+                        onClick={() => setCorBorda(color.value)}
+                        className={
+                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                          (corBorda === color.value 
+                            ? 'border-gray-800 shadow-lg scale-105' 
+                            : 'border-gray-200 hover:border-gray-400')
+                        }
+                        style={{ backgroundColor: color.value }}
+                        title={color.name}
+                      >
+                        {corBorda === color.value && (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <Button 
+                    onClick={saveColors}
+                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientShift 3s ease infinite'
+                    }}
+                  >
+                    Aplicar Cor da Borda
+                  </Button>
+                </div>
+              </div>
+
+              {/* Card da Cor do Nome */}
+              <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                <div className="text-center pb-4">
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor do Nome</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { name: 'Rosa', value: '#ec4899' },
+                      { name: 'Rosa Escuro', value: '#be185d' },
+                      { name: 'Vermelho', value: '#ef4444' },
+                      { name: 'Laranja', value: '#f97316' },
+                      { name: 'Amarelo', value: '#eab308' },
+                      { name: 'Verde', value: '#10b981' },
+                      { name: 'Azul', value: '#3b82f6' },
+                      { name: 'Roxo', value: '#8b5cf6' },
+                      { name: 'Preto', value: '#000000' }
+                    ].map((color) => (
+                      <button
+                        key={color.value}
+                        onClick={() => setCorNome(color.value)}
+                        className={
+                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                          (corNome === color.value 
+                            ? 'border-gray-800 shadow-lg scale-105' 
+                            : 'border-gray-200 hover:border-gray-400')
+                        }
+                        style={{ backgroundColor: color.value }}
+                        title={color.name}
+                      >
+                        {corNome === color.value && (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <Button 
+                    onClick={saveColors}
+                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientShift 3s ease infinite'
+                    }}
+                  >
+                    Aplicar Cor do Nome
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="imagens">
+            <ImageSettings
+              logoUrl={logoUrl}
+              onLogoUrlChange={setLogoUrl}
+              onSaveLogo={saveLogoOnly}
+              bannerUrl={bannerUrl}
+              onBannerUrlChange={setBannerUrl}
+              onSaveBanner={saveBannerOnly}
+            />
+          </TabsContent>
+
+          <TabsContent value="configuracao">
+            <div className="space-y-6">
+              {/* SUB-ABAS DENTRO DE CONFIGURAÇÃO */}
+              <Tabs value={configSubTab} onValueChange={setConfigSubTab} className="space-y-6">
+                <TabsList 
+                  className="grid w-full grid-cols-3 h-auto p-1 rounded-lg shadow-sm animate-pulse"
+                  style={{
+                    background: 'linear-gradient(135deg, #ECC440 0%, #FFFA8A 25%, #DDAC17 50%, #FFFF95 75%, #ECC440 100%)',
+                    backgroundSize: '200% 200%',
+                    animation: 'goldGradient 8s ease infinite'
+                  }}
+                >
+                  <TabsTrigger 
+                    value="geral"
+                    className="rounded-md font-[600] py-2 transition-all duration-200 text-black hover:bg-white hover:text-black data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
+                  >
+                    Geral
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="funcionamento"
+                    className="rounded-md font-[600] py-2 transition-all duration-200 text-black hover:bg-white hover:text-black data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
+                  >
+                    Funcionamento
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="categorias"
+                    className="rounded-md font-[600] py-2 transition-all duration-200 text-black hover:bg-white hover:text-black data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm"
+                  >
+                    Categorias
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="geral">
+                  <div className="space-y-8">
+                    {/* Layout horizontal para desktop */}
+                    <div className="grid grid-cols-3 gap-6">
+                      {/* Nome da Loja */}
+                      <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Nome da Loja</h3>
+                        <div className="space-y-4">
+                          <input
+                            value={nomeLoja}
+                            onChange={(e) => setNomeLoja(e.target.value)}
+                            placeholder="Nome da sua confeitaria"
+                            className="w-full p-3 border border-gray-300 rounded-lg"
+                          />
+                          <button 
+                            onClick={saveConfig}
+                            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                          >
+                            Salvar Nome
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Descrição da Loja */}
+                      <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>Descrição da Loja</h3>
+                        <div className="space-y-4">
+                          <textarea
+                            value={descricaoLoja}
+                            onChange={(e) => setDescricaoLoja(e.target.value)}
+                            placeholder="Descreva sua confeitaria..."
+                            rows={3}
+                            maxLength={200}
+                            className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+                          />
+                          <button 
+                            onClick={saveConfig}
+                            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                          >
+                            Salvar Descrição
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* WhatsApp para Pedidos */}
+                      <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                        <h3 className="text-xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
+                          WhatsApp para Pedidos
+                        </h3>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700">Número do WhatsApp</label>
+                            <input
+                              value={whatsapp}
+                              onChange={handleWhatsAppChange}
+                              placeholder="(11) 99999-9999"
+                              className="w-full"
+                            />
+                            <p className="text-xs text-gray-500">
+                              Formato: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+                            </p>
+                            <p className="text-xs text-black bg-pink-100 p-2 rounded">
+                              💡 Este número será usado quando os clientes clicarem em "Finalizar Pedido" no seu cardápio
+                            </p>
+                          </div>
+                          <button 
+                            onClick={saveWhatsApp}
+                            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                          >
+                            Salvar WhatsApp
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="funcionamento">
+                  <WorkingHoursSettings
+                    configuracoes={configuracoes}
+                    onSaveConfiguracoes={saveConfiguracoes}
+                  />
+                </TabsContent>
+
+                <TabsContent value="categorias">
+                  <CategorySettings
+                    mainCategories={mainCategories}
+                    onMainCategoriesChange={setMainCategories}
+                    onSaveCategories={saveCategories}
+                  />
+                </TabsContent>
+              </Tabs>
+            </div>
+          </TabsContent>
+
+        </Tabs>
+
+        <style>{`
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
+      </div>
+    )
+  }
+
+  // Layout original para mobile/tablet
   return (
     <div
       className="space-y-6 px-4 sm:px-0 pt-12 min-h-screen pb-24"
