@@ -181,8 +181,11 @@ export function ColorSettings({
           <div className="pt-4 flex justify-center">
             <Button 
               onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg text-white"
-              style={{ background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' }}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                boxShadow: '0 10px 25px -5px rgba(209, 27, 112, 0.3), 0 10px 10px -5px rgba(209, 27, 112, 0.2)'
+              }}
             >
               Aplicar Cor da Borda
             </Button>
@@ -272,8 +275,11 @@ export function ColorSettings({
           <div className="pt-4 flex justify-center">
             <Button 
               onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-md hover:shadow-lg text-white"
-              style={{ background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)' }}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                boxShadow: '0 10px 25px -5px rgba(209, 27, 112, 0.3), 0 10px 10px -5px rgba(209, 27, 112, 0.2)'
+              }}
             >
               Aplicar Cor do Nome
             </Button>
