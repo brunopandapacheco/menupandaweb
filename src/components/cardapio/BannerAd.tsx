@@ -9,11 +9,11 @@ export function BannerAd({ bannerUrl }: BannerAdProps) {
 
   return (
     <div className="mx-4 mb-4">
-      <div className="w-full h-32 rounded-lg overflow-hidden shadow-lg shadow-black/30">
+      <div className="w-full h-auto rounded-lg overflow-hidden shadow-lg shadow-black/30">
         <img 
           src={bannerUrl} 
           alt="Banner Publicitário" 
-          className="w-full h-full object-contain"
+          className="w-full h-auto object-contain"
           onError={(e) => {
             e.currentTarget.style.display = 'none'
           }}
