@@ -6,6 +6,7 @@ import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabaseService } from '@/services/supabase'
 import { useAuth } from '@/hooks/useAuth'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 interface ImageSettingsProps {
   logoUrl: string
@@ -30,6 +31,7 @@ export function ImageSettings({
   const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null)
   const [selectedBannerFile, setSelectedBannerFile] = useState<File | null>(null)
   const [showLogoCropper, setShowLogoCropper] = useState(false)
+  const device = useDeviceDetection()
 
   const handleLogoFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -115,6 +117,163 @@ export function ImageSettings({
     setSelectedLogoFile(null)
   }
 
+  // Layout para desktop - logo e banner lado a lado
+  if (device === 'desktop') {
+    return (
+      <div className="grid grid-cols-2 gap-8">
+        {/* Card da Logo - Esquerda */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Logo da Loja</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            <div className="flex justify-center">
+              <div className="relative">
+                {logoUrl ? (
+                  <div className="w-48 h-48 rounded-full border-4 border-gray-200 overflow-hidden shadow-xl">
+                    <img 
+                      src={`${logoUrl}?t=${Date.now()}`} 
+                      alt="Logo da loja" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-48 h-48 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 shadow-xl">
+                    <div className="text-center">
+                      <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500">Nenhuma logo</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoFileSelect}
+                className="hidden"
+                id="logo-upload"
+                disabled={uploadingLogo}
+              />
+
+              <Button
+                asChild
+                size="lg"
+                className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                style={{ 
+                  background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientShift 3s ease infinite'
+                }}
+                disabled={uploadingLogo}
+              >
+                <label 
+                  htmlFor="logo-upload" 
+                  className="cursor-pointer"
+                >
+                  {uploadingLogo ? 'Processando...' : 'Selecionar Logo'}
+                </label>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Card do Banner - Direita */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-md">
+                {bannerUrl ? (
+                  <div className="w-full h-32 border-2 border-gray-200 rounded-lg overflow-hidden shadow-md">
+                    <img 
+                      src={`${bannerUrl}?t=${Date.now()}`} 
+                      alt="Banner do cardápio" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+                    <div className="text-center">
+                      <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500">Nenhum banner</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerFileSelect}
+                className="hidden"
+                id="banner-upload"
+                disabled={uploadingBanner}
+              />
+
+              <Button
+                asChild
+                size="lg"
+                className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                style={{ 
+                  background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientShift 3s ease infinite'
+                }}
+                disabled={uploadingBanner}
+              >
+                <label 
+                  htmlFor="banner-upload" 
+                  className="cursor-pointer"
+                >
+                  {uploadingBanner ? 'Processando...' : 'Selecionar Banner'}
+                </label>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {showLogoCropper && selectedLogoFile && (
+          <LogoCropper
+            imageFile={selectedLogoFile}
+            onCropComplete={handleLogoCropComplete}
+            onCancel={handleLogoCropCancel}
+            circularCrop={true}
+          />
+        )}
+
+        <style>{`
+          @keyframes gradientShift {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
+        `}</style>
+      </div>
+    )
+  }
+
+  // Layout original para mobile/tablet - mantido igual
   return (
     <div className="space-y-6">
       
