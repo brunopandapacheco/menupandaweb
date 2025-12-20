@@ -88,6 +88,22 @@ export function ColorSettings({
     showSuccess('Cores salvas com sucesso!')
   }
 
+  // Funções para salvar cores individuais
+  const saveCorBorda = () => {
+    onSaveColors()
+    showSuccess('Cor da borda salva com sucesso!')
+  }
+
+  const saveCorNome = () => {
+    onSaveColors()
+    showSuccess('Cor do nome salva com sucesso!')
+  }
+
+  const saveBackground = () => {
+    onSaveColors()
+    showSuccess('Background salvo com sucesso!')
+  }
+
   return (
     <div className="space-y-6">
       {/* Card da Cor da Borda */}
@@ -168,6 +184,19 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
+
+          {/* Botão para salvar Cor da Borda - SEMPRE VISÍVEL */}
+          <Button 
+            onClick={saveCorBorda}
+            className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+            style={{ 
+              background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite'
+            }}
+          >
+            Salvar Cor da Borda
+          </Button>
         </CardContent>
       </Card>
 
@@ -249,6 +278,19 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
+
+          {/* Botão para salvar Cor do Nome - SEMPRE VISÍVEL */}
+          <Button 
+            onClick={saveCorNome}
+            className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+            style={{ 
+              background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite'
+            }}
+          >
+            Salvar Cor do Nome
+          </Button>
         </CardContent>
       </Card>
 
@@ -324,6 +366,19 @@ export function ColorSettings({
               </div>
             </div>
           )}
+
+          {/* Botão para salvar Background - SEMPRE VISÍVEL */}
+          <Button 
+            onClick={saveBackground}
+            className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+            style={{ 
+              background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite'
+            }}
+          >
+            Salvar Background
+          </Button>
         </CardContent>
       </Card>
 
