@@ -62,12 +62,10 @@ export function ColorSettings({
 
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
-    setCorBorda(color)
   }
 
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
-    setCorNome(color)
   }
 
   const handleBorderClick = (color: string) => {
@@ -300,7 +298,7 @@ export function ColorSettings({
         </CardContent>
       </Card>
 
-      {/* Card do Background */}
+      {/* Card do Background - Versão Mobile/Tablet */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
@@ -308,22 +306,22 @@ export function ColorSettings({
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
             {gradientBackgrounds.map((gradient, index) => (
-              <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
-                <CardContent className="p-4">
-                  <div 
-                    className="w-full h-24 rounded-lg mb-4 shadow-sm"
-                    style={{ background: gradient.gradient }}
-                  />
-                  <Button 
-                    size="sm" 
-                    className="w-full font-[650] text-xs"
-                    style={{ backgroundColor: '#111111', color: 'white' }}
-                    onClick={() => handleBackgroundClick(gradient.gradient)}
-                  >
-                    {selectedBackground === gradient.gradient ? 'Selecionado' : 'Selecionar'}
-                  </Button>
-                </CardContent>
-              </Card>
+              <div 
+                key={index} 
+                className="cursor-pointer transition-all"
+                onClick={() => handleBackgroundClick(gradient.gradient)}
+              >
+                <div 
+                  className={
+                    'w-full h-24 rounded-lg mb-2 shadow-sm ' +
+                    (selectedBackground === gradient.gradient 
+                      ? 'ring-4 ring-pink-500 ring-offset-2' 
+                      : '')
+                  }
+                  style={{ background: gradient.gradient }}
+                />
+                <p className="text-xs text-center text-gray-600">{gradient.name}</p>
+              </div>
             ))}
           </div>
           
@@ -331,7 +329,7 @@ export function ColorSettings({
           {selectedBackground && (
             <Button 
               onClick={handleSaveBackground}
-              className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white mt-4"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
                 backgroundSize: '200% 200%',
