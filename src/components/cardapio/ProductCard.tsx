@@ -126,7 +126,7 @@ export function ProductCard({
                       R$ {product.preco_normal.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 mb-1">
+                  <div className="flex items-center gap-1 mb-2">
                     <span className="text-base font-bold text-green-600">
                       R$ {product.preco_promocional.toFixed(2)}
                     </span>
@@ -164,6 +164,15 @@ export function ProductCard({
                 </div>
               )}
             </div>
+
+            {/* Botão Adicionar ao carrinho abaixo do preço */}
+            <button
+              onClick={handleAddToCart}
+              className="w-full py-2 px-3 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1"
+            >
+              <ShoppingCart className="w-3 h-3" />
+              Adicionar ao carrinho
+            </button>
           </div>
         </div>
       </div>
