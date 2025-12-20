@@ -133,7 +133,7 @@ export function ProductModal({
             </div>
             <button
               onClick={onClose}
-              className="h-10 w-10 p-0 transition-all duration-200 flex items-center justify-center"
+              className="h-10 w-10 p-0 transition-all duration-200 flex items-center justify-center rounded-full"
               style={{
                 backgroundColor: '#FF97D6',
                 cursor: 'pointer'
