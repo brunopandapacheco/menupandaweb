@@ -126,7 +126,7 @@ export function ProductCard({
                       className="text-xs px-1 py-0 rounded-sm"
                       style={{ 
                         borderRadius: '2px',
-                        backgroundColor: '#ec4899',
+                        backgroundColor: '#6A0122',
                         color: 'white',
                         pointerEvents: 'none'
                       }}
@@ -145,7 +145,7 @@ export function ProductCard({
                     className="text-xs px-1 py-0 rounded-sm"
                     style={{ 
                       borderRadius: '2px',
-                      backgroundColor: '#ec4899',
+                      backgroundColor: '#6A0122',
                       color: 'white',
                       pointerEvents: 'none'
                     }}
