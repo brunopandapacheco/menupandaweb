@@ -10,6 +10,6 @@ export function DesktopWhatsAppFloat() {
     window.open(whatsappUrl, '_blank')
   }
 
-  // Componente removido para desktop - retorna null
+  // Componente removido para desktop - retorna null para não renderizar nada
   return null
 }
