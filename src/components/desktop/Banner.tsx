@@ -1,45 +1,21 @@
 import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, Star, Clock, MapPin, Phone, MessageCircle, ShoppingCart } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { useCart } from '@/hooks/useCart'
-import { formatCurrency } from '@/utils/helpers'
 
 interface DesktopBannerProps {
   logoUrl?: string
   borderColor: string
   bannerGradient?: string
-  storeName?: string
-  storeDescription?: string
-  rating?: number
-  totalOrders?: number
-  workingHours?: string
-  address?: string
-  phone?: string
-  whatsapp?: string
-  deliveryFee?: number
-  acceptsDelivery?: boolean
 }
 
 export function DesktopBanner({ 
   logoUrl, 
   borderColor, 
-  bannerGradient,
-  storeName,
-  storeDescription,
-  rating,
-  totalOrders,
-  workingHours,
-  address,
-  phone,
-  whatsapp,
-  deliveryFee,
-  acceptsDelivery
+  bannerGradient
 }: DesktopBannerProps) {
   const [currentBanner, setCurrentBanner] = useState(0)
   const isMobile = useIsMobile()
-  const { items } = useCart()
 
   const banners = [
     { id: 1, image: '/banner1.png' },
@@ -63,30 +39,20 @@ export function DesktopBanner({
     setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length)
   }
 
-  const handleWhatsAppClick = () => {
-    const cleanNumber = whatsapp?.replace(/\D/g, '') || '41998843669'
-    const message = encodeURIComponent('Olá! Gostaria de fazer um pedido.')
-    window.open(`https://wa.me/55${cleanNumber}?text=${message}`, '_blank')
-  }
-
-  const handlePhoneClick = () => {
-    window.open(`tel:${phone}`, '_self')
-  }
-
   return (
     <div 
       className="w-full"
       style={{ 
         position: 'relative', 
-        height: '320px', // Altura maior para desktop
-        width: '100vw', // Garante 100% da largura da viewport
-        marginLeft: 'calc(-50vw + 50%)', // Centraliza e remove as bordas
-        marginRight: 'calc(-50vw + 50%)', // Centraliza e remove as bordas
+        height: '320px',
+        width: '100vw',
+        marginLeft: 'calc(-50vw + 50%)',
+        marginRight: 'calc(-50vw + 50%)',
         overflow: 'hidden',
         backgroundImage: bannerGradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
         backgroundSize: '200% 200%',
         animation: 'gradient-x 3s ease infinite',
-        zIndex: 1 // Z-INDEX BAIXO PARA FICAR ABAIXO DO MENU DE NAVEGAÇÃO
+        zIndex: 1
       }} 
     >
       {/* Conteúdo do Banner */}
@@ -97,60 +63,9 @@ export function DesktopBanner({
             {logoUrl && (
               <img 
                 src={logoUrl} 
-                alt={storeName || 'Logo'} 
+                alt="Logo" 
                 className="w-24 h-24 rounded-2xl object-cover shadow-xl border-4 border-white/30"
               />
-            )}
-            <div>
-              <h1 className="text-5xl font-bold text-white mb-2 drop-shadow-lg">
-                {storeName || 'Doces & Delícias'}
-              </h1>
-              <div className="flex items-center gap-4 text-white/90">
-                <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="font-semibold">{rating || '4.9'}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <ShoppingCart className="w-5 h-5" />
-                  <span>{totalOrders || '500'}+ pedidos</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-5 h-5" />
-                  <span>{workingHours || '08:00 - 18:00'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <p className="text-xl text-white/95 mb-6 max-w-2xl leading-relaxed drop-shadow">
-            {storeDescription || 'Os melhores doces e salgados da região, feitos com amor e qualidade.'}
-          </p>
-
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={handleWhatsAppClick}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              <MessageCircle className="w-6 h-6 mr-3" />
-              Fazer Pedido
-            </Button>
-            
-            <Button
-              onClick={handlePhoneClick}
-              variant="outline"
-              className="bg-white/20 backdrop-blur-sm border-2 border-white/40 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-xl transition-all duration-300 hover:bg-white/30 hover:scale-105"
-            >
-              <Phone className="w-6 h-6 mr-3" />
-              {phone || '(41) 99884-3669'}
-            </Button>
-
-            {acceptsDelivery && (
-              <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-xl border-2 border-white/40">
-                <div className="flex items-center gap-2 text-white font-semibold">
-                  <MapPin className="w-5 h-5" />
-                  <span>Delivery: {formatCurrency(deliveryFee || 5)}</span>
-                </div>
-              </div>
             )}
           </div>
         </div>
