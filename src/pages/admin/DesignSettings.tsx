@@ -10,7 +10,12 @@ import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Button } from '@/components/ui/button'
 
 const gradientBackgrounds = [
-  { name: 'Dourado Quente', gradient: '#F5C542' }
+  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+  { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
+  { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
+  { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
 ]
 
 // Função para formatar o número do WhatsApp
@@ -35,7 +40,7 @@ export default function DesignSettings() {
   const [configSubTab, setConfigSubTab] = useState('geral') // Sub-abas dentro de Configuração
   
   // Estados
-  const [bannerGradient, setBannerGradient] = useState(gradientBackgrounds[0].gradient)
+  const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
   const [corBorda, setCorBorda] = useState('#F5C542')
   const [corNome, setCorNome] = useState('#FCEBB3')
   
@@ -67,15 +72,13 @@ export default function DesignSettings() {
     }
   }, [configuracoes])
 
-  const applyGradient = async (gradient: typeof gradientBackgrounds[0]) => {
-    setBannerGradient(gradient.gradient)
-    const success = await saveDesignSettings({ banner_gradient: gradient.gradient })
-    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao aplicar cor')
-  }
-
   const saveColors = async () => {
-    const success = await saveDesignSettings({ cor_borda: corBorda, cor_nome: corNome })
-    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar cores')
+    const success = await saveDesignSettings({ 
+      cor_borda: corBorda, 
+      cor_nome: corNome,
+      banner_gradient: bannerGradient
+    })
+    success ? showSuccess('Cores salvas com sucesso!') : showError('Erro ao salvar cores')
   }
 
   const saveLogoOnly = async (url: string) => {
@@ -195,7 +198,7 @@ export default function DesignSettings() {
           </TabsList>
 
           <TabsContent value="cores">
-            {/* Layout horizontal para desktop - 3 cards lado a lado com nova ordem */}
+            {/* Layout horizontal para desktop - 3 cards lado a lado com NOVA ORDEM */}
             <div className="grid grid-cols-3 gap-6">
               {/* Card da Cor do Nome - AGORA EM PRIMEIRO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
@@ -235,18 +238,6 @@ export default function DesignSettings() {
                       </button>
                     ))}
                   </div>
-                  
-                  <Button 
-                    onClick={saveColors}
-                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientShift 3s ease infinite'
-                    }}
-                  >
-                    Aplicar Cor do Nome
-                  </Button>
                 </div>
               </div>
 
@@ -288,18 +279,6 @@ export default function DesignSettings() {
                       </button>
                     ))}
                   </div>
-                  
-                  <Button 
-                    onClick={saveColors}
-                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientShift 3s ease infinite'
-                    }}
-                  >
-                    Aplicar Cor da Borda
-                  </Button>
                 </div>
               </div>
 
@@ -310,30 +289,40 @@ export default function DesignSettings() {
                 </div>
                 <div className="space-y-4">
                   <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
-                      { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
-                      { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
-                      { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
-                      { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
-                      { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
-                    ].map((gradient, index) => (
-                      <div key={index} className="cursor-pointer hover:shadow-lg transition-all">
-                        <div 
-                          className="w-full aspect-square rounded-lg mb-3 shadow-sm"
-                          style={{ background: gradient.gradient }}
-                        />
-                        <Button 
-                          size="sm" 
-                          className="w-full font-[650] text-xs"
-                          style={{ backgroundColor: '#111111', color: 'white' }}
-                          onClick={() => applyGradient(gradient)}
-                        >
-                          Aplicar
-                        </Button>
-                      </div>
+                    {gradientBackgrounds.map((gradient, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setBannerGradient(gradient.gradient)}
+                        className={
+                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                          (bannerGradient === gradient.gradient 
+                            ? 'border-gray-800 shadow-lg scale-105' 
+                            : 'border-gray-200 hover:border-gray-400')
+                        }
+                        style={{ background: gradient.gradient }}
+                        title={gradient.name}
+                      >
+                        {bannerGradient === gradient.gradient && (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </button>
                     ))}
                   </div>
+                  
+                  {/* Botão único de salvar */}
+                  <Button 
+                    onClick={saveColors}
+                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientShift 3s ease infinite'
+                    }}
+                  >
+                    Salvar Cores
+                  </Button>
                 </div>
               </div>
             </div>
@@ -551,7 +540,7 @@ export default function DesignSettings() {
             onCorBordaChange={setCorBorda}
             onCorNomeChange={setCorNome}
             onSaveColors={saveColors}
-            onApplyGradient={applyGradient}
+            onApplyGradient={(gradient: any) => setBannerGradient(gradient.gradient)}
           />
         </TabsContent>
 
