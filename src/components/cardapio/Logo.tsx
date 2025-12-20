@@ -194,11 +194,11 @@ export function Logo({
       >
         <div className="text-center mt-8 mb-4">
           <h1 
-            className="text-2xl mb-2 font-semibold"
+            className="text-2xl mb-2 font-black"
             style={{ 
               color: corNome,
               fontFamily: '"Bebas Neue", sans-serif',
-              fontWeight: 700,
+              fontWeight: 900,
               letterSpacing: '0.5px'
             }}
           >
