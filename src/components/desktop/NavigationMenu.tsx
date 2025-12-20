@@ -165,29 +165,29 @@ export function DesktopNavigationMenu() {
 
   const displayCount = getDisplayCount()
 
-  // Layout para desktop: menu fixo na lateral direita com ícone maior e redondo
+  // Layout para desktop: menu fixo na lateral direita com ícone personalizado
   return (
     <>
       <div 
-        className="fixed right-0 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl border-l border-gray-200 flex items-center justify-center"
+        className="fixed right-8 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl flex items-center justify-center"
         style={{
-          background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
-          backgroundSize: '200% 200%',
-          animation: 'gradient-x 3s ease infinite',
-          width: '120px',
-          borderRadius: '20px 0 0 20px'
+          width: '80px',
+          height: '80px'
         }}
       >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button 
-              className="flex flex-col items-center gap-3 p-6 rounded-r-2xl transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
+              className="relative w-20 h-20 rounded-full border-4 border-gray-300 bg-white hover:bg-gray-50 transition-all duration-200 hover:scale-105 shadow-lg"
+              style={{
+                border: '4px solid #e5e7eb',
+                backgroundColor: '#ffffff'
+              }}
             >
-              <ShoppingCart className="w-10 h-10" />
-              <span className="font-semibold text-base">Carrinho</span>
+              <ShoppingCart className="w-8 h-8 text-gray-700" />
               {displayCount > 0 && (
                 <Badge 
-                  className="absolute -top-2 -left-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold border-2 border-white"
                 >
                   {displayCount}
                 </Badge>
@@ -329,9 +329,6 @@ export function DesktopNavigationMenu() {
           </SheetContent>
         </Sheet>
       </div>
-
-      {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na lateral */}
-      <div className="w-32"></div>
 
       {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
       {showCustomerForm && (
