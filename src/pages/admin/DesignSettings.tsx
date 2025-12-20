@@ -218,22 +218,25 @@ export default function DesignSettings() {
           <div className="space-y-6">
             {/* SUB-ABAS DENTRO DE CONFIGURAÇÃO */}
             <Tabs value={configSubTab} onValueChange={setConfigSubTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3 h-auto p-1 rounded-lg bg-gray-100">
+              <TabsList 
+                className="grid w-full grid-cols-3 h-auto p-1 rounded-lg shadow-sm"
+                style={{ backgroundColor: '#fef3c7' }}
+              >
                 <TabsTrigger 
                   value="geral"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-pink-600 hover:bg-white hover:text-pink-600 data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-sm"
                 >
                   Geral
                 </TabsTrigger>
                 <TabsTrigger 
                   value="funcionamento"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-pink-600 hover:bg-white hover:text-pink-600 data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-sm"
                 >
                   Funcionamento
                 </TabsTrigger>
                 <TabsTrigger 
                   value="categorias"
-                  className="rounded-md font-[600] py-2 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                  className="rounded-md font-[600] py-2 transition-all duration-200 text-pink-600 hover:bg-white hover:text-pink-600 data-[state=active]:bg-white data-[state=active]:text-pink-600 data-[state=active]:shadow-sm"
                 >
                   Categorias
                 </TabsTrigger>
