@@ -40,44 +40,6 @@ export function ProductList({
 
   return (
     <>
-      {/* Barra de Pesquisa - sempre visível */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ position: 'relative' }}>
-          <Search 
-            size={20} 
-            style={{ 
-              position: 'absolute', 
-              left: '12px', 
-              top: '50%', 
-              transform: 'translateY(-50%)',
-              color: '#9ca3af'
-            }} 
-          />
-          <input
-            type="text"
-            placeholder="Buscar produtos..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px 12px 12px 44px',
-              border: '2px solid #e5e7eb',
-              borderRadius: '12px',
-              fontSize: '14px',
-              outline: 'none',
-              backgroundColor: 'white',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = borderColor
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#e5e7eb'
-            }}
-          />
-        </div>
-      </div>
-
       {/* Conteúdo dos produtos - só renderiza se houver produtos filtrados */}
       {filteredProducts.length > 0 ? (
         <>
