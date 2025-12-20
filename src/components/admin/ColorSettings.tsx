@@ -168,6 +168,21 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
+
+          {/* Botão Salvar Cor da Borda */}
+          <div className="flex justify-center mt-6">
+            <Button 
+              onClick={handleSaveColors}
+              className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-lg hover:shadow-xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}
+            >
+              Salvar Cor da Borda
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -249,6 +264,21 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
+
+          {/* Botão Salvar Cor do Nome */}
+          <div className="flex justify-center mt-6">
+            <Button 
+              onClick={handleSaveColors}
+              className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-lg hover:shadow-xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}
+            >
+              Salvar Cor do Nome
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -257,7 +287,7 @@ export function ColorSettings({
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
             {gradientBackgrounds.map((gradient, index) => (
               <div 
@@ -287,24 +317,23 @@ export function ColorSettings({
               </div>
             ))}
           </div>
+
+          {/* Botão Salvar Background */}
+          <div className="flex justify-center mt-6">
+            <Button 
+              onClick={handleSaveColors}
+              className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-lg hover:shadow-xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}
+            >
+              Salvar Background
+            </Button>
+          </div>
         </CardContent>
       </Card>
-
-      {/* Botão único para salvar todas as cores */}
-      <div className="flex justify-center">
-        <Button 
-          onClick={handleSaveColors}
-          className="px-8 py-3 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-          style={{ 
-            background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-            backgroundSize: '200% 200%',
-            animation: 'gradientShift 3s ease infinite'
-          }}
-        >
-          <Sparkles className="w-5 h-5 mr-2" />
-          Salvar Todas as Cores
-        </Button>
-      </div>
 
       <style>{`
         @keyframes gradientShift {
