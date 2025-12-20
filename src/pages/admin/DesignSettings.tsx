@@ -195,41 +195,62 @@ export default function DesignSettings() {
           </TabsList>
 
           <TabsContent value="cores">
-            {/* Layout horizontal para desktop - 3 cards lado a lado */}
+            {/* Layout horizontal para desktop - 3 cards lado a lado com nova ordem */}
             <div className="grid grid-cols-3 gap-6">
-              {/* Card do Background */}
+              {/* Card da Cor do Nome - AGORA EM PRIMEIRO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
-                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</h3>
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor do Nome</h3>
                 </div>
                 <div className="space-y-4">
-                  {[
-                    { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
-                    { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
-                    { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
-                    { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
-                    { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
-                    { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
-                  ].map((gradient, index) => (
-                    <div key={index} className="cursor-pointer hover:shadow-lg transition-all">
-                      <div 
-                        className="w-full h-20 rounded-lg mb-3 shadow-sm"
-                        style={{ background: gradient.gradient }}
-                      />
-                      <Button 
-                        size="sm" 
-                        className="w-full font-[650] text-xs"
-                        style={{ backgroundColor: '#111111', color: 'white' }}
-                        onClick={() => applyGradient(gradient)}
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { name: 'Rosa', value: '#ec4899' },
+                      { name: 'Rosa Escuro', value: '#be185d' },
+                      { name: 'Vermelho', value: '#ef4444' },
+                      { name: 'Laranja', value: '#f97316' },
+                      { name: 'Amarelo', value: '#eab308' },
+                      { name: 'Verde', value: '#10b981' },
+                      { name: 'Azul', value: '#3b82f6' },
+                      { name: 'Roxo', value: '#8b5cf6' },
+                      { name: 'Preto', value: '#000000' }
+                    ].map((color) => (
+                      <button
+                        key={color.value}
+                        onClick={() => setCorNome(color.value)}
+                        className={
+                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                          (corNome === color.value 
+                            ? 'border-gray-800 shadow-lg scale-105' 
+                            : 'border-gray-200 hover:border-gray-400')
+                        }
+                        style={{ backgroundColor: color.value }}
+                        title={color.name}
                       >
-                        Aplicar
-                      </Button>
-                    </div>
-                  ))}
+                        {corNome === color.value && (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <Button 
+                    onClick={saveColors}
+                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientShift 3s ease infinite'
+                    }}
+                  >
+                    Aplicar Cor do Nome
+                  </Button>
                 </div>
               </div>
 
-              {/* Card da Cor da Borda */}
+              {/* Card da Cor da Borda - AGORA EM SEGUNDO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
                   <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor da Borda</h3>
@@ -282,56 +303,37 @@ export default function DesignSettings() {
                 </div>
               </div>
 
-              {/* Card da Cor do Nome */}
+              {/* Card do Background - AGORA EM TERCEIRO COM VISUAL AJUSTADO */}
               <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                 <div className="text-center pb-4">
-                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Cor do Nome</h3>
+                  <h3 className="text-xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</h3>
                 </div>
                 <div className="space-y-4">
                   <div className="grid grid-cols-3 gap-3">
                     {[
-                      { name: 'Rosa', value: '#ec4899' },
-                      { name: 'Rosa Escuro', value: '#be185d' },
-                      { name: 'Vermelho', value: '#ef4444' },
-                      { name: 'Laranja', value: '#f97316' },
-                      { name: 'Amarelo', value: '#eab308' },
-                      { name: 'Verde', value: '#10b981' },
-                      { name: 'Azul', value: '#3b82f6' },
-                      { name: 'Roxo', value: '#8b5cf6' },
-                      { name: 'Preto', value: '#000000' }
-                    ].map((color) => (
-                      <button
-                        key={color.value}
-                        onClick={() => setCorNome(color.value)}
-                        className={
-                          'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                          (corNome === color.value 
-                            ? 'border-gray-800 shadow-lg scale-105' 
-                            : 'border-gray-200 hover:border-gray-400')
-                        }
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                      >
-                        {corNome === color.value && (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <div className="w-3 h-3 bg-white rounded-full"></div>
-                          </div>
-                        )}
-                      </button>
+                      { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+                      { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+                      { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+                      { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
+                      { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
+                      { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
+                    ].map((gradient, index) => (
+                      <div key={index} className="cursor-pointer hover:shadow-lg transition-all">
+                        <div 
+                          className="w-full aspect-square rounded-lg mb-3 shadow-sm"
+                          style={{ background: gradient.gradient }}
+                        />
+                        <Button 
+                          size="sm" 
+                          className="w-full font-[650] text-xs"
+                          style={{ backgroundColor: '#111111', color: 'white' }}
+                          onClick={() => applyGradient(gradient)}
+                        >
+                          Aplicar
+                        </Button>
+                      </div>
                     ))}
                   </div>
-                  
-                  <Button 
-                    onClick={saveColors}
-                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientShift 3s ease infinite'
-                    }}
-                  >
-                    Aplicar Cor do Nome
-                  </Button>
                 </div>
               </div>
             </div>
