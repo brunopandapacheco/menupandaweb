@@ -8,6 +8,7 @@ import { CategorySettings } from '@/components/admin/CategorySettings'
 import { WorkingHoursSettings } from '@/components/admin/WorkingHoursSettings'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { Button } from '@/components/ui/button'
+import { Palette } from 'lucide-react'
 
 const gradientBackgrounds = [
   // Apenas cores rosa - 9 opções
@@ -48,6 +49,12 @@ export default function DesignSettings() {
   const [corBorda, setCorBorda] = useState('#F5C542')
   const [corNome, setCorNome] = useState('#FCEBB3')
   
+  // Estados para personalização
+  const [showCustomBorderPicker, setShowCustomBorderPicker] = useState(false)
+  const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
+  const [customBorderColor, setCustomBorderColor] = useState('#F5C542')
+  const [customNameColor, setCustomNameColor] = useState('#FCEBB3')
+  
   const [nomeLoja, setNomeLoja] = useState('')
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
@@ -60,8 +67,14 @@ export default function DesignSettings() {
   useEffect(() => {
     if (designSettings) {
       if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient)
-      if (designSettings.cor_borda) setCorBorda(designSettings.cor_borda)
-      if (designSettings.cor_nome) setCorNome(designSettings.cor_nome)
+      if (designSettings.cor_borda) {
+        setCorBorda(designSettings.cor_borda)
+        setCustomBorderColor(designSettings.cor_borda)
+      }
+      if (designSettings.cor_nome) {
+        setCorNome(designSettings.cor_nome)
+        setCustomNameColor(designSettings.cor_nome)
+      }
       if (designSettings.nome_loja) setNomeLoja(designSettings.nome_loja)
       if (designSettings.descricao_loja) setDescricaoLoja(designSettings.descricao_loja)
       if (designSettings.logo_url) setLogoUrl(designSettings.logo_url)
@@ -140,6 +153,17 @@ export default function DesignSettings() {
   const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatWhatsApp(e.target.value)
     setWhatsapp(formattedValue)
+  }
+
+  // Handlers para personalização de cores
+  const handleCustomBorderColor = (color: string) => {
+    setCustomBorderColor(color)
+    setCorBorda(color)
+  }
+
+  const handleCustomNameColor = (color: string) => {
+    setCustomNameColor(color)
+    setCorNome(color)
   }
 
   // Mostrar loading apenas na primeira carga
@@ -247,7 +271,57 @@ export default function DesignSettings() {
                         )}
                       </button>
                     ))}
+                    
+                    {/* Botão Personalizar */}
+                    <button
+                      onClick={() => setShowCustomNamePicker(!showCustomNamePicker)}
+                      className={
+                        'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                        (showCustomNamePicker 
+                          ? 'border-gray-800 shadow-lg scale-105' 
+                          : 'border-gray-200 hover:border-gray-400')
+                      }
+                      style={{ 
+                        background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
+                        position: 'relative'
+                      }}
+                      title="Personalizar cor"
+                    >
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Palette className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                    </button>
                   </div>
+                  
+                  {/* Picker de cor personalizada */}
+                  {showCustomNamePicker && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={customNameColor}
+                            onChange={(e) => handleCustomNameColor(e.target.value)}
+                            className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+                          />
+                          <input
+                            type="text"
+                            value={customNameColor}
+                            onChange={(e) => {
+                              const value = e.target.value
+                              if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                                handleCustomNameColor(value)
+                              }
+                            }}
+                            placeholder="#000000"
+                            className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
+                    </div>
+                  )}
                   
                   {/* Botão individual para salvar Cor do Nome */}
                   <Button 
@@ -301,7 +375,57 @@ export default function DesignSettings() {
                         )}
                       </button>
                     ))}
+                    
+                    {/* Botão Personalizar */}
+                    <button
+                      onClick={() => setShowCustomBorderPicker(!showCustomBorderPicker)}
+                      className={
+                        'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
+                        (showCustomBorderPicker 
+                          ? 'border-gray-800 shadow-lg scale-105' 
+                          : 'border-gray-200 hover:border-gray-400')
+                      }
+                      style={{ 
+                        background: `linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dfe6e9)`,
+                        position: 'relative'
+                      }}
+                      title="Personalizar cor"
+                    >
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Palette className="w-5 h-5 text-white drop-shadow-lg" />
+                      </div>
+                    </button>
                   </div>
+                  
+                  {/* Picker de cor personalizada */}
+                  {showCustomBorderPicker && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={customBorderColor}
+                            onChange={(e) => handleCustomBorderColor(e.target.value)}
+                            className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+                          />
+                          <input
+                            type="text"
+                            value={customBorderColor}
+                            onChange={(e) => {
+                              const value = e.target.value
+                              if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                                handleCustomBorderColor(value)
+                              }
+                            }}
+                            placeholder="#000000"
+                            className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
+                    </div>
+                  )}
                   
                   {/* Botão individual para salvar Cor da Borda */}
                   <Button 
