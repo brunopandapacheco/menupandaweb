@@ -169,10 +169,11 @@ export function DesktopNavigationMenu() {
   return (
     <>
       <div 
-        className="fixed right-8 top-1/2 transform -translate-y-1/2 z-50 flex items-center justify-center"
+        className="fixed right-8 top-1/2 transform -translate-y-1/2 flex items-center justify-center"
         style={{
           width: '80px',
-          height: '80px'
+          height: '80px',
+          zIndex: 99999 // Z-INDEX MÁXIMO PARA FICAR NA FRENTE DE TUDO
         }}
       >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -210,7 +211,8 @@ export function DesktopNavigationMenu() {
             className="w-full sm:w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto rounded-r-2xl m-4"
             style={{ 
               borderRadius: '16px',
-              margin: '16px'
+              margin: '16px',
+              zIndex: 99999 // Z-INDEX MÁXIMO PARA O SHEET CONTENT
             }}
           >
             <SheetHeader className="border-b pb-6">
@@ -346,7 +348,7 @@ export function DesktopNavigationMenu() {
         <div 
           className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
           style={{ 
-            zIndex: 9999,
+            zIndex: 999999, // Z-INDEX AINDA MAIOR PARA O MODAL
             position: 'fixed',
             top: 0,
             left: 0,
