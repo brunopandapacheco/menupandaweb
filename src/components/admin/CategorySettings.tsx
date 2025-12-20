@@ -6,6 +6,7 @@ import { X, Edit2, Trash2, Check, AlertTriangle, RefreshCw } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabase } from '@/lib/supabase'
+import { IconSelectorModal } from './IconSelectorModal'
 
 const availableIcons = [
   { name: '1', path: '/icons/1.png' },
@@ -41,6 +42,8 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
   const [showIconSelector, setShowIconSelector] = useState<string | null>(null)
   const [categoryIcons, setCategoryIcons] = useState<{ [key: string]: string }>({})
   const [allCategories, setAllCategories] = useState<string[]>([])
+  const [isIconModalOpen, setIsIconModalOpen] = useState(false)
+  const [selectedCategoryForIcon, setSelectedCategoryForIcon] = useState<string | null>(null)
 
   useEffect(() => {
     if (designSettings?.category_icons) {
@@ -249,6 +252,22 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
     return category === 'Todos'
   }
 
+  const handleOpenIconModal = (category: string) => {
+    if (category === 'Todos') {
+      showError('O ícone da categoria "Todos" não pode ser alterado')
+      return
+    }
+    
+    setSelectedCategoryForIcon(category)
+    setIsIconModalOpen(true)
+  }
+
+  const handleIconSelect = (iconPath: string) => {
+    if (selectedCategoryForIcon) {
+      handleIconChange(selectedCategoryForIcon, iconPath)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card className="border-0 shadow-lg">
@@ -283,7 +302,7 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
                         
                         {!isTodos && (
                           <button
-                            onClick={() => setShowIconSelector(showIconSelector === category ? null : category)}
+                            onClick={() => handleOpenIconModal(category)}
                             className="absolute -top-1 -right-1 bg-purple-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hover:bg-purple-700"
                           >
                             <Edit2 className="w-2 h-2" />
@@ -379,42 +398,19 @@ export function CategorySettings({ mainCategories, onMainCategoriesChange, onSav
             </div>
           </div>
 
-          {showIconSelector && (
-            <div className="border-2 border-purple-200 rounded-lg p-3 bg-purple-50">
-              <h4 className="text-sm font-semibold text-purple-800 mb-3">
-                Escolha um ícone para "{showIconSelector}"
-              </h4>
-              <div className="grid grid-cols-4 gap-2 max-h-80 overflow-y-auto">
-                {availableIcons.map((icon) => (
-                  <button
-                    key={icon.path}
-                    onClick={() => handleIconChange(showIconSelector, icon.path)}
-                    className="p-1 rounded border-2 transition-all hover:border-purple-400 hover:bg-purple-100"
-                    title={`Ícone ${icon.name}`}
-                  >
-                    <img 
-                      src={icon.path} 
-                      alt={`Ícone ${icon.name}`}
-                      className="w-16 h-16 object-contain mx-auto"
-                      onError={(e) => e.currentTarget.src = '/icons/1.png'}
-                    />
-                  </button>
-                ))}
-              </div>
-              <div className="mt-3 flex justify-end">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowIconSelector(null)}
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </div>
-          )}
-
         </CardContent>
       </Card>
+
+      {/* Modal de seleção de ícones */}
+      <IconSelectorModal
+        isOpen={isIconModalOpen}
+        onClose={() => {
+          setIsIconModalOpen(false)
+          setSelectedCategoryForIcon(null)
+        }}
+        onSelectIcon={handleIconSelect}
+        selectedIcon={selectedCategoryForIcon ? getCategoryIcon(selectedCategoryForIcon) : '/icons/1.png'}
+      />
     </div>
   )
 }

@@ -10,6 +10,7 @@ import { Produto } from '@/types/database'
 import { supabaseService } from '@/services/supabase'
 import { supabase } from '@/lib/supabase'
 import { showError, showSuccess } from '@/utils/toast'
+import { IconSelectorModal } from './IconSelectorModal'
 
 interface ProductFormProps {
   product: Partial<Produto> | null
@@ -31,39 +32,11 @@ const saleTypes = [
   { value: 'outros', label: '📌 Outros' }
 ]
 
-// Lista de ícones disponíveis na pasta public/icons
-// Apenas os ícones que realmente existem na pasta
-const availableIcons = [
-  { name: '1', path: '/icons/1.png' },
-  { name: '2', path: '/icons/2.png' },
-  { name: '3', path: '/icons/3.png' },
-  { name: '4', path: '/icons/4.png' },
-  { name: '5', path: '/icons/5.png' },
-  { name: '6', path: '/icons/6.png' },
-  { name: '7', path: '/icons/7.png' },
-  { name: '8', path: '/icons/8.png' },
-  { name: '9', path: '/icons/9.png' },
-  { name: '10', path: '/icons/10.png' },
-  { name: '11', path: '/icons/11.png' },
-  { name: '12', path: '/icons/12.png' },
-  { name: '13', path: '/icons/13.png' },
-  { name: '14', path: '/icons/14.png' },
-  { name: '15', path: '/icons/15.png' },
-  { name: '16', path: '/icons/16.png' },
-  { name: '17', path: '/icons/17.png' },
-  { name: '18', path: '/icons/18.png' },
-  { name: '19', path: '/icons/19.png' },
-  { name: '20', path: '/icons/20.png' },
-  { name: '21', path: '/icons/21.png' },
-  { name: '22', path: '/icons/22.png' },
-  { name: 'TODOS', path: '/icons/TODOS.png' }
-]
-
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
   const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
   const [selectedIcon, setSelectedIcon] = useState('/icons/1.png')
-  const [showIconSelector, setShowIconSelector] = useState(false)
+  const [isIconModalOpen, setIsIconModalOpen] = useState(false)
   const [categories, setCategories] = useState<string[]>([])
   const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
   const [loadingCategories, setLoadingCategories] = useState(true)
@@ -197,7 +170,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     setNewCategoryName('')
     setIsCreatingNewCategory(false)
     setSelectedIcon('/icons/1.png')
-    setShowIconSelector(false)
     
     showSuccess('Categoria criada e selecionada!')
   }
@@ -210,7 +182,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       setIsCreatingNewCategory(false)
       setNewCategoryName('')
       setSelectedIcon('/icons/1.png')
-      setShowIconSelector(false)
       setPendingCategory(null)
     }
   }
@@ -305,6 +276,15 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       createPendingCategory()
     }
   }, [product?.id])
+
+  const handleOpenIconModal = () => {
+    setIsIconModalOpen(true)
+  }
+
+  const handleIconSelect = (iconPath: string) => {
+    setSelectedIcon(iconPath)
+    setIsIconModalOpen(false)
+  }
 
   return (
     <div className="space-y-6">
@@ -428,43 +408,12 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setShowIconSelector(!showIconSelector)}
+                    onClick={handleOpenIconModal}
                   >
-                    {showIconSelector ? 'Fechar' : 'Escolher Ícone'}
+                    Escolher Ícone
                   </Button>
                 </div>
               </div>
-
-              {showIconSelector && (
-                <div className="border-2 border-pink-200 rounded-lg p-3 bg-pink-50 max-h-80 overflow-y-auto">
-                  <h4 className="text-sm font-semibold text-pink-800 mb-3">Escolha um ícone para a categoria</h4>
-                  <div className="grid grid-cols-4 gap-2">
-                    {availableIcons.map((icon) => (
-                      <button
-                        key={icon.path}
-                        onClick={() => {
-                          setSelectedIcon(icon.path)
-                          setShowIconSelector(false)
-                        }}
-                        className={`p-1 rounded border-2 transition-all hover:border-pink-400 hover:bg-pink-100 ${
-                          selectedIcon === icon.path ? 'border-pink-600 bg-pink-100' : 'border-gray-200'
-                        }`}
-                        title={`Ícone ${icon.name}`}
-                      >
-                        <img 
-                          src={icon.path} 
-                          alt={`Ícone ${icon.name}`}
-                          className="w-16 h-16 object-contain mx-auto"
-                          onError={(e) => {
-                            // Se o ícone não carregar, usa um fallback
-                            e.currentTarget.src = '/icons/1.png'
-                          }}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
               
               <div className="flex gap-2">
                 <Button
@@ -481,7 +430,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                     setIsCreatingNewCategory(false)
                     setNewCategoryName('')
                     setSelectedIcon('/icons/1.png')
-                    setShowIconSelector(false)
                   }}
                 >
                   <X className="w-4 h-4 mr-1" />
@@ -600,6 +548,14 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           </div>
         </div>
       )}
+
+      {/* Modal de seleção de ícones */}
+      <IconSelectorModal
+        isOpen={isIconModalOpen}
+        onClose={() => setIsIconModalOpen(false)}
+        onSelectIcon={handleIconSelect}
+        selectedIcon={selectedIcon}
+      />
     </div>
   )
 }
