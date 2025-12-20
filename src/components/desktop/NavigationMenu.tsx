@@ -165,7 +165,7 @@ export function DesktopNavigationMenu() {
 
   const displayCount = getDisplayCount()
 
-  // Layout para desktop: menu fixo na lateral direita com z-index alto
+  // Layout para desktop: menu fixo na lateral direita
   return (
     <>
       <div 
