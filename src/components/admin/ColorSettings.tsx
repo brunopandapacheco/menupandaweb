@@ -202,6 +202,7 @@ export function ColorSettings({
                 animation: 'gradientShift 3s ease infinite'
               }}
             >
+              <CheckCircle className="w-4 h-4 mr-2" />
               Aplicar Cor da Borda
             </Button>
           )}
@@ -298,6 +299,7 @@ export function ColorSettings({
                 animation: 'gradientShift 3s ease infinite'
               }}
             >
+              <CheckCircle className="w-4 h-4 mr-2" />
               Aplicar Cor do Nome
             </Button>
           )}
@@ -388,6 +390,7 @@ export function ColorSettings({
                 animation: 'gradientShift 3s ease infinite'
               }}
             >
+              <CheckCircle className="w-4 h-4 mr-2" />
               Aplicar Background
             </Button>
           )}
