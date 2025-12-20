@@ -6,7 +6,6 @@ import { ColorSettings } from '@/components/admin/ColorSettings'
 import { ImageSettings } from '@/components/admin/ImageSettings'
 import { CategorySettings } from '@/components/admin/CategorySettings'
 import { WorkingHoursSettings } from '@/components/admin/WorkingHoursSettings'
-import { MessageCircle } from 'lucide-react'
 
 const gradientBackgrounds = [
   { name: 'Dourado Quente', gradient: '#F5C542' }
@@ -315,7 +314,6 @@ export default function DesignSettings() {
                           onClick={saveWhatsApp}
                           className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
                         >
-                          <MessageCircle className="w-4 h-4 inline mr-2" />
                           Salvar WhatsApp
                         </button>
                       </div>
