@@ -174,8 +174,8 @@ export function DesktopNavigationMenu() {
           background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
           backgroundSize: '200% 200%',
           animation: 'gradient-x 3s ease infinite',
-          width: '120px', // Aumentado de 80px para 120px
-          borderRadius: '0 20px 20px 0' // Adicionado borda arredondada
+          width: '120px',
+          borderRadius: '0 20px 20px 0'
         }}
       >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -183,11 +183,11 @@ export function DesktopNavigationMenu() {
             <Button 
               className="flex flex-col items-center gap-3 p-6 rounded-l-2xl transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
             >
-              <ShoppingCart className="w-10 h-10" /> {/* Aumentado de w-6 h-6 para w-10 h-10 */}
-              <span className="font-semibold text-base">Carrinho</span> {/* Aumentado de text-sm para text-base */}
+              <ShoppingCart className="w-10 h-10" />
+              <span className="font-semibold text-base">Carrinho</span>
               {displayCount > 0 && (
                 <Badge 
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold" {/* Aumentado de w-5 h-5 para w-8 h-8 */}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold"
                 >
                   {displayCount}
                 </Badge>
@@ -331,7 +331,7 @@ export function DesktopNavigationMenu() {
       </div>
 
       {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na lateral */}
-      <div className="w-32"></div> {/* Aumentado de w-20 para w-32 */}
+      <div className="w-32"></div>
 
       {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
       {showCustomerForm && (
