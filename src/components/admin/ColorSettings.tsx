@@ -12,8 +12,7 @@ const predefinedColors = [
   { name: 'Amarelo', value: '#eab308' },
   { name: 'Verde', value: '#10b981' },
   { name: 'Azul', value: '#3b82f6' },
-  { name: 'Roxo', value: '#8b5cf6' },
-  { name: 'Preto', value: '#000000' }
+  { name: 'Roxo', value: '#8b5cf6' }
 ]
 
 const gradientBackgrounds = [
@@ -57,71 +56,81 @@ export function ColorSettings({
   const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
   const [customBorderColor, setCustomBorderColor] = useState(corBorda)
   const [customNameColor, setCustomNameColor] = useState(corNome)
+  const [selectedBorder, setSelectedBorder] = useState<string | null>(null)
+  const [selectedName, setSelectedName] = useState<string | null>(null)
+  const [selectedBackground, setSelectedBackground] = useState<string | null>(null)
 
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
-    onCorBordaChange(color)
+    setCorBorda(color)
   }
 
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
-    onCorNomeChange(color)
+    setCorNome(color)
+  }
+
+  const handleBorderClick = (color: string) => {
+    setSelectedBorder(color)
+  }
+
+  const handleNameClick = (color: string) => {
+    setSelectedName(color)
+  }
+
+  const handleBackgroundClick = (gradient: string) => {
+    setSelectedBackground(gradient)
+  }
+
+  const handleSaveBorder = () => {
+    if (selectedBorder) {
+      onCorBordaChange(selectedBorder)
+      setSelectedBorder(null)
+      showSuccess('Cor da borda salva!')
+    }
+  }
+
+  const handleSaveName = () => {
+    if (selectedName) {
+      onCorNomeChange(selectedName)
+      setSelectedName(null)
+      showSuccess('Cor do nome salva!')
+    }
+  }
+
+  const handleSaveBackground = () => {
+    if (selectedBackground) {
+      onBannerGradientChange(selectedBackground)
+      setSelectedBackground(null)
+      showSuccess('Background salvo!')
+    }
   }
 
   return (
     <div className="space-y-6">
-      {/* Card de Background */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {gradientBackgrounds.map((gradient, index) => (
-              <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
-                <CardContent className="p-4">
-                  <div 
-                    className="w-full h-24 rounded-lg mb-4 shadow-sm"
-                    style={{ background: gradient.gradient }}
-                  />
-                  <Button 
-                    size="sm" 
-                    className="w-full font-[650] text-xs"
-                    style={{ backgroundColor: '#111111', color: 'white' }}
-                    onClick={() => onApplyGradient(gradient)}
-                  >
-                    Aplicar
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Card da Cor da Borda */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor da Borda</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {predefinedColors.map((color) => (
               <button
                 key={color.value}
-                onClick={() => onCorBordaChange(color.value)}
+                onClick={() => handleBorderClick(color.value)}
                 className={
                   'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                  (corBorda === color.value 
+                  (selectedBorder === color.value 
                     ? 'border-gray-800 shadow-lg scale-105' 
                     : 'border-gray-200 hover:border-gray-400')
                 }
                 style={{ backgroundColor: color.value }}
                 title={color.name}
               >
-                {corBorda === color.value && (
+                {selectedBorder === color.value && (
                   <div className="w-full h-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
+                    <CheckCircle className="w-4 h-4 text-white" />
                   </div>
                 )}
               </button>
@@ -143,11 +152,12 @@ export function ColorSettings({
               title="Personalizar cor"
             >
               <div className="w-full h-full flex items-center justify-center">
-                <Palette className="w-4 h-4 text-white drop-shadow-lg" />
+                <Palette className="w-5 h-5 text-white drop-shadow-lg" />
               </div>
             </button>
           </div>
-
+          
+          {/* Picker de cor personalizada */}
           {showCustomBorderPicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
@@ -176,12 +186,12 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
-
-          {/* Botão Aplicar Cor da Borda */}
-          <div className="pt-4 flex justify-center">
+          
+          {/* Botão para aplicar cor selecionada */}
+          {selectedBorder && (
             <Button 
-              onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white animate-gradient-pulse"
+              onClick={handleSaveBorder}
+              className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
                 backgroundSize: '200% 200%',
@@ -190,7 +200,7 @@ export function ColorSettings({
             >
               Aplicar Cor da Borda
             </Button>
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -200,23 +210,23 @@ export function ColorSettings({
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor do Nome</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {predefinedColors.map((color) => (
               <button
                 key={color.value}
-                onClick={() => onCorNomeChange(color.value)}
+                onClick={() => handleNameClick(color.value)}
                 className={
                   'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
-                  (corNome === color.value 
+                  (selectedName === color.value 
                     ? 'border-gray-800 shadow-lg scale-105' 
                     : 'border-gray-200 hover:border-gray-400')
                 }
                 style={{ backgroundColor: color.value }}
                 title={color.name}
               >
-                {corNome === color.value && (
+                {selectedName === color.value && (
                   <div className="w-full h-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
+                    <CheckCircle className="w-4 h-4 text-white" />
                   </div>
                 )}
               </button>
@@ -238,11 +248,12 @@ export function ColorSettings({
               title="Personalizar cor"
             >
               <div className="w-full h-full flex items-center justify-center">
-                <Palette className="w-4 h-4 text-white drop-shadow-lg" />
+                <Palette className="w-5 h-5 text-white drop-shadow-lg" />
               </div>
             </button>
           </div>
-
+          
+          {/* Picker de cor personalizada */}
           {showCustomNamePicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
@@ -271,12 +282,12 @@ export function ColorSettings({
               <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
-
-          {/* Botão Aplicar Cor do Nome */}
-          <div className="pt-4 flex justify-center">
+          
+          {/* Botão para aplicar cor selecionada */}
+          {selectedName && (
             <Button 
-              onClick={onSaveColors}
-              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white animate-gradient-pulse"
+              onClick={handleSaveName}
+              className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
                 backgroundSize: '200% 200%',
@@ -285,7 +296,51 @@ export function ColorSettings({
             >
               Aplicar Cor do Nome
             </Button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Card do Background */}
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4">
+            {gradientBackgrounds.map((gradient, index) => (
+              <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
+                <CardContent className="p-4">
+                  <div 
+                    className="w-full h-24 rounded-lg mb-4 shadow-sm"
+                    style={{ background: gradient.gradient }}
+                  />
+                  <Button 
+                    size="sm" 
+                    className="w-full font-[650] text-xs"
+                    style={{ backgroundColor: '#111111', color: 'white' }}
+                    onClick={() => handleBackgroundClick(gradient.gradient)}
+                  >
+                    {selectedBackground === gradient.gradient ? 'Selecionado' : 'Selecionar'}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+          
+          {/* Botão para aplicar background selecionado */}
+          {selectedBackground && (
+            <Button 
+              onClick={handleSaveBackground}
+              className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+              style={{ 
+                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradientShift 3s ease infinite'
+              }}
+            >
+              Aplicar Background
+            </Button>
+          )}
         </CardContent>
       </Card>
 
