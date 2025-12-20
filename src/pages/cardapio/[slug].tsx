@@ -200,9 +200,11 @@ export default function CardapioPublico() {
             produtos={filteredProducts}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
-            backgroundColor={designSettings.cor_background}
-            borderColor={designSettings.cor_borda}
+            backgroundColor={designSettings.cor_background || '#ffffff'}
+            borderColor={designSettings.cor_borda || '#ec4899'}
             selectedCategory={selectedCategory}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
           />
         ) : (
           <EmptyState />

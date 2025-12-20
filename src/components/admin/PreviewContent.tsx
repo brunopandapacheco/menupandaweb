@@ -114,6 +114,8 @@ export function PreviewContent({
             backgroundColor={designSettings?.cor_background || '#ffffff'}
             borderColor={designSettings?.cor_borda || '#ec4899'}
             selectedCategory={selectedCategory}
+            searchTerm={searchTerm}
+            onSearchChange={onSearchChange}
           />
         ) : (
           <EmptyState />
