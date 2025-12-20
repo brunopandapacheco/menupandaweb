@@ -44,7 +44,7 @@ export default function DesignSettings() {
   const [activeTab, setActiveTab] = useState('cores')
   const [configSubTab, setConfigSubTab] = useState('geral') // Sub-abas dentro de Configuração
   
-  // Estados
+  // Estados - compartilhados entre desktop e mobile
   const [bannerGradient, setBannerGradient] = useState('linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)')
   const [corBorda, setCorBorda] = useState('#F5C542')
   const [corNome, setCorNome] = useState('#FCEBB3')
@@ -55,6 +55,9 @@ export default function DesignSettings() {
   const [customBorderColor, setCustomBorderColor] = useState('#F5C542')
   const [customNameColor, setCustomNameColor] = useState('#FCEBB3')
   
+  // 🟢 SOLUÇÃO: Estado para controlar inicialização
+  const [initialized, setInitialized] = useState(false)
+  
   const [nomeLoja, setNomeLoja] = useState('')
   const [descricaoLoja, setDescricaoLoja] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
@@ -64,8 +67,9 @@ export default function DesignSettings() {
   const [mainCategories, setMainCategories] = useState<string[]>([])
   const device = useDeviceDetection()
 
+  // 🟢 CORREÇÃO: Inicializar estado APENAS UMA VEZ
   useEffect(() => {
-    if (designSettings) {
+    if (designSettings && !initialized) {
       if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient)
       if (designSettings.cor_borda) {
         setCorBorda(designSettings.cor_borda)
@@ -80,8 +84,11 @@ export default function DesignSettings() {
       if (designSettings.logo_url) setLogoUrl(designSettings.logo_url)
       if (designSettings.banner1_url) setBannerUrl(designSettings.banner1_url)
       if (designSettings.categorias) setMainCategories(designSettings.categorias)
+      
+      // Marcar como inicializado
+      setInitialized(true)
     }
-  }, [designSettings])
+  }, [designSettings, initialized])
 
   useEffect(() => {
     if (configuracoes) {
@@ -89,6 +96,27 @@ export default function DesignSettings() {
     }
   }, [configuracoes])
 
+  // Função unificada para salvar cores - garante sincronização
+  const saveAllColors = async () => {
+    try {
+      const success = await saveDesignSettings({
+        banner_gradient: bannerGradient,
+        cor_borda: corBorda,
+        cor_nome: corNome
+      })
+      
+      if (success) {
+        showSuccess('Cores salvas com sucesso!')
+      } else {
+        showError('Erro ao salvar as cores')
+      }
+    } catch (error) {
+      console.error('Erro ao salvar cores:', error)
+      showError('Erro ao salvar as cores')
+    }
+  }
+
+  // Funções individuais para salvar cores
   const saveCorNome = async () => {
     const success = await saveDesignSettings({ cor_nome: corNome })
     success ? showSuccess('Cor do nome salva com sucesso!') : showError('Erro ao salvar cor do nome')
@@ -155,15 +183,30 @@ export default function DesignSettings() {
     setWhatsapp(formattedValue)
   }
 
-  // Handlers para personalização de cores
+  // Handlers para personalização de cores - atualizam ambos os estados
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
-    setCorBorda(color)
+    setCorBorda(color) // Atualiza o estado principal também
   }
 
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
-    setCorNome(color)
+    setCorNome(color) // Atualiza o estado principal também
+  }
+
+  // Handlers para cliques nas cores - atualizam ambos os estados
+  const handleBorderClick = (color: string) => {
+    setCorBorda(color) // Atualiza o estado principal
+    setCustomBorderColor(color) // Atualiza o estado local também
+  }
+
+  const handleNameClick = (color: string) => {
+    setCorNome(color) // Atualiza o estado principal
+    setCustomNameColor(color) // Atualiza o estado local também
+  }
+
+  const handleBackgroundClick = (gradient: string) => {
+    setBannerGradient(gradient) // Atualiza o estado principal
   }
 
   // Mostrar loading apenas na primeira carga
@@ -253,7 +296,7 @@ export default function DesignSettings() {
                     ].map((color) => (
                       <button
                         key={color.value}
-                        onClick={() => setCorNome(color.value)}
+                        onClick={() => handleNameClick(color.value)}
                         className={
                           'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                           (corNome === color.value 
@@ -321,19 +364,6 @@ export default function DesignSettings() {
                       <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
                     </div>
                   )}
-                  
-                  {/* Botão individual para salvar Cor do Nome */}
-                  <Button 
-                    onClick={saveCorNome}
-                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientShift 3s ease infinite'
-                    }}
-                  >
-                    Salvar Cor do Nome
-                  </Button>
                 </div>
               </div>
 
@@ -356,7 +386,7 @@ export default function DesignSettings() {
                     ].map((color) => (
                       <button
                         key={color.value}
-                        onClick={() => setCorBorda(color.value)}
+                        onClick={() => handleBorderClick(color.value)}
                         className={
                           'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                           (corBorda === color.value 
@@ -424,19 +454,6 @@ export default function DesignSettings() {
                       <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
                     </div>
                   )}
-                  
-                  {/* Botão individual para salvar Cor da Borda */}
-                  <Button 
-                    onClick={saveCorBorda}
-                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientShift 3s ease infinite'
-                    }}
-                  >
-                    Salvar Cor da Borda
-                  </Button>
                 </div>
               </div>
 
@@ -450,7 +467,7 @@ export default function DesignSettings() {
                     {gradientBackgrounds.map((gradient, index) => (
                       <button
                         key={index}
-                        onClick={() => setBannerGradient(gradient.gradient)}
+                        onClick={() => handleBackgroundClick(gradient.gradient)}
                         className={
                           'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                           (bannerGradient === gradient.gradient 
@@ -468,21 +485,24 @@ export default function DesignSettings() {
                       </button>
                     ))}
                   </div>
-                  
-                  {/* Botão individual para salvar Background */}
-                  <Button 
-                    onClick={saveBackground}
-                    className="w-full px-6 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientShift 3s ease infinite'
-                    }}
-                  >
-                    Salvar Background
-                  </Button>
                 </div>
               </div>
+            </div>
+
+            {/* Botão único para salvar todas as cores */}
+            <div className="flex justify-center mt-8">
+              <Button 
+                onClick={saveAllColors}
+                className="px-8 py-3 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white"
+                style={{ 
+                  background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientShift 3s ease infinite'
+                }}
+              >
+                <Palette className="w-5 h-5 mr-2" />
+                Salvar Todas as Cores
+              </Button>
             </div>
           </TabsContent>
 
@@ -694,11 +714,11 @@ export default function DesignSettings() {
             bannerGradient={bannerGradient}
             corBorda={corBorda}
             corNome={corNome}
-            onBannerGradientChange={setBannerGradient}
-            onCorBordaChange={setCorBorda}
-            onCorNomeChange={setCorNome}
-            onSaveColors={() => {}} // Função vazia para mobile
-            onApplyGradient={(gradient: any) => setBannerGradient(gradient.gradient)}
+            onBannerGradientChange={handleBackgroundClick}
+            onCorBordaChange={handleBorderClick}
+            onCorNomeChange={handleNameClick}
+            onSaveColors={saveAllColors}
+            onApplyGradient={(gradient: any) => handleBackgroundClick(gradient.gradient)}
           />
         </TabsContent>
 
