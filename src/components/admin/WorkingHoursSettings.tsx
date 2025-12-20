@@ -212,6 +212,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
                     id={dia.id}
                     checked={diasFuncionamento.includes(dia.id)}
                     onCheckedChange={() => toggleDia(dia.id)}
+                    className="data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
                   />
                   <Label htmlFor={dia.id} className="text-sm">
                     {dia.nome}
@@ -236,6 +237,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
               <Switch
                 checked={abreSabado}
                 onCheckedChange={setAbreSabado}
+                className="data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
               />
             </div>
             {abreSabado && (
@@ -266,6 +268,7 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
               <Switch
                 checked={abreDomingo}
                 onCheckedChange={setAbreDomingo}
+                className="data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500"
               />
             </div>
             {abreDomingo && (
