@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { Clock, CheckCircle, XCircle } from 'lucide-react'
+import { CheckCircle, XCircle } from 'lucide-react'
 import { showSuccess, showError } from '@/utils/toast'
 
 interface WorkingHoursSettingsProps {
@@ -142,12 +142,11 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
   return (
     <div className="space-y-6">
       <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl font-bold">
             Status de Funcionamento
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-center">
             Configure o horário de funcionamento da sua loja
           </CardDescription>
         </CardHeader>
@@ -181,7 +180,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
       <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
             Dias de Semana
           </CardTitle>
         </CardHeader>
@@ -228,7 +226,6 @@ export function WorkingHoursSettings({ configuracoes, onSaveConfiguracoes }: Wor
       <Card className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
             Fim de Semana
           </CardTitle>
         </CardHeader>
