@@ -55,10 +55,10 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
     }
   }
 
-  // Layout para desktop - botão fixo no menu lateral abaixo de Produtos
+  // Layout para desktop - botão fixo no menu lateral
   if (device === 'desktop') {
     return (
-      <div className="fixed left-4 top-64 z-[9999] transition-opacity duration-300">
+      <div className="fixed left-4 top-96 z-[9999] transition-opacity duration-300">
         <Button
           onClick={copyLink}
           className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-4 py-2 text-sm transition-colors"
