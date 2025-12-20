@@ -165,29 +165,29 @@ export function DesktopNavigationMenu() {
 
   const displayCount = getDisplayCount()
 
-  // Layout para desktop: menu fixo na lateral esquerda com ícone maior e redondo
+  // Layout para desktop: menu fixo na lateral direita com ícone maior e redondo
   return (
     <>
       <div 
-        className="fixed left-0 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl border-r border-gray-200 flex items-center justify-center"
+        className="fixed right-0 top-1/2 transform -translate-y-1/2 z-30 shadow-2xl border-l border-gray-200 flex items-center justify-center"
         style={{
           background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%)',
           backgroundSize: '200% 200%',
           animation: 'gradient-x 3s ease infinite',
           width: '120px',
-          borderRadius: '0 20px 20px 0'
+          borderRadius: '20px 0 0 20px'
         }}
       >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button 
-              className="flex flex-col items-center gap-3 p-6 rounded-l-2xl transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
+              className="flex flex-col items-center gap-3 p-6 rounded-r-2xl transition-all duration-200 hover:scale-105 bg-white text-pink-600 hover:bg-gray-50 relative"
             >
               <ShoppingCart className="w-10 h-10" />
               <span className="font-semibold text-base">Carrinho</span>
               {displayCount > 0 && (
                 <Badge 
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold"
+                  className="absolute -top-2 -left-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold"
                 >
                   {displayCount}
                 </Badge>
@@ -196,7 +196,7 @@ export function DesktopNavigationMenu() {
           </SheetTrigger>
           
           <SheetContent 
-            className="w-full sm:w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto rounded-l-2xl m-4"
+            className="w-full sm:w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto rounded-r-2xl m-4"
             style={{ 
               borderRadius: '16px',
               margin: '16px'
