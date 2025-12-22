@@ -33,6 +33,8 @@ export function ProductCard({
 }: ProductCardProps) {
   const [showModal, setShowModal] = useState(false)
   const { addItem } = useCart()
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   const getFirstImage = (imagemUrl?: string): string | null => {
     if (!imagemUrl) return null
@@ -48,6 +50,16 @@ export function ProductCard({
     setShowModal(true)
   }
 
+  const handleImageLoad = () => {
+    setImageLoaded(true)
+    setImageError(false)
+  }
+
+  const handleImageError = () => {
+    setImageError(true)
+    setImageLoaded(true) // Considerar "carregado" mesmo com errore para mostrar placeholder
+  }
+
   return (
     <>
       <div className={`bg-white rounded-lg overflow-hidden shadow-sm h-full flex flex-col ${
@@ -61,19 +73,28 @@ export function ProductCard({
             className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
             style={{ backgroundColor }}
           >
-            {firstImage ? (
+            {/* Placeholder enquanto carrega */}
+            {!imageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl">
+                  {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
+                </span>
+              </div>
+            )}
+            
+            {/* Imagem otimizada com lazy loading */}
+            {firstImage && (
               <img 
                 src={firstImage} 
                 alt={product.nome} 
-                className="w-full h-full object-cover rounded-lg"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
+                className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                loading="lazy"  // 🔥 Lazy loading nativo
+                decoding="async"  // 🔥 Decodificação assíncrona
+                onLoad={handleImageLoad}
+                onError={handleImageError}
               />
-            ) : (
-              <span className="text-2xl">
-                {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
-              </span>
             )}
 
             {/* FITA DE PROMOÇÃO */}
@@ -94,7 +115,7 @@ export function ProductCard({
           {/* Conteúdo do produto - flex-1 para ocupar espaço disponível */}
           <div className="flex-1 flex flex-col">
             <div className="flex justify-between items-start mb-1">
-              <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
+              <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2 min-h-[2.5rem]">
                 {product.nome}
               </h4>
               <button

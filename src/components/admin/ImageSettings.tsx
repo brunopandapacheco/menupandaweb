@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Image as ImageIcon } from 'lucide-react'
+import { Image as ImageIcon, CheckCircle, AlertCircle } from 'lucide-react'
 import { LogoCropper } from '@/components/LogoCropper'
 import { showSuccess, showError } from '@/utils/toast'
 import { supabaseService } from '@/services/supabase'
@@ -31,6 +31,11 @@ export function ImageSettings({
   const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null)
   const [selectedBannerFile, setSelectedBannerFile] = useState<File | null>(null)
   const [showLogoCropper, setShowLogoCropper] = useState(false)
+  const [compressionInfo, setCompressionInfo] = useState<{
+    originalSize: number
+    compressedSize: number
+    reduction: number
+  } | null>(null)
   const device = useDeviceDetection()
 
   const handleLogoFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +46,8 @@ export function ImageSettings({
       showError('Arquivo não é uma imagem')
       return
     }
-    if (file.size > 5 * 1024 * 1024) {
-      showError('Arquivo muito grande (máximo 5MB)')
+    if (file.size > 10 * 1024 * 1024) { // 10MB máximo
+      showError('Arquivo muito grande (máximo 10MB)')
       return
     }
 
@@ -58,23 +63,22 @@ export function ImageSettings({
       showError('Arquivo não é uma imagem')
       return
     }
-    if (file.size > 5 * 1024 * 1024) {
-      showError('Arquivo muito grande (máximo 5MB)')
+    if (file.size > 10 * 1024 * 1024) { // 10MB máximo
+      showError('Arquivo muito grande (máximo 10MB)')
       return
     }
 
     setUploadingBanner(true)
 
     try {
-      const fileName = `banner-${user?.id}-${Date.now()}.${file.name.split('.').pop()}`
+      const fileName = `banner-${user?.id}-${Date.now()}.webp`
       
-      const url = await supabaseService.uploadImage(file, 'images', fileName)
+      // Upload com compressão automática de 90%
+      const url = await supabaseService.uploadBanner(file, fileName)
       
-      if (!url) throw new Error('Falha no upload da imagem para o storage')
-
       await onSaveBanner(url)
       onBannerUrlChange(url)
-      showSuccess('🖼️ Banner atualizado com sucesso!')
+      showSuccess('🖼️ Banner otimizado com 90% de qualidade!')
     } catch (error: any) {
       console.error('❌ Erro no upload do banner:', error)
       showError(error.message || 'Erro ao fazer upload do banner')
@@ -93,28 +97,50 @@ export function ImageSettings({
     setShowLogoCropper(false)
 
     try {
-      const fileName = `logo-${user?.id}-${Date.now()}.jpg`
+      const fileName = `logo-${user?.id}-${Date.now()}.webp`
       
-      const file = new File([croppedBlob], fileName, { type: 'image/jpeg' })
-      const url = await supabaseService.uploadImage(file, 'logos', fileName)
-
-      if (!url) throw new Error('Falha no upload da imagem')
+      // Upload com compressão automática de 95%
+      const url = await supabaseService.uploadLogo(croppedBlob, fileName)
 
       await onSaveLogo(url)
       onLogoUrlChange(url)
-      showSuccess('🖼️ Logo atualizada com sucesso!')
+      showSuccess('🎨 Logo otimizada com 95% de qualidade!')
     } catch (error: any) {
       console.error('❌ Erro no upload da logo:', error)
       showError(error.message || 'Erro ao fazer upload da logo')
     } finally {
       setUploadingLogo(false)
       setSelectedLogoFile(null)
+      setCompressionInfo(null)
     }
   }
 
   const handleLogoCropCancel = () => {
     setShowLogoCropper(false)
     setSelectedLogoFile(null)
+    setCompressionInfo(null)
+  }
+
+  // Componente de feedback de compressão
+  const CompressionFeedback = ({ info }: { info: typeof compressionInfo }) => {
+    if (!info) return null
+
+    return (
+      <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+        <div className="flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 text-green-600" />
+          <span className="text-sm font-medium text-green-800">
+            Imagem otimizada com sucesso!
+          </span>
+        </div>
+        <div className="text-xs text-green-700 mt-1">
+          <div>Tamanho original: {(info.originalSize / 1024).toFixed(2)}KB</div>
+          <div>Tamanho otimizado: {(info.compressedSize / 1024).toFixed(2)}KB</div>
+          <div>Redução: {info.reduction.toFixed(1)}%</div>
+          <div>Qualidade mantida: 90-95%</div>
+        </div>
+      </div>
+    )
   }
 
   // Layout para desktop - logo e banner lado a lado
@@ -124,7 +150,12 @@ export function ImageSettings({
         {/* Card da Logo - Esquerda */}
         <Card className="border-0 shadow-lg flex flex-col">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Logo da Loja</CardTitle>
+            <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>
+              Logo da Loja
+              <span className="text-sm font-normal text-gray-600 block mt-1">
+                Qualidade: 95% 🎨
+              </span>
+            </CardTitle>
           </CardHeader>
 
           <CardContent className="flex-1 flex flex-col justify-between space-y-6">
@@ -151,6 +182,8 @@ export function ImageSettings({
                 )}
               </div>
             </div>
+
+            <CompressionFeedback info={compressionInfo} />
 
             <div className="flex justify-center">
               <input
@@ -187,7 +220,12 @@ export function ImageSettings({
         {/* Card do Banner - Direita */}
         <Card className="border-0 shadow-lg flex flex-col">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</CardTitle>
+            <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>
+              Banner do Cardápio
+              <span className="text-sm font-normal text-gray-600 block mt-1">
+                Qualidade: 90% 🖼️
+              </span>
+            </CardTitle>
           </CardHeader>
 
           <CardContent className="flex-1 flex flex-col justify-between space-y-6">
@@ -279,7 +317,12 @@ export function ImageSettings({
       
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Logo da Loja</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>
+            Logo da Loja
+            <span className="text-sm font-normal text-gray-600 block mt-1">
+              Qualidade: 95% 🎨
+            </span>
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
@@ -306,6 +349,8 @@ export function ImageSettings({
               )}
             </div>
           </div>
+
+          <CompressionFeedback info={compressionInfo} />
 
           <div className="flex justify-center">
             <input
@@ -341,7 +386,12 @@ export function ImageSettings({
 
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Banner do Cardápio</CardTitle>
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>
+            Banner do Cardápio
+            <span className="text-sm font-normal text-gray-600 block mt-1">
+              Qualidade: 90% 🖼️
+            </span>
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">

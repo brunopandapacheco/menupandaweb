@@ -11,6 +11,7 @@ import { supabaseService } from '@/services/supabase'
 import { supabase } from '@/lib/supabase'
 import { showError, showSuccess } from '@/utils/toast'
 import { IconSelectorModal } from './IconSelectorModal'
+import { compressImage, COMPRESS_CONFIG } from '@/utils/imageCompression'
 
 interface ProductFormProps {
   product: Partial<Produto> | null
@@ -40,6 +41,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   const [categories, setCategories] = useState<string[]>([])
   const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
   const [loadingCategories, setLoadingCategories] = useState(true)
+  const [uploadingImage, setUploadingImage] = useState(false)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -88,13 +90,20 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       return { success: false, message: 'Formato de imagem inválido. Use apenas PNG, JPEG ou WEBP.' }
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      return { success: false, message: 'Arquivo muito grande (máximo 5MB).' }
+    if (file.size > 10 * 1024 * 1024) { // 10MB máximo
+      return { success: false, message: 'Arquivo muito grande (máximo 10MB).' }
     }
 
+    setUploadingImage(true)
+    
     try {
-      const fileName = `produto-${Date.now()}.${file.name.split('.').pop()}`
-      const url = await supabaseService.uploadImage(file, 'products', fileName)
+      console.log('🖼️ Iniciando compressão da imagem do produto...')
+      
+      // Comprimir imagem com 90% de qualidade
+      const compressedFile = await compressImage(file, COMPRESS_CONFIG.product)
+      
+      const fileName = `produto-${Date.now()}.webp`
+      const url = await supabaseService.uploadImage(compressedFile, 'products', fileName)
       
       if (!url) {
         return { success: false, message: 'Falha no upload da imagem' }
@@ -102,12 +111,15 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       
       if (product) {
         onSave({ ...product, imagem_url: url })
-        return { success: true, message: 'Imagem enviada!' }
+        return { success: true, message: 'Imagem otimizada com 90% de qualidade!' }
       }
       
       return { success: false, message: 'Produto não encontrado' }
     } catch (error: any) {
+      console.error('❌ Erro no upload da imagem:', error)
       return { success: false, message: error.message || 'Falha no upload da imagem' }
+    } finally {
+      setUploadingImage(false)
     }
   }
 
@@ -157,7 +169,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     // Prepara a categoria pendente com o ícone selecionado
     setPendingCategory({
       name: trimmedName,
-      icon: selectedIcon // Usa o ícone selecionado pelo usuário
+      icon: selectedIcon
     })
 
     // Adiciona à lista de categorias localmente
@@ -335,7 +347,10 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                       Adicionar Imagem
                     </span>
                     <span className="text-xs text-pink-400">
-                      PNG, JPEG ou WEBP (máx. 5MB)
+                      PNG, JPEG ou WEBP (máx. 10MB)
+                    </span>
+                    <span className="text-xs text-pink-600 font-medium">
+                      🖼️ Qualidade: 90%
                     </span>
                   </label>
                 </Button>
@@ -421,7 +436,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   disabled={!newCategoryName.trim()}
                   className="bg-pink-600 hover:bg-pink-700 flex-1"
                 >
-                  <Check className="w-4 h-4 mr-1" />
+                  <Check className="w-3 h-3 mr-1" />
                   Criar
                 </Button>
                 <Button
@@ -432,7 +447,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                     setSelectedIcon('/icons/1.png')
                   }}
                 >
-                  <X className="w-4 h-4 mr-1" />
+                  <X className="w-3 h-3 mr-1" />
                   Cancelar
                 </Button>
               </div>

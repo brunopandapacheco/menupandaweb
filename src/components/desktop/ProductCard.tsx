@@ -33,6 +33,8 @@ export function DesktopProductCard({
 }: DesktopProductCardProps) {
   const [showModal, setShowModal] = useState(false)
   const { addItem } = useCart()
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   const getFirstImage = (imagemUrl?: string): string | null => {
     if (!imagemUrl) return null
@@ -45,6 +47,16 @@ export function DesktopProductCard({
   const handleAddToCart = () => {
     console.log('🛒 DesktopProductCard: Abrindo modal para produto:', product.nome)
     setShowModal(true)
+  }
+
+  const handleImageLoad = () => {
+    setImageLoaded(true)
+    setImageError(false)
+  }
+
+  const handleImageError = () => {
+    setImageError(true)
+    setImageLoaded(true) // Considerar "carregado" mesmo com errore para mostrar placeholder
   }
 
   return (
@@ -60,19 +72,28 @@ export function DesktopProductCard({
             className="w-full aspect-square rounded-xl flex items-center justify-center mb-4 bg-gray-50 overflow-hidden relative"
             style={{ backgroundColor }}
           >
-            {firstImage ? (
+            {/* Placeholder enquanto carrega */}
+            {!imageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-5xl">
+                  {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
+                </span>
+              </div>
+            )}
+            
+            {/* Imagem otimizada com lazy loading */}
+            {firstImage && (
               <img 
                 src={firstImage} 
                 alt={product.nome} 
-                className="w-full h-full object-cover rounded-xl"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
+                className={`w-full h-full object-cover rounded-xl transition-opacity duration-300 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                loading="lazy"  // 🔥 Lazy loading nativo
+                decoding="async"  // 🔥 Decodificação assíncrona
+                onLoad={handleImageLoad}
+                onError={handleImageError}
               />
-            ) : (
-              <span className="text-5xl">
-                {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
-              </span>
             )}
 
             {/* FITA DE PROMOÇÃO */}
