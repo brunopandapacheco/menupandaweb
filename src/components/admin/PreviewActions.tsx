@@ -4,7 +4,6 @@ import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
-import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 
 interface PreviewActionsProps {
   designSettings: any
@@ -15,7 +14,6 @@ interface PreviewActionsProps {
 export function PreviewActions({ designSettings, onRefresh, showButton }: PreviewActionsProps) {
   const { user } = useAuth()
   const [copied, setCopied] = useState(false)
-  const device = useDeviceDetection()
 
   const getCodigoPermanente = (userId: string): string => {
     return userId.slice(-5).toLowerCase()
@@ -55,35 +53,9 @@ export function PreviewActions({ designSettings, onRefresh, showButton }: Previe
     }
   }
 
-  // Layout para desktop - botão fixo no canto superior direito
-  if (device === 'desktop') {
-    return (
-      <div className="fixed right-8 top-8 z-[9999] transition-opacity duration-300">
-        <Button
-          onClick={copyLink}
-          className="bg-pink-500 hover:bg-pink-600 text-white shadow-lg px-4 py-2 text-sm transition-colors"
-          size="sm"
-        >
-          {copied ? (
-            <>
-              <Check className="w-3 h-3 mr-1" />
-              Copiado!
-            </>
-          ) : (
-            <>
-              <Copy className="w-3 h-3 mr-1" />
-              Copiar Link
-            </>
-          )}
-        </Button>
-      </div>
-    )
-  }
-
-  // Layout para mobile/tablet - botão flutuante no topo direito
   return (
     <div 
-      className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 ${
+      className={`fixed top-4 right-4 z-[9999] transition-opacity duration-300 flex gap-2 ${
         showButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >

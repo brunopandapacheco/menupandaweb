@@ -12,26 +12,24 @@ const predefinedColors = [
   { name: 'Amarelo', value: '#eab308' },
   { name: 'Verde', value: '#10b981' },
   { name: 'Azul', value: '#3b82f6' },
-  { name: 'Roxo', value: '#8b5cf6' }
+  { name: 'Roxo', value: '#8b5cf6' },
+  { name: 'Preto', value: '#000000' }
 ]
 
 const gradientBackgrounds = [
-  // 3 tons de rosa claro
-  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 50%, #FFD1DC 100%)' },
-  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFE4E1 0%, #FFC0CB 50%, #FFD1DC 100%)' },
-  { name: 'Rosa Claro', gradient: 'linear-gradient(135deg, #FFF0F5 0%, #FFC0CB 50%, #FFE4E1 100%)' },
-  // 1 tom de marrom claro
-  { name: 'Marrom Claro', gradient: 'linear-gradient(135deg, #F5DEB3 0%, #DEB887 50%, #D2691E 100%)' },
-  // 1 tom de marrom escuro
-  { name: 'Marrom Escuro', gradient: 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%)' },
-  // 1 tom de roxo
-  { name: 'Roxo Elegante', gradient: 'linear-gradient(135deg, #9370DB 0%, #8A2BE2 50%, #DDA0DD 100%)' },
-  // 1 tom de cinza
-  { name: 'Cinza Suave', gradient: 'linear-gradient(135deg, #D3D3D3 0%, #E8E8E8 50%, #F5F5F5 100%)' },
-  // 1 tom de laranja
-  { name: 'Laranja Vibrante', gradient: 'linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FF7F50 100%)' },
-  // 1 tom de verde
-  { name: 'Verde Fresco', gradient: 'linear-gradient(135deg, #90EE90 0%, #98FB98 50%, #8FBC8F 100%)' }
+  // Rosa
+  { name: 'Rosa Suave', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Vibrante', gradient: 'linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #FFB6C1 100%)' },
+  { name: 'Rosa Delicado', gradient: 'linear-gradient(135deg, #FFC0CB 0%, #FFD1DC 50%, #FFB6C1 100%)' },
+  
+  // Roxo
+  { name: 'Roxo Real', gradient: 'linear-gradient(135deg, #6A0DAD 0%, #8A2BE2 50%, #D8BFD8 100%)' },
+  
+  // Amarelo
+  { name: 'Amarelo Dourado', gradient: 'linear-gradient(135deg, #FFD700 0%, #FFEA00 50%, #FFFACD 100%)' },
+  
+  // Cinza
+  { name: 'Cinza Sombrio', gradient: 'linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%)' }
 ]
 
 interface ColorSettingsProps {
@@ -62,45 +60,56 @@ export function ColorSettings({
 
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
-    onCorBordaChange(color) // Aplica imediatamente
+    onCorBordaChange(color)
   }
 
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
-    onCorNomeChange(color) // Aplica imediatamente
-  }
-
-  const handleBorderClick = (color: string) => {
-    onCorBordaChange(color) // Aplica imediatamente
-    setCustomBorderColor(color) // Atualiza o estado local também
-  }
-
-  const handleNameClick = (color: string) => {
-    onCorNomeChange(color) // Aplica imediatamente
-    setCustomNameColor(color) // Atualiza o estado local também
-  }
-
-  const handleBackgroundClick = (gradient: string) => {
-    onBannerGradientChange(gradient) // Aplica imediatamente
-  }
-
-  const handleSaveColors = () => {
-    onSaveColors()
+    onCorNomeChange(color)
   }
 
   return (
     <div className="space-y-6">
+      {/* Card de Background */}
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {gradientBackgrounds.map((gradient, index) => (
+              <Card key={index} className="cursor-pointer hover:shadow-lg transition-all">
+                <CardContent className="p-4">
+                  <div 
+                    className="w-full h-24 rounded-lg mb-4 shadow-sm"
+                    style={{ background: gradient.gradient }}
+                  />
+                  <Button 
+                    size="sm" 
+                    className="w-full font-[650] text-xs"
+                    style={{ backgroundColor: '#111111', color: 'white' }}
+                    onClick={() => onApplyGradient(gradient)}
+                  >
+                    Aplicar
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Card da Cor da Borda */}
       <Card className="border-0 shadow-lg">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor da Borda</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-5 gap-3">
             {predefinedColors.map((color) => (
               <button
                 key={color.value}
-                onClick={() => handleBorderClick(color.value)}
+                onClick={() => onCorBordaChange(color.value)}
                 className={
                   'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                   (corBorda === color.value 
@@ -112,7 +121,7 @@ export function ColorSettings({
               >
                 {corBorda === color.value && (
                   <div className="w-full h-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-white" />
+                    <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
                   </div>
                 )}
               </button>
@@ -134,12 +143,11 @@ export function ColorSettings({
               title="Personalizar cor"
             >
               <div className="w-full h-full flex items-center justify-center">
-                <Palette className="w-5 h-5 text-white drop-shadow-lg" />
+                <Palette className="w-4 h-4 text-white drop-shadow-lg" />
               </div>
             </button>
           </div>
-          
-          {/* Picker de cor personalizada */}
+
           {showCustomBorderPicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
@@ -169,18 +177,18 @@ export function ColorSettings({
             </div>
           )}
 
-          {/* Botão Salvar Cor da Borda */}
-          <div className="flex justify-center mt-6">
+          {/* Botão Aplicar Cor da Borda */}
+          <div className="pt-4 flex justify-center">
             <Button 
-              onClick={handleSaveColors}
-              className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-lg hover:shadow-xl text-white"
+              onClick={onSaveColors}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white animate-gradient-pulse"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
                 backgroundSize: '200% 200%',
                 animation: 'gradientShift 3s ease infinite'
               }}
             >
-              Salvar Cor da Borda
+              Aplicar Cor da Borda
             </Button>
           </div>
         </CardContent>
@@ -192,11 +200,11 @@ export function ColorSettings({
           <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Cor do Nome</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-5 gap-3">
             {predefinedColors.map((color) => (
               <button
                 key={color.value}
-                onClick={() => handleNameClick(color.value)}
+                onClick={() => onCorNomeChange(color.value)}
                 className={
                   'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                   (corNome === color.value 
@@ -208,7 +216,7 @@ export function ColorSettings({
               >
                 {corNome === color.value && (
                   <div className="w-full h-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-white" />
+                    <CheckCircle className="w-4 h-4 text-white drop-shadow-lg" />
                   </div>
                 )}
               </button>
@@ -230,12 +238,11 @@ export function ColorSettings({
               title="Personalizar cor"
             >
               <div className="w-full h-full flex items-center justify-center">
-                <Palette className="w-5 h-5 text-white drop-shadow-lg" />
+                <Palette className="w-4 h-4 text-white drop-shadow-lg" />
               </div>
             </button>
           </div>
-          
-          {/* Picker de cor personalizada */}
+
           {showCustomNamePicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
@@ -265,71 +272,18 @@ export function ColorSettings({
             </div>
           )}
 
-          {/* Botão Salvar Cor do Nome */}
-          <div className="flex justify-center mt-6">
+          {/* Botão Aplicar Cor do Nome */}
+          <div className="pt-4 flex justify-center">
             <Button 
-              onClick={handleSaveColors}
-              className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-lg hover:shadow-xl text-white"
+              onClick={onSaveColors}
+              className="px-8 py-2 font-[650] text-base transition-all duration-200 shadow-xl hover:shadow-2xl text-white animate-gradient-pulse"
               style={{ 
                 background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
                 backgroundSize: '200% 200%',
                 animation: 'gradientShift 3s ease infinite'
               }}
             >
-              Salvar Cor do Nome
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Card do Background */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold" style={{ color: '#333333' }}>Background do Cardápio</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
-            {gradientBackgrounds.map((gradient, index) => (
-              <div 
-                key={index} 
-                className="cursor-pointer transition-all"
-                onClick={() => handleBackgroundClick(gradient.gradient)}
-              >
-                <div 
-                  className={
-                    'w-full h-24 rounded-lg mb-2 shadow-sm ' +
-                    (bannerGradient === gradient.gradient 
-                      ? 'ring-4 ring-pink-500 ring-offset-2' 
-                      : '')
-                  }
-                  style={{ 
-                    background: gradient.gradient,
-                    position: 'relative'
-                  }}
-                >
-                  {bannerGradient === gradient.gradient && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <CheckCircle className="w-6 h-6 text-white drop-shadow-lg" />
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-center text-gray-600">{gradient.name}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Botão Salvar Background */}
-          <div className="flex justify-center mt-6">
-            <Button 
-              onClick={handleSaveColors}
-              className="px-6 py-2 font-[650] text-base transition-all duration-200 shadow-lg hover:shadow-xl text-white"
-              style={{ 
-                background: 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
-                backgroundSize: '200% 200%',
-                animation: 'gradientShift 3s ease infinite'
-              }}
-            >
-              Salvar Background
+              Aplicar Cor do Nome
             </Button>
           </div>
         </CardContent>

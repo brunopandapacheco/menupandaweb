@@ -27,7 +27,7 @@ export function DesktopLayout({ children, activeTab = 'preview', onTabChange }: 
         animation: 'gradient-x 3s ease infinite',
         backgroundSize: '200% 200%'
       }}>
-        <div className="p-8 pt-8"> {/* REMOVIDO PT-12 PARA REDUZIR MARGEM SUPERIOR */}
+        <div className="p-8 pt-12">
           <div className="flex items-center justify-center">
             <div className="text-center">
               <div className="w-40 h-40 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden">

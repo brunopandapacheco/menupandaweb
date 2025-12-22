@@ -101,14 +101,14 @@ export function NavigationMenu() {
         year: 'numeric'
       })
 
-      let message = `Olá! 👋
-
-🧁 NOVO PEDIDO - ${cardapioName.toUpperCase()} 🧁
+      // 🍰 MENSAGEM PADRÃO DO WHATSAPP
+      let message = `🍰 NOVO PEDIDO - ${cardapioName.toUpperCase()} 🍰
 
 👤 Cliente: ${customerName.trim()}
 📅 Data do Pedido: ${dataFormatada}
+📞 Telefone: ${customerPhone.trim()}
 
-🛒 RESUMO DO PEDIDO:
+🛒 Resumo do Pedido:
 
 `
 
@@ -116,59 +116,70 @@ export function NavigationMenu() {
         if (!item) return
         
         message += `${index + 1}️⃣ ${item.name || 'Produto'}
-   - Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}
-   - Preço unitário: ${formatCurrency(item.price || 0)}
-   - Subtotal: ${formatCurrency((item.price || 0) * item.quantity)}`
+
+Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}
+
+Preço unitário: R$ ${formatCurrency(item.price || 0)}
+
+Subtotal: R$ ${formatCurrency((item.price || 0) * item.quantity)}`
         
         if (item.observations) {
           message += `
-   - Observações: ${item.observations}`
+
+Observações: ${item.observations}`
         }
         message += `
 
 `
       })
 
-      message += `💰 TOTAL: ${formatCurrency(totalPrice)}
+      message += `💰 Total: R$ ${formatCurrency(totalPrice)}
 
-📞 Telefone: ${customerPhone.trim()}
+Olá! Gostaria de confirmar meu pedido para que seja finalizado!`
 
-📞 Gostaria de finalizar este pedido!`
-
+      // Codificar mensagem para URL
       const encodedMessage = encodeURIComponent(message)
       const whatsappUrl = `https://wa.me/55${cleanNumber}?text=${encodedMessage}`
 
+      // Abrir WhatsApp
       window.open(whatsappUrl, '_blank')
       
+      // Limpar carrinho e formulário após enviar
       clearCart()
       setShowCustomerForm(false)
       setCustomerName('')
       setCustomerPhone('')
       setIsOpen(false)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending WhatsApp order:', error)
     }
   }
 
+  // Validar se items é um array válido
   const validItems = Array.isArray(items) ? items : []
 
+  // Calcular o número de itens para o badge (sempre inteiro)
   const getDisplayCount = () => {
     if (validItems.length === 0) return 0
     
+    // Para produtos por KG, cada item conta como 1 no badge
+    // Para outros produtos, usar Math.floor para arredondar para baixo
     return validItems.reduce((count, item) => {
       if (item.saleType === 'kg') {
-        return count + 1
+        return count + 1 // Cada item por KG conta como 1
       } else {
-        return count + Math.floor(item.quantity)
+        return count + Math.floor(item.quantity) // Arredondar para baixo
       }
     }, 0)
   }
 
   const displayCount = getDisplayCount()
 
+  // Layout para mobile: menu fixo na parte inferior
   if (isMobile) {
     return (
       <>
+        {/* Menu de Navegação Fixo na Parte Inferior (Mobile) - z-index reduzido */}
         <div 
           className="fixed bottom-0 left-0 right-0 z-30 shadow-lg border-t border-gray-200"
           style={{
@@ -179,6 +190,7 @@ export function NavigationMenu() {
         >
           <div className="container mx-auto px-4 py-3">
             <div className="flex justify-center">
+              {/* Botão Centralizado do Carrinho */}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
                   <Button 
@@ -208,8 +220,8 @@ export function NavigationMenu() {
                       <SheetTitle 
                         className="flex items-center gap-2 font-bold"
                         style={{ 
-                          color: '#ffffff',
-                          backgroundColor: '#FF99D8',
+                          color: '#ffffff', // Texto branco
+                          backgroundColor: '#FF99D8', // Fundo rosa #FF99D8
                           padding: '8px 16px',
                           borderRadius: '8px'
                         }}
@@ -221,6 +233,7 @@ export function NavigationMenu() {
                         )}
                       </SheetTitle>
                       
+                      {/* Botão X personalizado rosa e maior - usando SVG inline */}
                       <Button
                         variant="ghost"
                         size="sm"
@@ -263,6 +276,7 @@ export function NavigationMenu() {
                       </div>
                     ) : (
                       <>
+                        {/* Lista de itens */}
                         <div className="space-y-2 mb-6 overflow-x-hidden">
                           {validItems.map((item) => (
                             item && (
@@ -284,6 +298,7 @@ export function NavigationMenu() {
                           </div>
                         </div>
 
+                        {/* Botões de ação */}
                         <div className="space-y-3 mt-6">
                           <Button
                             onClick={handleWhatsAppOrder}
@@ -291,7 +306,7 @@ export function NavigationMenu() {
                             style={{
                               background: 'linear-gradient(135deg, #25D366 0%, #128C7E 50%, #075E54 100%)',
                               backgroundSize: '200% 200%',
-                              animation: 'whatsapp-gradient 4s ease infinite, pulse-slow 6s ease-in-out infinite',
+                              animation: 'whatsapp-gradient 4s ease infinite, pulse-slow 6s ease-inout infinite',
                               boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
                             }}
                           >
@@ -333,11 +348,12 @@ export function NavigationMenu() {
           </div>
         </div>
 
+        {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
         {showCustomerForm && (
           <div 
             className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
             style={{ 
-              zIndex: 9999,
+              zIndex: 9999, // Z-INDEX MAIOR PARA FICAR NA FRENTE DE TUDO
               position: 'fixed',
               top: 0,
               left: 0,
@@ -391,7 +407,7 @@ export function NavigationMenu() {
                   variant="outline"
                   onClick={() => {
                     setShowCustomerForm(false)
-                    setIsOpen(true)
+                    setIsOpen(true) // Reabre o carrinho ao cancelar
                   }}
                   className="flex-1"
                 >
@@ -410,14 +426,17 @@ export function NavigationMenu() {
         )}
 
         <style>{`
+          /* Esconder APENAS o botão Close do Radix */
           button[aria-label="Close"] {
             display: none !important;
           }
           
+          /* Garantir que nosso botão X personalizado continue visível */
           .custom-close-button {
             display: flex !important;
           }
 
+          /* Animação de gradiente para WhatsApp */
           @keyframes whatsapp-gradient {
             0% {
               background-position: 0% 50%;
@@ -430,6 +449,7 @@ export function NavigationMenu() {
             }
           }
 
+          /* Animação de pulsação bem lenta */
           @keyframes pulse-slow {
             0%, 100% {
               transform: scale(1);
@@ -445,8 +465,10 @@ export function NavigationMenu() {
     )
   }
 
+  // Layout para desktop: menu fixo na lateral esquerda
   return (
     <>
+      {/* Menu de Navegação Fixo na Lateral Esquerda (Desktop) - z-index reduzido */}
       <div 
         className="fixed left-0 top-0 bottom-0 z-30 shadow-lg border-r border-gray-200 flex items-center justify-center"
         style={{
@@ -484,8 +506,8 @@ export function NavigationMenu() {
                 <SheetTitle 
                   className="flex items-center gap-2 font-bold"
                   style={{ 
-                    color: '#ffffff',
-                    backgroundColor: '#FF99D8',
+                    color: '#ffffff', // Texto branco
+                    backgroundColor: '#FF99D8', // Fundo rosa #FF99D8
                     padding: '8px 16px',
                     borderRadius: '8px'
                   }}
@@ -497,6 +519,7 @@ export function NavigationMenu() {
                   )}
                 </SheetTitle>
                 
+                {/* Botão X personalizado rosa e maior - usando SVG inline */}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -539,6 +562,7 @@ export function NavigationMenu() {
                 </div>
               ) : (
                 <>
+                  {/* Lista de itens */}
                   <div className="space-y-2 mb-6 overflow-x-hidden">
                     {validItems.map((item) => (
                       item && (
@@ -560,6 +584,7 @@ export function NavigationMenu() {
                     </div>
                   </div>
 
+                  {/* Botões de ação */}
                   <div className="space-y-3 mt-6">
                     <Button
                       onClick={handleWhatsAppOrder}
@@ -567,7 +592,7 @@ export function NavigationMenu() {
                       style={{
                         background: 'linear-gradient(135deg, #25D366 0%, #128C7E 50%, #075E54 100%)',
                         backgroundSize: '200% 200%',
-                        animation: 'whatsapp-gradient 4s ease infinite, pulse-slow 6s ease-in-out infinite',
+                        animation: 'whatsapp-gradient 4s ease infinite, pulse-slow 6s ease-inout infinite',
                         boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
                       }}
                     >
@@ -607,13 +632,15 @@ export function NavigationMenu() {
         </Sheet>
       </div>
 
+      {/* Espaço para não cobrir o conteúdo quando o menu estiver fixo na lateral */}
       <div className="w-20"></div>
 
+      {/* Formulário de Dados do Cliente - Z-INDEX MAIOR PARA FICAR NA FRENTE */}
       {showCustomerForm && (
         <div 
           className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
           style={{ 
-            zIndex: 9999,
+            zIndex: 9999, // Z-INDEX MAIOR PARA FICAR NA FRENTE DE TUDO
             position: 'fixed',
             top: 0,
             left: 0,
@@ -667,7 +694,7 @@ export function NavigationMenu() {
                 variant="outline"
                 onClick={() => {
                   setShowCustomerForm(false)
-                  setIsOpen(true)
+                  setIsOpen(true) // Reabre o carrinho ao cancelar
                 }}
                 className="flex-1"
               >
@@ -686,14 +713,17 @@ export function NavigationMenu() {
       )}
 
       <style>{`
+        /* Esconder APENAS o botão Close do Radix */
         button[aria-label="Close"] {
           display: none !important;
         }
         
+        /* Garantir que nosso botão X personalizado continue visível */
         .custom-close-button {
           display: flex !important;
         }
 
+        /* Animação de gradiente para WhatsApp */
         @keyframes whatsapp-gradient {
           0% {
             background-position: 0% 50%;
@@ -706,14 +736,15 @@ export function NavigationMenu() {
           }
         }
 
+        /* Animação de pulsação bem lenta */
         @keyframes pulse-slow {
           0%, 100% {
             transform: scale(1);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 15px rgba(31, 41, 55, 0.3);
           }
           50% {
             transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 6px 20px rgba(31, 41, 55, 0.4);
           }
         }
       `}</style>

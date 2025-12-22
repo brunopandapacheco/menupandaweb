@@ -165,15 +165,14 @@ export function DesktopNavigationMenu() {
 
   const displayCount = getDisplayCount()
 
-  // Layout para desktop: menu fixo na lateral direita
+  // Layout para desktop: menu fixo na lateral direita com ícone personalizado
   return (
     <>
       <div 
-        className="fixed right-8 top-1/2 transform -translate-y-1/2 flex items-center justify-center"
+        className="fixed right-8 top-1/2 transform -translate-y-1/2 z-30 flex items-center justify-center"
         style={{
           width: '80px',
-          height: '80px',
-          zIndex: 99999 // Z-INDEX MÁXIMO PARA FICAR NA FRENTE DE TUDO
+          height: '80px'
         }}
       >
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -194,7 +193,7 @@ export function DesktopNavigationMenu() {
                   // Fallback para ícone do lucide se a imagem não carregar
                   const parent = e.currentTarget.parentElement
                   if (parent) {
-                    parent.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L6 9l3 7m0 0l3-7m-3 7v10a2 2 0 002 2h10a2 2 0 002-2V9l-3-7m-6 0l3 7m6 0l3-7"/></svg>'
+                    parent.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L6 9l3 7m0 0l3-7-3 7m-3 7v10a2 2 0 002 2h10a2 2 0 002-2V9l-3-7m-6 0l3 7m6 0l3-7"/></svg>'
                   }
                 }}
               />
@@ -206,13 +205,13 @@ export function DesktopNavigationMenu() {
                 </Badge>
               )}
             </Button>
-          </SheetTrigger>          
+          </SheetTrigger>
+          
           <SheetContent 
             className="w-full sm:w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto rounded-r-2xl m-4"
             style={{ 
               borderRadius: '16px',
-              margin: '16px',
-              zIndex: 99999 // Z-INDEX MÁXIMO PARA O SHEET CONTENT
+              margin: '16px'
             }}
           >
             <SheetHeader className="border-b pb-6">
@@ -348,7 +347,7 @@ export function DesktopNavigationMenu() {
         <div 
           className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
           style={{ 
-            zIndex: 999999, // Z-INDEX AINDA MAIOR PARA O MODAL
+            zIndex: 9999,
             position: 'fixed',
             top: 0,
             left: 0,
