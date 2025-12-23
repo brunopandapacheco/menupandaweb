@@ -42,6 +42,7 @@ export default function DesignSettings() {
   const [logoUrl, setLogoUrl] = useState('')
   const [bannerUrl, setBannerUrl] = useState('')
   const [whatsapp, setWhatsapp] = useState('(11) 999999999')
+  const [hideStars, setHideStars] = useState(false) // Novo estado para esconder estrelas
   
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
@@ -55,6 +56,7 @@ export default function DesignSettings() {
       if (designSettings.logo_url) setLogoUrl(designSettings.logo_url)
       if (designSettings.banner1_url) setBannerUrl(designSettings.banner1_url)
       if (designSettings.categorias) setMainCategories(designSettings.categorias)
+      if (designSettings.hide_stars !== undefined) setHideStars(designSettings.hide_stars) // Carregar estado das estrelas
     }
   }, [designSettings])
 
@@ -89,6 +91,7 @@ export default function DesignSettings() {
     const settingsToUpdate: any = {}
     if (nomeLoja?.trim()) settingsToUpdate.nome_loja = nomeLoja.trim()
     if (descricaoLoja?.trim()) settingsToUpdate.descricao_loja = descricaoLoja.trim()
+    if (hideStars !== undefined) settingsToUpdate.hide_stars = hideStars // Salvar estado das estrelas
 
     if (Object.keys(settingsToUpdate).length === 0) {
       showError('Por favor, preencha pelo menos um campo')
@@ -315,6 +318,46 @@ export default function DesignSettings() {
                           className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
                         >
                           Salvar WhatsApp
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Esconder Estrelas */}
+                    <div className="border-0 shadow-lg bg-white rounded-lg p-6">
+                      <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
+                        Esconder Estrelas
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Ocultar as estrelas de avaliação abaixo do nome da loja
+                          </label>
+                          <div className="flex items-center justify-center">
+                            <button
+                              onClick={() => setHideStars(!hideStars)}
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                hideStars ? 'bg-pink-600' : 'bg-gray-200'
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  hideStars ? 'translate-x-6' : 'translate-x-1'
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <p className="text-xs text-gray-500 text-center">
+                            {hideStars ? 'As estrelas estarão ocultas' : 'As estrelas estarão visíveis'}
+                          </p>
+                          <p className="text-xs text-black bg-pink-100 p-2 rounded">
+                            ⭐ Esta opção controla a exibição das estrelas de avaliação que aparecem abaixo do nome da loja no cardápio público
+                          </p>
+                        </div>
+                        <button 
+                          onClick={saveConfig}
+                          className="w-full py-3 px-8 rounded-xl bg-gradient-to-r from-[#d11b70] via-[#ff6fae] to-[#ff9acb] shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-white"
+                        >
+                          {hideStars ? 'Manter Estrelas Ocultas' : 'Ocultar Estrelas'}
                         </button>
                       </div>
                     </div>
