@@ -21,6 +21,7 @@ interface LogoProps {
     complemento: string
   }
   configuracoes?: any
+  hideStars?: boolean // Nova prop para controlar exibição das estrelas
 }
 
 export function Logo({ 
@@ -33,7 +34,8 @@ export function Logo({
   isEditable = false,
   onLogoChange,
   endereco,
-  configuracoes
+  configuracoes,
+  hideStars = false // Valor padrão false
 }: LogoProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [showLocationDialog, setShowLocationDialog] = useState(false)
@@ -205,14 +207,17 @@ export function Logo({
             {storeName}
           </h1>
           
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="flex items-center gap-1">
-              {renderStars(avaliacaoMedia)}
+          {/* Renderizar estrelas apenas se hideStars for false */}
+          {!hideStars && (
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="flex items-center gap-1">
+                {renderStars(avaliacaoMedia)}
+              </div>
+              <span className="text-sm font-semibold text-gray-700">
+                {avaliacaoMedia}/5.0
+              </span>
             </div>
-            <span className="text-sm font-semibold text-gray-700">
-              {avaliacaoMedia}/5.0
-            </span>
-          </div>
+          )}
           
           <p className="text-gray-600 text-sm mb-3">
             {storeDescription}
