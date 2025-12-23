@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { ProductForm } from './ProductForm'
 import { Produto } from '@/types/database'
 import { showSuccess, showError } from '@/utils/toast'
+import { useProductDraft } from '@/hooks/useProductDraft'
 import { useDatabase } from '@/hooks/useDatabase'
-import { supabase } from '@/lib/supabase'
 
 interface ProductDialogProps {
   isOpen: boolean
@@ -18,31 +18,63 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   const [localProduct, setLocalProduct] = useState<Partial<Produto> | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
-  const neutralFocusRef = useRef<HTMLDivElement>(null)
+  
+  const {
+    draft,
+    hasUnsavedChanges,
+    showDraftNotification,
+    saveDraft,
+    clearDraft,
+    restoreDraft,
+    dismissDraftNotification
+  } = useProductDraft(product)
 
-  // Reset local product when dialog changes
+  // Reset local product quando dialog muda
   useEffect(() => {
     if (isOpen) {
-      setLocalProduct(product || {
-        nome: '',
-        descricao: '',
-        preco_normal: 0,
-        preco_promocional: 0,
-        imagem_url: '',
-        categoria: '',
-        forma_venda: 'unidade',
-        disponivel: true,
-        promocao: false,
-      })
-      
-      // Focar no elemento neutro quando o modal abrir
-      setTimeout(() => {
-        if (neutralFocusRef.current) {
-          neutralFocusRef.current.focus()
+      if (product) {
+        // Editando produto existente
+        setLocalProduct(product)
+      } else {
+        // Novo produto - tenta restaurar rascunho
+        const restoredDraft = restoreDraft()
+        if (restoredDraft) {
+          // Convert ProductDraft to Partial<Produto>
+          setLocalProduct({
+            id: restoredDraft.id,
+            nome: restoredDraft.nome,
+            descricao: restoredDraft.descricao,
+            preco_normal: restoredDraft.preco_normal,
+            preco_promocional: restoredDraft.preco_promocional,
+            imagem_url: restoredDraft.imagem_url,
+            categoria: restoredDraft.categoria,
+            forma_venda: restoredDraft.forma_venda,
+            disponivel: restoredDraft.disponivel,
+            promocao: restoredDraft.promocao
+          })
+        } else {
+          setLocalProduct({
+            nome: '',
+            descricao: '',
+            preco_normal: 0,
+            preco_promocional: 0,
+            imagem_url: '',
+            categoria: '',
+            forma_venda: 'unidade',
+            disponivel: true,
+            promocao: false,
+          })
         }
-      }, 100)
+      }
     }
-  }, [isOpen, product])
+  }, [isOpen, product, restoreDraft])
+
+  // Salvar rascunho automaticamente quando o produto muda
+  useEffect(() => {
+    if (localProduct && !localProduct.id && hasUnsavedChanges) {
+      saveDraft(localProduct)
+    }
+  }, [localProduct, hasUnsavedChanges, saveDraft])
 
   const handleSave = async () => {
     if (!localProduct) return
@@ -69,6 +101,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
     try {
       // Criar categoria pendente se existir
       if (pendingCategory) {
+        const { supabase } = await import('@/lib/supabase')
         const { error } = await supabase
           .from('categorias')
           .insert({ 
@@ -85,10 +118,16 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
       // Salvar o produto
       if (localProduct.id) {
         const success = await editProduto(localProduct.id, localProduct)
-        if (success) showSuccess('Produto atualizado!')
+        if (success) {
+          showSuccess('Produto atualizado!')
+          clearDraft() // Limpa rascunho após salvar
+        }
       } else {
         const result = await addProduto(localProduct as Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>)
-        if (result) showSuccess('Produto criado!')
+        if (result) {
+          showSuccess('Produto criado!')
+          clearDraft() // Limpa rascunho após salvar
+        }
       }
       onClose()
     } catch {
@@ -107,6 +146,7 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
         const success = await removeProduto(localProduct.id)
         if (success) {
           showSuccess('Produto excluído!')
+          clearDraft() // Limpa rascunho após excluir
           onClose()
         }
       } catch {
@@ -121,65 +161,118 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
     setLocalProduct(updatedProduct)
   }
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl p-0">
-        {/* Elemento neutro para receber foco e evitar autofocus nos inputs */}
-        <div 
-          ref={neutralFocusRef}
-          tabIndex={-1}
-          style={{ 
-            position: 'absolute', 
-            width: '1px', 
-            height: '1px', 
-            padding: 0, 
-            margin: '-1px', 
-            overflow: 'hidden', 
-            clip: 'rect(0, 0, 0, 0)', 
-            whiteSpace: 'nowrap', 
-            border: 0 
-          }}
-          aria-hidden="true"
-        />
-        
-        <div className="bg-gradient-to-r from-[#201616] to-[#201616] text-white p-6 rounded-t-xl">
-          <DialogHeader>
-            <div>
-              <DialogTitle className="text-2xl font-bold">
-                {localProduct?.id ? 'Editar Produto' : 'Novo Produto'}
-              </DialogTitle>
-            </div>
-          </DialogHeader>
-        </div>
-        
-        <div className="p-6 space-y-6">
-          <ProductForm
-            product={localProduct}
-            onSave={handleFieldChange}
-            onDelete={localProduct?.id ? handleDelete : undefined}
-            onCancel={onClose}
-          />
+  const handleRestoreDraft = () => {
+    const restoredDraft = restoreDraft()
+    if (restoredDraft) {
+      // Convert ProductDraft to Partial<Produto>
+      setLocalProduct({
+        id: restoredDraft.id,
+        nome: restoredDraft.nome,
+        descricao: restoredDraft.descricao,
+        preco_normal: restoredDraft.preco_normal,
+        preco_promocional: restoredDraft.preco_promocional,
+        imagem_url: restoredDraft.imagem_url,
+        categoria: restoredDraft.categoria,
+        forma_venda: restoredDraft.forma_venda,
+        disponivel: restoredDraft.disponivel,
+        promocao: restoredDraft.promocao
+      })
+      dismissDraftNotification()
+    }
+  }
 
-          {/* Botões de Ação Principais */}
-          <div className="flex flex-col gap-3 pt-6 border-t">
-            <Button 
-              onClick={handleSave}
-              disabled={isSaving}
-              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3"
-            >
-              {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={onClose}
-              disabled={isSaving}
-              className="w-full sm:w-auto px-4 py-2 text-sm"
-            >
-              Cancelar
-            </Button>
+  const handleClearDraft = () => {
+    clearDraft()
+    setLocalProduct({
+      nome: '',
+      descricao: '',
+      preco_normal: 0,
+      preco_promocional: 0,
+      imagem_url: '',
+      categoria: '',
+      forma_venda: 'unidade',
+      disponivel: true,
+      promocao: false,
+    })
+    dismissDraftNotification()
+  }
+
+  const handleClose = () => {
+    // Se há alterações não salvas, pergunta antes de fechar
+    if (hasUnsavedChanges && !localProduct?.id) {
+      if (confirm('Você tem alterações não salvas. Tem certeza que deseja fechar?')) {
+        clearDraft()
+        onClose()
+      }
+    } else {
+      onClose()
+    }
+  }
+
+  return (
+    <>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl p-0">
+          <div className="bg-gradient-to-r from-[#201616] to-[#201616] text-white p-6 rounded-t-xl">
+            <DialogHeader>
+              <div>
+                <DialogTitle className="text-2xl font-bold">
+                  {localProduct?.id ? 'Editar Produto' : 'Novo Produto'}
+                </DialogTitle>
+                <DialogDescription className="text-gray-300">
+                  {localProduct?.id 
+                    ? 'Edite as informações do produto' 
+                    : 'Preencha as informações para adicionar um novo produto'
+                  }
+                  {hasUnsavedChanges && !localProduct?.id && (
+                    <div className="flex items-center gap-2 mt-2 text-yellow-300 text-sm">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                      <span>Rascunho sendo salvo automaticamente</span>
+                    </div>
+                  )}
+                </DialogDescription>
+              </div>
+            </DialogHeader>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+          
+          <div className="p-6 space-y-6">
+            <ProductForm
+              product={localProduct}
+              onSave={handleFieldChange}
+              onDelete={localProduct?.id ? handleDelete : undefined}
+              onCancel={handleClose}
+            />
+
+            {/* Botões de Ação Principais */}
+            <div className="flex flex-col gap-3 pt-6 border-t">
+              <Button 
+                onClick={handleSave}
+                disabled={isSaving}
+                className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3"
+              >
+                {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleClose}
+                disabled={isSaving}
+                className="w-full px-4 py-2 text-sm"
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Notificação de Rascunho */}
+      <DraftNotification
+        show={showDraftNotification}
+        onDismiss={dismissDraftNotification}
+        onRestore={handleRestoreDraft}
+        onClear={handleClearDraft}
+        lastSaved={draft?.lastSaved}
+      />
+    </>
   )
 }
