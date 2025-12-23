@@ -23,6 +23,7 @@ export function ProductList({
   borderColor,
   selectedCategory,
   searchTerm,
+  onSearchChange,
   onAddToCart
 }: ProductListProps) {
   // Filtrar produtos com base na pesquisa e categoria
@@ -44,13 +45,12 @@ export function ProductList({
         <>
           {/* Se "Todos" estiver selecionado, mostrar todos produtos juntos sem separar por categoria */}
           {selectedCategory === null ? (
-            <div className="space-y-12">
+            <>
               {/* Produtos em promoção */}
               {promotionalProducts.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <span style={{ fontSize: '16px' }}>🔥</span> 
-                    Promoções
+                <div style={{ marginBottom: '24px' }}>
+                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                    <span style={{ fontSize: '20px' }}>🔥</span> Promoções
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {promotionalProducts.map((product) => (
@@ -70,8 +70,10 @@ export function ProductList({
 
               {/* Produtos regulares */}
               {regularProducts.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-bold mb-4">Todos os Produtos</h3>
+                <div style={{ marginBottom: '24px' }}>
+                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>
+                    Todos os Produtos
+                  </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {regularProducts.map((product) => (
                       <ProductCard
@@ -87,15 +89,14 @@ export function ProductList({
                   </div>
                 </div>
               )}
-            </div>
+            </>
           ) : (
-            <div className="space-y-12">
+            <>
               {/* Promoções da categoria */}
               {promotionalProducts.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <span style={{ fontSize: '16px' }}>🔥</span> 
-                    Promoções - {selectedCategory}
+                <div style={{ marginBottom: '24px' }}>
+                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                    <span style={{ fontSize: '20px' }}>🔥</span> Promoções - {selectedCategory}
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {promotionalProducts.map((product) => (
@@ -115,8 +116,10 @@ export function ProductList({
 
               {/* Produtos regulares da categoria */}
               {regularProducts.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-bold mb-4">{selectedCategory}</h3>
+                <div style={{ marginBottom: '24px' }}>
+                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '18px' }}>
+                    {selectedCategory}
+                  </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {regularProducts.map((product) => (
                       <ProductCard
@@ -132,17 +135,17 @@ export function ProductList({
                   </div>
                 </div>
               )}
-            </div>
+            </>
           )}
         </>
       ) : (
         /* Mensagem quando não encontrar produtos */
-        <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <div style={{ width: '60px', height: '60px', backgroundColor: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
-            <Search style={{ width: '30px', height: '30px', color: '#9ca3af' }} />
+        <div style={{ textAlign: 'center', padding: '48px 0' }}>
+          <div style={{ width: '80px', height: '80px', backgroundColor: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+            <Search style={{ width: '40px', height: '40px', color: '#9ca3af' }} />
           </div>
-          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#1f2937', marginBottom: '6px' }}>Nenhum produto encontrado</h3>
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', marginBottom: '8px' }}>Nenhum produto encontrado</h3>
+          <p style={{ color: '#6b7280' }}>
             {searchTerm 
               ? `Nenhum produto encontrado para "${searchTerm}"`
               : 'Tente buscar por outro termo ou selecionar outra categoria'

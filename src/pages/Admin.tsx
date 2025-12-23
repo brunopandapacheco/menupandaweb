@@ -40,7 +40,6 @@ export default function Admin() {
         logoUrl={config?.logo_url}
         borderColor={config?.cor_borda || '#ec4899'}
         bannerGradient={config?.banner_gradient}
-        isAdmin={true} // Admin panel - show logout button on mobile
       />
       
       <div className="container mx-auto px-4 py-8">

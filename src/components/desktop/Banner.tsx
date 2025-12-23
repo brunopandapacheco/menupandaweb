@@ -2,12 +2,14 @@ interface DesktopBannerProps {
   logoUrl?: string
   borderColor: string
   bannerGradient?: string
+  isAdmin?: boolean
 }
 
 export function DesktopBanner({ 
   logoUrl, 
   borderColor, 
-  bannerGradient
+  bannerGradient,
+  isAdmin = false
 }: DesktopBannerProps) {
   return (
     <div 
