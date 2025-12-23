@@ -84,6 +84,12 @@ export default function CardapioPublico() {
         return
       }
 
+      console.log('🔍 [CardapioPublico] DesignSettings recebidos:', designData)
+      console.log('🔍 [CardapioPublico] hide_stars:', designData.hide_stars)
+      console.log('🔍 [CardapioPublico] hide_stars type:', typeof designData.hide_stars)
+      console.log('🔍 [CardapioPublico] hide_stars == true:', designData.hide_stars == true)
+      console.log('🔍 [CardapioPublico] hide_stars === true:', designData.hide_stars === true)
+
       setDesignSettings(designData)
       setConfiguracoes(configData)
       setProdutos(productsData || [])
@@ -184,8 +190,9 @@ export default function CardapioPublico() {
     )
   }
 
-  // Adicionar log para debug
-  console.log('🔍 [CardapioPublico] hide_stars:', designSettings?.hide_stars)
+  // Verificar se deve esconder as estrelas
+  const shouldHideStars = designSettings.hide_stars === true
+  console.log('🔍 [CardapioPublico] shouldHideStars:', shouldHideStars)
 
   return (
     <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
@@ -207,7 +214,7 @@ export default function CardapioPublico() {
         corNome={designSettings.cor_nome}
         avaliacaoMedia={configuracoes?.avaliacao_media}
         configuracoes={configuracoes}
-        hideStars={designSettings?.hide_stars || false} // Passar o valor do hide_stars
+        hideStars={shouldHideStars} // Passar o valor verificado
       />
 
       <div className={`container mx-auto px-4 py-4 ${device === 'desktop' ? 'pb-20' : 'pb-20'}`}>

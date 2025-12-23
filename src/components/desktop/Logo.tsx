@@ -103,6 +103,11 @@ export function DesktopLogo({
 
   const logoUrlWithTimestamp = getLogoUrlWithTimestamp(logoUrl)
 
+  // Debug para verificar o valor de hideStars
+  console.log('🔍 [DesktopLogo] hideStars:', hideStars)
+  console.log('🔍 [DesktopLogo] hideStars type:', typeof hideStars)
+  console.log('🔍 [DesktopLogo] hideStars === true:', hideStars === true)
+
   return (
     <div className="relative">
       <div 
@@ -208,8 +213,8 @@ export function DesktopLogo({
             {storeName}
           </h1>
           
-          {/* Renderizar estrelas apenas se hideStars for false */}
-          {!hideStars && (
+          {/* Renderizar estrelas apenas se hideStars for estritamente false */}
+          {hideStars === false && (
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="flex items-center gap-2">
                 {renderStars(avaliacaoMedia)}
