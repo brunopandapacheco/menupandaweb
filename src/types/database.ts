@@ -16,6 +16,7 @@ export interface DesignSettings {
   banner1_url?: string
   category_icons?: { [key: string]: string }
   codigo?: string
+  hide_stars?: boolean // Nova coluna para controlar exibição das estrelas
 }
 
 export interface Configuracoes {
