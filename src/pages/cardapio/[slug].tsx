@@ -184,6 +184,9 @@ export default function CardapioPublico() {
     )
   }
 
+  // Adicionar log para debug
+  console.log('🔍 [CardapioPublico] hide_stars:', designSettings?.hide_stars)
+
   return (
     <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
       {/* Navigation Menu - z-index médio, sempre visível */}
@@ -204,6 +207,7 @@ export default function CardapioPublico() {
         corNome={designSettings.cor_nome}
         avaliacaoMedia={configuracoes?.avaliacao_media}
         configuracoes={configuracoes}
+        hideStars={designSettings?.hide_stars || false} // Passar o valor do hide_stars
       />
 
       <div className={`container mx-auto px-4 py-4 ${device === 'desktop' ? 'pb-20' : 'pb-20'}`}>

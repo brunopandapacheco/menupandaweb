@@ -56,7 +56,10 @@ export default function DesignSettings() {
       if (designSettings.logo_url) setLogoUrl(designSettings.logo_url)
       if (designSettings.banner1_url) setBannerUrl(designSettings.banner1_url)
       if (designSettings.categorias) setMainCategories(designSettings.categorias)
-      if (designSettings.hide_stars !== undefined) setHideStars(designSettings.hide_stars) // Carregar estado das estrelas
+      if (designSettings.hide_stars !== undefined) {
+        console.log('🔍 [DesignSettings] Carregando hide_stars do banco:', designSettings.hide_stars)
+        setHideStars(designSettings.hide_stars) // Carregar estado das estrelas
+      }
     }
   }, [designSettings])
 
@@ -91,15 +94,25 @@ export default function DesignSettings() {
     const settingsToUpdate: any = {}
     if (nomeLoja?.trim()) settingsToUpdate.nome_loja = nomeLoja.trim()
     if (descricaoLoja?.trim()) settingsToUpdate.descricao_loja = descricaoLoja.trim()
-    if (hideStars !== undefined) settingsToUpdate.hide_stars = hideStars // Salvar estado das estrelas
+    if (hideStars !== undefined) {
+      console.log('🔍 [DesignSettings] Salvando hide_stars:', hideStars)
+      settingsToUpdate.hide_stars = hideStars // Salvar estado das estrelas
+    }
 
     if (Object.keys(settingsToUpdate).length === 0) {
       showError('Por favor, preencha pelo menos um campo')
       return
     }
 
+    console.log('🔍 [DesignSettings] Enviando para salvar:', settingsToUpdate)
     const success = await saveDesignSettings(settingsToUpdate)
-    success ? showSuccess('Atualizado com sucesso!') : showError('Erro ao salvar configurações')
+    if (success) {
+      console.log('✅ [DesignSettings] Salvo com sucesso!')
+      showSuccess('Atualizado com sucesso!')
+    } else {
+      console.error('❌ [DesignSettings] Erro ao salvar')
+      showError('Erro ao salvar configurações')
+    }
   }
 
   const saveWhatsApp = async () => {
@@ -334,7 +347,11 @@ export default function DesignSettings() {
                           </label>
                           <div className="flex items-center justify-center">
                             <button
-                              onClick={() => setHideStars(!hideStars)}
+                              onClick={() => {
+                                const newValue = !hideStars
+                                console.log('🔍 [DesignSettings] Toggle hideStars para:', newValue)
+                                setHideStars(newValue)
+                              }}
                               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                                 hideStars ? 'bg-pink-600' : 'bg-gray-200'
                               }`}

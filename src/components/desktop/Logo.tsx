@@ -21,6 +21,7 @@ interface LogoProps {
     complemento: string
   }
   configuracoes?: any
+  hideStars?: boolean // Nova prop para controlar exibição das estrelas
 }
 
 export function DesktopLogo({ 
@@ -33,7 +34,8 @@ export function DesktopLogo({
   isEditable = false,
   onLogoChange,
   endereco,
-  configuracoes
+  configuracoes,
+  hideStars = false // Valor padrão false
 }: LogoProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [showLocationDialog, setShowLocationDialog] = useState(false)
@@ -206,14 +208,17 @@ export function DesktopLogo({
             {storeName}
           </h1>
           
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="flex items-center gap-2">
-              {renderStars(avaliacaoMedia)}
+          {/* Renderizar estrelas apenas se hideStars for false */}
+          {!hideStars && (
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="flex items-center gap-2">
+                {renderStars(avaliacaoMedia)}
+              </div>
+              <span className="text-lg font-semibold text-gray-700">
+                {avaliacaoMedia}/5.0
+              </span>
             </div>
-            <span className="text-lg font-semibold text-gray-700">
-              {avaliacaoMedia}/5.0
-            </span>
-          </div>
+          )}
           
           <p className="text-gray-600 text-lg mb-4">
             {storeDescription}
