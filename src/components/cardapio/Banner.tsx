@@ -2,14 +2,12 @@ interface BannerProps {
   logoUrl?: string
   borderColor: string
   bannerGradient?: string
-  isAdmin?: boolean
 }
 
 export function Banner({ 
   logoUrl, 
   borderColor, 
-  bannerGradient,
-  isAdmin = false
+  bannerGradient
 }: BannerProps) {
   return (
     <div 

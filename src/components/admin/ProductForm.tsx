@@ -27,43 +27,10 @@ const saleTypes = [
   { value: 'tamanho-p', label: 'Tam P' },
   { value: 'tamanho-m', label: 'Tam M' },
   { value: 'tamanho-g', label: 'Tam G' },
+  { value: 'tamanho-xg', label: 'Tam XG' }, // NOVA OPÇÃO
   { value: 'kit-caixa', label: 'Kit / Caixa' },
   { value: 'sob-encomenda', label: 'Sob encomenda' },
   { value: 'outros', label: 'Outros' }
-]
-
-// Opções pré-definidas de massa e recheio
-const massasPredefinidas = [
-  'Massa branca tradicional',
-  'Massa de chocolate',
-  'Massa de baunilha',
-  'Massa de red velvet',
-  'Massa de limão',
-  'Massa de maracujá',
-  'Massa de cenoura',
-  'Massa de coco'
-]
-
-const recheiosPredefinidos = [
-  'Brigadeiro tradicional',
-  'Brigadeiro de ninho',
-  'Brigadeiro de morango',
-  'Brigadeiro de Ovomaltine',
-  'Beijinho',
-  'Prestígio',
-  'Morango',
-  'Chocolate ao leite',
-  'Chocolate belga',
-  'Doce de leite',
-  'Coco',
-  'Limão',
-  'Maracujá',
-  'Nutella',
-  'Goiabada',
-  'Chantilly',
-  'Creme de avelã',
-  'Creme de castanha',
-  'Merengue'
 ]
 
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
@@ -74,13 +41,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
   const [categories, setCategories] = useState<string[]>([])
   const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
   const [loadingCategories, setLoadingCategories] = useState(true)
-  
-  // Estados para personalização de bolo
-  const [habilitarPersonalizacao, setHabilitarPersonalizacao] = useState(false)
-  const [massasDisponiveis, setMassasDisponiveis] = useState<string[]>([])
-  const [recheiosDisponiveis, setRecheiosDisponiveis] = useState<string[]>([])
-  const [novaMassa, setNovaMassa] = useState('')
-  const [novoRecheio, setNovoRecheio] = useState('')
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -122,15 +82,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
 
     fetchCategories()
   }, [])
-
-  // Carregar dados de personalização quando editar produto
-  useEffect(() => {
-    if (product) {
-      setHabilitarPersonalizacao(product.habilitar_personalizacao || false)
-      setMassasDisponiveis(product.massas_disponiveis || [])
-      setRecheiosDisponiveis(product.recheios_disponiveis || [])
-    }
-  }, [product])
 
   const handleImageUpload = async (file: File) => {
     const allowedFormats = ['image/png', 'image/jpeg', 'image/webp']
@@ -204,17 +155,22 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       return
     }
 
+    // Prepara a categoria pendente com o ícone selecionado
     setPendingCategory({
       name: trimmedName,
-      icon: selectedIcon
+      icon: selectedIcon // Usa o ícone selecionado pelo usuário
     })
 
+    // Adiciona à lista de categorias localmente
     setCategories(prev => [...prev, trimmedName].sort())
+
+    // Define a categoria no produto
     handleFieldChange('categoria', trimmedName)
     
+    // Limpa o formulário
     setNewCategoryName('')
-    setIsCreatingNewCategory(false)
     setSelectedIcon('/icons/1.png')
+    setPendingCategory(null)
     
     showSuccess('Categoria criada e selecionada!')
   }
@@ -254,34 +210,12 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     })
   }
 
-  // Funções para gerenciar massas
-  const adicionarMassa = () => {
-    if (novaMassa.trim() && !massasDisponiveis.includes(novaMassa.trim())) {
-      setMassasDisponiveis([...massasDisponiveis, novaMassa.trim()])
-      setNovaMassa('')
-    }
-  }
-
-  const removerMassa = (massa: string) => {
-    setMassasDisponiveis(massasDisponiveis.filter(m => m !== massa))
-  }
-
-  // Funções para gerenciar recheios
-  const adicionarRecheio = () => {
-    if (novoRecheio.trim() && !recheiosDisponiveis.includes(novoRecheio.trim())) {
-      setRecheiosDisponiveis([...recheiosDisponiveis, novoRecheio.trim()])
-      setNovoRecheio('')
-    }
-  }
-
-  const removerRecheio = (recheio: string) => {
-    setRecheiosDisponiveis(recheiosDisponiveis.filter(r => r !== recheio))
-  }
-
+  // Função para criar a categoria no banco e salvar o ícone
   const createPendingCategory = async () => {
     if (!pendingCategory) return
 
     try {
+      // 1. Criar a categoria no banco de dados
       const { error: categoryError } = await supabase
         .from('categorias')
         .insert({ 
@@ -291,32 +225,32 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       
       if (categoryError) throw categoryError
       
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Usuário não autenticado')
-      
+      // 2. Obter os design settings atuais
       const { data: designSettings, error: designError } = await supabase
         .from('design_settings')
         .select('category_icons')
-        .eq('user_id', user.id)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
         .single()
       
       if (designError && designError.code !== 'PGRST116') {
         throw designError
       }
       
+      // 3. Atualizar os ícones das categorias
       const currentIcons = designSettings?.category_icons || {}
       const updatedIcons = {
         ...currentIcons,
-        [pendingCategory.name]: pendingCategory.icon
+        [pendingCategory.name]: pendingCategory.icon // Salva o ícone selecionado
       }
       
       const { error: updateError } = await supabase
         .from('design_settings')
         .update({ category_icons: updatedIcons })
-        .eq('user_id', user.id)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
       
       if (updateError) throw updateError
       
+      // 4. Atualizar a lista de categorias
       const { data: updatedCategories, error: fetchError } = await supabase
         .from('categorias')
         .select('nome')
@@ -334,6 +268,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     }
   }
 
+  // Efeito para criar a categoria pendente quando o produto for salvo
   useEffect(() => {
     if (product?.id && pendingCategory) {
       createPendingCategory()
@@ -348,18 +283,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     setSelectedIcon(iconPath)
     setIsIconModalOpen(false)
   }
-
-  // Salvar opções de personalização
-  useEffect(() => {
-    if (product) {
-      onSave({
-        ...product,
-        habilitar_personalizacao,
-        massas_disponiveis: massasDisponiveis,
-        recheios_disponiveis: recheiosDisponiveis
-      })
-    }
-  }, [habilitarPersonalizacao, massasDisponiveis, recheiosDisponiveis])
 
   return (
     <div className="space-y-6">
@@ -496,7 +419,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   disabled={!newCategoryName.trim()}
                   className="bg-pink-600 hover:bg-pink-700 flex-1"
                 >
-                  <Check className="w-4 h-4 mr-1" />
+                  <Check className="w-3 h-3 mr-1" />
                   Criar
                 </Button>
                 <Button
@@ -507,7 +430,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                     setSelectedIcon('/icons/1.png')
                   }}
                 >
-                  <X className="w-4 h-4 mr-1" />
+                  <X className="w-3 h-3 mr-1" />
                   Cancelar
                 </Button>
               </div>
@@ -543,138 +466,6 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
           </SelectContent>
         </Select>
       </div>
-
-      {/* Seção de Personalização para Bolos */}
-      {(product?.categoria?.toLowerCase().includes('bolo') || product?.categoria?.toLowerCase().includes('torta')) && (
-        <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-purple-800">🎂 Personalização de Bolo</h3>
-            <Switch
-              checked={habilitarPersonalizacao}
-              onCheckedChange={setHabilitarPersonalizacao}
-              className="data-[state=checked]:bg-purple-600"
-            />
-          </div>
-
-          {habilitarPersonalizacao && (
-            <div className="space-y-6">
-              {/* Massas Disponíveis */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-purple-700">Massas Disponíveis</Label>
-                <div className="space-y-2">
-                  {massasDisponiveis.map((massa, index) => (
-                    <div key={index} className="flex items-center gap-2 bg-white p-2 rounded-lg border border-purple-200">
-                      <span className="flex-1 text-sm">{massa}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removerMassa(massa)}
-                        className="text-red-500 hover:text-red-700 h-6 w-6 p-0"
-                      >
-                        <X className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
-                  
-                  <div className="flex gap-2">
-                    <Input
-                      value={novaMassa}
-                      onChange={(e) => setNovaMassa(e.target.value)}
-                      placeholder="Adicionar nova massa..."
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      onClick={adicionarMassa}
-                      disabled={!novaMassa.trim()}
-                      className="bg-purple-600 hover:bg-purple-700"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-
-                  {/* Sugestões de massas */}
-                  <div className="space-y-2">
-                    <Label className="text-xs text-purple-600">Sugestões:</Label>
-                    <div className="flex flex-wrap gap-1">
-                      {massasPredefinidas.filter(massa => !massasDisponiveis.includes(massa)).map((massa, index) => (
-                        <Button
-                          key={index}
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setNovaMassa(massa)}
-                          className="text-xs h-6 border-purple-300 text-purple-600 hover:bg-purple-50"
-                        >
-                          + {massa}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recheios Disponíveis */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-purple-700">Recheios Disponíveis</Label>
-                <div className="space-y-2">
-                  {recheiosDisponiveis.map((recheio, index) => (
-                    <div key={index} className="flex items-center gap-2 bg-white p-2 rounded-lg border border-purple-200">
-                      <span className="flex-1 text-sm">{recheio}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removerRecheio(recheio)}
-                        className="text-red-500 hover:text-red-700 h-6 w-6 p-0"
-                      >
-                        <X className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
-                  
-                  <div className="flex gap-2">
-                    <Input
-                      value={novoRecheio}
-                      onChange={(e) => setNovoRecheio(e.target.value)}
-                      placeholder="Adicionar novo recheio..."
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      onClick={adicionarRecheio}
-                      disabled={!novoRecheio.trim()}
-                      className="bg-purple-600 hover:bg-purple-700"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-
-                  {/* Sugestões de recheios */}
-                  <div className="space-y-2">
-                    <Label className="text-xs text-purple-600">Sugestões:</Label>
-                    <div className="flex flex-wrap gap-1">
-                      {recheiosPredefinidos.filter(recheio => !recheiosDisponiveis.includes(recheio)).map((recheio, index) => (
-                        <Button
-                          key={index}
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setNovoRecheio(recheio)}
-                          className="text-xs h-6 border-purple-300 text-purple-600 hover:bg-purple-50"
-                        >
-                          + {recheio}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       <div className="bg-green-50 rounded-xl p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

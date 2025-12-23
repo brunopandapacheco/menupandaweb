@@ -16,7 +16,7 @@ export interface DesignSettings {
   banner1_url?: string
   category_icons?: { [key: string]: string }
   codigo?: string
-  hide_stars?: boolean
+  hide_stars?: boolean // Nova coluna para controlar exibição das estrelas
 }
 
 export interface Configuracoes {
@@ -40,9 +40,7 @@ export interface Produto {
   promocao: boolean
   created_at: string
   updated_at: string
-  habilitar_personalizacao?: boolean
-  massas_disponiveis?: string[]
-  recheios_disponiveis?: string[]
 }
 
+// Only export User from supabase, others are already exported as interfaces above
 export type { User }

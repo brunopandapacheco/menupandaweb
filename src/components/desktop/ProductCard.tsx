@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Heart } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { ProductModal } from '../cart/ProductModal'
-import { ProductCustomizationModal } from '../cardapio/ProductCustomizationModal'
 import { useCart } from '@/hooks/useCart'
 import { Produto } from '@/types/database'
 
@@ -12,7 +11,7 @@ interface DesktopProductCardProps {
   onToggleFavorite: (productId: string) => void
   backgroundColor: string
   borderColor?: string
-  onAddToCart?: (product: Produto, customization?: { massa: string; recheio: string }) => void
+  onAddToCart?: (product: Produto) => void
 }
 
 const categoryIcons = {
@@ -33,7 +32,6 @@ export function DesktopProductCard({
   onAddToCart
 }: DesktopProductCardProps) {
   const [showModal, setShowModal] = useState(false)
-  const [showCustomizationModal, setShowCustomizationModal] = useState(false)
   const { addItem } = useCart()
 
   const getFirstImage = (imagemUrl?: string): string | null => {
@@ -45,38 +43,8 @@ export function DesktopProductCard({
   const firstImage = getFirstImage(product.imagem_url)
 
   const handleAddToCart = () => {
-    // Verificar se é um bolo ou torta para mostrar personalização
-    const isBoloOrTorta = product.categoria?.toLowerCase().includes('bolo') || 
-                           product.categoria?.toLowerCase().includes('torta')
-    
-    if (isBoloOrTorta) {
-      setShowCustomizationModal(true)
-    } else {
-      // Para outros produtos, adiciona diretamente ao carrinho
-      console.log('🛒 DesktopProductCard: Adicionando produto direto ao carrinho:', product.nome)
-      setShowModal(true)
-    }
-  }
-
-  const handleCustomizationConfirm = (customization: { massa: string; recheio: string }) => {
-    // Adiciona ao carrinho com personalização
-    const cartItem = {
-      id: product.id,
-      name: `${product.nome} (${customization.massa} / ${customization.recheio})`,
-      description: `${product.descricao}\n\n🎂 Massa: ${customization.massa}\n🍫 Recheio: ${customization.recheio}`,
-      price: product.preco_normal,
-      imageUrl: product.imagem_url,
-      saleType: product.forma_venda as any,
-      quantity: 1,
-      observations: `Massa: ${customization.massa} | Recheio: ${customization.recheio}`
-    }
-    
-    addItem(cartItem)
-    
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cartItem }))
-      setShowCustomizationModal(false)
-    }, 50)
+    console.log('🛒 DesktopProductCard: Abrindo modal para produto:', product.nome)
+    setShowModal(true)
   }
 
   return (
@@ -139,15 +107,6 @@ export function DesktopProductCard({
             <p className="text-gray-600 text-base mb-4 line-clamp-3 leading-relaxed flex-1">
               {product.descricao}
             </p>
-            
-            {/* Indicador de personalização para bolos */}
-            {(product.categoria?.toLowerCase().includes('bolo') || product.categoria?.toLowerCase().includes('torta')) && (
-              <div className="mb-4">
-                <span className="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-medium">
-                  🎂 Personalizável
-                </span>
-              </div>
-            )}
             
             {/* Preço e botão - sempre na parte inferior */}
             <div className="mt-auto">
@@ -224,19 +183,11 @@ export function DesktopProductCard({
         </div>
       </div>
 
-      {/* Modal do produto (para não-bolos) */}
+      {/* Modal do produto */}
       <ProductModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         product={product}
-      />
-
-      {/* Modal de personalização (para bolos) */}
-      <ProductCustomizationModal
-        isOpen={showCustomizationModal}
-        onClose={() => setShowCustomizationModal(false)}
-        product={product}
-        onConfirm={handleCustomizationConfirm}
       />
     </>
   )
