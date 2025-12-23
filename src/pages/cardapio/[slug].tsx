@@ -45,7 +45,6 @@ export default function CardapioPublico() {
 
   useEffect(() => {
     const handleConfigUpdate = () => {
-      console.log('🔄 [CardapioPublico] handleConfigUpdate disparado')
       setLastUpdate(Date.now())
       if (slug) {
         const codigoLower = slug.toLowerCase()
@@ -57,7 +56,6 @@ export default function CardapioPublico() {
     
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'pandamenu-config-updated') {
-        console.log('🔄 [CardapioPublico] Storage change detectado')
         handleConfigUpdate()
       }
     }
@@ -75,8 +73,6 @@ export default function CardapioPublico() {
       setLoading(true)
       setError(null)
       
-      console.log('🔍 [CardapioPublico] Iniciando loadData para código:', codigo)
-      
       const [designData, configData, productsData] = await Promise.all([
         supabaseService.getDesignSettingsByCodigo(codigo),
         supabaseService.getConfiguracoesByCodigo(codigo),
@@ -90,13 +86,10 @@ export default function CardapioPublico() {
 
       console.log('📊 [CardapioPublico] Dados recebidos:')
       console.log('  - DesignSettings completo:', designData)
-      console.log('  - hide_stars (bruto):', designData.hide_stars)
-      console.log('  - hide_stars (typeof):', typeof designData.hide_stars)
-      console.log('  - hide_stars (JSON.stringify):', JSON.stringify(designData.hide_stars))
+      console.log('  - hide_stars:', designData.hide_stars)
+      console.log('  - hide_stars type:', typeof designData.hide_stars)
+      console.log('  - hide_stars == true:', designData.hide_stars == true)
       console.log('  - hide_stars === true:', designData.hide_stars === true)
-      console.log('  - hide_stars === false:', designData.hide_stars === false)
-      console.log('  - !!hide_stars:', !!designData.hide_stars)
-      console.log('  - !hide_stars:', !designData.hide_stars)
 
       setDesignSettings(designData)
       setConfiguracoes(configData)
@@ -198,7 +191,7 @@ export default function CardapioPublico() {
     )
   }
 
-  // Verificar se deve esconder as estrelas - DEBUG DETALHADO
+  // Verificar se deve esconder as estrelas
   const shouldHideStars = designSettings.hide_stars === true
   console.log('🔍 [CardapioPublico] Análise detalhada do hide_stars:')
   console.log('  - Valor bruto:', designSettings.hide_stars)
@@ -206,6 +199,11 @@ export default function CardapioPublico() {
   console.log('  - Comparação === true:', designSettings.hide_stars === true)
   console.log('  - Comparação === false:', designSettings.hide_stars === false)
   console.log('  - shouldHideStars final:', shouldHideStars)
+
+  // LOG IMPORTANTE: Verificar se a prop está sendo passada
+  console.log('🔍 [CardapioPublico] Props sendo passadas para LogoComponent:')
+  console.log('  - hideStars:', shouldHideStars)
+  console.log('  - hideStars type:', typeof shouldHideStars)
 
   return (
     <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
