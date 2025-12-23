@@ -20,16 +20,16 @@ interface ProductFormProps {
 }
 
 const saleTypes = [
-  { value: 'unidade', label: '🍰 Unidade' },
-  { value: 'fatia', label: '🍰 Fatia' },
-  { value: 'kg', label: '⚖️ Kg' },
-  { value: 'cento', label: '💯 Cento' },
-  { value: 'tamanho-p', label: '📦 Tamanho P' },
-  { value: 'tamanho-m', label: '📦 Tamanho M' },
-  { value: 'tamanho-g', label: '📦 Tamanho G' },
-  { value: 'kit-caixa', label: '🎁 Kit / Caixa' },
-  { value: 'sob-encomenda', label: '📝 Sob encomenda' },
-  { value: 'outros', label: '📌 Outros' }
+  { value: 'unidade', label: 'Unidade' },
+  { value: 'fatia', label: 'Fatia' },
+  { value: 'kg', label: 'Kg' },
+  { value: 'cento', label: 'Cento' },
+  { value: 'tamanho-p', label: 'Tam P' },
+  { value: 'tamanho-m', label: 'Tam M' },
+  { value: 'tamanho-g', label: 'Tam G' },
+  { value: 'kit-caixa', label: 'Kit / Caixa' },
+  { value: 'sob-encomenda', label: 'Sob encomenda' },
+  { value: 'outros', label: 'Outros' }
 ]
 
 export function ProductForm({ product, onSave, onDelete, onCancel }: ProductFormProps) {
