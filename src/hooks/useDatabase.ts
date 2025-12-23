@@ -39,12 +39,26 @@ export function useDatabase() {
       // Atualiza o cache com os dados mais recentes
       if (designData) {
         updateCache('designSettings', designData)
+        // Disparar evento para notificar o cardápio público sobre a mudança
+        window.dispatchEvent(new CustomEvent('configUpdated', { 
+          detail: { type: 'designSettings', data: designData } 
+        }))
+        // Também atualizar localStorage para cross-tab communication
+        localStorage.setItem('pandamenu-config-updated', Date.now().toString())
       }
       if (configData) {
         updateCache('configuracoes', configData)
+        window.dispatchEvent(new CustomEvent('configUpdated', { 
+          detail: { type: 'configuracoes', data: configData } 
+        }))
+        localStorage.setItem('pandamenu-config-updated', Date.now().toString())
       }
       if (productsData) {
         updateCache('produtos', productsData || [])
+        window.dispatchEvent(new CustomEvent('configUpdated', { 
+          detail: { type: 'produtos', data: productsData } 
+        }))
+        localStorage.setItem('pandamenu-config-updated', Date.now().toString())
       }
       
     } catch (error) {
@@ -74,6 +88,13 @@ export function useDatabase() {
       const currentSettings = getCache('designSettings')
       const updatedSettings = { ...currentSettings, ...settings }
       updateCache('designSettings', updatedSettings)
+      
+      // Disparar evento para atualizar o cardápio público imediatamente
+      window.dispatchEvent(new CustomEvent('configUpdated', { 
+        detail: { type: 'designSettings', data: updatedSettings } 
+      }))
+      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
+      
       return true;
     } else {
       console.error('❌ [saveDesignSettings] Erro ao salvar design settings. Resultado:', result);
@@ -93,6 +114,12 @@ export function useDatabase() {
       const currentConfig = getCache('configuracoes')
       const updatedConfig = { ...currentConfig, ...config }
       updateCache('configuracoes', updatedConfig)
+      
+      // Disparar evento para atualizar o cardápio público
+      window.dispatchEvent(new CustomEvent('configUpdated', { 
+        detail: { type: 'configuracoes', data: updatedConfig } 
+      }))
+      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
     }
     
     return success
@@ -109,6 +136,11 @@ export function useDatabase() {
     if (result) {
       const currentProducts = getCache('produtos') || []
       updateCache('produtos', [result, ...currentProducts])
+      
+      window.dispatchEvent(new CustomEvent('configUpdated', { 
+        detail: { type: 'produtos', data: [result, ...currentProducts] } 
+      }))
+      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
     }
     
     return result
@@ -128,6 +160,11 @@ export function useDatabase() {
         p.id === id ? { ...p, ...product } : p
       )
       updateCache('produtos', updatedProducts)
+      
+      window.dispatchEvent(new CustomEvent('configUpdated', { 
+        detail: { type: 'produtos', data: updatedProducts } 
+      }))
+      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
     }
     
     return success
@@ -145,6 +182,11 @@ export function useDatabase() {
       const currentProducts = getCache('produtos') || []
       const updatedProducts = currentProducts.filter(p => p.id !== id)
       updateCache('produtos', updatedProducts)
+      
+      window.dispatchEvent(new CustomEvent('configUpdated', { 
+        detail: { type: 'produtos', data: updatedProducts } 
+      }))
+      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
     }
     
     return success
