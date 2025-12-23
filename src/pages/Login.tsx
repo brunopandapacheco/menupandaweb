@@ -1,8 +1,9 @@
 import { LoginForm } from '@/components/auth/LoginForm'
+import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect } from 'react'
-import { Mail, MessageCircle } from 'lucide-react'
+import { Mail, MessageCircle, ArrowRight } from 'lucide-react'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -45,6 +46,24 @@ export default function Login() {
             <LoginForm onSuccess={() => {
               navigate('/admin')
             }} />
+
+            {/* Link para login por email */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="text-center">
+                <p className="text-gray-600 text-sm mb-3">
+                  Ou acesse usando apenas seu email
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/login-email')}
+                  className="w-full text-blue-600 border-blue-300 hover:bg-blue-50 hover:border-blue-400"
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Login por Email
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

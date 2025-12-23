@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { CacheProvider } from "@/hooks/useCache";
 import Login from "./pages/Login";
+import LoginEmail from "./pages/LoginEmail";
 import AdminLayout from "./pages/admin/AdminLayout";
 import CardapioPublico from "./pages/cardapio/[slug]";
 import Cadastro from "./pages/cardapio/Cadastro";
@@ -82,6 +83,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/login-email" element={<LoginEmail />} />
                 <Route path="/cardapio/cadastro" element={<Cadastro />} />
                 <Route path="/admin" element={<AdminLayout />} />
                 {/* ROTA DO CARDÁPIO PÚBLICO */}
