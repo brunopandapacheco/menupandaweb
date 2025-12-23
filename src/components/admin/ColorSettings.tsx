@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Sparkles, CheckCircle, Palette } from 'lucide-react'
@@ -57,6 +57,10 @@ export function ColorSettings({
   const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
   const [customBorderColor, setCustomBorderColor] = useState(corBorda)
   const [customNameColor, setCustomNameColor] = useState(corNome)
+  
+  // Refs for native color pickers
+  const borderColorInputRef = useRef<HTMLInputElement>(null)
+  const nameColorInputRef = useRef<HTMLInputElement>(null)
 
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
@@ -66,6 +70,15 @@ export function ColorSettings({
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
     onCorNomeChange(color)
+  }
+
+  // Functions to open native color pickers
+  const openBorderColorPicker = () => {
+    borderColorInputRef.current?.click()
+  }
+
+  const openNameColorPicker = () => {
+    nameColorInputRef.current?.click()
   }
 
   return (
@@ -127,9 +140,9 @@ export function ColorSettings({
               </button>
             ))}
             
-            {/* Botão Personalizar */}
+            {/* Botão Personalizar - agora abre o color picker nativo */}
             <button
-              onClick={() => setShowCustomBorderPicker(!showCustomBorderPicker)}
+              onClick={openBorderColorPicker}
               className={
                 'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                 (showCustomBorderPicker 
@@ -147,6 +160,15 @@ export function ColorSettings({
               </div>
             </button>
           </div>
+
+          {/* Hidden native color picker */}
+          <input
+            ref={borderColorInputRef}
+            type="color"
+            value={customBorderColor}
+            onChange={(e) => handleCustomBorderColor(e.target.value)}
+            className="hidden"
+          />
 
           {showCustomBorderPicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
@@ -222,9 +244,9 @@ export function ColorSettings({
               </button>
             ))}
             
-            {/* Botão Personalizar */}
+            {/* Botão Personalizar - agora abre o color picker nativo */}
             <button
-              onClick={() => setShowCustomNamePicker(!showCustomNamePicker)}
+              onClick={openNameColorPicker}
               className={
                 'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                 (showCustomNamePicker 
@@ -242,6 +264,15 @@ export function ColorSettings({
               </div>
             </button>
           </div>
+
+          {/* Hidden native color picker */}
+          <input
+            ref={nameColorInputRef}
+            type="color"
+            value={customNameColor}
+            onChange={(e) => handleCustomNameColor(e.target.value)}
+            className="hidden"
+          />
 
           {showCustomNamePicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
