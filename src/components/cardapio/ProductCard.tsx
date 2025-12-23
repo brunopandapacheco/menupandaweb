@@ -23,6 +23,25 @@ const categoryIcons = {
   'Bebidas': '🥤'
 }
 
+// Função para abreviar o tipo de venda
+const abbreviateFormaVenda = (formaVenda: string): string => {
+  const abbreviations: { [key: string]: string } = {
+    'tamanho-p': 'Tam P',
+    'tamanho-m': 'Tam M',
+    'tamanho-g': 'Tam G',
+    'tamanho-xg': 'Tam XG',
+    'kit-caixa': 'Kit',
+    'sob-encomenda': 'Sob Encomenda',
+    'unidade': 'Un',
+    'fatia': 'Fatia',
+    'kg': 'Kg',
+    'cento': 'Cento',
+    'outros': 'Outros'
+  }
+  
+  return abbreviations[formaVenda] || formaVenda
+}
+
 export function ProductCard({ 
   product, 
   isFavorite, 
@@ -133,7 +152,7 @@ export function ProductCard({
                           pointerEvents: 'none'
                         }}
                       >
-                        {product.forma_venda}
+                        {abbreviateFormaVenda(product.forma_venda)}
                       </Badge>
                     </div>
                   </div>
@@ -152,7 +171,7 @@ export function ProductCard({
                         pointerEvents: 'none'
                       }}
                     >
-                      {product.forma_venda}
+                      {abbreviateFormaVenda(product.forma_venda)}
                     </Badge>
                   </div>
                 )}
