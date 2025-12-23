@@ -61,35 +61,7 @@ export class SupabaseService {
     }
   }
 
-  // Upload de logo com qualidade máxima (95%)
-  async uploadLogo(file: File, fileName: string) {
-    try {
-      console.log('🎨 Iniciando compressão de logo com qualidade máxima...')
-      
-      const compressedFile = await compressImage(file, COMPRESS_CONFIG.logo)
-      
-      const { data, error } = await supabase.storage
-        .from('logos')
-        .upload(fileName, compressedFile, {
-          cacheControl: '3600',
-          upsert: false
-        })
-
-      if (error) throw error
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('logos')
-        .getPublicUrl(fileName)
-
-      console.log('✅ Logo enviado com qualidade máxima!')
-      return publicUrl
-    } catch (error: any) {
-      console.error('❌ Erro no upload do logo:', error)
-      throw new Error(error.message || 'Erro no upload do logo');
-    }
-  }
-
-  // Upload de logo com Blob (corrigido)
+  // Upload de logo com qualidade máxima (95%) - Função unificada que aceita File ou Blob
   async uploadLogo(file: File | Blob, fileName: string) {
     try {
       console.log('🎨 Iniciando compressão de logo com qualidade máxima...')
@@ -100,7 +72,7 @@ export class SupabaseService {
         fileToCompress = new File([file], fileName, { type: 'image/webp' })
       }
       
-      const compressedFile = await compressImage(fileToCompress, COMPRESS_CONFIG.logo)
+      const compressedFile = await compressImage(fileToCompress as File, COMPRESS_CONFIG.logo)
       
       const { data, error } = await supabase.storage
         .from('logos')
