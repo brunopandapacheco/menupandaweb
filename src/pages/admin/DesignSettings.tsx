@@ -47,7 +47,20 @@ export default function DesignSettings() {
   const [mainCategories, setMainCategories] = useState<string[]>([])
 
   useEffect(() => {
+    console.log('🔍 [DesignSettings] useEffect - designSettings mudou:', designSettings)
+    
     if (designSettings) {
+      console.log('🔍 [DesignSettings] Carregando valores do designSettings:')
+      console.log('  - banner_gradient:', designSettings.banner_gradient)
+      console.log('  - cor_borda:', designSettings.cor_borda)
+      console.log('  - cor_nome:', designSettings.cor_nome)
+      console.log('  - nome_loja:', designSettings.nome_loja)
+      console.log('  - descricao_loja:', designSettings.descricao_loja)
+      console.log('  - logo_url:', designSettings.logo_url)
+      console.log('  - banner1_url:', designSettings.banner1_url)
+      console.log('  - categorias:', designSettings.categorias)
+      console.log('  - hide_stars:', designSettings.hide_stars)
+      
       if (designSettings.banner_gradient) setBannerGradient(designSettings.banner_gradient)
       if (designSettings.cor_borda) setCorBorda(designSettings.cor_borda)
       if (designSettings.cor_nome) setCorNome(designSettings.cor_nome)
@@ -59,7 +72,13 @@ export default function DesignSettings() {
       if (designSettings.hide_stars !== undefined) {
         console.log('🔍 [DesignSettings] Carregando hide_stars do banco:', designSettings.hide_stars)
         setHideStars(designSettings.hide_stars) // Carregar estado das estrelas
+      } else {
+        console.log('🔍 [DesignSettings] hide_stars não definido, usando padrão false')
+        setHideStars(false)
       }
+    } else {
+      console.log('🔍 [DesignSettings] designSettings é null, usando valores padrão')
+      setHideStars(false)
     }
   }, [designSettings])
 

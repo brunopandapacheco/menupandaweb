@@ -254,7 +254,7 @@ export class SupabaseService {
       
       return resultData;
     } catch (error: any) {
-      console.error('❌ Erro em ensureDesignSettingsWithCode:', error);
+      console.error('❌ Erro em ensureDesignSettingsWithCode:', error)
       throw new Error(error.message || 'Erro desconhecido ao garantir design settings com código');
     }
   }
@@ -488,6 +488,8 @@ export class SupabaseService {
   // Métodos por código
   async getDesignSettingsByCodigo(codigo: string) {
     try {
+      console.log('🔍 [getDesignSettingsByCodigo] Buscando por código:', codigo)
+      
       const { data, error } = await supabase
         .from('design_settings')
         .select('*')
@@ -495,24 +497,32 @@ export class SupabaseService {
         .single()
 
       if (error) {
-        console.error('❌ Erro ao buscar design settings por código:', error)
+        console.error('❌ [getDesignSettingsByCodigo] Erro ao buscar design settings por código:', error)
         throw error
       }
       
+      console.log('✅ [getDesignSettingsByCodigo] Design settings encontrados:', data)
       return data
     } catch (error: any) {
-      console.error('❌ Erro em getDesignSettingsByCodigo:', error)
+      console.error('❌ [getDesignSettingsByCodigo] Erro em getDesignSettingsByCodigo:', error)
       throw new Error(error.message || 'Erro desconhecido ao buscar design settings por código');
     }
   }
 
   async getConfiguracoesByCodigo(codigo: string) {
     try {
-      const { data: designData } = await supabase
+      console.log('🔍 [getConfiguracoesByCodigo] Buscando configurações por código:', codigo)
+      
+      const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
         .eq('codigo', codigo)
         .single()
+      
+      if (designError) {
+        console.error('❌ [getConfiguracoesByCodigo] Erro ao buscar design settings por código:', designError)
+        throw designError
+      }
       
       if (!designData) {
         throw new Error('Design settings not found')
@@ -526,26 +536,34 @@ export class SupabaseService {
         .limit(1)
       
       if (error) {
-        console.error('❌ Erro ao buscar configurações por código:', error)
+        console.error('❌ [getConfiguracoesByCodigo] Erro ao buscar configurações por código:', error)
         throw error
       }
       
       const config = data && data.length > 0 ? data[0] : null
       
+      console.log('✅ [getConfiguracoesByCodigo] Configurações encontradas:', config)
       return config
     } catch (error: any) {
-      console.error('❌ Erro em getConfiguracoesByCodigo:', error)
+      console.error('❌ [getConfiguracoesByCodigo] Erro em getConfiguracoesByCodigo:', error)
       throw new Error(error.message || 'Erro desconhecido ao buscar configurações por código');
     }
   }
 
   async getProductsByCodigo(codigo: string) {
     try {
-      const { data: designData } = await supabase
+      console.log('🔍 [getProductsByCodigo] Buscando produtos por código:', codigo)
+      
+      const { data: designData, error: designError } = await supabase
         .from('design_settings')
         .select('user_id')
         .eq('codigo', codigo)
         .single()
+      
+      if (designError) {
+        console.error('❌ [getProductsByCodigo] Erro ao buscar design settings por código:', designError)
+        throw designError
+      }
       
       if (!designData) {
         throw new Error('Design settings not found')
@@ -559,13 +577,14 @@ export class SupabaseService {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('❌ Erro ao buscar produtos por código:', error)
+        console.error('❌ [getProductsByCodigo] Erro ao buscar produtos por código:', error)
         throw error
       }
       
+      console.log('✅ [getProductsByCodigo] Produtos encontrados:', data?.length || 0)
       return data || []
     } catch (error: any) {
-      console.error('❌ Erro em getProductsByCodigo:', error)
+      console.error('❌ [getProductsByCodigo] Erro em getProductsByCodigo:', error)
       throw new Error(error.message || 'Erro desconhecido ao buscar produtos por código');
     }
   }
