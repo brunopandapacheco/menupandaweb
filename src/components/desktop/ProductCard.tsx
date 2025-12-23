@@ -47,6 +47,26 @@ export function DesktopProductCard({
     setShowModal(true)
   }
 
+  // Função para formatar o tipo de venda
+  const formatSaleType = (saleType: string) => {
+    switch (saleType) {
+      case 'tamanho-p':
+        return 'P'
+      case 'tamanho-m':
+        return 'M'
+      case 'tamanho-g':
+        return 'G'
+      case 'kg':
+        return 'KG'
+      case 'cento':
+        return '100'
+      case 'outros':
+        return 'OUT'
+      default:
+        return 'UN'
+    }
+  }
+
   return (
     <>
       <div className={`bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col ${
@@ -132,7 +152,7 @@ export function DesktopProductCard({
                           pointerEvents: 'none'
                         }}
                       >
-                        {product.forma_venda}
+                        {formatSaleType(product.forma_venda)}
                       </Badge>
                     </div>
                   </div>
@@ -151,7 +171,7 @@ export function DesktopProductCard({
                         pointerEvents: 'none'
                       }}
                     >
-                      {product.forma_venda}
+                      {formatSaleType(product.forma_venda)}
                     </Badge>
                   </div>
                 )}

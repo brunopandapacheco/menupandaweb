@@ -90,6 +90,26 @@ export function ProductModal({
     return `${qty} ${qty === 1 ? 'unidade' : 'unidades'}`
   }
 
+  // Função para formatar o tipo de venda
+  const formatSaleType = (saleType: string) => {
+    switch (saleType) {
+      case 'tamanho-p':
+        return 'P'
+      case 'tamanho-m':
+        return 'M'
+      case 'tamanho-g':
+        return 'G'
+      case 'kg':
+        return 'KG'
+      case 'cento':
+        return '100'
+      case 'outros':
+        return 'OUT'
+      default:
+        return 'UN'
+    }
+  }
+
   const getFirstImage = (imageUrl?: string) => {
     if (!imageUrl) return null
     return imageUrl.split(',')[0].trim()
@@ -120,17 +140,9 @@ export function ProductModal({
       >
         <div className="border-b-2 border-pink-200 p-4 pb-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-pink-800">
-                {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
-              </h2>
-              <p className="text-sm text-gray-600">
-                {isEditMode 
-                  ? 'Altere a quantidade e as observações do produto'
-                  : 'Escolha a quantidade e adicione observações para o produto'
-                }
-              </p>
-            </div>
+            <h2 className="text-lg font-bold text-pink-800">
+              {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
+            </h2>
             <button
               onClick={onClose}
               className="h-10 w-10 p-0 transition-all duration-200 flex items-center justify-center rounded-full"
@@ -150,7 +162,10 @@ export function ProductModal({
               <img 
                 src={firstImage} 
                 alt={product.nome}
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                }}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-4xl">
@@ -175,7 +190,7 @@ export function ProductModal({
                   boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
                 }}
               >
-                {product.forma_venda}
+                {formatSaleType(product.forma_venda)}
               </Badge>
               {product.promocao && (
                 <Badge className="bg-red-500 text-white rounded-full">
@@ -195,7 +210,7 @@ export function ProductModal({
                 onClick={decrementQuantity}
                 className="h-10 w-10 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-50"
               >
-                <Minus className="w-4 h-4 text-pink-600" />
+                <Minus className="w-3 h-3 text-pink-600" />
               </Button>
               <div className="flex-1 text-center">
                 <span className="text-lg font-semibold text-pink-800">
@@ -207,7 +222,7 @@ export function ProductModal({
                 onClick={incrementQuantity}
                 className="h-10 w-10 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-50"
               >
-                <Plus className="w-4 h-4 text-pink-600" />
+                <Plus className="w-3 h-3 text-pink-600" />
               </Button>
             </div>
           </div>
@@ -221,7 +236,7 @@ export function ProductModal({
               onChange={(e) => setObservations(e.target.value)}
               placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
               rows={3}
-              className="resize-none rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
+              className="min-h-[60px] text-sm rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
             />
           </div>
 

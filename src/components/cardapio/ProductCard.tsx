@@ -11,7 +11,7 @@ interface ProductCardProps {
   onToggleFavorite: (productId: string) => void
   backgroundColor: string
   borderColor?: string
-  onAddToCart?: (product: Produto) => void
+  onAddToCart?: (product: Produto) => void // Nova prop for adicionar ao carrinho
 }
 
 const categoryIcons = {
@@ -21,25 +21,6 @@ const categoryIcons = {
   'Doces': '🍮',
   'Salgados': '🥐',
   'Bebidas': '🥤'
-}
-
-// Função para abreviar o tipo de venda
-const abbreviateFormaVenda = (formaVenda: string): string => {
-  const abbreviations: { [key: string]: string } = {
-    'tamanho-p': 'Tam P',
-    'tamanho-m': 'Tam M',
-    'tamanho-g': 'Tam G',
-    'tamanho-xg': 'Tam XG',
-    'kit-caixa': 'Kit',
-    'sob-encomenda': 'Sob Encomenda',
-    'unidade': 'Unidade',
-    'fatia': 'Fatia',
-    'kg': 'Kg',
-    'cento': 'Cento',
-    'outros': 'Outros'
-  }
-  
-  return abbreviations[formaVenda] || formaVenda
 }
 
 export function ProductCard({ 
@@ -63,7 +44,28 @@ export function ProductCard({
 
   const handleAddToCart = () => {
     console.log('🛒 ProductCard: Abrindo modal para produto:', product.nome)
+    // Abrir modal em vez de adicionar diretamente
     setShowModal(true)
+  }
+
+  // Função para formatar o tipo de venda
+  const formatSaleType = (saleType: string) => {
+    switch (saleType) {
+      case 'tamanho-p':
+        return 'P'
+      case 'tamanho-m':
+        return 'M'
+      case 'tamanho-g':
+        return 'G'
+      case 'kg':
+        return 'KG'
+      case 'cento':
+        return '100'
+      case 'outros':
+        return 'OUT'
+      default:
+        return 'UN'
+    }
   }
 
   return (
@@ -71,12 +73,12 @@ export function ProductCard({
       <div className={`bg-white rounded-lg overflow-hidden shadow-sm h-full flex flex-col ${
         product.promocao 
           ? 'border-2 border-dashed border-pink-500' 
-          : 'border-2 border-gray-100'
+          : 'border border-gray-100'
       }`}>
-        <div className="p-4 flex-1 flex flex-col">
-          {/* Imagem em primeiro lugar - quadrada e maior para mobile */}
+        <div className="p-3 flex-1 flex flex-col">
+          {/* Imagem em primeiro lugar - quadrada */}
           <div 
-            className="w-full aspect-square rounded-lg flex items-center justify-center mb-4 bg-gray-50 overflow-hidden relative"
+            className="w-full aspect-square rounded-lg flex items-center justify-center mb-3 bg-gray-50 overflow-hidden relative"
             style={{ backgroundColor }}
           >
             {firstImage ? (
@@ -89,7 +91,7 @@ export function ProductCard({
                 }}
               />
             ) : (
-              <span className="text-4xl">
+              <span className="text-2xl">
                 {categoryIcons[product.categoria as keyof typeof categoryIcons] || '🧁'}
               </span>
             )}
@@ -97,11 +99,11 @@ export function ProductCard({
             {/* FITA DE PROMOÇÃO */}
             {product.promocao && (
               <div 
-                className="absolute top-4 -right-12 bg-red-500 text-white font-bold px-6 py-2 transform rotate-45 shadow-lg z-10"
+                className="absolute top-3 -right-10 bg-red-500 text-white font-bold px-4 py-1 transform rotate-45 shadow-md z-10"
                 style={{ 
-                  width: '180px',
+                  width: '130px',
                   textAlign: 'center',
-                  fontSize: '0.8rem'
+                  fontSize: '0.6rem'
                 }}
               >
                 PROMOÇÃO
@@ -111,29 +113,29 @@ export function ProductCard({
           
           {/* Conteúdo do produto - flex-1 para ocupar espaço disponível */}
           <div className="flex-1 flex flex-col">
-            <div className="flex justify-between items-start mb-3">
-              <h4 className="font-bold text-sm leading-tight flex-1 line-clamp-2 pr-2">
+            <div className="flex justify-between items-start mb-1">
+              <h4 className="font-semibold text-xs leading-tight flex-1 line-clamp-2">
                 {product.nome}
               </h4>
               <button
                 onClick={() => onToggleFavorite(product.id)}
-                className="p-2 bg-transparent border-none cursor-pointer text-gray-400 hover:text-red-500 ml-3 flex-shrink-0 transition-colors"
+                className="p-1 bg-transparent border-none cursor-pointer text-gray-400 hover:text-red-500 ml-1 flex-shrink-0"
               >
-                <Heart className="w-5 h-5" style={{ fill: isFavorite ? '#ef4444' : 'none' }} />
+                <Heart className="w-3 h-3" style={{ fill: isFavorite ? '#ef4444' : 'none' }} />
               </button>
             </div>
             
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed flex-1">
+            <p className="text-gray-500 text-xs mb-2 line-clamp-4 leading-tight flex-1">
               {product.descricao}
             </p>
             
             {/* Preço e botão - sempre na parte inferior */}
             <div className="mt-auto">
-              <div className="mb-4">
+              <div>
                 {product.promocao && product.preco_promocional ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg text-red-500 line-through">
+                  <div className="mb-2">
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-sm text-red-500 line-through">
                         R$ {product.preco_normal.toFixed(2)}
                       </span>
                     </div>
@@ -151,7 +153,7 @@ export function ProductCard({
                           pointerEvents: 'none'
                         }}
                       >
-                        {abbreviateFormaVenda(product.forma_venda)}
+                        {formatSaleType(product.forma_venda)}
                       </Badge>
                     </div>
                   </div>
@@ -170,7 +172,7 @@ export function ProductCard({
                         pointerEvents: 'none'
                       }}
                     >
-                      {abbreviateFormaVenda(product.forma_venda)}
+                      {formatSaleType(product.forma_venda)}
                     </Badge>
                   </div>
                 )}
