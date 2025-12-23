@@ -6,6 +6,7 @@ import { Produto } from '@/types/database'
 import { showSuccess, showError } from '@/utils/toast'
 import { useProductDraft } from '@/hooks/useProductDraft'
 import { useDatabase } from '@/hooks/useDatabase'
+import DraftNotification from '@/components/ui/DraftNotification' // Import the component
 
 interface ProductDialogProps {
   isOpen: boolean
