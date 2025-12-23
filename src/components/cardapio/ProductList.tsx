@@ -23,7 +23,6 @@ export function ProductList({
   borderColor,
   selectedCategory,
   searchTerm,
-  onSearchChange,
   onAddToCart
 }: ProductListProps) {
   // Filtrar produtos com base na pesquisa e categoria
@@ -40,34 +39,20 @@ export function ProductList({
 
   return (
     <>
-      {/* Barra de busca para mobile */}
-      <div className="mb-6 px-2">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Buscar produtos..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:border-pink-300 focus:outline-none focus:ring-1 focus:ring-pink-200"
-            style={{ backgroundColor: '#ffffff' }}
-          />
-        </div>
-      </div>
-
       {/* Conteúdo dos produtos - só renderiza se houver produtos filtrados */}
       {filteredProducts.length > 0 ? (
         <>
           {/* Se "Todos" estiver selecionado, mostrar todos produtos juntos sem separar por categoria */}
           {selectedCategory === null ? (
-            <>
+            <div className="space-y-12">
               {/* Produtos em promoção */}
               {promotionalProducts.length > 0 && (
-                <div style={{ marginBottom: '20px' }}>
-                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                    <span style={{ fontSize: '18px' }}>🔥</span> Promoções
+                <div>
+                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span style={{ fontSize: '16px' }}>🔥</span> 
+                    Promoções
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {promotionalProducts.map((product) => (
                       <ProductCard
                         key={product.id}
@@ -85,11 +70,9 @@ export function ProductList({
 
               {/* Produtos regulares */}
               {regularProducts.length > 0 && (
-                <div style={{ marginBottom: '20px' }}>
-                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '16px' }}>
-                    Todos os Produtos
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Todos os Produtos</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {regularProducts.map((product) => (
                       <ProductCard
                         key={product.id}
@@ -104,16 +87,17 @@ export function ProductList({
                   </div>
                 </div>
               )}
-            </>
+            </div>
           ) : (
-            <>
+            <div className="space-y-12">
               {/* Promoções da categoria */}
               {promotionalProducts.length > 0 && (
-                <div style={{ marginBottom: '20px' }}>
-                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '16px', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                    <span style={{ fontSize: '18px' }}>🔥</span> Promoções - {selectedCategory}
+                <div>
+                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span style={{ fontSize: '16px' }}>🔥</span> 
+                    Promoções - {selectedCategory}
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {promotionalProducts.map((product) => (
                       <ProductCard
                         key={product.id}
@@ -131,11 +115,9 @@ export function ProductList({
 
               {/* Produtos regulares da categoria */}
               {regularProducts.length > 0 && (
-                <div style={{ marginBottom: '20px' }}>
-                  <h3 style={{ fontWeight: '600', marginBottom: '12px', fontSize: '16px' }}>
-                    {selectedCategory}
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                <div>
+                  <h3 className="text-lg font-bold mb-4">{selectedCategory}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     {regularProducts.map((product) => (
                       <ProductCard
                         key={product.id}
@@ -150,7 +132,7 @@ export function ProductList({
                   </div>
                 </div>
               )}
-            </>
+            </div>
           )}
         </>
       ) : (

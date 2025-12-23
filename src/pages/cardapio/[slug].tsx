@@ -257,7 +257,6 @@ export default function CardapioPublico() {
 
       <FooterComponent 
         textoRodape={designSettings.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999'}
-        backgroundColor={designSettings.cor_background || '#fef2f2'}
       />
 
       {/* WhatsApp Float - sempre visível */}
