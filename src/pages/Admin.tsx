@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
-import { supabase } from '@/lib/supabase'
 import { useDatabase } from '@/hooks/useDatabase'
 import { Banner } from '@/components/cardapio/Banner'
-import { ProductGrid } from '@/components/cardapio/ProductGrid'
-import { Footer } from '@/components/cardapio/Footer'
+import { AdminPanel } from '@/components/admin/AdminPanel'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { ErrorDisplay } from '@/components/ui/ErrorDisplay'
-import { DesignSettings, Produto } from '@/types/database'
+import { DesignSettings } from '@/types/database'
 
-export default function Index() {
+export default function Admin() {
   const { user, loading: authLoading } = useAuth()
-  const { designSettings, produtos, loading: dataLoading } = useDatabase()
+  const { designSettings, loading: dataLoading } = useDatabase()
   const [config, setConfig] = useState<DesignSettings | null>(null)
-  const [products, setProducts] = useState<Produto[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -22,12 +19,6 @@ export default function Index() {
       setConfig(designSettings)
     }
   }, [designSettings])
-
-  useEffect(() => {
-    if (produtos) {
-      setProducts(produtos)
-    }
-  }, [produtos])
 
   useEffect(() => {
     if (!authLoading && !dataLoading) {
@@ -49,21 +40,12 @@ export default function Index() {
         logoUrl={config?.logo_url}
         borderColor={config?.cor_borda || '#ec4899'}
         bannerGradient={config?.banner_gradient}
-        isAdmin={false} // Public menu - no logout button
+        isAdmin={true} // Admin panel - show logout button on mobile
       />
       
       <div className="container mx-auto px-4 py-8">
-        <ProductGrid 
-          products={products}
-          borderColor={config?.cor_borda || '#ec4899'}
-          backgroundColor={config?.cor_background || '#fef2f2'}
-          nameColor={config?.cor_nome || '#be185d'}
-        />
+        <AdminPanel />
       </div>
-      
-      <Footer 
-        backgroundColor={config?.cor_background || '#fef2f2'}
-      />
     </div>
   )
 }

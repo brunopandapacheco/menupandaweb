@@ -1,12 +1,16 @@
-import { Phone, Clock, MapPin } from 'lucide-react'
-
 interface FooterProps {
-  textoRodape?: string
+  backgroundColor: string
 }
 
-export function Footer({ textoRodape }: FooterProps) {
-  const displayText = textoRodape || 'Faça seu pedido! 📞 (11) 99999-9999'
-
-  // Footer removido - retorna null para não renderizar nada
-  return null
+export function Footer({ backgroundColor }: FooterProps) {
+  return (
+    <footer
+      className="w-full py-6 text-center text-gray-700"
+      style={{ backgroundColor }}
+    >
+      <p className="text-sm">
+        Faça seu pedido! 📞 (11) 99999-9999
+      </p>
+    </footer>
+  )
 }

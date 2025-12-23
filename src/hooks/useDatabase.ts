@@ -75,16 +75,16 @@ export function useDatabase() {
     }
     
     if (settings.codigo) {
-      console.log('⚠️ BLOQUEADO: Tentativa de alterar código para:', settings.codigo)
+      console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
       delete settings.codigo
     }
 
-    console.log('🔍 [saveDesignSettings] Payload recebido:', settings);
+    console.log('🔍 [saveDesignSettings] Enviando para Supabase:', settings);
     
     const result = await supabaseService.updateDesignSettings(user.id, settings)
     
     if (result) {
-      console.log('✅ [saveDesignSettings] Design settings atualizados:', result);
+      console.log('✅ [saveDesignSettings] Sucesso ao salvar design settings:', result);
       const currentSettings = getCache('designSettings')
       const updatedSettings = { ...currentSettings, ...settings }
       updateCache('designSettings', updatedSettings)
