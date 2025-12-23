@@ -354,7 +354,8 @@ export default function DesignSettings() {
                       </div>
                     </div>
 
-                    {/* Esconder Estrelas */}
+                    {/* Esconder Estrelas - SEÇÃO COMENTADA */}
+                    {/* 
                     <div className="border-0 shadow-lg bg-white rounded-lg p-6">
                       <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#ec4899' }}>
                         Esconder Estrelas
@@ -397,6 +398,7 @@ export default function DesignSettings() {
                         </button>
                       </div>
                     </div>
+                    */}
                   </div>
                 </div>
               </TabsContent>
