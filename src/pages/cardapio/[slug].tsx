@@ -45,6 +45,7 @@ export default function CardapioPublico() {
 
   useEffect(() => {
     const handleConfigUpdate = () => {
+      console.log('🔄 [CardapioPublico] handleConfigUpdate disparado')
       setLastUpdate(Date.now())
       if (slug) {
         const codigoLower = slug.toLowerCase()
@@ -56,6 +57,7 @@ export default function CardapioPublico() {
     
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'pandamenu-config-updated') {
+        console.log('🔄 [CardapioPublico] Storage change detectado')
         handleConfigUpdate()
       }
     }
@@ -73,6 +75,8 @@ export default function CardapioPublico() {
       setLoading(true)
       setError(null)
       
+      console.log('🔍 [CardapioPublico] Iniciando loadData para código:', codigo)
+      
       const [designData, configData, productsData] = await Promise.all([
         supabaseService.getDesignSettingsByCodigo(codigo),
         supabaseService.getConfiguracoesByCodigo(codigo),
@@ -84,11 +88,15 @@ export default function CardapioPublico() {
         return
       }
 
-      console.log('🔍 [CardapioPublico] DesignSettings recebidos:', designData)
-      console.log('🔍 [CardapioPublico] hide_stars:', designData.hide_stars)
-      console.log('🔍 [CardapioPublico] hide_stars type:', typeof designData.hide_stars)
-      console.log('🔍 [CardapioPublico] hide_stars == true:', designData.hide_stars == true)
-      console.log('🔍 [CardapioPublico] hide_stars === true:', designData.hide_stars === true)
+      console.log('📊 [CardapioPublico] Dados recebidos:')
+      console.log('  - DesignSettings completo:', designData)
+      console.log('  - hide_stars (bruto):', designData.hide_stars)
+      console.log('  - hide_stars (typeof):', typeof designData.hide_stars)
+      console.log('  - hide_stars (JSON.stringify):', JSON.stringify(designData.hide_stars))
+      console.log('  - hide_stars === true:', designData.hide_stars === true)
+      console.log('  - hide_stars === false:', designData.hide_stars === false)
+      console.log('  - !!hide_stars:', !!designData.hide_stars)
+      console.log('  - !hide_stars:', !designData.hide_stars)
 
       setDesignSettings(designData)
       setConfiguracoes(configData)
@@ -102,7 +110,7 @@ export default function CardapioPublico() {
         localStorage.setItem('cardapio_whatsapp', configData.telefone)
       }
     } catch (error: any) {
-      console.error('Error loading data:', error)
+      console.error('❌ [CardapioPublico] Error loading data:', error)
       setError('Erro ao carregar cardápio: ' + error.message)
     } finally {
       setLoading(false)
@@ -111,7 +119,7 @@ export default function CardapioPublico() {
 
   const filteredProducts = produtos.filter(product => {
     const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+                       product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = !selectedCategory || product.categoria === selectedCategory
     return matchesSearch && matchesCategory
   })
@@ -190,9 +198,14 @@ export default function CardapioPublico() {
     )
   }
 
-  // Verificar se deve esconder as estrelas
+  // Verificar se deve esconder as estrelas - DEBUG DETALHADO
   const shouldHideStars = designSettings.hide_stars === true
-  console.log('🔍 [CardapioPublico] shouldHideStars:', shouldHideStars)
+  console.log('🔍 [CardapioPublico] Análise detalhada do hide_stars:')
+  console.log('  - Valor bruto:', designSettings.hide_stars)
+  console.log('  - Tipo:', typeof designSettings.hide_stars)
+  console.log('  - Comparação === true:', designSettings.hide_stars === true)
+  console.log('  - Comparação === false:', designSettings.hide_stars === false)
+  console.log('  - shouldHideStars final:', shouldHideStars)
 
   return (
     <div className={`min-h-screen cardapio-scrollbar relative`} style={{ backgroundColor: designSettings.cor_background || '#fef2f2' }}>
