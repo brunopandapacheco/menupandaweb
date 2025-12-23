@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Heart, Package, Edit } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { ProductModal } from '@/components/cart/ProductModal'
 import { useCart } from '@/hooks/useCart'
@@ -32,7 +32,7 @@ const abbreviateFormaVenda = (formaVenda: string): string => {
     'tamanho-xg': 'Tam XG',
     'kit-caixa': 'Kit',
     'sob-encomenda': 'Sob Encomenda',
-    'unidade': 'Un',
+    'unidade': 'Unidade',
     'fatia': 'Fatia',
     'kg': 'Kg',
     'cento': 'Cento',
@@ -137,15 +137,15 @@ export function ProductCard({
                         R$ {product.preco_normal.toFixed(2)}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl font-bold text-green-600">
+                    <div className="flex items-center gap-1 mb-2">
+                      <span className="text-lg font-bold text-green-600">
                         R$ {product.preco_promocional.toFixed(2)}
                       </span>
                       <Badge 
                         variant="secondary" 
-                        className="text-sm px-3 py-1 rounded-md"
+                        className="text-xs px-1 py-0 rounded-sm"
                         style={{ 
-                          borderRadius: '6px',
+                          borderRadius: '2px',
                           backgroundColor: '#6A0122',
                           color: 'white',
                           pointerEvents: 'none'
@@ -156,15 +156,15 @@ export function ProductCard({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold text-green-600">
+                  <div className="flex items-center gap-1 mb-2">
+                    <span className="text-lg font-bold text-green-600">
                       R$ {product.preco_normal.toFixed(2)}
                     </span>
                     <Badge 
                       variant="secondary" 
-                      className="text-sm px-3 py-1 rounded-md"
+                      className="text-xs px-1 py-0 rounded-sm"
                       style={{ 
-                        borderRadius: '6px',
+                        borderRadius: '2px',
                         backgroundColor: '#6A0122',
                         color: 'white',
                         pointerEvents: 'none'
@@ -179,20 +179,13 @@ export function ProductCard({
               {/* Botão Adicionar ao carrinho abaixo do preço */}
               <button
                 onClick={handleAddToCart}
-                className="w-full py-3 px-4 rounded-xl text-white text-sm font-semibold transition-all duration-200 text-center whitespace-nowrap overflow-hidden hover:scale-105 shadow-lg"
-                style={{ 
-                  backgroundColor: '#FF4F97',
-                  boxShadow: '0 4px 15px rgba(255, 79, 151, 0.3)'
-                }}
+                className="w-full py-2 px-3 rounded-lg text-white text-xs font-medium transition-colors text-center whitespace-nowrap overflow-hidden"
+                style={{ backgroundColor: '#FF4F97' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#E64280'
-                  e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 79, 151, 0.4)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = '#FF4F97'
-                  e.currentTarget.style.transform = 'scale(1)'
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 79, 151, 0.3)'
                 }}
               >
                 Adicionar ao carrinho

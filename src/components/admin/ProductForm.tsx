@@ -27,7 +27,6 @@ const saleTypes = [
   { value: 'tamanho-p', label: 'Tam P' },
   { value: 'tamanho-m', label: 'Tam M' },
   { value: 'tamanho-g', label: 'Tam G' },
-  { value: 'tamanho-xg', label: 'Tam XG' }, // NOVA OPÇÃO
   { value: 'kit-caixa', label: 'Kit / Caixa' },
   { value: 'sob-encomenda', label: 'Sob encomenda' },
   { value: 'outros', label: 'Outros' }
@@ -169,8 +168,8 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
     
     // Limpa o formulário
     setNewCategoryName('')
+    setIsCreatingNewCategory(false)
     setSelectedIcon('/icons/1.png')
-    setPendingCategory(null)
     
     showSuccess('Categoria criada e selecionada!')
   }
@@ -226,10 +225,13 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       if (categoryError) throw categoryError
       
       // 2. Obter os design settings atuais
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+      
       const { data: designSettings, error: designError } = await supabase
         .from('design_settings')
         .select('category_icons')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+        .eq('user_id', user.id)
         .single()
       
       if (designError && designError.code !== 'PGRST116') {
@@ -246,7 +248,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
       const { error: updateError } = await supabase
         .from('design_settings')
         .update({ category_icons: updatedIcons })
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+        .eq('user_id', user.id)
       
       if (updateError) throw updateError
       
@@ -419,7 +421,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                   disabled={!newCategoryName.trim()}
                   className="bg-pink-600 hover:bg-pink-700 flex-1"
                 >
-                  <Check className="w-3 h-3 mr-1" />
+                  <Check className="w-4 h-4 mr-1" />
                   Criar
                 </Button>
                 <Button
@@ -430,7 +432,7 @@ export function ProductForm({ product, onSave, onDelete, onCancel }: ProductForm
                     setSelectedIcon('/icons/1.png')
                   }}
                 >
-                  <X className="w-3 h-3 mr-1" />
+                  <X className="w-4 h-4 mr-1" />
                   Cancelar
                 </Button>
               </div>
