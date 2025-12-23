@@ -101,41 +101,37 @@ export function NavigationMenu() {
         year: 'numeric'
       })
 
-      // 🍰 MENSAGEM PADRÃO DO WHATSAPP
-      let message = `🍰 NOVO PEDIDO - ${cardapioName.toUpperCase()} 🍰
+      // 🍰 MENSAGEM MELHORADA DO WHATSAPP
+      let message = `✅ NOVO PEDIDO - ${cardapioName.toUpperCase()}
 
 👤 Cliente: ${customerName.trim()}
-📅 Data do Pedido: ${dataFormatada}
+📅 Data: ${dataFormatada}
 📞 Telefone: ${customerPhone.trim()}
 
-🛒 Resumo do Pedido:
+🛒 PEDIDO:
 
 `
 
       items.forEach((item, index) => {
         if (!item) return
         
-        message += `${index + 1}️⃣ ${item.name || 'Produto'}
-
-Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}
-
-Preço unitário: R$ ${formatCurrency(item.price || 0)}
-
-Subtotal: R$ ${formatCurrency((item.price || 0) * item.quantity)}`
+        message += `${index + 1}. ${item.name || 'Produto'}
+   • Quantidade: ${item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} ${item.quantity === 1 ? 'unidade' : 'unidades'}`}
+   • Valor: R$ ${formatCurrency(item.price || 0)}
+   • Subtotal: R$ ${formatCurrency((item.price || 0) * item.quantity)}`
         
         if (item.observations) {
           message += `
-
-Observações: ${item.observations}`
+   • Obs: ${item.observations}`
         }
         message += `
 
 `
       })
 
-      message += `💰 Total: R$ ${formatCurrency(totalPrice)}
+      message += `💰 TOTAL DO PEDIDO: R$ ${formatCurrency(totalPrice)}
 
-Olá! Gostaria de confirmar meu pedido para que seja finalizado!`
+📞 Gostaria de confirmar meu pedido!`
 
       // Codificar mensagem para URL
       const encodedMessage = encodeURIComponent(message)
