@@ -1,46 +1,58 @@
-import { useAuth } from '@/hooks/useAuth'
+import { useState } from 'react'
 import { LogOut } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/hooks/useAuth'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { supabase } from '@/lib/supabase'
 
 interface BannerProps {
   logoUrl?: string
   borderColor: string
   bannerGradient?: string
-  isAdmin?: boolean // Add prop to identify admin panel
+  isAdmin?: boolean // New prop to control logout button visibility
 }
 
 export function Banner({ 
   logoUrl, 
   borderColor, 
   bannerGradient,
-  isAdmin = false // Default to false for public menu
+  isAdmin = false // Default to false
 }: BannerProps) {
-  const { signOut } = useAuth()
+  const { signOut } = supabase.auth
+  const isMobile = useIsMobile()
 
   const handleLogout = async () => {
-    await signOut()
+    try {
+      await signOut()
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
   }
 
   return (
     <div 
-      className="w-full"
+      className="w-full relative"
       style={{ 
         position: 'relative', 
-        height: '220px', // Aumentado de 180px para 220px
+        height: '220px',
         overflow: 'hidden',
         backgroundImage: bannerGradient || 'linear-gradient(135deg, #d11b70 0%, #ff6fae 50%, #ff9acb 100%)',
         backgroundSize: '200% 200%',
         animation: 'gradient-x 3s ease infinite'
       }} 
     >
-      {/* Botão Sair - Apenas no painel administrativo e visível no mobile */}
-      {isAdmin && (
-        <button
+      {/* Logout button for admin on mobile */}
+      {isAdmin && isMobile && (
+        <Button
           onClick={handleLogout}
-          className="absolute top-4 left-4 z-10 md:hidden bg-white/20 backdrop-blur-sm text-white p-2 rounded-lg hover:bg-white/30 transition-colors"
-          title="Sair"
+          className="absolute top-4 left-4 bg-white/90 hover:bg-white text-pink-600 px-3 py-2 text-sm font-medium shadow-lg"
+          style={{
+            zIndex: 10
+          }}
         >
-          <LogOut className="w-5 h-5" />
-        </button>
+          Sair
+        </Button>
       )}
     </div>
   )

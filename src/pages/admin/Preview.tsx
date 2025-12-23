@@ -31,17 +31,7 @@ export default function Preview() {
         showButton={showButton}
       />
       
-      <PreviewContent
-        designSettings={designSettings}
-        configuracoes={configuracoes}
-        produtos={produtos}
-        searchTerm={searchTerm}
-        selectedCategory={selectedCategory}
-        favorites={favorites}
-        onSearchChange={setSearchTerm}
-        onCategorySelect={setSelectedCategory}
-        onToggleFavorite={toggleFavorite}
-      />
+      <PreviewContent />
     </>
   )
 }

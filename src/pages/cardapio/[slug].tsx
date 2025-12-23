@@ -129,7 +129,7 @@ export default function CardapioPublico() {
     const categories = [{ name: 'Todos', icon: '/icons/TODOS.png' }]
     
     const productCategories = Array.from(new Set(produtos.map(p => p.categoria)))
-      .filter(cat => cat && cat.trim() !== '')
+      .filter((cat): cat is string => cat && typeof cat === 'string' && cat.trim() !== '')
       .sort()
     
     productCategories.forEach(category => {
@@ -197,7 +197,6 @@ export default function CardapioPublico() {
   console.log('  - Valor bruto:', designSettings.hide_stars)
   console.log('  - Tipo:', typeof designSettings.hide_stars)
   console.log('  - Comparação === true:', designSettings.hide_stars === true)
-  console.log('  - Comparação === false:', designSettings.hide_stars === false)
   console.log('  - shouldHideStars final:', shouldHideStars)
 
   // LOG IMPORTANTE: Verificar se a prop está sendo passada
@@ -257,7 +256,8 @@ export default function CardapioPublico() {
       </div>
 
       <FooterComponent 
-        textoRodape={designSettings.texto_rodape} 
+        textoRodape={designSettings.texto_rodape || 'Faça seu pedido! 📞 (11) 99999-9999'}
+        backgroundColor={designSettings.cor_background || '#fef2f2'}
       />
 
       {/* WhatsApp Float - sempre visível */}
