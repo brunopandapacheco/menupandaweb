@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Sparkles, CheckCircle, Palette } from 'lucide-react'
@@ -57,10 +57,6 @@ export function ColorSettings({
   const [showCustomNamePicker, setShowCustomNamePicker] = useState(false)
   const [customBorderColor, setCustomBorderColor] = useState(corBorda)
   const [customNameColor, setCustomNameColor] = useState(corNome)
-  
-  // Refs for native color pickers
-  const borderColorInputRef = useRef<HTMLInputElement>(null)
-  const nameColorInputRef = useRef<HTMLInputElement>(null)
 
   const handleCustomBorderColor = (color: string) => {
     setCustomBorderColor(color)
@@ -70,15 +66,6 @@ export function ColorSettings({
   const handleCustomNameColor = (color: string) => {
     setCustomNameColor(color)
     onCorNomeChange(color)
-  }
-
-  // Functions to open native color pickers
-  const openBorderColorPicker = () => {
-    borderColorInputRef.current?.click()
-  }
-
-  const openNameColorPicker = () => {
-    nameColorInputRef.current?.click()
   }
 
   return (
@@ -140,9 +127,9 @@ export function ColorSettings({
               </button>
             ))}
             
-            {/* Botão Personalizar - agora abre o color picker nativo */}
+            {/* Botão Personalizar - agora abre painel HEX */}
             <button
-              onClick={openBorderColorPicker}
+              onClick={() => setShowCustomBorderPicker(true)}
               className={
                 'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                 (showCustomBorderPicker 
@@ -161,41 +148,43 @@ export function ColorSettings({
             </button>
           </div>
 
-          {/* Hidden native color picker */}
-          <input
-            ref={borderColorInputRef}
-            type="color"
-            value={customBorderColor}
-            onChange={(e) => handleCustomBorderColor(e.target.value)}
-            className="hidden"
-          />
-
+          {/* Painel HEX para cor da borda */}
           {showCustomBorderPicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={customBorderColor}
-                    onChange={(e) => handleCustomBorderColor(e.target.value)}
-                    className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Cor personalizada (HEX)
+                </label>
+                
+                <div className="flex items-center gap-3">
+                  {/* Preview da cor */}
+                  <div 
+                    className="w-12 h-12 rounded-lg border-2 border-gray-300"
+                    style={{ backgroundColor: customBorderColor }}
                   />
+                  
+                  {/* Input HEX */}
                   <input
                     type="text"
                     value={customBorderColor}
                     onChange={(e) => {
                       const value = e.target.value
+                      setCustomBorderColor(value)
+                      
+                      // Aplica automaticamente se for um HEX válido
                       if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                        handleCustomBorderColor(value)
+                        onCorBordaChange(value)
                       }
                     }}
-                    placeholder="#000000"
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                    placeholder="#FF5733"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-mono"
                   />
                 </div>
+                
+                <p className="text-xs text-gray-500">
+                  Digite um código HEX (ex: #FF5733)
+                </p>
               </div>
-              <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
 
@@ -244,9 +233,9 @@ export function ColorSettings({
               </button>
             ))}
             
-            {/* Botão Personalizar - agora abre o color picker nativo */}
+            {/* Botão Personalizar - agora abre painel HEX */}
             <button
-              onClick={openNameColorPicker}
+              onClick={() => setShowCustomNamePicker(true)}
               className={
                 'aspect-square rounded-xl border-2 transition-all hover:scale-105 ' + 
                 (showCustomNamePicker 
@@ -265,41 +254,43 @@ export function ColorSettings({
             </button>
           </div>
 
-          {/* Hidden native color picker */}
-          <input
-            ref={nameColorInputRef}
-            type="color"
-            value={customNameColor}
-            onChange={(e) => handleCustomNameColor(e.target.value)}
-            className="hidden"
-          />
-
+          {/* Painel HEX para cor do nome */}
           {showCustomNamePicker && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-gray-700">Cor Personalizada:</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={customNameColor}
-                    onChange={(e) => handleCustomNameColor(e.target.value)}
-                    className="w-12 h-12 rounded cursor-pointer border-2 border-gray-300"
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Cor personalizada (HEX)
+                </label>
+                
+                <div className="flex items-center gap-3">
+                  {/* Preview da cor */}
+                  <div 
+                    className="w-12 h-12 rounded-lg border-2 border-gray-300"
+                    style={{ backgroundColor: customNameColor }}
                   />
+                  
+                  {/* Input HEX */}
                   <input
                     type="text"
                     value={customNameColor}
                     onChange={(e) => {
                       const value = e.target.value
+                      setCustomNameColor(value)
+                      
+                      // Aplica automaticamente se for um HEX válido
                       if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                        handleCustomNameColor(value)
+                        onCorNomeChange(value)
                       }
                     }}
-                    placeholder="#000000"
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm font-mono w-28"
+                    placeholder="#FF5733"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-mono"
                   />
                 </div>
+                
+                <p className="text-xs text-gray-500">
+                  Digite um código HEX (ex: #FF5733)
+                </p>
               </div>
-              <p className="text-xs text-gray-500 mt-2">Digite um código HEX (ex: #FF5733)</p>
             </div>
           )}
 
