@@ -64,7 +64,7 @@ export function ProductCard({
       case 'outros':
         return 'OUT'
       default:
-        return 'UN'
+        return 'Unidade'
     }
   }
 
