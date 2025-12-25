@@ -18,7 +18,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: false,        // Desativa recarregamento ao focar na janela
+      refetchOnReconnect: false,        // Desativa recarregamento ao reconectar
+      staleTime: 1000 * 60 * 5,        // 5 minutos de cache
     },
   },
 });
