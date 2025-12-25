@@ -157,12 +157,12 @@ export function ProductModal({
         </div>
 
         <div className="space-y-4 p-4">
-          <div className="w-full h-40 rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
+          <div className="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
             {firstImage ? (
               <img 
                 src={firstImage} 
                 alt={product.nome}
-                className="w-full h-auto object-contain"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none'
                 }}
