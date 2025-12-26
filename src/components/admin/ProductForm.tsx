@@ -148,12 +148,26 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
   // Funções para gerenciar massas
   const handleAddMassa = async () => {
     const name = newMassaInput.trim()
-    if (!name || masterMassas.includes(name)) return
+    if (!name) {
+      showError('Digite o nome da massa');
+      return;
+    }
+    if (masterMassas.includes(name)) {
+      showError(`A massa "${name}" já existe.`);
+      return;
+    }
+    
     const newMassa = await addMassa(name)
     if (newMassa) {
-      setProductMassas(prev => [...prev, newMassa])
-      setNewMassaInput('')
-      handleFieldChange('massas_disponiveis', [...productMassas, newMassa])
+      showSuccess(`Massa "${newMassa}" adicionada!`);
+      setProductMassas(prev => {
+        const updatedList = [...prev, newMassa].sort();
+        handleFieldChange('massas_disponiveis', updatedList); // Pass the updated list
+        return updatedList;
+      });
+      setNewMassaInput('');
+    } else {
+      showError('Erro ao adicionar massa.');
     }
   }
 
@@ -178,7 +192,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
       const { data: products } = await supabase
         .from('produtos')
         .select('id, massas_disponiveis')
-        .contains('massas_disponiveis', editingMassa)
+        .contains('massas_disponiveis', [editingMassa]) // Use array for contains
 
       if (products) {
         for (const product of products) {
@@ -218,7 +232,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
       const { data: products } = await supabase
         .from('produtos')
         .select('id, massas_disponiveis')
-        .contains('massas_disponiveis', massa)
+        .contains('massas_disponiveis', [massa]) // Use array for contains
 
       if (products) {
         for (const product of products) {
@@ -240,12 +254,25 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
   // Funções para gerenciar recheios
   const handleAddRecheio = async () => {
     const name = newRecheioInput.trim()
-    if (!name || masterRecheios.includes(name)) return
+    if (!name) {
+      showError('Digite o nome do recheio');
+      return;
+    }
+    if (masterRecheios.includes(name)) {
+      showError(`O recheio "${name}" já existe.`);
+      return;
+    }
     const newRecheio = await addRecheio(name)
     if (newRecheio) {
-      setProductRecheios(prev => [...prev, newRecheio])
-      setNewRecheioInput('')
-      handleFieldChange('recheios_disponiveis', [...productRecheios, newRecheio])
+      showSuccess(`Recheio "${newRecheio}" adicionado!`);
+      setProductRecheios(prev => {
+        const updatedList = [...prev, newRecheio].sort();
+        handleFieldChange('recheios_disponiveis', updatedList);
+        return updatedList;
+      });
+      setNewRecheioInput('');
+    } else {
+      showError('Erro ao adicionar recheio.');
     }
   }
 
@@ -270,7 +297,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
       const { data: products } = await supabase
         .from('produtos')
         .select('id, recheios_disponiveis')
-        .contains('recheios_disponiveis', editingRecheio)
+        .contains('recheios_disponiveis', [editingRecheio]) // Use array for contains
 
       if (products) {
         for (const product of products) {
@@ -309,7 +336,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
       const { data: products } = await supabase
         .from('produtos')
         .select('id, recheios_disponiveis')
-        .contains('recheios_disponiveis', recheio)
+        .contains('recheios_disponiveis', [recheio]) // Use array for contains
 
       if (products) {
         for (const product of products) {
@@ -331,12 +358,25 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
   // Funções para gerenciar coberturas
   const handleAddCobertura = async () => {
     const name = newCoberturaInput.trim()
-    if (!name || masterCoberturas.includes(name)) return
+    if (!name) {
+      showError('Digite o nome da cobertura');
+      return;
+    }
+    if (masterCoberturas.includes(name)) {
+      showError(`A cobertura "${name}" já existe.`);
+      return;
+    }
     const newCobertura = await addCobertura(name)
     if (newCobertura) {
-      setProductCoberturas(prev => [...prev, newCobertura])
-      setNewCoberturaInput('')
-      handleFieldChange('coberturas_disponiveis', [...productCoberturas, newCobertura])
+      showSuccess(`Cobertura "${newCobertura}" adicionada!`);
+      setProductCoberturas(prev => {
+        const updatedList = [...prev, newCobertura].sort();
+        handleFieldChange('coberturas_disponiveis', updatedList);
+        return updatedList;
+      });
+      setNewCoberturaInput('');
+    } else {
+      showError('Erro ao adicionar cobertura.');
     }
   }
 
@@ -361,7 +401,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
       const { data: products } = await supabase
         .from('produtos')
         .select('id, coberturas_disponiveis')
-        .contains('coberturas_disponiveis', editingCobertura)
+        .contains('coberturas_disponiveis', [editingCobertura]) // Use array for contains
 
       if (products) {
         for (const product of products) {
@@ -400,7 +440,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
       const { data: products } = await supabase
         .from('produtos')
         .select('id, coberturas_disponiveis')
-        .contains('coberturas_disponiveis', cobertura)
+        .contains('coberturas_disponiveis', [cobertura]) // Use array for contains
 
       if (products) {
         for (const product of products) {
@@ -636,163 +676,157 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
           {product?.permite_personalizacao ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10">
               {/* Massas */}
-              {productMassas.length > 0 && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Massas</h4>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={newMassaInput}
-                        onChange={(e) => setNewMassaInput(e.target.value)}
-                        placeholder="Adicionar massa..."
-                        className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
-                        onKeyPress={(e) => e.key === 'Enter' && handleAddMassa()}
-                      />
-                      <Button onClick={handleAddMassa} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
-                    {productMassas.map((massa) => (
-                      <div key={massa} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
-                        {editingMassa === massa ? (
-                          <div className="flex items-center gap-2 flex-1">
-                            <Input
-                              value={editMassaValue}
-                              onChange={(e) => setEditMassaValue(e.target.value)}
-                              className="flex-1 h-8 text-xs"
-                              autoFocus
-                            />
-                            <Button size="sm" onClick={handleSaveEditMassa} className="bg-green-600 hover:bg-green-700 h-8 px-2">
-                              <Check className="w-3 h-3" />
-                            </Button>
-                            <Button size="sm" variant="ghost" onClick={() => {setEditingMassa(null); setEditMassaValue('')}} className="h-8 px-2">
-                              <X className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <>
-                            <span className="flex-1 truncate pr-2">{massa}</span>
-                            <div className="flex items-center gap-1">
-                              <Button size="sm" variant="ghost" onClick={() => handleEditMassa(massa)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
-                                <Edit2 className="w-3 h-3" />
-                              </Button>
-                              <Button size="sm" variant="ghost" onClick={() => handleDeleteMassa(massa)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ))}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                  <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Massas</h4>
+                  <div className="relative flex items-center gap-2">
+                    <Input
+                      value={newMassaInput}
+                      onChange={(e) => setNewMassaInput(e.target.value)}
+                      placeholder="Adicionar massa..."
+                      className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddMassa()}
+                    />
+                    <Button onClick={handleAddMassa} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
                   </div>
                 </div>
-              )}
+                <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
+                  {productMassas.map((massa) => (
+                    <div key={massa} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
+                      {editingMassa === massa ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Input
+                            value={editMassaValue}
+                            onChange={(e) => setEditMassaValue(e.target.value)}
+                            className="flex-1 h-8 text-xs"
+                            autoFocus
+                          />
+                          <Button size="sm" onClick={handleSaveEditMassa} className="bg-green-600 hover:bg-green-700 h-8 px-2">
+                            <Check className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => {setEditingMassa(null); setEditMassaValue('')}} className="h-8 px-2">
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="flex-1 truncate pr-2">{massa}</span>
+                          <div className="flex items-center gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => handleEditMassa(massa)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteMassa(massa)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Recheios */}
-              {productRecheios.length > 0 && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Recheios</h4>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={newRecheioInput}
-                        onChange={(e) => setNewRecheioInput(e.target.value)}
-                        placeholder="Adicionar recheio..."
-                        className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
-                        onKeyPress={(e) => e.key === 'Enter' && handleAddRecheio()}
-                      />
-                      <Button onClick={handleAddRecheio} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
-                    {productRecheios.map((recheio) => (
-                      <div key={recheio} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
-                        {editingRecheio === recheio ? (
-                          <div className="flex items-center gap-2 flex-1">
-                            <Input
-                              value={editRecheioValue}
-                              onChange={(e) => setEditRecheioValue(e.target.value)}
-                              className="flex-1 h-8 text-xs"
-                              autoFocus
-                            />
-                            <Button size="sm" onClick={handleSaveEditRecheio} className="bg-green-600 hover:bg-green-700 h-8 px-2">
-                              <Check className="w-3 h-3" />
-                            </Button>
-                            <Button size="sm" variant="ghost" onClick={() => {setEditingRecheio(null); setEditRecheioValue('')}} className="h-8 px-2">
-                              <X className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <>
-                            <span className="flex-1 truncate pr-2">{recheio}</span>
-                            <div className="flex items-center gap-1">
-                              <Button size="sm" variant="ghost" onClick={() => handleEditRecheio(recheio)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
-                                <Edit2 className="w-3 h-3" />
-                              </Button>
-                              <Button size="sm" variant="ghost" onClick={() => handleDeleteRecheio(recheio)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ))}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                  <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Recheios</h4>
+                  <div className="relative flex items-center gap-2">
+                    <Input
+                      value={newRecheioInput}
+                      onChange={(e) => setNewRecheioInput(e.target.value)}
+                      placeholder="Adicionar recheio..."
+                      className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddRecheio()}
+                    />
+                    <Button onClick={handleAddRecheio} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
                   </div>
                 </div>
-              )}
+                <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
+                  {productRecheios.map((recheio) => (
+                    <div key={recheio} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
+                      {editingRecheio === recheio ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Input
+                            value={editRecheioValue}
+                            onChange={(e) => setEditRecheioValue(e.target.value)}
+                            className="flex-1 h-8 text-xs"
+                            autoFocus
+                          />
+                          <Button size="sm" onClick={handleSaveEditRecheio} className="bg-green-600 hover:bg-green-700 h-8 px-2">
+                            <Check className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => {setEditingRecheio(null); setEditRecheioValue('')}} className="h-8 px-2">
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="flex-1 truncate pr-2">{recheio}</span>
+                          <div className="flex items-center gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => handleEditRecheio(recheio)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteRecheio(recheio)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Coberturas */}
-              {productCoberturas.length > 0 && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Coberturas</h4>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={newCoberturaInput}
-                        onChange={(e) => setNewCoberturaInput(e.target.value)}
-                        placeholder="Adicionar cobertura..."
-                        className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
-                        onKeyPress={(e) => e.key === 'Enter' && handleAddCobertura()}
-                      />
-                      <Button onClick={handleAddCobertura} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
-                    {productCoberturas.map((cobertura) => (
-                      <div key={cobertura} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
-                        {editingCobertura === cobertura ? (
-                          <div className="flex items-center gap-2 flex-1">
-                            <Input
-                              value={editCoberturaValue}
-                              onChange={(e) => setEditCoberturaValue(e.target.value)}
-                              className="flex-1 h-8 text-xs"
-                              autoFocus
-                            />
-                            <Button size="sm" onClick={handleSaveEditCobertura} className="bg-green-600 hover:bg-green-700 h-8 px-2">
-                              <Check className="w-3 h-3" />
-                            </Button>
-                            <Button size="sm" variant="ghost" onClick={() => {setEditingCobertura(null); setEditCoberturaValue('')}} className="h-8 px-2">
-                              <X className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <>
-                            <span className="flex-1 truncate pr-2">{cobertura}</span>
-                            <div className="flex items-center gap-1">
-                              <Button size="sm" variant="ghost" onClick={() => handleEditCobertura(cobertura)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
-                                <Edit2 className="w-3 h-3" />
-                              </Button>
-                              <Button size="sm" variant="ghost" onClick={() => handleDeleteCobertura(cobertura)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ))}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                  <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Coberturas</h4>
+                  <div className="relative flex items-center gap-2">
+                    <Input
+                      value={newCoberturaInput}
+                      onChange={(e) => setNewCoberturaInput(e.target.value)}
+                      placeholder="Adicionar cobertura..."
+                      className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddCobertura()}
+                    />
+                    <Button onClick={handleAddCobertura} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
                   </div>
                 </div>
-              )}
+                <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
+                  {productCoberturas.map((cobertura) => (
+                    <div key={cobertura} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
+                      {editingCobertura === cobertura ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Input
+                            value={editCoberturaValue}
+                            onChange={(e) => setEditCoberturaValue(e.target.value)}
+                            className="flex-1 h-8 text-xs"
+                            autoFocus
+                          />
+                          <Button size="sm" onClick={handleSaveEditCobertura} className="bg-green-600 hover:bg-green-700 h-8 px-2">
+                            <Check className="w-3 h-3" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => {setEditingCobertura(null); setEditCoberturaValue('')}} className="h-8 px-2">
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="flex-1 truncate pr-2">{cobertura}</span>
+                          <div className="flex items-center gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => handleEditCobertura(cobertura)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteCobertura(cobertura)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
