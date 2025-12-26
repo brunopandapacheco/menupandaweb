@@ -44,10 +44,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
     saveDesignSettings,
     addMassa, 
     addRecheio,
-    addCobertura,
-    deleteMassa,
-    deleteRecheio,
-    deleteCobertura
+    addCobertura 
   } = useDatabase()
   
   const [isCreatingNewCategory, setIsCreatingNewCategory] = useState(false)
@@ -63,6 +60,14 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
   const [newMassaInput, setNewMassaInput] = useState('')
   const [newRecheioInput, setNewRecheioInput] = useState('')
   const [newCoberturaInput, setNewCoberturaInput] = useState('')
+
+  // Estados para edição de massas, recheios e coberturas
+  const [editingMassa, setEditingMassa] = useState<string | null>(null)
+  const [editingRecheio, setEditingRecheio] = useState<string | null>(null)
+  const [editingCobertura, setEditingCobertura] = useState<string | null>(null)
+  const [editMassaValue, setEditMassaValue] = useState('')
+  const [editRecheioValue, setEditRecheioValue] = useState('')
+  const [editCoberturaValue, setEditCoberturaValue] = useState('')
 
   useEffect(() => {
     setProductMassas(product?.massas_disponiveis || [])
@@ -140,6 +145,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
     return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   }
 
+  // Funções para gerenciar massas
   const handleAddMassa = async () => {
     const name = newMassaInput.trim()
     if (!name || masterMassas.includes(name)) return
@@ -151,6 +157,87 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
     }
   }
 
+  const handleEditMassa = (massa: string) => {
+    setEditingMassa(massa)
+    setEditMassaValue(massa)
+  }
+
+  const handleSaveEditMassa = async () => {
+    if (!editingMassa || !editMassaValue.trim()) return
+    
+    try {
+      const { error } = await supabase
+        .from('massas')
+        .update({ nome: editMassaValue.trim() })
+        .eq('nome', editingMassa)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+      if (error) throw error
+
+      // Atualizar produtos que usam esta massa
+      const { data: products } = await supabase
+        .from('produtos')
+        .select('id, massas_disponiveis')
+        .contains('massas_disponiveis', editingMassa)
+
+      if (products) {
+        for (const product of products) {
+          const updatedMassas = product.massas_disponiveis.map(m => 
+            m === editingMassa ? editMassaValue.trim() : m
+          )
+          await supabase
+            .from('produtos')
+            .update({ massas_disponiveis: updatedMassas })
+            .eq('id', product.id)
+        }
+      }
+
+      // Atualizar estado local
+      setProductMassas(prev => prev.map(m => m === editingMassa ? editMassaValue.trim() : m))
+      setEditingMassa(null)
+      setEditMassaValue('')
+      showSuccess('Massa atualizada com sucesso!')
+    } catch (error: any) {
+      showError('Erro ao atualizar massa')
+    }
+  }
+
+  const handleDeleteMassa = async (massa: string) => {
+    if (!confirm(`Tem certeza que deseja excluir "${massa}"?`)) return
+    
+    try {
+      const { error } = await supabase
+        .from('massas')
+        .delete()
+        .eq('nome', massa)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+      if (error) throw error
+
+      // Remover dos produtos
+      const { data: products } = await supabase
+        .from('produtos')
+        .select('id, massas_disponiveis')
+        .contains('massas_disponiveis', massa)
+
+      if (products) {
+        for (const product of products) {
+          const updatedMassas = product.massas_disponiveis.filter(m => m !== massa)
+          await supabase
+            .from('produtos')
+            .update({ massas_disponiveis: updatedMassas })
+            .eq('id', product.id)
+        }
+      }
+
+      setProductMassas(prev => prev.filter(m => m !== massa))
+      showSuccess('Massa excluída com sucesso!')
+    } catch (error: any) {
+      showError('Erro ao excluir massa')
+    }
+  }
+
+  // Funções para gerenciar recheios
   const handleAddRecheio = async () => {
     const name = newRecheioInput.trim()
     if (!name || masterRecheios.includes(name)) return
@@ -162,6 +249,86 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
     }
   }
 
+  const handleEditRecheio = (recheio: string) => {
+    setEditingRecheio(recheio)
+    setEditRecheioValue(recheio)
+  }
+
+  const handleSaveEditRecheio = async () => {
+    if (!editingRecheio || !editRecheioValue.trim()) return
+    
+    try {
+      const { error } = await supabase
+        .from('recheios')
+        .update({ nome: editRecheioValue.trim() })
+        .eq('nome', editingRecheio)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+      if (error) throw error
+
+      // Atualizar produtos
+      const { data: products } = await supabase
+        .from('produtos')
+        .select('id, recheios_disponiveis')
+        .contains('recheios_disponiveis', editingRecheio)
+
+      if (products) {
+        for (const product of products) {
+          const updatedRecheios = product.recheios_disponiveis.map(r => 
+            r === editingRecheio ? editRecheioValue.trim() : r
+          )
+          await supabase
+            .from('produtos')
+            .update({ recheios_disponiveis: updatedRecheios })
+            .eq('id', product.id)
+        }
+      }
+
+      setProductRecheios(prev => prev.map(r => r === editingRecheio ? editRecheioValue.trim() : r))
+      setEditingRecheio(null)
+      setEditRecheioValue('')
+      showSuccess('Recheio atualizado com sucesso!')
+    } catch (error: any) {
+      showError('Erro ao atualizar recheio')
+    }
+  }
+
+  const handleDeleteRecheio = async (recheio: string) => {
+    if (!confirm(`Tem certeza que deseja excluir "${recheio}"?`)) return
+    
+    try {
+      const { error } = await supabase
+        .from('recheios')
+        .delete()
+        .eq('nome', recheio)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+      if (error) throw error
+
+      // Remover dos produtos
+      const { data: products } = await supabase
+        .from('produtos')
+        .select('id, recheios_disponiveis')
+        .contains('recheios_disponiveis', recheio)
+
+      if (products) {
+        for (const product of products) {
+          const updatedRecheios = product.recheios_disponiveis.filter(r => r !== recheio)
+          await supabase
+            .from('produtos')
+            .update({ recheios_disponiveis: updatedRecheios })
+            .eq('id', product.id)
+        }
+      }
+
+      setProductRecheios(prev => prev.filter(r => r !== recheio))
+      showSuccess('Recheio excluído com sucesso!')
+    } catch (error: any) {
+      showError('Erro ao excluir recheio')
+    }
+  }
+
+  // Funções para gerenciar coberturas
   const handleAddCobertura = async () => {
     const name = newCoberturaInput.trim()
     if (!name || masterCoberturas.includes(name)) return
@@ -173,36 +340,82 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
     }
   }
 
-  const handleDeleteMassa = async (massa: string) => {
-    if (confirm(`Tem certeza que deseja excluir a massa "${massa}"?`)) {
-      const success = await deleteMassa(massa)
-      if (success) {
-        setProductMassas(prev => prev.filter(m => m !== massa))
-        handleFieldChange('massas_disponiveis', productMassas.filter(m => m !== massa))
-        showSuccess('Massa excluída com sucesso!')
-      }
-    }
+  const handleEditCobertura = (cobertura: string) => {
+    setEditingCobertura(cobertura)
+    setEditCoberturaValue(cobertura)
   }
 
-  const handleDeleteRecheio = async (recheio: string) => {
-    if (confirm(`Tem certeza que deseja excluir o recheio "${recheio}"?`)) {
-      const success = await deleteRecheio(recheio)
-      if (success) {
-        setProductRecheios(prev => prev.filter(r => r !== recheio))
-        handleFieldChange('recheios_disponiveis', productRecheios.filter(r => r !== recheio))
-        showSuccess('Recheio excluído com sucesso!')
+  const handleSaveEditCobertura = async () => {
+    if (!editingCobertura || !editCoberturaValue.trim()) return
+    
+    try {
+      const { error } = await supabase
+        .from('coberturas')
+        .update({ nome: editCoberturaValue.trim() })
+        .eq('nome', editingCobertura)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+      if (error) throw error
+
+      // Atualizar produtos
+      const { data: products } = await supabase
+        .from('produtos')
+        .select('id, coberturas_disponiveis')
+        .contains('coberturas_disponiveis', editingCobertura)
+
+      if (products) {
+        for (const product of products) {
+          const updatedCoberturas = product.coberturas_disponiveis.map(c => 
+            c === editingCobertura ? editCoberturaValue.trim() : c
+          )
+          await supabase
+            .from('produtos')
+            .update({ coberturas_disponiveis: updatedCoberturas })
+            .eq('id', product.id)
+        }
       }
+
+      setProductCoberturas(prev => prev.map(c => c === editingCobertura ? editCoberturaValue.trim() : c))
+      setEditingCobertura(null)
+      setEditCoberturaValue('')
+      showSuccess('Cobertura atualizada com sucesso!')
+    } catch (error: any) {
+      showError('Erro ao atualizar cobertura')
     }
   }
 
   const handleDeleteCobertura = async (cobertura: string) => {
-    if (confirm(`Tem certeza que deseja excluir a cobertura "${cobertura}"?`)) {
-      const success = await deleteCobertura(cobertura)
-      if (success) {
-        setProductCoberturas(prev => prev.filter(c => c !== cobertura))
-        handleFieldChange('coberturas_disponiveis', productCoberturas.filter(c => c !== cobertura))
-        showSuccess('Cobertura excluída com sucesso!')
+    if (!confirm(`Tem certeza que deseja excluir "${cobertura}"?`)) return
+    
+    try {
+      const { error } = await supabase
+        .from('coberturas')
+        .delete()
+        .eq('nome', cobertura)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+
+      if (error) throw error
+
+      // Remover dos produtos
+      const { data: products } = await supabase
+        .from('produtos')
+        .select('id, coberturas_disponiveis')
+        .contains('coberturas_disponiveis', cobertura)
+
+      if (products) {
+        for (const product of products) {
+          const updatedCoberturas = product.coberturas_disponiveis.filter(c => c !== cobertura)
+          await supabase
+            .from('produtos')
+            .update({ coberturas_disponiveis: updatedCoberturas })
+            .eq('id', product.id)
+        }
       }
+
+      setProductCoberturas(prev => prev.filter(c => c !== cobertura))
+      showSuccess('Cobertura excluída com sucesso!')
+    } catch (error: any) {
+      showError('Erro ao excluir cobertura')
     }
   }
 
@@ -222,6 +435,11 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
     const newList = productCoberturas.includes(cobertura) ? productCoberturas.filter(c => c !== cobertura) : [...productCoberturas, cobertura]
     setProductCoberturas(newList)
     handleFieldChange('coberturas_disponiveis', newList)
+  }
+
+  // Verificar se deve mostrar opções de personalização
+  const shouldShowPersonalization = () => {
+    return productMassas.length > 0 || productRecheios.length > 0 || productCoberturas.length > 0
   }
 
   return (
@@ -293,7 +511,7 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
                   </button>
                   <Input value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} placeholder="Nome..." className="h-12 rounded-xl flex-1 bg-gray-50" autoFocus />
                   <Button onClick={handleCreateCategory} className="bg-pink-600 h-12 w-12 rounded-xl flex-shrink-0"><Check className="w-5 h-5" /></Button>
-                  <Button variant="ghost" onClick={() => setIsCreatingNewCategory(false)} className="h-12 w-12 rounded-xl flex-shrink-0 text-gray-400"><X className="w-5 h-5" /></Button>
+                  <Button variant="ghost" onClick={() => setIsCreatingNewCategory(false)} className="h-12 w-12 rounded-xl flex-shrink-0"><X className="w-5 h-5" /></Button>
                 </div>
               </div>
             ) : (
@@ -387,123 +605,203 @@ export function ProductForm({ product, onSave, onDelete }: ProductFormProps) {
         </div>
       </section>
 
-      {/* SEÇÃO 4: PERSONALIZAÇÃO */}
-      <section className={`rounded-2xl border transition-all duration-300 ${product?.permite_personalizacao ? 'bg-white border-pink-200 shadow-lg shadow-pink-50 p-6 sm:p-10' : 'bg-white border-gray-200 p-6 sm:p-8 shadow-sm opacity-80'}`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
-          <div className="flex items-center gap-2 text-gray-500">
-            <Settings2 className={`w-5 h-5 ${product?.permite_personalizacao ? 'text-pink-500' : ''}`} />
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-widest text-gray-900">Opções de Montagem</h3>
-          </div>
-          <div className={`flex items-center gap-4 px-6 py-3 rounded-full border transition-all ${product?.permite_personalizacao ? 'bg-pink-600 border-pink-500 text-white' : 'bg-gray-100 border-gray-200 text-gray-500'}`}>
-            <Switch 
-              id="permite_personalizacao" 
-              checked={product?.permite_personalizacao || false} 
-              onCheckedChange={(c) => handleFieldChange('permite_personalizacao', c)} 
-              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-gray-300"
-            />
-            <Label htmlFor="permite_personalizacao" className="font-black text-xs uppercase tracking-widest cursor-pointer">
-              {product?.permite_personalizacao ? 'OPÇÕES ATIVADAS' : 'ATIVAR OPÇÕES'}
-            </Label>
-          </div>
-        </div>
-
-        {product?.permite_personalizacao ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10 animate-in fade-in slide-in-from-top-4">
-            {/* Listas de Personalização */}
-            {[
-              { 
-                label: 'Massas', 
-                input: newMassaInput, 
-                setInput: setNewMassaInput, 
-                add: handleAddMassa, 
-                delete: handleDeleteMassa, 
-                master: masterMassas, 
-                product: productMassas, 
-                toggle: toggleMassa, 
-                color: 'pink' 
-              },
-              { 
-                label: 'Recheios', 
-                input: newRecheioInput, 
-                setInput: setNewRecheioInput, 
-                add: handleAddRecheio, 
-                delete: handleDeleteRecheio, 
-                master: masterRecheios, 
-                product: productRecheios, 
-                toggle: toggleRecheio, 
-                color: 'purple' 
-              },
-              { 
-                label: 'Coberturas', 
-                input: newCoberturaInput, 
-                setInput: setNewCoberturaInput, 
-                add: handleAddCobertura, 
-                delete: handleDeleteCobertura, 
-                master: masterCoberturas, 
-                product: productCoberturas, 
-                toggle: toggleCobertura, 
-                color: 'blue' 
-              }
-            ].map((section) => (
-              <div key={section.label} className="space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                  <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">{section.label}</h4>
-                </div>
-                <div className="relative">
-                  <Input 
-                    value={section.input} 
-                    onChange={(e) => section.setInput(e.target.value)} 
-                    placeholder="Adicionar..." 
-                    className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500" 
-                    onKeyPress={(e) => e.key === 'Enter' && section.add()} 
-                  />
-                  <Button onClick={section.add} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
-                </div>
-                <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
-                  {section.master.map((item) => (
-                    <div key={item} className="flex items-center gap-1">
-                      <button 
-                        onClick={() => section.toggle(item)} 
-                        className={`flex-1 flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 ${section.product.includes(item) ? 'bg-pink-50 border-pink-500 text-pink-700' : 'bg-white border-gray-100 text-gray-400 hover:border-pink-100 hover:text-pink-400'}`}
-                      >
-                        <span className="truncate pr-2">{item}</span>
-                        {section.product.includes(item) ? <Check className="w-4 h-4 flex-shrink-0" /> : <Plus className="w-3 h-3 opacity-30 flex-shrink-0" />}
-                      </button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => section.delete(item)}
-                        className="h-9 w-9 p-0 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 flex-shrink-0"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100">
-              <Settings2 className="w-8 h-8 text-gray-200" />
+      {/* SEÇÃO 4: PERSONALIZAÇÃO - SÓ APARECE SE HOUVER OPÇÕES */}
+      {shouldShowPersonalization() && (
+        <section className={`rounded-2xl border transition-all duration-300 ${
+          product?.permite_personalizacao 
+            ? 'bg-white border-pink-200 shadow-lg shadow-pink-50 p-6 sm:p-10' 
+            : 'bg-white border-gray-200 p-6 sm:p-8 shadow-sm opacity-80'
+        }`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
+            <div className="flex items-center gap-2 text-gray-500">
+              <Settings2 className={`w-5 h-5 ${product?.permite_personalizacao ? 'text-pink-500' : ''}`} />
+              <h3 className="text-xs sm:text-sm font-black uppercase tracking-widest text-gray-900">Opções de Montagem</h3>
             </div>
-            <p className="text-gray-500 text-sm font-medium">Produto padrão sem opções de escolha para o cliente.</p>
+            <div className={`flex items-center gap-4 px-6 py-3 rounded-full border transition-all ${
+              product?.permite_personalizacao 
+                ? 'bg-pink-600 border-pink-500 text-white' 
+                : 'bg-gray-100 border-gray-200 text-gray-500'
+            }`}>
+              <Switch 
+                id="permite_personalizacao" 
+                checked={product?.permite_personalizacao || false} 
+                onCheckedChange={(c) => handleFieldChange('permite_personalizacao', c)} 
+              />
+              <Label htmlFor="permite_personalizacao" className="font-black text-xs uppercase tracking-widest cursor-pointer">
+                {product?.permite_personalizacao ? 'OPÇÕES ATIVADAS' : 'ATIVAR OPÇÕES'}
+              </Label>
+            </div>
           </div>
-        )}
-      </section>
 
-      {/* ÁREA DE PERIGO */}
-      {product?.id && onDelete && (
-        <section className="bg-gray-100 rounded-2xl p-6 border border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div className="space-y-1 text-center sm:text-left">
-            <h3 className="font-black text-gray-900 uppercase tracking-widest text-sm">Zona de Exclusão</h3>
-            <p className="text-xs text-gray-600 font-medium">Esta ação não pode ser desfeita. O produto será removido permanentemente.</p>
-          </div>
-          <Button variant="ghost" onClick={onDelete} className="w-full sm:w-auto text-red-600 font-black hover:bg-red-50 hover:text-red-700 px-8 py-6 rounded-xl transition-all">
-            <Trash2 className="w-5 h-5 mr-2" /> EXCLUIR PRODUTO
-          </Button>
+          {product?.permite_personalizacao ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10">
+              {/* Massas */}
+              {productMassas.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                    <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Massas</h4>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={newMassaInput}
+                        onChange={(e) => setNewMassaInput(e.target.value)}
+                        placeholder="Adicionar massa..."
+                        className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddMassa()}
+                      />
+                      <Button onClick={handleAddMassa} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
+                    {productMassas.map((massa) => (
+                      <div key={massa} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
+                        {editingMassa === massa ? (
+                          <div className="flex items-center gap-2 flex-1">
+                            <Input
+                              value={editMassaValue}
+                              onChange={(e) => setEditMassaValue(e.target.value)}
+                              className="flex-1 h-8 text-xs"
+                              autoFocus
+                            />
+                            <Button size="sm" onClick={handleSaveEditMassa} className="bg-green-600 hover:bg-green-700 h-8 px-2">
+                              <Check className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => {setEditingMassa(null); setEditMassaValue('')}} className="h-8 px-2">
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="flex-1 truncate pr-2">{massa}</span>
+                            <div className="flex items-center gap-1">
+                              <Button size="sm" variant="ghost" onClick={() => handleEditMassa(massa)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
+                                <Edit2 className="w-3 h-3" />
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={() => handleDeleteMassa(massa)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Recheios */}
+              {productRecheios.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                    <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Recheios</h4>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={newRecheioInput}
+                        onChange={(e) => setNewRecheioInput(e.target.value)}
+                        placeholder="Adicionar recheio..."
+                        className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddRecheio()}
+                      />
+                      <Button onClick={handleAddRecheio} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
+                    {productRecheios.map((recheio) => (
+                      <div key={recheio} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
+                        {editingRecheio === recheio ? (
+                          <div className="flex items-center gap-2 flex-1">
+                            <Input
+                              value={editRecheioValue}
+                              onChange={(e) => setEditRecheioValue(e.target.value)}
+                              className="flex-1 h-8 text-xs"
+                              autoFocus
+                            />
+                            <Button size="sm" onClick={handleSaveEditRecheio} className="bg-green-600 hover:bg-green-700 h-8 px-2">
+                              <Check className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => {setEditingRecheio(null); setEditRecheioValue('')}} className="h-8 px-2">
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="flex-1 truncate pr-2">{recheio}</span>
+                            <div className="flex items-center gap-1">
+                              <Button size="sm" variant="ghost" onClick={() => handleEditRecheio(recheio)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
+                                <Edit2 className="w-3 h-3" />
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={() => handleDeleteRecheio(recheio)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Coberturas */}
+              {productCoberturas.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                    <h4 className="text-gray-900 font-black text-xs uppercase tracking-widest">Coberturas</h4>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={newCoberturaInput}
+                        onChange={(e) => setNewCoberturaInput(e.target.value)}
+                        placeholder="Adicionar cobertura..."
+                        className="bg-gray-50 border-gray-200 rounded-xl h-11 pr-12 focus:ring-pink-500"
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddCobertura()}
+                      />
+                      <Button onClick={handleAddCobertura} className="absolute right-1 top-1 h-9 w-9 p-0 bg-gray-800 hover:bg-black rounded-lg"><Plus className="w-4 h-4" /></Button>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto scrollbar-hide">
+                    {productCoberturas.map((cobertura) => (
+                      <div key={cobertura} className="flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all border-2 bg-white hover:bg-gray-50">
+                        {editingCobertura === cobertura ? (
+                          <div className="flex items-center gap-2 flex-1">
+                            <Input
+                              value={editCoberturaValue}
+                              onChange={(e) => setEditCoberturaValue(e.target.value)}
+                              className="flex-1 h-8 text-xs"
+                              autoFocus
+                            />
+                            <Button size="sm" onClick={handleSaveEditCobertura} className="bg-green-600 hover:bg-green-700 h-8 px-2">
+                              <Check className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => {setEditingCobertura(null); setEditCoberturaValue('')}} className="h-8 px-2">
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="flex-1 truncate pr-2">{cobertura}</span>
+                            <div className="flex items-center gap-1">
+                              <Button size="sm" variant="ghost" onClick={() => handleEditCobertura(cobertura)} className="text-blue-600 hover:text-blue-800 h-6 w-6 p-0">
+                                <Edit2 className="w-3 h-3" />
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={() => handleDeleteCobertura(cobertura)} className="text-red-600 hover:text-red-800 h-6 w-6 p-0">
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100">
+                <Settings2 className="w-8 h-8 text-gray-200" />
+              </div>
+              <p className="text-gray-500 text-sm font-medium">Produto padrão sem opções de escolha para o cliente.</p>
+            </div>
+          )}
         </section>
       )}
 
