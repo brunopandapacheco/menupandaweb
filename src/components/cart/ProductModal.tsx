@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Plus, Minus, ShoppingCart } from 'lucide-react'
+import { X, Plus, Minus, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
@@ -13,6 +13,9 @@ interface ProductModalProps {
   product: Produto | null
   initialQuantity?: number
   initialObservations?: string
+  initialMassa?: string
+  initialRecheio?: string
+  initialCobertura?: string
   onSave?: (updatedProduct: any) => void
   isEditMode?: boolean
 }
@@ -23,32 +26,39 @@ export function ProductModal({
   product, 
   initialQuantity = 1,
   initialObservations = '',
+  initialMassa = '',
+  initialRecheio = '',
+  initialCobertura = '',
   onSave,
   isEditMode = false
 }: ProductModalProps) {
   const { addItem } = useCart()
   const [quantity, setQuantity] = useState(initialQuantity)
   const [observations, setObservations] = useState(initialObservations)
+  const [selectedMassa, setSelectedMassa] = useState(initialMassa)
+  const [selectedRecheio, setSelectedRecheio] = useState(initialRecheio)
+  const [selectedCobertura, setSelectedCobertura] = useState(initialCobertura)
 
   useEffect(() => {
     if (product) {
       setQuantity(initialQuantity)
       setObservations(initialObservations)
+      setSelectedMassa(initialMassa)
+      setSelectedRecheio(initialRecheio)
+      setSelectedCobertura(initialCobertura)
     }
-  }, [product, initialQuantity, initialObservations])
+  }, [product, initialQuantity, initialObservations, initialMassa, initialRecheio, initialCobertura])
 
-  if (!product) return null
+  if (!isOpen || !product) return null
 
   const incrementQuantity = () => {
     const increment = product.forma_venda === 'kg' ? 0.5 : 1
-    const maxQuantity = product.forma_venda === 'kg' ? 50 : 99
-    setQuantity(prev => Math.min(prev + increment, maxQuantity))
+    setQuantity(prev => Math.min(prev + increment, 50))
   }
 
   const decrementQuantity = () => {
     const decrement = product.forma_venda === 'kg' ? 0.5 : 1
-    const minQuantity = product.forma_venda === 'kg' ? 0.5 : 1
-    setQuantity(prev => Math.max(prev - decrement, minQuantity))
+    if (quantity > decrement) setQuantity(prev => prev - decrement)
   }
 
   const handleAddToCart = () => {
@@ -60,234 +70,165 @@ export function ProductModal({
       imageUrl: product.imagem_url,
       saleType: product.forma_venda as any,
       quantity,
-      observations
+      observations,
+      selectedMassa,
+      selectedRecheio,
+      selectedCobertura
     }
-    
     addItem(cartItem)
-    
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cartItem }))
-      
-      setTimeout(() => {
-        onClose()
-      }, 100)
-    }, 50)
+    onClose()
   }
 
   const handleSave = () => {
-    if (onSave) {
-      onSave({
-        quantity,
-        observations
-      })
-    }
+    if (onSave) onSave({ quantity, observations, selectedMassa, selectedRecheio, selectedCobertura })
   }
 
-  const formatQuantity = (qty: number, saleType: string) => {
-    if (saleType === 'kg') {
-      return `${qty}kg`
-    }
-    return `${qty} ${qty === 1 ? 'unidade' : 'unidades'}`
-  }
-
-  // Função para formatar o tipo de venda
-  const formatSaleType = (saleType: string) => {
-    switch (saleType) {
-      case 'tamanho-p':
-        return 'P'
-      case 'tamanho-m':
-        return 'M'
-      case 'tamanho-g':
-        return 'G'
-      case 'kg':
-        return 'KG'
-      case 'cento':
-        return '100'
-      case 'outros':
-        return 'OUT'
-      default:
-        return 'UN'
-    }
-  }
-
-  const getFirstImage = (imageUrl?: string) => {
-    if (!imageUrl) return null
-    return imageUrl.split(',')[0].trim()
-  }
-
-  const firstImage = getFirstImage(product.imagem_url)
-
-  if (!isOpen) return null
+  const formatQuantity = (qty: number, saleType: string) => saleType === 'kg' ? `${qty}kg` : `${qty} un`
 
   return (
     <>
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-        style={{ backdropFilter: 'blur(8px)' }}
-        onClick={onClose}
+        className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-50 cursor-pointer" 
+        onClick={onClose} 
       />
-      
       <div 
-        className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto rounded-2xl border-4 shadow-2xl z-50 p-0 bg-white"
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          border: '4px solid #FF97D6',
-          margin: '0'
-        }}
+        className="max-w-sm w-[90vw] max-h-[90vh] overflow-y-auto rounded-3xl border-0 shadow-2xl z-50 p-0 bg-white fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" 
       >
-        <div className="border-b-2 border-pink-200 p-4 pb-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-pink-800">
-              {isEditMode ? 'Editar Item' : 'Adicionar ao Carrinho'}
-            </h2>
-            <button
-              onClick={onClose}
-              className="h-10 w-10 p-0 transition-all duration-200 flex items-center justify-center rounded-full"
-              style={{
-                backgroundColor: '#FF97D6',
-                cursor: 'pointer'
-              }}
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
-          </div>
+        <div className="border-b border-gray-100 p-5 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-md z-10">
+          <h2 className="text-lg font-bold text-gray-800">{isEditMode ? 'Editar Item' : 'Personalizar Item'}</h2>
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="h-9 w-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-500" />
+          </button>
         </div>
 
-        <div className="space-y-4 p-4">
-          <div className="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border-2 border-pink-200">
-            {firstImage ? (
-              <img 
-                src={firstImage} 
-                alt={product.nome}
-                className="w-full h-full object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
-              />
+        <div className="space-y-6 p-5">
+          <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gray-50 ring-1 ring-gray-100">
+            {product.imagem_url ? (
+              <img src={product.imagem_url.split(',')[0]} alt={product.nome} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-4xl">
-                🧁
-              </div>
+              <div className="w-full h-full flex items-center justify-center text-5xl bg-pink-50">🧁</div>
             )}
           </div>
 
+          <div className="space-y-2">
+            <h3 className="text-2xl font-black text-gray-900 leading-tight">{product.nome}</h3>
+            {product.descricao && <p className="text-gray-500 text-sm leading-relaxed">{product.descricao}</p>}
+            <div className="flex items-center gap-2 pt-1">
+              <span className="text-2xl font-black text-pink-600">{formatCurrency(product.preco_normal)}</span>
+              <Badge variant="outline" className="border-pink-200 text-pink-600 bg-pink-50/50 uppercase tracking-wider font-bold text-[10px]">{product.forma_venda}</Badge>
+            </div>
+          </div>
+
+          {/* Quantidade */}
           <div className="space-y-3">
-            <h3 className="text-xl font-bold text-gray-900">{product.nome}</h3>
-            <p className="text-gray-600 text-sm">{product.descricao}</p>
-            
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-green-600">
-                {formatCurrency(product.preco_normal)}
-              </span>
-              <Badge 
-                variant="secondary" 
-                className="rounded-none font-semibold text-white"
-                style={{
-                  backgroundColor: '#FF97D6',
-                  boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
-                }}
-              >
-                {formatSaleType(product.forma_venda)}
-              </Badge>
-              {product.promocao && (
-                <Badge className="bg-red-500 text-white rounded-full">
-                  PROMOÇÃO
-                </Badge>
-              )}
+            <label className="text-xs font-black uppercase tracking-widest text-gray-400">Quantidade</label>
+            <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-100">
+              <Button type="button" variant="ghost" onClick={decrementQuantity} className="h-12 w-12 rounded-xl bg-white shadow-sm border border-gray-100 hover:bg-gray-50"><Minus className="w-4 h-4 text-gray-600" /></Button>
+              <span className="flex-1 text-center font-black text-xl text-gray-800">{formatQuantity(quantity, product.forma_venda)}</span>
+              <Button type="button" variant="ghost" onClick={incrementQuantity} className="h-12 w-12 rounded-xl bg-white shadow-sm border border-gray-100 hover:bg-gray-50"><Plus className="w-4 h-4 text-gray-600" /></Button>
             </div>
           </div>
 
-          <div className="border-2 border-pink-200 rounded-xl p-3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quantidade:
-            </label>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                onClick={decrementQuantity}
-                className="h-10 w-10 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-50"
-              >
-                <Minus className="w-3 h-3 text-pink-600" />
-              </Button>
-              <div className="flex-1 text-center">
-                <span className="text-lg font-semibold text-pink-800">
-                  {formatQuantity(quantity, product.forma_venda)}
-                </span>
+          {/* Seleção de Massa */}
+          {product.permite_personalizacao && product.massas_disponiveis && product.massas_disponiveis.length > 0 && (
+            <div className="space-y-3">
+              <label className="text-xs font-black uppercase tracking-widest text-gray-400">Escolha a Massa</label>
+              <div className="grid grid-cols-1 gap-2">
+                {product.massas_disponiveis.map((m) => (
+                  <button 
+                    type="button" 
+                    key={m} 
+                    onClick={() => setSelectedMassa(m)} 
+                    className={`flex items-center justify-between px-4 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${selectedMassa === m ? 'bg-pink-50 border-pink-500 text-pink-700' : 'bg-white border-gray-100 text-gray-600 hover:border-pink-200'}`}
+                  >
+                    <span>{m}</span>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedMassa === m ? 'bg-pink-500 border-pink-500' : 'bg-white border-gray-200'}`}>
+                      {selectedMassa === m && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                  </button>
+                ))}
               </div>
-              <Button
-                variant="outline"
-                onClick={incrementQuantity}
-                className="h-10 w-10 p-0 rounded-full border-2 border-pink-300 hover:bg-pink-50"
-              >
-                <Plus className="w-3 h-3 text-pink-600" />
-              </Button>
             </div>
-          </div>
+          )}
 
-          <div className="border-2 border-pink-200 rounded-xl p-3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Observações (opcional):
-            </label>
-            <Textarea
-              value={observations}
-              onChange={(e) => setObservations(e.target.value)}
-              placeholder="Ex: Sem cobertura de chocolate, escrever mensagem no bolo..."
-              rows={3}
-              className="min-h-[60px] text-sm rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-200"
+          {/* Seleção de Recheio */}
+          {product.permite_personalizacao && product.recheios_disponiveis && product.recheios_disponiveis.length > 0 && (
+            <div className="space-y-3">
+              <label className="text-xs font-black uppercase tracking-widest text-gray-400">Escolha o Recheio</label>
+              <div className="grid grid-cols-1 gap-2">
+                {product.recheios_disponiveis.map((r) => (
+                  <button 
+                    type="button" 
+                    key={r} 
+                    onClick={() => setSelectedRecheio(r)} 
+                    className={`flex items-center justify-between px-4 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${selectedRecheio === r ? 'bg-pink-50 border-pink-500 text-pink-700' : 'bg-white border-gray-100 text-gray-600 hover:border-pink-200'}`}
+                  >
+                    <span>{r}</span>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedRecheio === r ? 'bg-pink-500 border-pink-500' : 'bg-white border-gray-200'}`}>
+                      {selectedRecheio === r && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Seleção de Cobertura */}
+          {product.permite_personalizacao && product.coberturas_disponiveis && product.coberturas_disponiveis.length > 0 && (
+            <div className="space-y-3">
+              <label className="text-xs font-black uppercase tracking-widest text-gray-400">Escolha a Cobertura</label>
+              <div className="grid grid-cols-1 gap-2">
+                {product.coberturas_disponiveis.map((c) => (
+                  <button 
+                    type="button" 
+                    key={c} 
+                    onClick={() => setSelectedCobertura(c)} 
+                    className={`flex items-center justify-between px-4 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${selectedCobertura === c ? 'bg-pink-50 border-pink-500 text-pink-700' : 'bg-white border-gray-100 text-gray-600 hover:border-pink-200'}`}
+                  >
+                    <span>{c}</span>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedCobertura === c ? 'bg-pink-500 border-pink-500' : 'bg-white border-gray-200'}`}>
+                      {selectedCobertura === c && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <label className="text-xs font-black uppercase tracking-widest text-gray-400">Observações</label>
+            <Textarea 
+              value={observations} 
+              onChange={(e) => setObservations(e.target.value)} 
+              placeholder="Ex: Sem cereja, embalagem para presente..." 
+              className="rounded-2xl border-gray-100 bg-gray-50 focus:bg-white focus:ring-pink-500 focus:border-pink-500 transition-all text-sm min-h-[100px]" 
             />
           </div>
 
-          <div 
-            className="border-2 border-pink-200 rounded-xl p-4"
-            style={{
-              backgroundColor: '#F7F6FB'
-            }}
-          >
-            <div className="flex justify-between items-center">
-              <span className="text-gray-800 font-medium">Total:</span>
-              <span 
-                className="text-3xl font-bold"
-                style={{ 
-                  color: '#6FCF97'
-                }}
-              >
-                {formatCurrency(product.preco_normal * quantity)}
-              </span>
-            </div>
+          <div className="bg-gray-900 rounded-3xl p-6 flex flex-col gap-1 shadow-xl">
+            <span className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">Total do Pedido</span>
+            <span className="text-3xl font-black text-white">{formatCurrency(product.preco_normal * quantity)}</span>
           </div>
 
-          <div className="space-y-3">
-            {isEditMode ? (
-              <Button
-                onClick={handleSave}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl border-2 border-blue-400 shadow-lg"
-              >
-                Salvar Alterações
-              </Button>
-            ) : (
-              <Button
-                onClick={handleAddToCart}
-                className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 rounded-xl border-2 border-pink-400 shadow-lg"
-              >
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                Adicionar ao Carrinho
-              </Button>
-            )}
-            
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="w-full"
-              style={{
-                borderColor: '#FF99D8',
-                color: '#FF99D8',
-                borderWidth: '2px'
-              }}
+          <div className="flex flex-col gap-3 pb-6">
+            <Button 
+              type="button"
+              onClick={isEditMode ? handleSave : handleAddToCart} 
+              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-black py-7 rounded-2xl text-lg shadow-lg shadow-pink-100 transition-all active:scale-[0.98]"
             >
-              Cancelar
+              {isEditMode ? 'Salvar Alterações' : 'Adicionar ao Carrinho'}
+            </Button>
+            <Button 
+              type="button"
+              variant="ghost" 
+              onClick={onClose} 
+              className="w-full text-gray-400 font-bold hover:text-gray-600"
+            >
+              Cancelar e Voltar
             </Button>
           </div>
         </div>

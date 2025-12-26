@@ -1,12 +1,9 @@
-import { useState } from 'react'
-import { Minus, Plus, Trash2, Edit2, Check, X } from 'lucide-react'
+"use client";
+
+import { Trash2, Plus, Minus, Cake, Utensils, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { CartItem } from '@/types/cart'
 import { formatCurrency } from '@/utils/helpers'
-import { ProductModal } from '@/components/cart/ProductModal'
-import { Produto } from '@/types/database'
+import { CartItem } from '@/hooks/useCart'
 
 interface CartItemComponentProps {
   item: CartItem
@@ -15,150 +12,47 @@ interface CartItemComponentProps {
   onRemove: (id: string) => void
 }
 
-export function CartItemComponent({ 
-  item, 
-  onUpdateQuantity, 
-  onUpdateObservations, 
-  onRemove 
+export function CartItemComponent({
+  item,
+  onUpdateQuantity,
+  onRemove
 }: CartItemComponentProps) {
-  const [showEditModal, setShowEditModal] = useState(false)
-
-  if (!item || !item.id) {
-    return null
+  const handleDecrement = () => {
+    const decrement = item.saleType === 'kg' ? 0.5 : 1
+    if (item.quantity > decrement) onUpdateQuantity(item.id, item.quantity - decrement)
+    else onRemove(item.id)
   }
 
-  const convertToProduct = (): Produto => ({
-    id: item.id,
-    user_id: '',
-    nome: item.name || 'Produto',
-    descricao: item.description || '',
-    preco_normal: item.price || 0,
-    preco_promocional: undefined,
-    imagem_url: item.imageUrl,
-    categoria: '',
-    forma_venda: item.saleType || 'unidade',
-    disponivel: true,
-    promocao: false,
-    created_at: '',
-    updated_at: ''
-  })
-
-  const handleEdit = () => {
-    setShowEditModal(true)
-  }
-
-  const handleModalSave = (updatedProduct: any) => {
-    try {
-      const newQuantity = updatedProduct.quantity || item.quantity
-      const newObservations = updatedProduct.observations || item.observations
-      
-      onUpdateQuantity(item.id, newQuantity)
-      onUpdateObservations(item.id, newObservations)
-      setShowEditModal(false)
-    } catch (error) {
-      console.error('Error saving cart item:', error)
-    }
-  }
-
-  const getQuantityDisplay = () => {
-    const quantity = item.quantity
-    
-    if (item.saleType === 'kg') {
-      return (
-        <>
-          <span style={{ 
-            color: '#FF97D6', 
-            fontWeight: 'bold',
-            fontSize: '15px'
-          }}>{quantity}kg</span> {item.name || 'Produto'}
-        </>
-      )
-    }
-    
-    return (
-      <>
-        <span style={{ 
-          color: '#FF97D6', 
-          fontWeight: 'bold',
-          fontSize: '15px'
-        }}>{quantity}x</span> {item.name || 'Produto'}
-      </>
-    )
-  }
+  const handleIncrement = () => onUpdateQuantity(item.id, item.quantity + (item.saleType === 'kg' ? 0.5 : 1))
 
   return (
-    <>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3 w-full overflow-hidden">
-        <div className="flex gap-3 w-full">
-          <div className="flex-1 min-w-0">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm leading-tight flex-1 pr-2">
-                {getQuantityDisplay()}
-              </h3>
-              <div className="text-right ml-2 flex-shrink-0">
-                <span className="text-green-600 font-bold text-sm">
-                  {formatCurrency((item.price || 0) * item.quantity)}
-                </span>
-              </div>
-            </div>
+    <div className="flex gap-3 p-3 bg-white border-2 border-pink-100 rounded-xl shadow-sm">
+      <div className="w-16 h-16 rounded-lg overflow-hidden bg-pink-50 flex-shrink-0 border border-pink-100">
+        {item.imageUrl ? <img src={item.imageUrl.split(',')[0]} alt={item.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-xl">🧁</div>}
+      </div>
 
-            <div className="mb-2">
-              <div className="text-xs text-gray-500 bg-gray-50 p-1 rounded min-h-[24px]">
-                <p className="line-clamp-2">{item.observations || 'Nenhuma observação'}</p>
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleEdit}
-                className="flex-1 h-8 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
-              >
-                <Edit2 className="w-3 h-3 mr-1" />
-                Editar
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onRemove(item.id)}
-                className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 text-xs"
-              >
-                <Trash2 className="w-3 h-3 mr-1" />
-                Remover
-              </Button>
-            </div>
+      <div className="flex-1 min-w-0 flex flex-col justify-between">
+        <div>
+          <h4 className="font-bold text-gray-900 truncate text-sm">{item.name}</h4>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {item.selectedMassa && <div className="flex items-center gap-1 text-[9px] font-medium text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full"><Cake size={8} /> {item.selectedMassa}</div>}
+            {item.selectedRecheio && <div className="flex items-center gap-1 text-[9px] font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full"><Utensils size={8} /> {item.selectedRecheio}</div>}
+            {item.selectedCobertura && <div className="flex items-center gap-1 text-[9px] font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full"><Sparkles size={8} /> {item.selectedCobertura}</div>}
           </div>
+          {item.observations && <p className="text-[10px] text-gray-500 italic mt-1 line-clamp-1">Obs: {item.observations}</p>}
+        </div>
 
-          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50">
-            {item.imageUrl ? (
-              <img 
-                src={item.imageUrl} 
-                alt={item.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                🧁
-              </div>
-            )}
+        <div className="flex items-center justify-between mt-1">
+          <span className="font-bold text-green-600 text-sm">{formatCurrency(item.price * item.quantity)}</span>
+          <div className="flex items-center gap-2 bg-pink-50 rounded-full px-1 py-0.5">
+            <Button variant="ghost" onClick={handleDecrement} className="h-6 w-6 p-0 rounded-full"><Minus className="w-3 h-3 text-pink-600" /></Button>
+            <span className="text-xs font-bold text-pink-800 w-8 text-center">{item.saleType === 'kg' ? `${item.quantity}kg` : `${item.quantity} un`}</span>
+            <Button variant="ghost" onClick={handleIncrement} className="h-6 w-6 p-0 rounded-full"><Plus className="w-3 h-3 text-pink-600" /></Button>
           </div>
         </div>
       </div>
 
-      <ProductModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        product={convertToProduct()}
-        initialQuantity={item.quantity}
-        initialObservations={item.observations}
-        onSave={handleModalSave}
-        isEditMode={true}
-      />
-    </>
+      <Button variant="ghost" size="sm" onClick={() => onRemove(item.id)} className="text-gray-300 hover:text-red-500 p-0 h-6 w-6"><Trash2 className="w-4 h-4" /></Button>
+    </div>
   )
 }

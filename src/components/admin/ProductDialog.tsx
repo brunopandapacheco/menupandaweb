@@ -6,6 +6,7 @@ import { Produto } from '@/types/database'
 import { showSuccess, showError } from '@/utils/toast'
 import { useDatabase } from '@/hooks/useDatabase'
 import { supabase } from '@/lib/supabase'
+import { X, Save } from 'lucide-react'
 
 interface ProductDialogProps {
   isOpen: boolean
@@ -20,7 +21,6 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   const [pendingCategory, setPendingCategory] = useState<{ name: string; icon: string } | null>(null)
   const neutralFocusRef = useRef<HTMLDivElement>(null)
 
-  // Reset local product when dialog changes
   useEffect(() => {
     if (isOpen) {
       setLocalProduct(product || {
@@ -35,7 +35,6 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
         promocao: false,
       })
       
-      // Focar no elemento neutro quando o modal abrir
       setTimeout(() => {
         if (neutralFocusRef.current) {
           neutralFocusRef.current.focus()
@@ -47,7 +46,6 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
   const handleSave = async () => {
     if (!localProduct) return
 
-    // Validações obrigatórias
     if (!localProduct.nome?.trim()) {
       showError('Nome do produto é obrigatório')
       return
@@ -58,7 +56,6 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
       return
     }
 
-    // Garantir que o preço sempre tenha um valor válido
     const precoNormal = parseFloat(localProduct.preco_normal?.toString() || '0')
     if (precoNormal <= 0 || isNaN(precoNormal)) {
       showError('Preço normal deve ser maior que zero')
@@ -67,7 +64,6 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
 
     setIsSaving(true)
     try {
-      // Criar categoria pendente se existir
       if (pendingCategory) {
         const { error } = await supabase
           .from('categorias')
@@ -77,12 +73,10 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
           })
         
         if (error) throw error
-        
-        showSuccess('Categoria criada com sucesso!')
+        showSuccess('Categoria criada!')
         setPendingCategory(null)
       }
 
-      // Salvar o produto
       if (localProduct.id) {
         const success = await editProduto(localProduct.id, localProduct)
         if (success) showSuccess('Produto atualizado!')
@@ -123,36 +117,37 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto border-0 shadow-2xl p-0">
-        {/* Elemento neutro para receber foco e evitar autofocus nos inputs */}
+      <DialogContent className="max-w-5xl w-[95vw] max-h-[92vh] overflow-y-auto border-0 shadow-2xl p-0 bg-[#F5F5F5] overflow-x-hidden">
         <div 
           ref={neutralFocusRef}
           tabIndex={-1}
-          style={{ 
-            position: 'absolute', 
-            width: '1px', 
-            height: '1px', 
-            padding: 0, 
-            margin: '-1px', 
-            overflow: 'hidden', 
-            clip: 'rect(0, 0, 0, 0)', 
-            whiteSpace: 'nowrap', 
-            border: 0 
-          }}
+          className="sr-only"
           aria-hidden="true"
         />
         
-        <div className="bg-gradient-to-r from-[#201616] to-[#201616] text-white p-6 rounded-t-xl">
-          <DialogHeader>
-            <div>
-              <DialogTitle className="text-2xl font-bold">
+        {/* Header Profissional */}
+        <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="min-w-0">
+              <DialogTitle className="text-lg sm:text-xl font-bold text-gray-800 truncate">
                 {localProduct?.id ? 'Editar Produto' : 'Novo Produto'}
               </DialogTitle>
+              <DialogDescription className="text-xs sm:text-sm text-gray-500 hidden sm:block">
+                Preencha os detalhes abaixo para atualizar seu cardápio.
+              </DialogDescription>
             </div>
-          </DialogHeader>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose}
+            className="rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 flex-shrink-0"
+          >
+            <X className="w-5 h-5" />
+          </Button>
         </div>
         
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-8">
           <ProductForm
             product={localProduct}
             onSave={handleFieldChange}
@@ -160,22 +155,27 @@ export function ProductDialog({ isOpen, onClose, product }: ProductDialogProps) 
             onCancel={onClose}
           />
 
-          {/* Botões de Ação Principais */}
-          <div className="flex flex-col gap-3 pt-6 border-t">
+          {/* Rodapé com botões rosa e cinza */}
+          <div className="mt-10 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-6 border-t border-gray-200">
+            <Button 
+              variant="ghost" 
+              onClick={onClose}
+              disabled={isSaving}
+              className="w-full sm:w-auto px-8 py-5 sm:py-6 text-gray-500 font-bold hover:bg-gray-100"
+            >
+              CANCELAR
+            </Button>
             <Button 
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-3"
+              className="w-full sm:w-auto px-10 py-5 sm:py-6 bg-pink-600 hover:bg-pink-700 text-white font-black shadow-lg shadow-pink-100 flex gap-2 justify-center rounded-xl"
             >
-              {isSaving ? 'Salvando...' : (localProduct?.id ? 'Atualizar' : 'Criar') + ' Produto'}
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={onClose}
-              disabled={isSaving}
-              className="w-full sm:w-auto px-4 py-2 text-sm"
-            >
-              Cancelar
+              {isSaving ? 'SALVANDO...' : (
+                <>
+                  <Save className="w-5 h-5" />
+                  {localProduct?.id ? 'SALVAR ALTERAÇÕES' : 'PUBLICAR PRODUTO'}
+                </>
+              )}
             </Button>
           </div>
         </div>

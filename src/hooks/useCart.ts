@@ -1,157 +1,65 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { CartItem, CartState } from '@/types/cart'
+
+export interface CartItem {
+  id: string
+  name: string
+  description: string
+  price: number
+  imageUrl?: string
+  saleType: 'kg' | 'unidade' | 'fatia' | 'cento' | 'tamanho-p' | 'tamanho-m' | 'tamanho-g' | 'outros'
+  quantity: number
+  observations?: string
+  selectedMassa?: string
+  selectedRecheio?: string
+  selectedCobertura?: string
+}
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>(() => {
     if (typeof window !== 'undefined') {
       try {
         const savedCart = localStorage.getItem('pandamenu-cart')
-        if (savedCart) {
-          const parsed = JSON.parse(savedCart)
-          return Array.isArray(parsed) ? parsed : []
-        }
-      } catch (error) {
-        console.error('Error loading cart:', error)
-        localStorage.removeItem('pandamenu-cart')
-      }
+        return savedCart ? JSON.parse(savedCart) : []
+      } catch (error) { return [] }
     }
     return []
   })
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('pandamenu-cart', JSON.stringify(items))
-        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: items }))
-      } catch (error) {
-        console.error('Error saving cart:', error)
-      }
-    }
+    localStorage.setItem('pandamenu-cart', JSON.stringify(items))
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: items }))
   }, [items])
 
-  useEffect(() => {
-    const handleCartUpdate = (event: CustomEvent) => {
-      try {
-        const cartData = event.detail
-        if (Array.isArray(cartData)) {
-          setItems(cartData)
-        }
-      } catch (error) {
-        console.error('Error handling cart update:', error)
+  const { totalItems, totalPrice } = useMemo(() => ({
+    totalItems: items.reduce((sum, item) => sum + (item.saleType === 'kg' ? item.quantity : Math.floor(item.quantity)), 0),
+    totalPrice: items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  }), [items])
+
+  const addItem = useCallback((newItem: CartItem) => {
+    setItems(prev => {
+      const existing = prev.findIndex(i => i.id === newItem.id && i.selectedMassa === newItem.selectedMassa && i.selectedRecheio === newItem.selectedRecheio && i.selectedCobertura === newItem.selectedCobertura)
+      if (existing >= 0) {
+        const updated = [...prev]
+        updated[existing].quantity += newItem.quantity
+        return updated
       }
-    }
-
-    window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
-    
-    return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
-    }
+      return [...prev, newItem]
+    })
   }, [])
 
-  const { totalItems, totalPrice } = useMemo(() => {
-    try {
-      const totalItems = items.reduce((sum, item) => {
-        return sum + (item.saleType === 'kg' ? item.quantity : Math.floor(item.quantity))
-      }, 0)
-
-      const totalPrice = items.reduce((sum, item) => {
-        return sum + (item.price * item.quantity)
-      }, 0)
-
-      return { totalItems, totalPrice }
-    } catch (error) {
-      console.error('Error calculating totals:', error)
-      return { totalItems: 0, totalPrice: 0 }
-    }
-  }, [items])
-
-  const addItem = useCallback((newItem: Omit<CartItem, 'id'> & { id: string }) => {
-    try {
-      setItems(prevItems => {
-        const existingItemIndex = prevItems.findIndex(item => 
-          item.id.startsWith(newItem.id) && item.name === newItem.name
-        )
-        
-        let updatedItems: CartItem[]
-        
-        if (existingItemIndex >= 0) {
-          updatedItems = [...prevItems]
-          updatedItems[existingItemIndex].quantity += newItem.quantity
-        } else {
-          const itemWithId: CartItem = {
-            ...newItem,
-            id: `${newItem.id}_${Date.now()}`
-          }
-          updatedItems = [...prevItems, itemWithId]
-        }
-        
-        return updatedItems
-      })
-    } catch (error) {
-      console.error('Error adding item to cart:', error)
-    }
+  const updateQuantity = useCallback((id: string, quantity: number) => {
+    setItems(prev => prev.map(i => i.id === id ? { ...i, quantity } : i))
   }, [])
 
-  const updateQuantity = useCallback((itemId: string, quantity: number) => {
-    try {
-      if (quantity <= 0) {
-        removeItem(itemId)
-        return
-      }
-
-      setItems(prevItems => 
-        prevItems.map(item => 
-          item.id === itemId 
-            ? { ...item, quantity }
-            : item
-        )
-      )
-    } catch (error) {
-      console.error('Error updating quantity:', error)
-    }
+  const updateObservations = useCallback((id: string, observations: string) => {
+    setItems(prev => prev.map(i => i.id === id ? { ...i, observations } : i))
   }, [])
 
-  const updateObservations = useCallback((itemId: string, observations: string) => {
-    try {
-      setItems(prevItems => 
-        prevItems.map(item => 
-          item.id === itemId 
-            ? { ...item, observations }
-            : item
-        )
-      )
-    } catch (error) {
-      console.error('Error updating observations:', error)
-    }
+  const removeItem = useCallback((id: string) => {
+    setItems(prev => prev.filter(i => i.id !== id))
   }, [])
 
-  const removeItem = useCallback((itemId: string) => {
-    try {
-      setItems(prevItems => prevItems.filter(item => item.id !== itemId))
-    } catch (error) {
-      console.error('Error removing item:', error)
-    }
-  }, [])
+  const clearCart = useCallback(() => setItems([]), [])
 
-  const clearCart = useCallback(() => {
-    try {
-      setItems([])
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('pandamenu-cart')
-      }
-    } catch (error) {
-      console.error('Error clearing cart:', error)
-    }
-  }, [])
-
-  return {
-    items,
-    totalItems,
-    totalPrice,
-    addItem,
-    updateQuantity,
-    updateObservations,
-    removeItem,
-    clearCart
-  }
+  return { items, totalItems, totalPrice, addItem, updateQuantity, updateObservations, removeItem, clearCart }
 }

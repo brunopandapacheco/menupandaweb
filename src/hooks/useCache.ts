@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useCallback, createContext, useContext, ReactNode } from 'react'
 import { DesignSettings, Configuracoes, Produto } from '@/types/database'
 
@@ -5,10 +7,16 @@ interface CacheData {
   designSettings: DesignSettings | null
   configuracoes: Configuracoes | null
   produtos: Produto[]
+  massas: string[]
+  recheios: string[]
+  coberturas: string[]
   lastUpdated: {
     designSettings: number | null
     configuracoes: number | null
     produtos: number | null
+    massas: number | null
+    recheios: number | null
+    coberturas: number | null
   }
 }
 
@@ -27,15 +35,20 @@ export function CacheProvider({ children }: { children: ReactNode }) {
     designSettings: null,
     configuracoes: null,
     produtos: [],
+    massas: [],
+    recheios: [],
+    coberturas: [],
     lastUpdated: {
       designSettings: null,
       configuracoes: null,
-      produtos: null
+      produtos: null,
+      massas: null,
+      recheios: null,
+      coberturas: null
     }
   })
 
   const updateCache = useCallback((type: keyof Omit<CacheData, 'lastUpdated'>, data: any) => {
-    console.log('Cache: Updating', type)
     setCache(prev => ({
       ...prev,
       [type]: data,
@@ -57,15 +70,20 @@ export function CacheProvider({ children }: { children: ReactNode }) {
   }, [cache])
 
   const clearCache = useCallback(() => {
-    console.log('Cache: Clearing all cache')
     setCache({
       designSettings: null,
       configuracoes: null,
       produtos: [],
+      massas: [],
+      recheios: [],
+      coberturas: [],
       lastUpdated: {
         designSettings: null,
         configuracoes: null,
-        produtos: null
+        produtos: null,
+        massas: null,
+        recheios: null,
+        coberturas: null
       }
     })
   }, [])

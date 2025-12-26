@@ -60,6 +60,8 @@ export function DesktopProductCard({
         return 'KG'
       case 'cento':
         return '100'
+      case 'sob-encomenda':
+        return 'Encomenda' // Alterado aqui
       case 'outros':
         return 'OUT'
       default:

@@ -1,211 +1,216 @@
 import { useState, useEffect } from 'react'
-import { useAuth } from './useAuth'
-import { useCache } from './useCache'
-import { supabaseService } from '@/services/supabase'
-import { DesignSettings, Configuracoes, Produto } from '@/types/database'
+import { supabase } from '@/lib/supabase'
+import { showError, showSuccess } from '@/utils/toast'
 
 export function useDatabase() {
-  const { user } = useAuth()
-  const { cache, updateCache, getCache, isCacheValid } = useCache()
-  const [loading, setLoading] = useState(false)
+  const [massas, setMassas] = useState<string[]>([])
+  const [recheios, setRecheios] = useState<string[]>([])
+  const [coberturas, setCoberturas] = useState<string[]>([])
+  const [designSettings, setDesignSettings] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user) {
-      loadData()
-    } else {
-      setLoading(false)
-    }
-  }, [user])
+    fetchData()
+  }, [])
 
-  const loadData = async (forceRefresh = false) => {
-    if (!user) {
-      console.error('❌ Usuário não encontrado em loadData')
-      setLoading(false)
-      return
-    }
-
-    setLoading(true)
-    
+  const fetchData = async () => {
     try {
-      // Sempre busca as configurações de design mais recentes para garantir o estado mais atualizado,
-      // pois ensureDesignSettingsWithCode também lida com a criação/definição de padrões.
-      let designData = await supabaseService.ensureDesignSettingsWithCode(user.id)
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-      const [configData, productsData] = await Promise.all([
-        supabaseService.getConfiguracoes(user.id),
-        supabaseService.getProducts(user.id)
-      ])
-
-      // Atualiza o cache com os dados mais recentes
-      if (designData) {
-        updateCache('designSettings', designData)
-        // Disparar evento para notificar o cardápio público sobre a mudança
-        window.dispatchEvent(new CustomEvent('configUpdated', { 
-          detail: { type: 'designSettings', data: designData } 
-        }))
-        // Também atualizar localStorage para cross-tab communication
-        localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-      }
-      if (configData) {
-        updateCache('configuracoes', configData)
-        window.dispatchEvent(new CustomEvent('configUpdated', { 
-          detail: { type: 'configuracoes', data: configData } 
-        }))
-        localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-      }
-      if (productsData) {
-        updateCache('produtos', productsData || [])
-        window.dispatchEvent(new CustomEvent('configUpdated', { 
-          detail: { type: 'produtos', data: productsData } 
-        }))
-        localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-      }
+      // Fetch massas
+      const { data: massasData } = await supabase
+        .from('massas')
+        .select('nome')
+        .eq('user_id', user.id)
+        .order('nome')
       
+      // Fetch recheios
+      const { data: recheiosData } = await supabase
+        .from('recheios')
+        .select('nome')
+        .eq('user_id', user.id)
+        .order('nome')
+      
+      // Fetch coberturas
+      const { data: coberturasData } = await supabase
+        .from('coberturas')
+        .select('nome')
+        .eq('user_id', user.id)
+        .order('nome')
+
+      // Fetch design settings
+      const { data: designData } = await supabase
+        .from('design_settings')
+        .select('*')
+        .eq('user_id', user.id)
+        .single()
+
+      setMassas(massasData?.map(m => m.nome) || [])
+      setRecheios(recheiosData?.map(r => r.nome) || [])
+      setCoberturas(coberturasData?.map(c => c.nome) || [])
+      setDesignSettings(designData)
     } catch (error) {
-      console.error('❌ Error loading data:', error)
+      console.error('Error fetching data:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const saveDesignSettings = async (settings: Partial<DesignSettings>) => {
-    if (!user) {
-      console.error('❌ Usuário não encontrado em saveDesignSettings')
-      return false
-    }
-    
-    if (settings.codigo) {
-      console.log('⚠️ Tentativa de alterar código bloqueada. Código atual:', getCache('designSettings')?.codigo)
-      delete settings.codigo
-    }
+  const addMassa = async (nome: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
 
-    console.log('🔍 [saveDesignSettings] Enviando para Supabase:', settings);
-    
-    const result = await supabaseService.updateDesignSettings(user.id, settings)
-    
-    if (result) {
-      console.log('✅ [saveDesignSettings] Sucesso ao salvar design settings:', result);
-      const currentSettings = getCache('designSettings')
-      const updatedSettings = { ...currentSettings, ...settings }
-      updateCache('designSettings', updatedSettings)
-      
-      // Disparar evento para atualizar o cardápio público imediatamente
-      window.dispatchEvent(new CustomEvent('configUpdated', { 
-        detail: { type: 'designSettings', data: updatedSettings } 
-      }))
-      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-      
-      return true;
-    } else {
-      console.error('❌ [saveDesignSettings] Erro ao salvar design settings. Resultado:', result);
-      return false;
-    }
-  }
+      const { error } = await supabase
+        .from('massas')
+        .insert({ nome, user_id: user.id })
 
-  const saveConfiguracoes = async (config: Partial<Configuracoes>) => {
-    if (!user) {
-      console.error('❌ Usuário não encontrado em saveConfiguracoes')
-      return false
-    }
-    
-    const success = await supabaseService.updateConfiguracoes(user.id, config)
-    
-    if (success) {
-      const currentConfig = getCache('configuracoes')
-      const updatedConfig = { ...currentConfig, ...config }
-      updateCache('configuracoes', updatedConfig)
-      
-      // Disparar evento para atualizar o cardápio público
-      window.dispatchEvent(new CustomEvent('configUpdated', { 
-        detail: { type: 'configuracoes', data: updatedConfig } 
-      }))
-      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-    }
-    
-    return success
-  }
+      if (error) throw error
 
-  const addProduto = async (product: Omit<Produto, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
-    if (!user) {
-      console.error('❌ Usuário não encontrado em addProduto')
+      setMassas(prev => [...prev, nome].sort())
+      showSuccess('Massa adicionada!')
+      return nome
+    } catch (error) {
+      showError('Erro ao adicionar massa')
       return null
     }
-    
-    const result = await supabaseService.createProduct(user.id, product)
-    
-    if (result) {
-      const currentProducts = getCache('produtos') || []
-      updateCache('produtos', [result, ...currentProducts])
-      
-      window.dispatchEvent(new CustomEvent('configUpdated', { 
-        detail: { type: 'produtos', data: [result, ...currentProducts] } 
-      }))
-      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-    }
-    
-    return result
   }
 
-  const editProduto = async (id: string, product: Partial<Produto>) => {
-    if (!user) {
-      console.error('❌ Usuário não encontrado em editProduto')
+  const addRecheio = async (nome: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+
+      const { error } = await supabase
+        .from('recheios')
+        .insert({ nome, user_id: user.id })
+
+      if (error) throw error
+
+      setRecheios(prev => [...prev, nome].sort())
+      showSuccess('Recheio adicionado!')
+      return nome
+    } catch (error) {
+      showError('Erro ao adicionar recheio')
+      return null
+    }
+  }
+
+  const addCobertura = async (nome: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+
+      const { error } = await supabase
+        .from('coberturas')
+        .insert({ nome, user_id: user.id })
+
+      if (error) throw error
+
+      setCoberturas(prev => [...prev, nome].sort())
+      showSuccess('Cobertura adicionada!')
+      return nome
+    } catch (error) {
+      showError('Erro ao adicionar cobertura')
+      return null
+    }
+  }
+
+  const deleteMassa = async (nome: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+
+      const { error } = await supabase
+        .from('massas')
+        .delete()
+        .eq('nome', nome)
+        .eq('user_id', user.id)
+
+      if (error) throw error
+
+      setMassas(prev => prev.filter(m => m !== nome))
+      return true
+    } catch (error) {
+      showError('Erro ao excluir massa')
       return false
     }
-    
-    const success = await supabaseService.updateProduct(id, product)
-    
-    if (success) {
-      const currentProducts = getCache('produtos') || []
-      const updatedProducts = currentProducts.map(p => 
-        p.id === id ? { ...p, ...product } : p
-      )
-      updateCache('produtos', updatedProducts)
-      
-      window.dispatchEvent(new CustomEvent('configUpdated', { 
-        detail: { type: 'produtos', data: updatedProducts } 
-      }))
-      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-    }
-    
-    return success
   }
 
-  const removeProduto = async (id: string) => {
-    if (!user) {
-      console.error('❌ Usuário não encontrado em removeProduto')
+  const deleteRecheio = async (nome: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+
+      const { error } = await supabase
+        .from('recheios')
+        .delete()
+        .eq('nome', nome)
+        .eq('user_id', user.id)
+
+      if (error) throw error
+
+      setRecheios(prev => prev.filter(r => r !== nome))
+      return true
+    } catch (error) {
+      showError('Erro ao excluir recheio')
       return false
     }
-    
-    const success = await supabaseService.deleteProduct(id)
-    
-    if (success) {
-      const currentProducts = getCache('produtos') || []
-      const updatedProducts = currentProducts.filter(p => p.id !== id)
-      updateCache('produtos', updatedProducts)
-      
-      window.dispatchEvent(new CustomEvent('configUpdated', { 
-        detail: { type: 'produtos', data: updatedProducts } 
-      }))
-      localStorage.setItem('pandamenu-config-updated', Date.now().toString())
-    }
-    
-    return success
   }
 
-  // Adiciona um log aqui para ver quais designSettings estão sendo retornados pelo hook
-  const currentDesignSettings = getCache('designSettings');
-  console.log('🔍 [useDatabase] Retornando designSettings do cache:', currentDesignSettings);
+  const deleteCobertura = async (nome: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+
+      const { error } = await supabase
+        .from('coberturas')
+        .delete()
+        .eq('nome', nome)
+        .eq('user_id', user.id)
+
+      if (error) throw error
+
+      setCoberturas(prev => prev.filter(c => c !== nome))
+      return true
+    } catch (error) {
+      showError('Erro ao excluir cobertura')
+      return false
+    }
+  }
+
+  const saveDesignSettings = async (settings: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Usuário não autenticado')
+
+      const { error } = await supabase
+        .from('design_settings')
+        .upsert({ ...settings, user_id: user.id })
+
+      if (error) throw error
+
+      setDesignSettings(prev => ({ ...prev, ...settings }))
+      showSuccess('Configurações salvas!')
+    } catch (error) {
+      showError('Erro ao salvar configurações')
+    }
+  }
 
   return {
+    massas,
+    recheios,
+    coberturas,
+    designSettings,
     loading,
-    designSettings: currentDesignSettings,
-    configuracoes: getCache('configuracoes'),
-    produtos: getCache('produtos'),
+    addMassa,
+    addRecheio,
+    addCobertura,
+    deleteMassa,
+    deleteRecheio,
+    deleteCobertura,
     saveDesignSettings,
-    saveConfiguracoes,
-    addProduto,
-    editProduto,
-    removeProduto,
-    refreshData: () => loadData(true)
+    refreshData: fetchData
   }
 }
